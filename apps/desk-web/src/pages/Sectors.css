@@ -1,0 +1,50 @@
+.sectors-page { padding: 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h2 { margin: 0; font-size: 1.5rem; color: #1a1a2e; }
+.btn-primary { background: #4361ee; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+
+.create-form {
+  background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 12px;
+  padding: 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+}
+.create-form input { flex: 1; min-width: 150px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+.color-picker { flex: 0 !important; min-width: 50px !important; padding: 4px !important; height: 40px; cursor: pointer; }
+
+.icon-picker { display: flex; gap: 4px; flex-wrap: wrap; }
+.icon-option {
+  width: 36px; height: 36px; border: 2px solid #e0e0e0; border-radius: 8px;
+  background: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.icon-option.selected { border-color: #4361ee; background: #e8f0fe; }
+.icon-option:hover { border-color: #4361ee; }
+
+.sectors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.sector-card {
+  background: #fff; border: 1px solid #e8e8e8; border-top: 4px solid #4361ee;
+  border-radius: 12px; padding: 20px; display: flex; gap: 16px; align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+.sector-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+.sector-icon {
+  width: 48px; height: 48px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+}
+.sector-info { flex: 1; }
+.sector-name { font-size: 1.1rem; font-weight: 600; color: #1a1a2e; }
+.sector-code { font-size: 0.75rem; color: #888; font-family: monospace; margin-top: 2px; }
+.sector-desc { font-size: 0.85rem; color: #666; margin-top: 6px; }
+
+.sector-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+.badge.active { background: #e8f5e9; color: #2e7d32; }
+.badge.inactive { background: #fbe9e7; color: #c62828; }
+.badge.auto { background: #e8f0fe; color: #1967d2; }
+.badge.limit { background: #fff3e0; color: #e65100; }
+
+.sector-actions { flex-shrink: 0; }
+.btn-toggle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #e0e0e0; background: #fff; font-size: 1rem; cursor: pointer; }
+.btn-toggle:hover { border-color: #4361ee; }
+
+.loading { text-align: center; padding: 48px; color: #888; }

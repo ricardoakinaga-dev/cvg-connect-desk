@@ -1,0 +1,8 @@
+{
+  "name": "@cvg/kanban",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": { "dev": "echo 'kanban module'" },
+  "dependencies": { "@cvg/database": "workspace:*", "@cvg/shared": "workspace:*", "@cvg/auth": "workspace:*", "@cvg/chat": "workspace:*" }
+}

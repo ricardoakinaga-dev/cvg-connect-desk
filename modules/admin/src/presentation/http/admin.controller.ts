@@ -303,4 +303,115 @@ export async function registerAdminRoutes(app: FastifyInstance) {
       return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to delete team' });
     }
   });
+
+  // ============================================
+  // PERMISSÕES POR SETOR (User Sectors)
+  // ============================================
+
+  // Listar setores de um usuário
+  app.get('/admin/users/:id/sectors', {
+    preHandler: [authenticate, requirePermission('admin:read')],
+    schema: {
+      description: 'Listar setores com acesso de um usuário',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    try {
+      const { sectorPermissionService } = await import('@cvg/auth');
+      const userSecs = await sectorPermissionService.getUserSectors(id);
+      return userSecs;
+    } catch (error) {
+      request.log.error(error);
+      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
+    }
+  });
+
+  // Definir setores de um usuário (substitui todos)
+  app.put('/admin/users/:id/sectors', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      description: 'Definir permissões de setor de um usuário',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+      body: {
+        type: 'object',
+        required: ['sectors'],
+        properties: {
+          sectors: {
+            type: 'array',
+            items: {
+              type: 'object',
+              required: ['sectorId', 'accessLevel'],
+              properties: {
+                sectorId: { type: 'string' },
+                accessLevel: { type: 'string', enum: ['read', 'write', 'admin'] },
+              },
+            },
+          },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const { sectors: sectorPerms } = request.body as { sectors: { sectorId: string; accessLevel: 'read' | 'write' | 'admin' }[] };
+    try {
+      const { sectorPermissionService } = await import('@cvg/auth');
+      await sectorPermissionService.setUserSectors(id, sectorPerms);
+      return { success: true, count: sectorPerms.length };
+    } catch (error) {
+      request.log.error(error);
+      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
+    }
+  });
+
+  // Adicionar setor a um usuário
+  app.post('/admin/users/:id/sectors', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      description: 'Adicionar permissão de setor a um usuário',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+      body: {
+        type: 'object',
+        required: ['sectorId'],
+        properties: {
+          sectorId: { type: 'string' },
+          accessLevel: { type: 'string', enum: ['read', 'write', 'admin'], default: 'read' },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const { sectorId, accessLevel } = request.body as { sectorId: string; accessLevel?: 'read' | 'write' | 'admin' };
+    try {
+      const { sectorPermissionService } = await import('@cvg/auth');
+      await sectorPermissionService.addSectorPermission(id, sectorId, accessLevel || 'read');
+      return { success: true };
+    } catch (error) {
+      request.log.error(error);
+      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
+    }
+  });
+
+  // Remover setor de um usuário
+  app.delete('/admin/users/:id/sectors/:sectorId', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      description: 'Remover permissão de setor de um usuário',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (request, reply) => {
+    const { id, sectorId } = request.params as { id: string; sectorId: string };
+    try {
+      const { sectorPermissionService } = await import('@cvg/auth');
+      await sectorPermissionService.removeSectorPermission(id, sectorId);
+      return { success: true };
+    } catch (error) {
+      request.log.error(error);
+      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
+    }
+  });
 }

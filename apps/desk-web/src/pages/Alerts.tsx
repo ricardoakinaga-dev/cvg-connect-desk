@@ -1,206 +1,142 @@
-import { useState, useEffect, useCallback } from 'react';
-import { alertApi, Alert } from '../lib/api';
+import { useState, useEffect } from 'react';
+import { alertApi, type Alert } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import './Alerts.css';
 
 export function Alerts() {
+  const { user } = useAuthStore();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [filter, setFilter] = useState<string>('');
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-  
-  const user = useAuthStore((state) => state.user);
+  const [filterStatus, setFilterStatus] = useState('');
+  const [filterSeverity, setFilterSeverity] = useState('');
 
-  const fetchAlerts = useCallback(async () => {
+  const fetchAlerts = async () => {
     try {
-      const result = await alertApi.list(filter ? { status: filter } : undefined);
-      setAlerts(result);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load alerts');
-    } finally {
-      setLoading(false);
-    }
-  }, [filter]);
-
-  useEffect(() => {
-    fetchAlerts();
-    const interval = setInterval(fetchAlerts, 15000);
-    return () => clearInterval(interval);
-  }, [fetchAlerts]);
-
-  const handleAcknowledge = async (alertId: string) => {
-    if (!user) return;
-    setActionLoading(alertId);
-    try {
-      await alertApi.acknowledge(alertId, user.email);
-      await fetchAlerts();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to acknowledge alert');
-    } finally {
-      setActionLoading(null);
-    }
+      const filters: any = {};
+      if (filterStatus) filters.status = filterStatus;
+      if (filterSeverity) filters.severity = filterSeverity;
+      const data = await alertApi.list(filters);
+      setAlerts(data);
+    } catch (err) { console.error('Erro:', err); }
+    finally { setLoading(false); }
   };
 
-  const handleResolve = async (alertId: string) => {
-    if (!user) return;
-    setActionLoading(alertId);
-    try {
-      await alertApi.resolve(alertId, user.email);
-      await fetchAlerts();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to resolve alert');
-    } finally {
-      setActionLoading(null);
-    }
+  useEffect(() => { fetchAlerts(); }, [filterStatus, filterSeverity]);
+
+  const handleAck = async (id: string) => {
+    try { await alertApi.acknowledge(id, user?.id || ''); fetchAlerts(); }
+    catch (err) { console.error('Erro:', err); }
   };
 
-  const getSeverityBadge = (severity: string) => {
-    const badges: Record<string, string> = {
-      critical: 'badge-critical',
-      error: 'badge-error',
-      warning: 'badge-warning',
-      info: 'badge-info',
-    };
-    return badges[severity] || 'badge-info';
+  const handleResolve = async (id: string) => {
+    try { await alertApi.resolve(id, user?.id || ''); fetchAlerts(); }
+    catch (err) { console.error('Erro:', err); }
   };
 
-  const getStatusBadge = (status: string) => {
-    const badges: Record<string, string> = {
-      active: 'badge-active',
-      acknowledged: 'badge-acknowledged',
-      resolved: 'badge-resolved',
-    };
-    return badges[status] || 'badge-active';
+  const severityConfig: Record<string, { label: string; icon: string; color: string; bg: string; border: string }> = {
+    critical: { label: 'Crítico', icon: '🔴', color: '#dc2626', bg: '#fef2f2', border: '#fca5a5' },
+    error: { label: 'Erro', icon: '🟠', color: '#ea580c', bg: '#fff7ed', border: '#fdba74' },
+    warning: { label: 'Aviso', icon: '🟡', color: '#ca8a04', bg: '#fefce8', border: '#fde047' },
+    info: { label: 'Info', icon: '🔵', color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
   };
 
-  const getSeverityIcon = (severity: string) => {
-    const icons: Record<string, string> = {
-      critical: '🔴',
-      error: '🟠',
-      warning: '🟡',
-      info: '🔵',
-    };
-    return icons[severity] || '⚪';
+  const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+    active: { label: 'Ativo', color: '#dc2626', bg: '#fef2f2' },
+    acknowledged: { label: 'Reconhecido', color: '#ca8a04', bg: '#fefce8' },
+    resolved: { label: 'Resolvido', color: '#16a34a', bg: '#f0fdf4' },
   };
 
-  const activeCount = alerts.filter(a => a.status === 'active').length;
-  const acknowledgedCount = alerts.filter(a => a.status === 'acknowledged').length;
-  const criticalCount = alerts.filter(a => a.severity === 'critical' && a.status === 'active').length;
+  const timeAgo = (d: string) => {
+    const mins = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+    if (mins < 1) return 'agora';
+    if (mins < 60) return `${mins}min atrás`;
+    if (mins < 1440) return `${Math.floor(mins / 60)}h atrás`;
+    return `${Math.floor(mins / 1440)}d atrás`;
+  };
 
-  if (loading) return <div className="loading">Carregando alertas...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  const stats = {
+    total: alerts.length,
+    active: alerts.filter(a => a.status === 'active').length,
+    acknowledged: alerts.filter(a => a.status === 'acknowledged').length,
+    resolved: alerts.filter(a => a.status === 'resolved').length,
+    critical: alerts.filter(a => a.severity === 'critical' && a.status !== 'resolved').length,
+  };
 
   return (
-    <div className="page-container">
-      <header className="page-header">
-        <div>
-          <h1>Alertas</h1>
-          <p className="text-muted">Monitoramento de alertas do sistema</p>
-        </div>
-      </header>
-
-      <div className="alert-stats">
-        <div className="stat-card">
-          <div className="stat-value">{criticalCount}</div>
-          <div className="stat-label">Críticos</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{activeCount}</div>
-          <div className="stat-label">Ativos</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{acknowledgedCount}</div>
-          <div className="stat-label">Acknow.</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{alerts.length}</div>
-          <div className="stat-label">Total</div>
+    <div className="alerts-page">
+      <div className="page-hero">
+        <div className="hero-left">
+          <h2>🔔 Alertas</h2>
+          <p>Monitore alertas operacionais do sistema</p>
         </div>
       </div>
 
-      <div className="alert-filters">
-        <button
-          className={`filter-btn ${filter === '' ? 'active' : ''}`}
-          onClick={() => setFilter('')}
-        >
-          Todos
-        </button>
-        <button
-          className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
-          onClick={() => setFilter('active')}
-        >
-          Ativos
-        </button>
-        <button
-          className={`filter-btn ${filter === 'acknowledged' ? 'active' : ''}`}
-          onClick={() => setFilter('acknowledged')}
-        >
-          Acknow.
-        </button>
-        <button
-          className={`filter-btn ${filter === 'resolved' ? 'active' : ''}`}
-          onClick={() => setFilter('resolved')}
-        >
-          Resolvidos
-        </button>
+      <div className="stats-row">
+        <div className="stat-card"><span className="stat-num">{stats.total}</span><span className="stat-label">Total</span></div>
+        <div className="stat-card active"><span className="stat-num">{stats.active}</span><span className="stat-label">Ativos</span></div>
+        <div className="stat-card ack"><span className="stat-num">{stats.acknowledged}</span><span className="stat-label">Reconhecidos</span></div>
+        <div className="stat-card resolved"><span className="stat-num">{stats.resolved}</span><span className="stat-label">Resolvidos</span></div>
+        {stats.critical > 0 && <div className="stat-card critical"><span className="stat-num">{stats.critical}</span><span className="stat-label">🔴 Críticos</span></div>}
       </div>
 
-      {alerts.length === 0 ? (
-        <div className="empty-state">Nenhum alerta encontrado</div>
+      <div className="filter-bar">
+        <div className="filter-group">
+          <span className="filter-label">Status:</span>
+          {[{ k: '', l: 'Todos' }, { k: 'active', l: 'Ativos' }, { k: 'acknowledged', l: 'Reconhecidos' }, { k: 'resolved', l: 'Resolvidos' }].map(f => (
+            <button key={f.k} className={`chip ${filterStatus === f.k ? 'active' : ''}`} onClick={() => setFilterStatus(f.k)}>{f.l}</button>
+          ))}
+        </div>
+        <div className="filter-group">
+          <span className="filter-label">Severidade:</span>
+          {[{ k: '', l: 'Todas' }, { k: 'critical', l: '🔴' }, { k: 'error', l: '🟠' }, { k: 'warning', l: '🟡' }, { k: 'info', l: '🔵' }].map(f => (
+            <button key={f.k} className={`chip ${filterSeverity === f.k ? 'active' : ''}`} onClick={() => setFilterSeverity(f.k)}>{f.l}</button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="loading-state"><div className="spinner" /> Carregando alertas...</div>
+      ) : alerts.length === 0 ? (
+        <div className="empty-state"><span className="empty-icon">🔔</span><p>Nenhum alerta encontrado</p></div>
       ) : (
         <div className="alert-list">
-          {alerts.map((alert) => (
-            <div
-              key={alert.id}
-              className={`alert-card ${alert.severity} ${alert.status}`}
-            >
-              <div className="alert-header">
-                <div className="alert-severity-icon">
-                  {getSeverityIcon(alert.severity)}
-                </div>
-                <div className="alert-badges">
-                  <span className={`badge ${getSeverityBadge(alert.severity)}`}>
-                    {alert.severity}
-                  </span>
-                  <span className={`badge ${getStatusBadge(alert.status)}`}>
-                    {alert.status}
-                  </span>
-                </div>
-              </div>
-              
-              <h3 className="alert-title">{alert.title}</h3>
-              {alert.message && <p className="alert-message">{alert.message}</p>}
-              
-              <div className="alert-meta">
-                <span className="alert-type">Tipo: {alert.type}</span>
-                <span className="alert-time">
-                  {new Date(alert.createdAt).toLocaleString('pt-BR')}
-                </span>
-              </div>
+          {alerts.map(alert => {
+            const sev = severityConfig[alert.severity] || severityConfig.info;
+            const sta = statusConfig[alert.status] || statusConfig.active;
 
-              <div className="alert-actions">
+            return (
+              <div key={alert.id} className={`alert-card ${alert.status === 'resolved' ? 'resolved' : ''}`} style={{ borderLeftColor: sev.border }}>
+                <div className="alert-severity-bar" style={{ background: sev.bg }}>
+                  <span className="sev-badge" style={{ color: sev.color }}>{sev.icon} {sev.label}</span>
+                  <span className="sta-badge" style={{ background: sta.bg, color: sta.color }}>{sta.label}</span>
+                </div>
+
+                <div className="alert-body">
+                  <h3 className="alert-title">{alert.title}</h3>
+                  {alert.message && <p className="alert-msg">{alert.message}</p>}
+
+                  <div className="alert-meta">
+                    <span className="alert-type">{alert.type}</span>
+                    <span className="alert-time">{timeAgo(alert.createdAt)}</span>
+                    {alert.acknowledgedAt && <span className="alert-ack">👁️ {timeAgo(alert.acknowledgedAt)}</span>}
+                    {alert.resolvedAt && <span className="alert-resolved">✅ {timeAgo(alert.resolvedAt)}</span>}
+                  </div>
+                </div>
+
                 {alert.status === 'active' && (
-                  <button
-                    className="btn btn-sm btn-warning"
-                    onClick={() => handleAcknowledge(alert.id)}
-                    disabled={actionLoading === alert.id}
-                  >
-                    {actionLoading === alert.id ? 'Aguarde...' : 'Acknowledgear'}
-                  </button>
+                  <div className="alert-actions">
+                    <button className="btn-ack" onClick={() => handleAck(alert.id)}>👁️ Reconhecer</button>
+                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>✅ Resolver</button>
+                  </div>
                 )}
-                {alert.status !== 'resolved' && (
-                  <button
-                    className="btn btn-sm btn-success"
-                    onClick={() => handleResolve(alert.id)}
-                    disabled={actionLoading === alert.id}
-                  >
-                    {actionLoading === alert.id ? 'Aguarde...' : 'Resolver'}
-                  </button>
+                {alert.status === 'acknowledged' && (
+                  <div className="alert-actions">
+                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>✅ Resolver</button>
+                  </div>
                 )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

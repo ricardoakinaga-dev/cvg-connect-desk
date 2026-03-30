@@ -11,14 +11,14 @@ import { Notes } from './pages/Notes';
 import { Admin } from './pages/Admin';
 import { Audit } from './pages/Audit';
 import { Settings } from './pages/Settings';
+import { Labels } from './pages/Labels';
+import { Sectors } from './pages/Sectors';
+import { ContactGroups } from './pages/ContactGroups';
+import { Kanban } from './pages/Kanban';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
 
@@ -28,20 +28,17 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
+          <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/inbox" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
             <Route path="inbox" element={<Inbox />} />
+            <Route path="kanban" element={<Kanban />} />
             <Route path="tasks" element={<Tasks />} />
-            <Route path="alerts" element={<Alerts />} />
             <Route path="notes" element={<Notes />} />
+            <Route path="alerts" element={<Alerts />} />
+            <Route path="sectors" element={<Sectors />} />
+            <Route path="labels" element={<Labels />} />
+            <Route path="contact-groups" element={<ContactGroups />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="admin" element={<Admin />} />
             <Route path="audit" element={<Audit />} />
             <Route path="settings" element={<Settings />} />

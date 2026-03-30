@@ -1,10 +1,13 @@
-import { pgTable, uuid, text, timestamp, boolean, pgEnum, index, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, timestamp, boolean, pgEnum, index, uniqueIndex, integer, varchar } from 'drizzle-orm/pg-core';
 
 export const conversationStatusEnum = pgEnum('conversation_status', ['open', 'pending', 'closed', 'archived']);
+export const conversationStatusV2Enum = pgEnum('conversation_status_v2', ['novo', 'em_atendimento', 'pendente', 'em_espera', 'finalizado', 'arquivado']);
 export const conversationHandlerEnum = pgEnum('conversation_handler', ['bot', 'human']);
 export const messageDirectionEnum = pgEnum('message_direction', ['inbound', 'outbound']);
 export const messageStatusEnum = pgEnum('message_status', ['pending', 'sent', 'delivered', 'failed']);
 export const interactionTypeEnum = pgEnum('interaction_type', ['clinical', 'commercial', 'urgent']);
+export const contactGroupTypeEnum = pgEnum('contact_group_type', ['internal', 'external', 'mixed', 'sector', 'custom']);
+export const transferStatusEnum = pgEnum('transfer_status', ['pending', 'accepted', 'rejected']);
 
 export const contacts = pgTable('contacts', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -44,10 +47,13 @@ export const conversations = pgTable('conversations', {
   id: uuid('id').defaultRandom().primaryKey(),
   contactId: uuid('contact_id').references(() => contacts.id),
   status: conversationStatusEnum('status').default('open').notNull(),
+  statusV2: conversationStatusV2Enum('status_v2').default('novo').notNull(),
   currentHandler: conversationHandlerEnum('current_handler').default('bot').notNull(),
   interactionType: interactionTypeEnum('interaction_type'),
   queueId: uuid('queue_id').references(() => queues.id),
   teamId: uuid('team_id').references(() => teams.id),
+  sectorId: uuid('sector_id').references(() => sectors.id),
+  assignedUserId: uuid('assigned_user_id').references(() => users.id),
   isActive: boolean('is_active').default(true).notNull(),
   externalChannelId: text('external_channel_id'),
   externalConversationId: text('external_conversation_id'),
@@ -58,7 +64,10 @@ export const conversations = pgTable('conversations', {
 }, (t) => ({
   contactIdx: index('idx_conversations_contact').on(t.contactId),
   statusIdx: index('idx_conversations_status').on(t.status),
+  statusV2Idx: index('idx_conversations_status_v2').on(t.statusV2),
   currentHandlerIdx: index('idx_conversations_current_handler').on(t.currentHandler),
+  sectorIdx: index('idx_conversations_sector').on(t.sectorId),
+  assignedIdx: index('idx_conversations_assigned').on(t.assignedUserId),
   externalIdx: uniqueIndex('idx_conversations_external').on(t.externalConversationId),
 }));
 
@@ -285,4 +294,151 @@ export const auditLogs = pgTable('audit_logs', {
   entityIdx: index('idx_audit_logs_entity').on(t.entityType, t.entityId),
   actionIdx: index('idx_audit_logs_action').on(t.action),
   createdAtIdx: index('idx_audit_logs_created').on(t.createdAt),
+}));
+
+// ============================================
+// FASE 9 — Enterprise Premium
+// ============================================
+
+// --- Labels (Tags Globais) ---
+export const labels = pgTable('labels', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  color: varchar('color', { length: 7 }).notNull().default('#6b7280'),
+  description: text('description'),
+  category: text('category'),
+  isSystem: boolean('is_system').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  nameIdx: uniqueIndex('idx_labels_name').on(t.name),
+  categoryIdx: index('idx_labels_category').on(t.category),
+}));
+
+export const conversationLabels = pgTable('conversation_labels', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  conversationId: uuid('conversation_id').references(() => conversations.id, { onDelete: 'cascade' }).notNull(),
+  labelId: uuid('label_id').references(() => labels.id, { onDelete: 'cascade' }).notNull(),
+  createdBy: uuid('created_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  convLabelIdx: uniqueIndex('idx_conv_labels_unique').on(t.conversationId, t.labelId),
+  conversationIdx: index('idx_conv_labels_conversation').on(t.conversationId),
+  labelIdx: index('idx_conv_labels_label').on(t.labelId),
+}));
+
+export const contactLabels = pgTable('contact_labels', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  contactId: uuid('contact_id').references(() => contacts.id, { onDelete: 'cascade' }).notNull(),
+  labelId: uuid('label_id').references(() => labels.id, { onDelete: 'cascade' }).notNull(),
+  createdBy: uuid('created_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  contactLabelIdx: uniqueIndex('idx_contact_labels_unique').on(t.contactId, t.labelId),
+  contactIdx: index('idx_contact_labels_contact').on(t.contactId),
+  labelIdx: index('idx_contact_labels_label').on(t.labelId),
+}));
+
+// --- Setores (Sectors — evolução de queues) ---
+export const sectors = pgTable('sectors', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 100 }).notNull(),
+  code: varchar('code', { length: 50 }).notNull(),
+  description: text('description'),
+  color: varchar('color', { length: 7 }).notNull().default('#4361ee'),
+  icon: varchar('icon', { length: 10 }).notNull().default('📋'),
+  isActive: boolean('is_active').default(true).notNull(),
+  autoAssign: boolean('auto_assign').default(false).notNull(),
+  maxConcurrent: integer('max_concurrent').default(0).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  codeIdx: uniqueIndex('idx_sectors_code').on(t.code),
+}));
+
+// --- Vínculo Contato ↔ Setor ---
+export const contactSectors = pgTable('contact_sectors', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  contactId: uuid('contact_id').references(() => contacts.id).notNull(),
+  sectorId: uuid('sector_id').references(() => sectors.id).notNull(),
+  sourceId: text('source_id'),
+  status: varchar('status', { length: 20 }).default('active').notNull(),
+  assignedUserId: uuid('assigned_user_id').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  contactSectorIdx: uniqueIndex('idx_contact_sectors_unique').on(t.contactId, t.sectorId),
+  contactIdx: index('idx_contact_sectors_contact').on(t.contactId),
+  sectorIdx: index('idx_contact_sectors_sector').on(t.sectorId),
+}));
+
+// --- Grupos de Contatos ---
+export const contactGroups = pgTable('contact_groups', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 150 }).notNull(),
+  description: text('description'),
+  groupType: contactGroupTypeEnum('group_type').notNull().default('custom'),
+  sectorId: uuid('sector_id').references(() => sectors.id),
+  color: varchar('color', { length: 7 }).default('#6b7280'),
+  icon: varchar('icon', { length: 10 }).default('👥'),
+  isSystem: boolean('is_system').default(false).notNull(),
+  createdBy: uuid('created_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  typeIdx: index('idx_contact_groups_type').on(t.groupType),
+  sectorIdx: index('idx_contact_groups_sector').on(t.sectorId),
+}));
+
+export const contactGroupMembers = pgTable('contact_group_members', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  groupId: uuid('group_id').references(() => contactGroups.id, { onDelete: 'cascade' }).notNull(),
+  contactId: uuid('contact_id').references(() => contacts.id, { onDelete: 'cascade' }).notNull(),
+  addedBy: uuid('added_by').references(() => users.id),
+  addedAt: timestamp('added_at').defaultNow().notNull(),
+}, (t) => ({
+  groupContactIdx: uniqueIndex('idx_group_members_unique').on(t.groupId, t.contactId),
+  groupIdx: index('idx_group_members_group').on(t.groupId),
+  contactIdx: index('idx_group_members_contact').on(t.contactId),
+}));
+
+// --- Transferências entre Setores ---
+export const contactTransfers = pgTable('contact_transfers', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  contactId: uuid('contact_id').references(() => contacts.id).notNull(),
+  conversationId: uuid('conversation_id').references(() => conversations.id),
+  fromSectorId: uuid('from_sector_id').references(() => sectors.id),
+  toSectorId: uuid('to_sector_id').references(() => sectors.id).notNull(),
+  fromUserId: uuid('from_user_id').references(() => users.id),
+  toUserId: uuid('to_user_id').references(() => users.id),
+  reason: text('reason'),
+  status: transferStatusEnum('status').default('pending').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  resolvedAt: timestamp('resolved_at'),
+}, (t) => ({
+  contactIdx: index('idx_transfers_contact').on(t.contactId),
+  conversationIdx: index('idx_transfers_conversation').on(t.conversationId),
+  fromSectorIdx: index('idx_transfers_from_sector').on(t.fromSectorId),
+  toSectorIdx: index('idx_transfers_to_sector').on(t.toSectorId),
+  statusIdx: index('idx_transfers_status').on(t.status),
+}));
+
+// --- Coluna sector_id e status_v2 adicionados à conversations ---
+// (adicionado via migration separada para não quebrar dados existentes)
+
+// ============================================
+// FASE 9.2 — Permissões por Setor
+// ============================================
+
+export const userSectors = pgTable('user_sectors', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  sectorId: uuid('sector_id').references(() => sectors.id, { onDelete: 'cascade' }).notNull(),
+  accessLevel: varchar('access_level', { length: 20 }).notNull().default('read'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  userSectorIdx: uniqueIndex('idx_user_sectors_unique').on(t.userId, t.sectorId),
+  userIdx: index('idx_user_sectors_user').on(t.userId),
+  sectorIdx: index('idx_user_sectors_sector').on(t.sectorId),
 }));

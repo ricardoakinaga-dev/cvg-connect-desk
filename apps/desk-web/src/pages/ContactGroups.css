@@ -1,0 +1,50 @@
+.contact-groups-page { padding: 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h2 { margin: 0; font-size: 1.5rem; color: #1a1a2e; }
+.btn-primary { background: #4361ee; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+
+.create-form {
+  background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 12px;
+  padding: 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+}
+.create-form input, .create-form select { flex: 1; min-width: 150px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+.color-input { flex: 0 !important; min-width: 50px !important; height: 40px; cursor: pointer; }
+.icon-picker { display: flex; gap: 4px; }
+.icon-opt { width: 34px; height: 34px; border: 2px solid #e0e0e0; border-radius: 8px; background: #fff; font-size: 1rem; cursor: pointer; }
+.icon-opt.sel { border-color: #4361ee; background: #e8f0fe; }
+
+.groups-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.groups-list { display: flex; flex-direction: column; gap: 8px; }
+
+.group-card {
+  background: #fff; border: 1px solid #e8e8e8; border-left: 4px solid #6b7280;
+  border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: all 0.2s;
+}
+.group-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.group-card.selected { background: #e8f0fe; border-color: #4361ee; }
+
+.group-icon { font-size: 1.5rem; }
+.group-info { flex: 1; }
+.group-name { font-weight: 600; font-size: 0.95rem; color: #1a1a2e; }
+.group-meta { display: flex; gap: 10px; margin-top: 4px; }
+.group-type { font-size: 0.75rem; background: #f0f0f0; padding: 2px 8px; border-radius: 10px; color: #666; }
+.group-count { font-size: 0.75rem; color: #888; }
+
+.btn-delete-sm { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.btn-delete-sm:hover { background: #fbe9e7; }
+
+.group-detail {
+  background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 20px;
+}
+.group-detail h3 { margin: 0 0 16px; font-size: 1rem; color: #1a1a2e; }
+
+.members-list { display: flex; flex-direction: column; gap: 8px; }
+.member-card {
+  display: flex; justify-content: space-between; padding: 10px 14px;
+  background: #f8f9fa; border-radius: 8px;
+}
+.member-name { font-weight: 500; font-size: 0.9rem; }
+.member-phone { color: #888; font-size: 0.8rem; }
+
+.loading, .empty { text-align: center; padding: 48px; color: #888; }

@@ -273,3 +273,69 @@ export const dashboardApi = {
     return api.get<{ count: number }>('/metrics/alerts/active');
   },
 };
+
+// ============================================
+// FASE 9 — Enterprise Premium APIs
+// ============================================
+
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+  description: string | null;
+  category: string | null;
+  isSystem: boolean;
+}
+
+export interface Sector {
+  id: string;
+  name: string;
+  code: string;
+  description: string | null;
+  color: string;
+  icon: string;
+  isActive: boolean;
+  autoAssign: boolean;
+  maxConcurrent: number;
+}
+
+export const labelApi = {
+  list: () => api.get<Label[]>('/labels'),
+  create: (data: { name: string; color?: string; description?: string; category?: string }) => api.post<Label>('/labels', data),
+  update: (id: string, data: Partial<Label>) => api.put<Label>(`/labels/${id}`, data),
+  delete: (id: string) => api.delete(`/labels/${id}`),
+  getConversationLabels: (conversationId: string) => api.get<Label[]>(`/conversations/${conversationId}/labels`),
+  addToConversation: (conversationId: string, labelId: string) => api.post(`/conversations/${conversationId}/labels`, { labelId }),
+  removeFromConversation: (conversationId: string, labelId: string) => api.delete(`/conversations/${conversationId}/labels/${labelId}`),
+  getContactLabels: (contactId: string) => api.get<Label[]>(`/contacts/${contactId}/labels`),
+  addToContact: (contactId: string, labelId: string) => api.post(`/contacts/${contactId}/labels`, { labelId }),
+};
+
+export const sectorApi = {
+  list: (all?: boolean) => api.get<Sector[]>(`/sectors${all ? '?all=true' : ''}`),
+  create: (data: { name: string; code: string; description?: string; color?: string; icon?: string }) => api.post<Sector>('/sectors', data),
+  update: (id: string, data: Partial<Sector>) => api.put<Sector>(`/sectors/${id}`, data),
+  delete: (id: string) => api.delete(`/sectors/${id}`),
+  getConversations: (id: string, status?: string) => api.get(`/sectors/${id}/conversations${status ? `?status=${status}` : ''}`),
+  getStats: (id: string) => api.get(`/sectors/${id}/stats`),
+  getAllStats: () => api.get('/sectors/stats/overview'),
+};
+
+export interface ContactTransfer {
+  id: string;
+  contactId: string;
+  conversationId: string | null;
+  fromSectorId: string | null;
+  toSectorId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+}
+
+export const transferApi = {
+  create: (data: { contactId: string; conversationId?: string; toSectorId: string; fromSectorId?: string; reason?: string; autoAccept?: boolean }) =>
+    api.post<ContactTransfer>('/transfers', data),
+  list: () => api.get<ContactTransfer[]>('/transfers'),
+  getContactTransfers: (contactId: string) => api.get<ContactTransfer[]>(`/contacts/${contactId}/transfers`),
+  accept: (id: string) => api.post(`/transfers/${id}/accept`),
+  reject: (id: string) => api.post(`/transfers/${id}/reject`),
+};

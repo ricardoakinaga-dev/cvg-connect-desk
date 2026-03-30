@@ -1,356 +1,219 @@
 import { useState, useEffect, useCallback } from 'react';
-import { conversationApi, taskApi, alertApi, Conversation, Message, Task, Alert } from '../lib/api';
-import { realtimeClient } from '../lib/realtime';
+import { conversationApi, type Conversation, type Message } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import './Inbox.css';
 
 export function Inbox() {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [conversationTasks, setConversationTasks] = useState<Task[]>([]);
-  const [conversationAlerts, setConversationAlerts] = useState<Alert[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [messagesLoading, setMessagesLoading] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
-  const [filter, setFilter] = useState('');
-  const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchConversations = useCallback(async () => {
     try {
-      const result = await conversationApi.list();
-      setConversations(result.conversations);
+      const data = await conversationApi.list(filterStatus ? { status: filterStatus } : undefined);
+      setConversations(data.conversations || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load conversations');
-    }
-  }, []);
-
-  const fetchMessages = useCallback(async (conversationId: string) => {
-    setMessagesLoading(true);
-    try {
-      const result = await conversationApi.getMessages(conversationId);
-      setMessages(result.messages);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load messages');
+      console.error('Erro:', err);
     } finally {
-      setMessagesLoading(false);
-    }
-  }, []);
-
-  const fetchConversationContext = useCallback(async (conversationId: string) => {
-    try {
-      const [tasksResult, alertsResult] = await Promise.all([
-        taskApi.list({}),
-        alertApi.list({}),
-      ]);
-      const filteredTasks = tasksResult.filter(t => t.conversationId === conversationId);
-      const filteredAlerts = alertsResult.filter(a => a.conversationId === conversationId);
-      setConversationTasks(filteredTasks);
-      setConversationAlerts(filteredAlerts);
-    } catch (err) {
-      console.error('Failed to load context:', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    const init = async () => {
-      setLoading(true);
-      await fetchConversations();
       setLoading(false);
-    };
-    init();
-    
-    const interval = setInterval(fetchConversations, 30000);
-    return () => clearInterval(interval);
-  }, [fetchConversations]);
-
-  useEffect(() => {
-    if (selectedConversation) {
-      fetchMessages(selectedConversation.id);
-      fetchConversationContext(selectedConversation.id);
-      
-      const interval = setInterval(() => {
-        fetchMessages(selectedConversation.id);
-      }, 10000);
-      return () => clearInterval(interval);
     }
-  }, [selectedConversation, fetchMessages, fetchConversationContext]);
+  }, [filterStatus]);
 
-  // Realtime integration
-  useEffect(() => {
-    if (!user || !token) return;
-
-    realtimeClient.connect(user.id, token);
-
-    const handleMessagePersisted = (event: any) => {
-      const message = event.payload?.message;
-      if (!message) return;
-
-      if (selectedConversation && message.conversationId === selectedConversation.id) {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === message.id)) return prev;
-          return [...prev, message as Message];
-        });
-      }
-
-      setConversations((prev) => {
-        return prev.map((conv) => {
-          if (conv.id === message.conversationId) {
-            return { ...conv, lastMessage: message as Message };
-          }
-          return conv;
-        });
-      });
-    };
-
-    const handleConversationStatusChanged = (event: any) => {
-      const payload = event.payload;
-      if (!payload) return;
-
-      setConversations((prev) =>
-        prev.map((conv) => {
-          if (conv.id === payload.conversationId) {
-            return { ...conv, status: payload.status, currentHandler: payload.currentHandler };
-          }
-          return conv;
-        })
-      );
-
-      if (selectedConversation && payload.conversationId === selectedConversation.id) {
-        setSelectedConversation((prev) =>
-          prev ? { ...prev, status: payload.status, currentHandler: payload.currentHandler } : prev
-        );
-      }
-    };
-
-    realtimeClient.subscribe('message.persisted', handleMessagePersisted);
-    realtimeClient.subscribe('conversation.status.changed', handleConversationStatusChanged);
-
-    if (selectedConversation) {
-      realtimeClient.subscribeToChannel(`conversation:${selectedConversation.id}`);
-    }
-
-    return () => {
-      realtimeClient.unsubscribe('message.persisted', handleMessagePersisted);
-      realtimeClient.unsubscribe('conversation.status.changed', handleConversationStatusChanged);
-      if (selectedConversation) {
-        realtimeClient.unsubscribeFromChannel(`conversation:${selectedConversation.id}`);
-      }
-    };
-  }, [user, token, selectedConversation]);
-
-  const handleSendMessage = async () => {
-    if (!selectedConversation || !newMessage.trim()) return;
-    
-    setSending(true);
+  const fetchMessages = useCallback(async (id: string) => {
     try {
-      await conversationApi.sendMessage({
-        conversationId: selectedConversation.id,
-        content: newMessage,
-        recipient: selectedConversation.lastMessage?.sender || '',
-      });
-      setNewMessage('');
-      await fetchMessages(selectedConversation.id);
+      const data = await conversationApi.getMessages(id);
+      setMessages(data.messages || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send message');
-    } finally {
-      setSending(false);
+      console.error('Erro:', err);
+    }
+  }, []);
+
+  useEffect(() => { fetchConversations(); const i = setInterval(fetchConversations, 15000); return () => clearInterval(i); }, [fetchConversations]);
+  useEffect(() => { if (selectedId) fetchMessages(selectedId); }, [selectedId, fetchMessages]);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim() || !selectedId) return;
+    const conv = conversations.find(c => c.id === selectedId);
+    try {
+      await conversationApi.sendMessage({ conversationId: selectedId, content: newMessage, recipient: conv?.contactId || '' });
+      setNewMessage('');
+      fetchMessages(selectedId);
+    } catch (err) {
+      console.error('Erro:', err);
     }
   };
 
-  const filteredConversations = conversations.filter(c => {
-    if (!filter) return true;
-    return c.status.toLowerCase().includes(filter.toLowerCase());
-  });
-
-  const getStatusBadge = (status: string) => {
-    const badges: Record<string, string> = {
-      open: 'badge-success',
-      pending: 'badge-warning',
-      closed: 'badge-info',
-      archived: 'badge-secondary',
+  const statusBadge = (status: string) => {
+    const map: Record<string, { label: string; class: string }> = {
+      open: { label: 'Aberto', class: 'open' },
+      pending: { label: 'Pendente', class: 'pending' },
+      closed: { label: 'Fechado', class: 'closed' },
+      archived: { label: 'Arquivado', class: 'archived' },
     };
-    return badges[status] || 'badge-info';
+    return map[status] || { label: status, class: 'default' };
   };
 
-  const getPriorityClass = (priority: string) => {
-    const classes: Record<string, string> = {
-      urgent: 'priority-urgent',
-      high: 'priority-high',
-      medium: 'priority-medium',
-      low: 'priority-low',
-    };
-    return classes[priority] || '';
+  const timeAgo = (d: string) => {
+    const mins = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+    if (mins < 1) return 'agora';
+    if (mins < 60) return `${mins}min`;
+    if (mins < 1440) return `${Math.floor(mins / 60)}h`;
+    return `${Math.floor(mins / 1440)}d`;
   };
 
-  const getSeverityClass = (severity: string) => {
-    const classes: Record<string, string> = {
-      critical: 'severity-critical',
-      error: 'severity-error',
-      warning: 'severity-warning',
-      info: 'severity-info',
-    };
-    return classes[severity] || '';
-  };
+  const filtered = conversations.filter(c =>
+    !searchTerm || c.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  if (loading) return <div className="loading">Carregando conversas...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  const selected = conversations.find(c => c.id === selectedId);
+  const badge = selected ? statusBadge(selected.status) : null;
 
   return (
-    <div className="page-container">
-      <div className="inbox-container">
-        <div className="inbox-sidebar">
-          <div className="inbox-header">
-            <h2>Conversas</h2>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              className="input inbox-search"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-          </div>
-          <div className="conversation-list">
-            {filteredConversations.length === 0 ? (
-              <div className="empty-state">Nenhuma conversa encontrada</div>
-            ) : (
-              filteredConversations.map((conv) => (
-                <div
-                  key={conv.id}
-                  className={`conversation-item ${selectedConversation?.id === conv.id ? 'active' : ''}`}
-                  onClick={() => setSelectedConversation(conv)}
-                >
-                  <div className="conversation-header">
-                    <span className="conversation-id">#{conv.id.slice(0, 8)}</span>
-                    <span className={`badge ${getStatusBadge(conv.status)}`}>{conv.status}</span>
-                  </div>
-                  <div className="conversation-preview">
-                    {conv.lastMessage?.content || 'Sem mensagens'}
-                  </div>
-                  <div className="conversation-time">
-                    {conv.lastMessage?.sentAt ? new Date(conv.lastMessage.sentAt).toLocaleString('pt-BR') : ''}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+    <div className="inbox-page">
+      {/* COLUNA 1 — Lista */}
+      <div className="inbox-col-list">
+        <div className="inbox-topbar">
+          <h2>📥 Inbox</h2>
+          <span className="conv-count">{filtered.length}</span>
         </div>
 
-        <div className="inbox-main">
-          {!selectedConversation ? (
-            <div className="empty-state">Selecione uma conversa</div>
-          ) : (
-            <>
-              <div className="conversation-header">
-                <h3>Conversa #{selectedConversation.id.slice(0, 8)}</h3>
-                <span className={`badge ${getStatusBadge(selectedConversation.status)}`}>{selectedConversation.status}</span>
-              </div>
-              
-              <div className="messages-container">
-                {messagesLoading ? (
-                  <div className="loading">Carregando mensagens...</div>
-                ) : messages.length === 0 ? (
-                  <div className="empty-state">Nenhuma mensagem nesta conversa</div>
-                ) : (
-                  messages.map((msg) => (
-                    <div key={msg.id} className={`message ${msg.direction}`}>
-                      <div className="message-content">{msg.content}</div>
-                      <div className="message-meta">
-                        <span className="message-sender">{msg.sender || msg.senderType}</span>
-                        <span className="message-time">
-                          {msg.sentAt ? new Date(msg.sentAt).toLocaleString('pt-BR') : ''}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+        <div className="inbox-search">
+          <span className="search-icon">🔍</span>
+          <input placeholder="Buscar conversas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+        </div>
 
-              <div className="message-composer">
-                <textarea
-                  className="input"
-                  placeholder="Digite sua mensagem..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                />
-                <button
-                  className="btn btn-primary"
-                  onClick={handleSendMessage}
-                  disabled={sending || !newMessage.trim()}
-                >
-                  {sending ? 'Enviando...' : 'Enviar'}
-                </button>
-              </div>
-            </>
+        <div className="inbox-filters">
+          {[
+            { key: '', label: 'Todas' },
+            { key: 'open', label: 'Abertas' },
+            { key: 'pending', label: 'Pendentes' },
+            { key: 'closed', label: 'Fechadas' },
+          ].map(f => (
+            <button key={f.key} className={`filter-chip ${filterStatus === f.key ? 'active' : ''}`} onClick={() => setFilterStatus(f.key)}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="conv-list">
+          {loading ? (
+            <div className="loading-state"><div className="spinner" /> Carregando...</div>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state"><span className="empty-icon">📭</span><p>Nenhuma conversa encontrada</p></div>
+          ) : (
+            filtered.map(conv => {
+              const b = statusBadge(conv.status);
+              return (
+                <div key={conv.id} className={`conv-item ${selectedId === conv.id ? 'selected' : ''}`} onClick={() => setSelectedId(conv.id)}>
+                  <div className="conv-avatar">{(conv.contactId || '?')[0].toUpperCase()}</div>
+                  <div className="conv-body">
+                    <div className="conv-top">
+                      <span className="conv-name">{conv.contactId?.slice(0, 12) || 'Contato'}</span>
+                      <span className="conv-time">{timeAgo(conv.createdAt)}</span>
+                    </div>
+                    <div className="conv-bottom">
+                      <span className={`status-dot ${b.class}`} />
+                      <span className="conv-preview">{conv.externalConversationId || 'Conversa'}</span>
+                      <span className={`status-pill ${b.class}`}>{b.label}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
+      </div>
 
-        <div className="inbox-context-panel">
-          <div className="context-section">
-            <h4>Tarefas</h4>
-            {conversationTasks.length === 0 ? (
-              <div className="empty-state-small">Nenhuma tarefa</div>
-            ) : (
-              conversationTasks.map((task) => (
-                <div key={task.id} className={`context-item ${getPriorityClass(task.priority)}`}>
-                  <div className="context-item-title">{task.title}</div>
-                  <div className="context-item-meta">
-                    <span className={`badge ${getStatusBadge(task.status)}`}>{task.status}</span>
-                    <span className={`badge ${getPriorityClass(task.priority)}`}>{task.priority}</span>
+      {/* COLUNA 2 — Chat */}
+      <div className="inbox-col-chat">
+        {selectedId && selected ? (
+          <>
+            <div className="chat-header">
+              <div className="chat-contact">
+                <div className="chat-avatar">{(selected.contactId || '?')[0].toUpperCase()}</div>
+                <div>
+                  <div className="chat-name">{selected.contactId?.slice(0, 16) || 'Contato'}</div>
+                  <div className="chat-meta">
+                    {badge && <span className={`status-pill ${badge.class}`}>{badge.label}</span>}
+                    <span className="chat-id">#{selected.id.slice(0, 8)}</span>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="context-section">
-            <h4>Alertas</h4>
-            {conversationAlerts.length === 0 ? (
-              <div className="empty-state-small">Nenhum alerta</div>
-            ) : (
-              conversationAlerts.map((alert) => (
-                <div key={alert.id} className={`context-item ${getSeverityClass(alert.severity)}`}>
-                  <div className="context-item-title">{alert.title}</div>
-                  <div className="context-item-meta">
-                    <span className={`badge ${getSeverityClass(alert.severity)}`}>{alert.severity}</span>
-                    <span className={`badge ${getStatusBadge(alert.status)}`}>{alert.status}</span>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="context-section">
-            <h4>Informações</h4>
-            {selectedConversation && (
-              <div className="context-info">
-                <div className="info-row">
-                  <span className="info-label">ID:</span>
-                  <span className="info-value">{selectedConversation.id}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Status:</span>
-                  <span className="info-value">{selectedConversation.status}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Criada em:</span>
-                  <span className="info-value">
-                    {new Date(selectedConversation.createdAt).toLocaleString('pt-BR')}
-                  </span>
                 </div>
               </div>
-            )}
+              <div className="chat-actions">
+                <button className="btn-icon" title="Transferir">🔄</button>
+                <button className="btn-icon" title="Finalizar">✅</button>
+                <button className="btn-icon" title="Info">ℹ️</button>
+              </div>
+            </div>
+
+            <div className="chat-messages">
+              {messages.length === 0 ? (
+                <div className="empty-state"><span className="empty-icon">💬</span><p>Nenhuma mensagem ainda</p></div>
+              ) : (
+                messages.map(msg => (
+                  <div key={msg.id} className={`msg ${msg.direction}`}>
+                    <div className="msg-bubble">
+                      <div className="msg-content">{msg.content}</div>
+                      <div className="msg-time">{new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <form className="chat-composer" onSubmit={handleSend}>
+              <button type="button" className="btn-attach" title="Anexo">📎</button>
+              <input placeholder="Digite sua mensagem..." value={newMessage} onChange={e => setNewMessage(e.target.value)} />
+              <button type="submit" className="btn-send" disabled={!newMessage.trim()}>
+                <span>Enviar</span> ➤
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="empty-state chat-empty">
+            <span className="empty-icon-big">💬</span>
+            <h3>Selecione uma conversa</h3>
+            <p>Escolha uma conversa na lista para começar o atendimento</p>
           </div>
-        </div>
+        )}
+      </div>
+
+      {/* COLUNA 3 — Painel */}
+      <div className="inbox-col-panel">
+        {selected ? (
+          <>
+            <div className="panel-section">
+              <h4>📋 Informações</h4>
+              <div className="info-row"><span className="info-label">ID</span><span className="info-value mono">{selected.id.slice(0, 12)}...</span></div>
+              <div className="info-row"><span className="info-label">Canal</span><span className="info-value">WhatsApp</span></div>
+              <div className="info-row"><span className="info-label">Criado</span><span className="info-value">{new Date(selected.createdAt).toLocaleDateString('pt-BR')}</span></div>
+              {selected.closedAt && <div className="info-row"><span className="info-label">Fechado</span><span className="info-value">{new Date(selected.closedAt).toLocaleDateString('pt-BR')}</span></div>}
+            </div>
+
+            <div className="panel-section">
+              <h4>🏷️ Labels</h4>
+              <div className="label-chips">
+                <span className="label-chip" style={{ background: '#e8f0fe', color: '#1967d2' }}>+ Adicionar</span>
+              </div>
+            </div>
+
+            <div className="panel-section">
+              <h4>⚡ Ações Rápidas</h4>
+              <button className="action-btn">📝 Nova Nota</button>
+              <button className="action-btn">✓ Criar Tarefa</button>
+              <button className="action-btn">🔔 Criar Alerta</button>
+              <button className="action-btn transfer">🔄 Transferir Setor</button>
+            </div>
+          </>
+        ) : (
+          <div className="empty-state"><span className="empty-icon">ℹ️</span><p>Selecione uma conversa</p></div>
+        )}
       </div>
     </div>
   );

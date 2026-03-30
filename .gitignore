@@ -128,3 +128,5 @@ public
 *.sqlite3
 postgres-data/
 redis-data/
+.pnpm-store/
+.codex/

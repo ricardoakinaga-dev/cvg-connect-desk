@@ -1,0 +1,40 @@
+.labels-page { padding: 24px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h2 { margin: 0; font-size: 1.5rem; color: #1a1a2e; }
+.btn-primary { background: #4361ee; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+.btn-primary:hover { background: #3a56d4; }
+
+.create-form {
+  background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 12px;
+  padding: 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+}
+.create-form input { flex: 1; min-width: 150px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+.color-picker { flex: 0 !important; min-width: 50px !important; padding: 4px !important; height: 40px; cursor: pointer; }
+
+.labels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.label-card {
+  background: #fff; border: 1px solid #e8e8e8; border-left: 4px solid #6b7280;
+  border-radius: 10px; padding: 14px 16px; transition: box-shadow 0.2s;
+}
+.label-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+.label-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.label-badge {
+  padding: 4px 12px; border-radius: 20px; color: #fff; font-size: 0.8rem; font-weight: 600;
+  text-transform: lowercase;
+}
+.system-badge { background: #e8f0fe; color: #1967d2; padding: 2px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; }
+.label-category { background: #f0f0f0; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; color: #666; margin-bottom: 6px; display: inline-block; }
+.label-desc { color: #666; font-size: 0.8rem; margin: 4px 0 8px; }
+.label-actions { display: flex; gap: 8px; }
+.btn-edit-sm, .btn-delete-sm { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; }
+.btn-edit-sm:hover { background: #f0f0f0; }
+.btn-delete-sm:hover { background: #fbe9e7; border-color: #ef9a9a; }
+
+.label-edit { display: flex; flex-direction: column; gap: 8px; }
+.label-edit input { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+.color-picker-sm { width: 40px; height: 32px; padding: 2px; cursor: pointer; border: none; }
+.edit-actions { display: flex; gap: 8px; }
+.btn-save { background: #4361ee; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.btn-cancel { background: #f0f0f0; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.loading { text-align: center; padding: 48px; color: #888; }

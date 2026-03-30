@@ -1,0 +1,16 @@
+{
+  "name": "@cvg/transfers",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "echo 'transfers module'",
+    "build": "echo build",
+    "lint": "echo lint"
+  },
+  "dependencies": {
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*",
+    "@cvg/auth": "workspace:*"
+  }
+}

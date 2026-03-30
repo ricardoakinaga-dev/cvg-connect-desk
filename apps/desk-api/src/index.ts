@@ -16,6 +16,11 @@ import { registerAuthRoutes } from '@cvg/auth';
 import { registerAuditRoutes } from '@cvg/audit';
 import { registerAdminRoutes } from '@cvg/admin';
 import { initializeSecretaryClient } from '@cvg/integrations';
+import { registerLabelRoutes } from '@cvg/labels';
+import { registerSectorRoutes } from '@cvg/sectors';
+import { registerTransferRoutes } from '@cvg/transfers';
+import { registerContactGroupRoutes } from '@cvg/contact-groups';
+import { registerKanbanRoutes } from '@cvg/kanban';
 
 const app = Fastify({
   logger: {
@@ -228,6 +233,11 @@ async function bootstrap() {
   await registerAuthRoutes(app);
   await registerAuditRoutes(app);
   await registerAdminRoutes(app);
+  await registerLabelRoutes(app);
+  await registerSectorRoutes(app);
+  await registerTransferRoutes(app);
+  await registerContactGroupRoutes(app);
+  await registerKanbanRoutes(app);
 
   // Graceful shutdown
   const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];

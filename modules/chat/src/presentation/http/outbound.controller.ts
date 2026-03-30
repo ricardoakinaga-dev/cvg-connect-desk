@@ -122,14 +122,16 @@ export async function registerOutboundController(app: FastifyInstance) {
             status: { type: 'string' },
             queueId: { type: 'string', format: 'uuid' },
             teamId: { type: 'string', format: 'uuid' },
+            sectorId: { type: 'string', format: 'uuid' },
           },
         },
       },
     },
-    async (request: FastifyRequest<{ Querystring: { status?: string; queueId?: string; teamId?: string } }>, reply: FastifyReply) => {
+    async (request: FastifyRequest<{ Querystring: { status?: string; queueId?: string; teamId?: string; sectorId?: string } }>, reply: FastifyReply) => {
       try {
-        const { status, queueId, teamId } = request.query;
-        const conversations = await conversationRepository.findAll({ status, queueId, teamId });
+        const { status, queueId, teamId, sectorId } = request.query;
+        const userId = (request.user as any)?.id;
+        const conversations = await conversationRepository.findAll({ status, queueId, teamId, sectorId, userId });
         
         const conversationsWithLastMessage = await Promise.all(
           conversations.map(async (conv) => {
