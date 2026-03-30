@@ -1,0 +1,11 @@
+{
+  "name": "@cvg/chatwoot-compat",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "build": "echo build",
+    "lint": "echo lint",
+    "test": "echo test"
+  }
+}

@@ -1,0 +1,139 @@
+.audit-page {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a1a2e;
+}
+
+.btn-primary {
+  background: #4361ee;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #3a56d4;
+}
+
+.audit-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.audit-filters input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.audit-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: box-shadow 0.2s;
+}
+
+.audit-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.audit-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.audit-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.audit-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.audit-action strong {
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  font-family: monospace;
+}
+
+.audit-entity {
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.audit-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.audit-actor {
+  font-weight: 500;
+}
+
+.audit-context {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #555;
+  font-family: monospace;
+}
+
+.audit-entity-id {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: #bbb;
+  font-family: monospace;
+  margin-top: 4px;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 48px;
+  color: #888;
+  font-size: 1rem;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@cvg/notes",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo build",
+    "lint": "echo lint",
+    "test": "echo test"
+  },
+  "dependencies": {
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*"
+  }
+}

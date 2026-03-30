@@ -1,0 +1,153 @@
+# docker-compose.dev.yml — Desenvolvimento (mantém volumes bind para hot-reload)
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-connect_desk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-connect_desk_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-connect_desk} -d ${POSTGRES_DB:-connect_desk_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db-init:
+    build:
+      context: .
+      dockerfile: services/db-init/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  desk-api:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      CI: "true"
+      NODE_ENV: development
+      DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+      REALTIME_PORT: ${REALTIME_PORT:-8080}
+      WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      GATEWAY_URL: ${GATEWAY_URL:-}
+      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
+      SECRETARY_URL: ${SECRETARY_URL:-}
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile && pnpm --filter @cvg/desk-api exec tsx src/index.ts"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r)=>{process.exit(r.statusCode===200?0:1)})"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  desk-web:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      VITE_API_URL: /api
+      DOCKER: "true"
+    volumes:
+      - .:/app
+    ports:
+      - "8081:5173"
+    depends_on:
+      - desk-api
+    command: sh -c "corepack enable && pnpm --filter @cvg/desk-web exec vite --host 0.0.0.0 --port 5173"
+
+  message-worker:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      CI: "true"
+      NODE_ENV: development
+      DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
+      REDIS_URL: redis://redis:6379
+      WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      GATEWAY_URL: ${GATEWAY_URL:-}
+      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
+      SECRETARY_URL: ${SECRETARY_URL:-}
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile && pnpm --filter @cvg/message-worker exec tsx src/index.ts"
+
+  realtime-service:
+    image: node:20-alpine
+    working_dir: /app
+    environment:
+      CI: "true"
+      NODE_ENV: development
+      REDIS_URL: redis://redis:6379
+      REALTIME_PORT: 8080
+      REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
+      WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile && pnpm --filter @cvg/realtime-service exec tsx src/index.ts"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  pgdata:
+  redisdata:

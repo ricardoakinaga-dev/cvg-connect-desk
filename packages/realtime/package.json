@@ -1,0 +1,18 @@
+{
+  "name": "@cvg/realtime",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "echo lint",
+    "test": "echo test"
+  },
+  "dependencies": {
+    "@cvg/events": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

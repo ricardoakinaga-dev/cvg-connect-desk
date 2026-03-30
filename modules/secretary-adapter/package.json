@@ -1,0 +1,17 @@
+{
+  "name": "@cvg/secretary-adapter",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo build",
+    "lint": "echo lint",
+    "test": "echo test"
+  },
+  "dependencies": {
+    "@cvg/shared": "workspace:*",
+    "@cvg/events": "workspace:*",
+    "@cvg/integrations": "workspace:*"
+  }
+}

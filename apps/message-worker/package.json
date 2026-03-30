@@ -1,0 +1,24 @@
+{
+  "name": "@cvg/message-worker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "lint": "echo lint",
+    "test": "echo test"
+  },
+  "dependencies": {
+    "@cvg/events": "workspace:*",
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*",
+    "@cvg/alerts": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

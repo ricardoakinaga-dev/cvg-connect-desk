@@ -1,0 +1,170 @@
+# docker-compose.yml — Produção (build das imagens, sem bind mounts)
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-connect_desk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD é obrigatório em produção}
+      POSTGRES_DB: ${POSTGRES_DB:-connect_desk_db}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-connect_desk} -d ${POSTGRES_DB:-connect_desk_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  db-init:
+    build:
+      context: .
+      dockerfile: services/db-init/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - internal
+
+  desk-api:
+    build:
+      context: .
+      dockerfile: apps/desk-api/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório em produção}
+      GATEWAY_URL: ${GATEWAY_URL:-}
+      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
+      SECRETARY_URL: ${SECRETARY_URL:-}
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      SECRETARY_TIMEOUT_MS: ${SECRETARY_TIMEOUT_MS:-30000}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - internal
+      - frontend
+
+  desk-web:
+    build:
+      context: .
+      dockerfile: apps/desk-web/Dockerfile
+      args:
+        VITE_API_URL: /api
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - desk-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    networks:
+      - frontend
+
+  message-worker:
+    build:
+      context: .
+      dockerfile: apps/message-worker/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
+      REDIS_URL: redis://redis:6379
+      WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      GATEWAY_URL: ${GATEWAY_URL:-}
+      EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
+      SECRETARY_URL: ${SECRETARY_URL:-}
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+
+  realtime-service:
+    build:
+      context: .
+      dockerfile: apps/realtime-service/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      REDIS_URL: redis://redis:6379
+      REALTIME_PORT: 8080
+      REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    networks:
+      - internal
+      - frontend
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  internal:
+    driver: bridge
+  frontend:
+    driver: bridge

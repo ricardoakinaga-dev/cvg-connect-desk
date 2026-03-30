@@ -1,0 +1,152 @@
+.alert-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.alert-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.alert-list {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.alert-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid var(--color-border);
+}
+
+.alert-card.critical {
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.alert-card.error {
+  border-left-color: #f97316;
+}
+
+.alert-card.warning {
+  border-left-color: #eab308;
+}
+
+.alert-card.info {
+  border-left-color: #3b82f6;
+}
+
+.alert-card.resolved {
+  opacity: 0.7;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.alert-severity-icon {
+  font-size: 20px;
+}
+
+.alert-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.alert-title {
+  font-size: 15px;
+  margin: 0 0 8px 0;
+}
+
+.alert-message {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.alert-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.alert-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.badge-critical {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-error {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.badge-warning {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.badge-info {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-active {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-acknowledged {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-resolved {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.btn-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.btn-warning:hover {
+  background: #d97706;
+}
