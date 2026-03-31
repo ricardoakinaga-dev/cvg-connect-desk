@@ -68,6 +68,13 @@ class ApiClient {
     });
   }
 
+  async put<T>(endpoint: string, data?: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
   async patch<T>(endpoint: string, data: unknown): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PATCH',
@@ -86,6 +93,10 @@ export interface Conversation {
   id: string;
   contactId: string | null;
   status: 'open' | 'pending' | 'closed' | 'archived';
+  statusV2: string | null;
+  sectorId: string | null;
+  assignedUserId: string | null;
+  currentHandler: string | null;
   interactionType: string | null;
   queueId: string | null;
   teamId: string | null;
@@ -179,22 +190,71 @@ export interface DashboardSummary {
   generatedAt: string;
 }
 
+export interface ConversationListItem {
+  id: string;
+  contactId: string | null;
+  status: 'open' | 'pending' | 'closed' | 'archived';
+  statusV2: string | null;
+  sectorId: string | null;
+  assignedUserId: string | null;
+  currentHandler: string | null;
+  interactionType: string | null;
+  queueId: string | null;
+  teamId: string | null;
+  isActive: boolean;
+  externalChannelId: string | null;
+  externalConversationId: string | null;
+  metadata: string | null;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  // Enriched fields from backend
+  contactName?: string | null;
+  contactPhone?: string | null;
+  sectorName?: string | null;
+  sectorIcon?: string | null;
+  sectorColor?: string | null;
+  lastMessage?: { content: string; direction: string; createdAt: string } | null;
+  unreadCount?: number;
+}
+
 export const conversationApi = {
-  list: (filters?: { status?: string; queueId?: string; teamId?: string }) => {
+  list: (filters?: { status?: string; queueId?: string; teamId?: string; sectorId?: string }) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.queueId) params.append('queueId', filters.queueId);
     if (filters?.teamId) params.append('teamId', filters.teamId);
+    if (filters?.sectorId) params.append('sectorId', filters.sectorId);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return api.get<{ conversations: Conversation[] }>(`/conversations${query}`);
+    return api.get<{ conversations: ConversationListItem[] }>(`/conversations${query}`);
   },
 
-  getMessages: (conversationId: string, limit = 50) => {
-    return api.get<{ messages: Message[] }>(`/conversations/${conversationId}/messages?limit=${limit}`);
+  getMessages: (conversationId: string, limit = 50, before?: string) => {
+    const params = new URLSearchParams();
+    if (limit) params.append('limit', String(limit));
+    if (before) params.append('before', before);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return api.get<{ messages: Message[] }>(`/conversations/${conversationId}/messages${query}`);
   },
 
   sendMessage: (data: { conversationId: string; content: string; recipient: string; sender?: string }) => {
     return api.post<{ messageId: string; conversationId: string; status: string }>('/messages', data);
+  },
+
+  updateStatus: (conversationId: string, statusV2: string) => {
+    return api.patch(`/conversations/${conversationId}/status`, { statusV2 });
+  },
+
+  transfer: (conversationId: string, toSectorId: string, reason?: string) => {
+    return api.post(`/conversations/${conversationId}/transfer`, { toSectorId, reason });
+  },
+
+  assign: (conversationId: string, userId: string) => {
+    return api.patch(`/conversations/${conversationId}/assign`, { userId });
+  },
+
+  close: (conversationId: string) => {
+    return api.post(`/conversations/${conversationId}/close`);
   },
 };
 
