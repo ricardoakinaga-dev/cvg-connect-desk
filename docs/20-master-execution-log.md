@@ -2055,3 +2055,122 @@ Proteger a API contra abuso com rate limiting global.
 ---
 
 **Fim do log (atualizado em 2026-03-30)**
+
+---
+
+### **[2026-03-31] INBOX ENTERPRISE REWRITE**
+
+**Implementação Realizada:**
+
+1. **Backend Otimizado** (`modules/chat/src/presentation/http/outbound.controller.ts`):
+   - Eliminado N+1 queries: batch load de contatos, setores e últimas mensagens via SQL DISTINCT ON
+   - Mensagens retornadas em ordem ASC (mais antigas primeiro)
+   - Contagem de mensagens não lidas por conversa
+   - Resolução de setor (nome, ícone, cor) em cada conversa
+
+2. **Novos Endpoints:**
+   - `PATCH /conversations/:id/status` — alterar status (novo, em_atendimento, etc.)
+   - `POST /conversations/:id/transfer` — transferir entre setores
+   - `PATCH /conversations/:id/assign` — atribuir responsável
+   - `POST /conversations/:id/close` — fechar conversa
+   - `POST /conversations/:id/mark-read` — marcar como lida
+
+3. **Frontend Reescrito** (`apps/desk-web/src/pages/Inbox.tsx` + `Inbox.css`):
+   - Setores com scroll horizontal corrigido
+   - Badges de mensagens não lidas
+   - Separadores de data dinâmicos
+   - Menu de status dropdown
+   - Modal de transferência entre setores
+   - Atalhos de teclado (Escape, Ctrl+N)
+   - CSS WhatsApp-like completo
+
+4. **API Client** (`apps/desk-web/src/lib/api.ts`):
+   - `ConversationListItem` type com campos enriquecidos
+   - `conversationApi.updateStatus`, `transfer`, `assign`, `close`
+   - Método `PUT` adicionado ao `ApiClient`
+
+**Commit:** `660e25d`
+
+---
+
+### **[2026-03-31] DOCKER BUILD FIX**
+
+**Problema:** rollup@4.60.0 usa native binary que não resolve no Docker alpine.
+**Solução:** `pnpm.overrides: { rollup: "4.34.8" }` no package.json raiz.
+**Dockerfile:** `--no-lockfile` → `--no-frozen-lockfile`
+**Validação:** `docker compose build desk-web` e `docker compose build desk-api` passam.
+**Commit:** `49b67b0`
+
+---
+
+### **[2026-03-31] TESTES UNITÁRIOS**
+
+**Implementação:**
+- 47 testes criados, todos passando
+- Chat: `sendOutboundMessage` (6), `receiveInboundMessage` (6), `createConversation` (4)
+- Shared: Result pattern (7), AppError (6), Pagination (8)
+- Mock helpers em `test-helpers.ts`
+
+**Commit:** `8e5bf22`
+
+---
+
+### **[2026-03-31] WEBSOCKET REALTIME INTEGRATION**
+
+**Implementação:**
+- Inbox conecta ao realtime-service após login via `useAuthStore`
+- Escuta eventos: `message.persisted`, `conversation.created`, `conversation.status.changed`
+- Mensagens aparecem em tempo real (<1s) sem refresh
+- Polling: 30s com WS conectado, 8s sem WS
+- Indicador 🟢/🟡 no header da sidebar
+
+**Commit:** `ea07294`
+
+---
+
+### **[2026-03-31] SECRETARY INTEGRATION ATIVADA**
+
+**Implementação:**
+- Endpoint `/invoke` adicionado na Secretary (`src/routes/invoke.ts`)
+- Secretary integrada ao docker-compose como serviço
+- `SECRETARY_URL=http://secretary:3000` na rede Docker
+- `SECRETARY_API_KEY` configurada para autenticação
+- Fluxo testado end-to-end: `webhook → Desk → Secretary → resposta`
+- Fallback quando `OPENAI_API_KEY` não configurada
+
+**Commits:** `ecd34b2` (Desk), alterações na Secretary (sem git repo)
+
+---
+
+### **[2026-03-31] CRUD TUTOR/PATIENT**
+
+**Implementação:**
+
+1. **Módulo Tutors** (`modules/tutors/`):
+   - Repository: CRUD, busca, getWithPatients (com pacientes vinculados)
+   - Use cases: list, get, create, update, delete, stats
+   - Controller: 6 endpoints RESTful
+
+2. **Módulo Patients** (`modules/patients/`):
+   - Repository: CRUD, busca com filtros (search/tutorId/species)
+   - Use cases: list, get, create, update, delete, stats
+   - Controller: 6 endpoints RESTful
+
+3. **Frontend:**
+   - `Tutors.tsx`: tabela, busca, CRUD modal, painel de detalhes com pacientes
+   - `Patients.tsx`: tabela, busca, filtro espécie, CRUD modal, detalhes com tutor
+   - `shared.css`: estilos reutilizáveis (modal, tabela, forms, botões)
+   - Links na sidebar: 👨‍👩‍👦 Tutores, 🐾 Pacientes
+
+**Commit:** `b544b53`
+
+---
+
+### **[2026-03-31] DOCUMENTAÇÃO ATUALIZADA**
+
+**Arquivos atualizados:**
+- `docs/14-roadmap.md` — Estado atual do projeto e status das fases
+- `docs/22-enterprise-premium-plan.md` — Status mudado para "IMPLEMENTADO"
+- `docs/20-master-execution-log.md` — Este log (entradas de 31/03)
+
+**Fim do log (atualizado em 2026-03-31)**

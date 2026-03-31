@@ -1,7 +1,7 @@
 # Relatório Comparativo: Documentação vs Implementação — CVG Connect Desk
 
-**Data:** 30 de março de 2026
-**Fase atual:** Phase 8 — Refinement & Deployment
+**Data:** 31 de março de 2026 (atualizado)
+**Fase atual:** Phase 9 — Enterprise Premium (CONCLUÍDA)
 **Escopo:** Comparar documentação em `/docs` com código implementado no monorepo
 
 ---
@@ -10,25 +10,26 @@
 
 ### ✅ O que está implementado corretamente
 
-- **Estrutura de módulos**: chat, tasks, notes, alerts, dashboard, auth, audit, secretary-adapter
-- **Backend API**: Fastify com rotas operacionais, autenticação real, RBAC aplicado
-- **Frontend MVP**: Inbox 3 colunas, Tasks, Alerts, Dashboard com polling
-- **Banco de dados**: Schema completo com IAM, Chat, Operations, Audit
+- **Estrutura de módulos**: chat, tasks, notes, alerts, dashboard, auth, audit, secretary-adapter, contacts, tutors, patients, sectors, labels, contact-groups, transfers, kanban, gateway-adapter
+- **Backend API**: Fastify com rotas operacionais, autenticação real, RBAC aplicado, rate limiting
+- **Frontend**: Inbox WhatsApp-like, Contacts, Tutors, Patients, Tasks, Notes, Alerts, Sectors, Labels, Groups, Kanban, Dashboard, Admin, Audit, Settings (15 páginas)
+- **Banco de dados**: Schema completo com IAM, Chat, Operations, Audit, Enterprise (sectors, labels, groups, transfers)
 - **Eventos**: Event envelope, publisher, consumer com idempotência e retry
 - **Worker**: message-worker com handlers para handoff e Secretary invocation
-- **Realtime**: realtime-service implementado (WebSocket), mas não conectado ao frontend
-- **Segurança**: Auth real, RBAC, audit trail
+- **Realtime**: realtime-service implementado (WebSocket), **conectado ao frontend**
+- **Secretary**: Integration ativa com endpoint `/invoke`, testada end-to-end
+- **Segurança**: Auth real, RBAC, audit trail, Helmet, CORS, Rate Limit, Webhook HMAC
+- **Testes**: 47 testes unitários passando (chat use cases + shared core)
+- **Docker**: Build corrigido, compose produção e dev funcionais
+- **CRUD Tutor/Patient**: Backend completo + frontend com tabelas e modais
 
-### ⚠️ Falhas e inconsistências encontradas
+### ⚠️ Itens que ainda precisam de atenção
 
-1. **Campo `bot_active` ausente no schema** — documentado, não implementado
-2. **Métrica de handoff inexistente no dashboard** — documentado como KPI, não implementado
-3. **Módulo `admin` vazio** — só existe `package.json`, sem código
-4. **Módulo `chatwoot-compat` vazio** — só existe `package.json`, sem código (pode ser intencional)
-5. **Secretary integration não ativada no fluxo inbound** — adapter existe, mas não está sendo chamado
-6. **Faltam campos de auditoria em controllers** — logs estruturados não estão sendo usados consistentemente
-7. **Testes ausentes** — estratégia de testes definida, mas poucos ou nenhum teste implementado
-8. **Rate limiting não implementado** — documentado como pendente
+1. **Testes insuficientes** — 47 testes é um bom início, mas precisa de mais cobertura (controllers, integração)
+2. **KPIs avançados** — métrica de handoff rate e tempo de resposta não implementadas no dashboard (decisão: adiado)
+3. **Módulo `chatwoot-compat` vazio** — intencional (compatibilidade futura)
+4. **OPENAI_API_KEY** — Secretary funciona com fallback, mas precisa da key para IA real
+5. **Deploy produção** — Docker build funciona, mas falta guia de deploy e monitoramento
 
 ---
 

@@ -14,24 +14,27 @@ Este documento estabelece:
 - critérios de entrada e saída por fase;
 - regras para evitar implementação fora de ordem.
 
-## 2. Estado Atual do Projeto
+## 2. Estado Atual do Projeto (Atualizado em 31/03/2026)
 No momento atual:
 - a documentação arquitetural está avançada e endurecida;
 - o monorepo está estruturado com `apps`, `modules` e `packages`;
-- as fases 0, 1, 2, 3, 4, 5 e 7 já materializaram: backend API, chat, tasks, notes, alerts, events, worker, realtime, dashboard e frontend MVP;
+- as fases 0, 1, 2, 3, 4, 5, 7, 8 e 9 estão concluídas;
 - existe pipeline assíncrono com worker implementado (apps/message-worker);
-- existe realtime-service implementado (apps/realtime-service);
-- existe frontend operacional (apps/desk-web) com Inbox 3 colunas, Tasks, Alerts, Dashboard;
-- IAM, Chat Core, Operations já possuem modelagem concreta no banco;
-- existe integração com Secretary via modules/secretary-adapter;
+- existe realtime-service implementado (apps/realtime-service) **conectado ao frontend via WebSocket**;
+- existe frontend operacional (apps/desk-web) com Inbox WhatsApp-like, Contacts, Tutors, Patients, Tasks, Notes, Alerts, Sectors, Labels, Groups, Kanban, Dashboard, Admin, Audit;
+- Inbox reescrito com nível Enterprise (badges não lidas, transfer, status, realtime);
+- CRUD completo de Tutors e Patients implementado (backend + frontend);
+- Secretary integrada com endpoint `/invoke` ativo;
+- IAM, Chat Core, Operations possuem modelagem concreta no banco;
+- integração com Secretary via modules/secretary-adapter está **ativa e testada**;
 - autenticação real implementada com login, logout, sessões e RBAC;
-- existe módulo de audit trail implementado;
-- realtime ainda não está conectado ao frontend (fallback por polling ativo).
+- módulo de audit trail implementado;
+- 47 testes unitários passando;
+- Docker build corrigido (rollup@4.34.8 via pnpm overrides).
 
 Conclusão:
-- o projeto já possui backend funcional e frontend MVP operacional com hardening;
-- autenticação real, RBAC e auditoria estão implementados;
-- o próximo passo é refinement de produção e deployment.
+- o projeto está em estado de produção para operação básica;
+- pendências menores: testes adicionais, docs de deploy, tune de produção.
 
 ## 3. Princípios do Roadmap
 
@@ -74,11 +77,12 @@ Phase 0 -> Foundation                  [CONCLUÍDA]
 Phase 1 -> Core Chat                   [CONCLUÍDA]
 Phase 2 -> Operations (Tasks/Notes)     [CONCLUÍDA]
 Phase 3 -> Integrations + Secretary    [CONCLUÍDA]
-Phase 4 -> Realtime                    [CONCLUÍDA]
+Phase 4 -> Realtime                    [CONCLUÍDA] ✓ WebSocket conectado ao frontend
 Phase 5 -> Dashboard + Observability   [CONCLUÍDA]
-Phase 6 -> Frontend MVP                [CONCLUÍDA]
-Phase 7 -> Hardening + Production      [CONCLUÍDA]
-Phase 8 -> Refinement & Deployment     [PENDENTE]
+Phase 6 -> Frontend MVP                [CONCLUÍDA] ✓ Inbox Enterprise reescrito
+Phase 7 -> Hardening + Production      [CONCLUÍDA] ✓ Docker build corrigido
+Phase 8 -> Refinement & Deployment     [CONCLUÍDA] ✓ Testes (47), Secretary ativa
+Phase 9 -> Enterprise Premium          [CONCLUÍDA] ✓ Sectors, Labels, Kanban, Transfers, Tutor/Patient CRUD
 ```
 
 ## 5. Phase 0 — Foundation
