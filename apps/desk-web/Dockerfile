@@ -2,8 +2,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 ENV CI=true
-ENV ROLLUP_DISABLE_NATIVE=1
-ENV NPM_CONFIG_OPTIONAL=false
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=${VITE_API_URL}
 
@@ -15,7 +13,7 @@ COPY packages/ packages/
 COPY modules/ modules/
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
-RUN pnpm install -r --no-lockfile
+RUN pnpm install -r --no-frozen-lockfile
 
 COPY apps/desk-web/ apps/desk-web/
 RUN pnpm --filter @cvg/desk-web exec vite build

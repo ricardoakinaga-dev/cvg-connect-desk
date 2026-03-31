@@ -30,5 +30,10 @@
   "dependencies": {
     "drizzle-orm": "0.45.2",
     "pg": "8.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup": "4.34.8"
+    }
   }
 }
