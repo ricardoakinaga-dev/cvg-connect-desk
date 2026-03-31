@@ -28,6 +28,7 @@
     "@cvg/contact-groups": "workspace:*",
     "@cvg/kanban": "workspace:*",
     "@cvg/gateway-adapter": "workspace:*",
+    "@cvg/contacts": "workspace:*",
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.1",
     "@fastify/rate-limit": "^10.3.0",

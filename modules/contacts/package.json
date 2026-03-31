@@ -1,0 +1,13 @@
+{
+  "name": "@cvg/contacts",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": { "dev": "echo 'contacts module'" },
+  "dependencies": {
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*",
+    "@cvg/auth": "workspace:*",
+    "@cvg/chat": "workspace:*"
+  }
+}

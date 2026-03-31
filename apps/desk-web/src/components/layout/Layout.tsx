@@ -17,6 +17,9 @@ export function Layout() {
           <NavLink to="/inbox" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">📥</span><span>Inbox</span>
           </NavLink>
+          <NavLink to="/contacts" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <span className="nav-icon">👤</span><span>Contatos</span>
+          </NavLink>
           <NavLink to="/kanban" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">📋</span><span>Kanban</span>
           </NavLink>

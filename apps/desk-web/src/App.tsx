@@ -15,6 +15,7 @@ import { Labels } from './pages/Labels';
 import { Sectors } from './pages/Sectors';
 import { ContactGroups } from './pages/ContactGroups';
 import { Kanban } from './pages/Kanban';
+import { Contacts } from './pages/Contacts';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/inbox" replace />} />
             <Route path="inbox" element={<Inbox />} />
+            <Route path="contacts" element={<Contacts />} />
             <Route path="kanban" element={<Kanban />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="notes" element={<Notes />} />
