@@ -14,6 +14,13 @@ interface Contact {
   phone: string | null;
 }
 
+interface Collaborator {
+  id: string;
+  name: string;
+  email: string;
+  isActive: boolean;
+}
+
 type NewConvTab = 'contacts' | 'collaborators';
 
 // ==========================================
@@ -105,6 +112,7 @@ export function Inbox() {
   const [conversations, setConversations] = useState<ConversationListItem[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
   // State — Selection
   const [selectedSector, setSelectedSector] = useState<string>('all');
@@ -130,10 +138,11 @@ export function Inbox() {
   // Data fetching
   // ==========================================
 
-  // Load sectors and contacts on mount
+  // Load sectors, contacts and collaborators on mount
   useEffect(() => {
     sectorApi.list().then(setSectors).catch(() => {});
     api.get<Contact[]>('/contacts').then(setContacts).catch(() => {});
+    api.get<Collaborator[]>('/admin/users').then(u => setCollaborators(u.filter(x => x.isActive))).catch(() => {});
   }, []);
 
   // Fetch conversations
@@ -387,12 +396,18 @@ export function Inbox() {
   }, [conversations, searchTerm]);
 
   const filteredContacts = useMemo(() => {
+    if (newConvTab === 'collaborators') {
+      const list = collaborators.map(c => ({ id: c.id, name: c.name, phone: c.email }));
+      if (!contactSearch) return list;
+      const term = contactSearch.toLowerCase();
+      return list.filter(c => (c.name || '').toLowerCase().includes(term) || (c.phone || '').toLowerCase().includes(term));
+    }
     if (!contactSearch) return contacts;
     const term = contactSearch.toLowerCase();
     return contacts.filter(c =>
       (c.name || '').toLowerCase().includes(term) || (c.phone || '').includes(contactSearch)
     );
-  }, [contacts, contactSearch]);
+  }, [contacts, collaborators, contactSearch, newConvTab]);
 
   const sectorCounts = useMemo(() => {
     const counts: Record<string, number> = { all: conversations.length };
@@ -564,7 +579,7 @@ export function Inbox() {
             <div className="new-conv-search-wrapper">
               <input
                 className="new-conv-search"
-                placeholder="Buscar contato..."
+                placeholder={newConvTab === 'contacts' ? 'Buscar cliente...' : 'Buscar colaborador...'}
                 value={contactSearch}
                 onChange={e => setContactSearch(e.target.value)}
                 autoFocus
@@ -579,21 +594,25 @@ export function Inbox() {
                   </div>
                   <div className="new-conv-info">
                     <span className="new-conv-name">{c.name || 'Sem nome'}</span>
-                    <span className="new-conv-phone">{formatPhone(c.phone)}</span>
+                    <span className="new-conv-phone">
+                      {newConvTab === 'collaborators' ? c.phone : formatPhone(c.phone)}
+                    </span>
                   </div>
                   <span className="new-conv-action">💬</span>
                 </div>
               )) : (
                 <div className="new-conv-empty">
                   <span>📭</span>
-                  <p>Nenhum contato encontrado</p>
+                  <p>{newConvTab === 'contacts' ? 'Nenhum cliente encontrado' : 'Nenhum colaborador encontrado'}</p>
                 </div>
               )}
             </div>
 
-            <button className="btn-add-contact" onClick={() => navigate('/contacts')}>
-              ＋ Cadastrar novo contato
-            </button>
+            {newConvTab === 'contacts' && (
+              <button className="btn-add-contact" onClick={() => navigate('/contacts')}>
+                ＋ Cadastrar novo contato
+              </button>
+            )}
           </div>
         )}
 
