@@ -124,6 +124,7 @@ export function Inbox() {
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
   const [wsConnected, setWsConnected] = useState(false);
+  const [showSectorDropdown, setShowSectorDropdown] = useState(false);
 
   // ==========================================
   // Data fetching
@@ -470,37 +471,63 @@ export function Inbox() {
           </div>
         </header>
 
-        {/* Sector buttons + New conversation — same row */}
+        {/* Actions row — new conv + sectors dropdown */}
         <div className="sector-btns-row">
           <button
             className={`btn-new-conv ${showNewConv ? 'active' : ''}`}
             onClick={() => { setShowNewConv(!showNewConv); setContactSearch(''); }}
             title="Nova conversa (Ctrl+N)"
           >
-            {showNewConv ? '✕' : '✏️'}
+            {showNewConv ? '✕' : '＋'}
           </button>
 
-          <button
-            className={`sector-btn ${selectedSector === 'all' ? 'active' : ''}`}
-            onClick={() => setSelectedSector('all')}
-          >
-            Todos
-            {sectorCounts.all > 0 && <span className="sector-count">{sectorCounts.all}</span>}
-          </button>
-
-          {sectors.filter(s => s.isActive).map(s => (
+          {/* Sector dropdown */}
+          <div className="sector-dropdown-wrapper">
             <button
-              key={s.id}
-              className={`sector-btn ${selectedSector === s.id ? 'active' : ''}`}
-              onClick={() => setSelectedSector(s.id)}
-              style={selectedSector === s.id ? { background: s.color, borderColor: s.color } : {}}
+              className="sector-dropdown-trigger"
+              onClick={() => setShowSectorDropdown(!showSectorDropdown)}
             >
-              {s.icon} {s.name}
-              {(sectorCounts[s.id] || 0) > 0 && (
-                <span className="sector-count">{sectorCounts[s.id]}</span>
+              <span>
+                {selectedSector === 'all'
+                  ? 'Todos'
+                  : (() => { const s = sectors.find(s => s.id === selectedSector); return s ? `${s.icon} ${s.name}` : 'Setor'; })()
+                }
+              </span>
+              <span className={`dropdown-arrow ${showSectorDropdown ? 'open' : ''}`}>▾</span>
+              {selectedSector !== 'all' && (
+                <span className="sector-count">{sectorCounts[selectedSector] || 0}</span>
               )}
             </button>
-          ))}
+
+            {showSectorDropdown && (
+              <>
+                <div className="sector-dropdown-backdrop" onClick={() => setShowSectorDropdown(false)} />
+                <div className="sector-dropdown-menu">
+                  <button
+                    className={`sector-dropdown-item ${selectedSector === 'all' ? 'active' : ''}`}
+                    onClick={() => { setSelectedSector('all'); setShowSectorDropdown(false); }}
+                  >
+                    <span>📋</span>
+                    <span>Todos</span>
+                    <span className="sector-count">{sectorCounts.all}</span>
+                  </button>
+                  {sectors.filter(s => s.isActive).map(s => (
+                    <button
+                      key={s.id}
+                      className={`sector-dropdown-item ${selectedSector === s.id ? 'active' : ''}`}
+                      onClick={() => { setSelectedSector(s.id); setShowSectorDropdown(false); }}
+                    >
+                      <span>{s.icon}</span>
+                      <span>{s.name}</span>
+                      {(sectorCounts[s.id] || 0) > 0 && (
+                        <span className="sector-count">{sectorCounts[s.id]}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Search */}
