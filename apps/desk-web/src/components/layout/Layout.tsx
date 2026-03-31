@@ -23,6 +23,8 @@ export function Layout() {
           <NavLink to="/kanban" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">📋</span><span>Kanban</span>
           </NavLink>
+
+          <div className="nav-section-label">Trabalho</div>
           <NavLink to="/tasks" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">✓</span><span>Tarefas</span>
           </NavLink>
@@ -33,7 +35,10 @@ export function Layout() {
             <span className="nav-icon">🔔</span><span>Alertas</span>
           </NavLink>
 
-          <div className="nav-section-label">Organização</div>
+          <div className="nav-section-label">Gestão</div>
+          <NavLink to="/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <span className="nav-icon">📊</span><span>Dashboard</span>
+          </NavLink>
           <NavLink to="/sectors" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">🏢</span><span>Setores</span>
           </NavLink>
@@ -42,11 +47,6 @@ export function Layout() {
           </NavLink>
           <NavLink to="/contact-groups" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">👥</span><span>Grupos</span>
-          </NavLink>
-
-          <div className="nav-section-label">Gestão</div>
-          <NavLink to="/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            <span className="nav-icon">📊</span><span>Dashboard</span>
           </NavLink>
           <NavLink to="/admin" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">⚙️</span><span>Administração</span>
