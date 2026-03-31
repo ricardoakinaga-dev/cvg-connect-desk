@@ -391,6 +391,61 @@ export interface ContactTransfer {
   createdAt: string;
 }
 
+// ==========================================
+// Tutors API
+// ==========================================
+export interface Tutor {
+  id: string;
+  externalId: string | null;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  createdAt: string;
+  updatedAt: string;
+  patients?: { id: string; name: string; species: string | null; breed: string | null }[];
+  conversationCount?: number;
+}
+
+export const tutorApi = {
+  list: (search?: string) => api.get<Tutor[]>(`/tutors${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+  get: (id: string) => api.get<Tutor>(`/tutors/${id}`),
+  create: (data: { name: string; phone?: string; email?: string }) => api.post<Tutor>('/tutors', data),
+  update: (id: string, data: Partial<Tutor>) => api.put<Tutor>(`/tutors/${id}`, data),
+  delete: (id: string) => api.delete(`/tutors/${id}`),
+};
+
+// ==========================================
+// Patients API
+// ==========================================
+export interface Patient {
+  id: string;
+  externalId: string | null;
+  name: string;
+  species: string | null;
+  breed: string | null;
+  tutorId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tutor?: { id: string; name: string; phone: string | null } | null;
+  conversationCount?: number;
+  taskCount?: number;
+}
+
+export const patientApi = {
+  list: (filters?: { search?: string; tutorId?: string; species?: string }) => {
+    const params = new URLSearchParams();
+    if (filters?.search) params.append('search', filters.search);
+    if (filters?.tutorId) params.append('tutorId', filters.tutorId);
+    if (filters?.species) params.append('species', filters.species);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return api.get<Patient[]>(`/patients${query}`);
+  },
+  get: (id: string) => api.get<Patient>(`/patients/${id}`),
+  create: (data: { name: string; species?: string; breed?: string; tutorId?: string }) => api.post<Patient>('/patients', data),
+  update: (id: string, data: Partial<Patient>) => api.put<Patient>(`/patients/${id}`, data),
+  delete: (id: string) => api.delete(`/patients/${id}`),
+};
+
 export const transferApi = {
   create: (data: { contactId: string; conversationId?: string; toSectorId: string; fromSectorId?: string; reason?: string; autoAccept?: boolean }) =>
     api.post<ContactTransfer>('/transfers', data),
