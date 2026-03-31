@@ -397,6 +397,21 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
 
+  modules/patients:
+    dependencies:
+      '@cvg/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@cvg/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@cvg/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)
+
   modules/secretary-adapter:
     dependencies:
       '@cvg/events':
@@ -441,6 +456,21 @@ importers:
       '@cvg/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+
+  modules/tutors:
+    dependencies:
+      '@cvg/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@cvg/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@cvg/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)
 
   packages/auth:
     dependencies:
