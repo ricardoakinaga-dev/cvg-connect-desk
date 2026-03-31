@@ -1,57 +1,82 @@
 import { FastifyInstance } from 'fastify';
 import { handleGatewayInbound, handleGatewayReceipt, handleInstanceStatus, checkGatewayHealth } from '../../application/use-cases';
+import { normalizeEvolutionMessage, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
 import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 
 export async function registerGatewayRoutes(app: FastifyInstance) {
 
   // ============================================
   // WEBHOOK: Inbound do Gateway (WA_INBOUND)
+  // Aceita tanto /gateway/inbound quanto /gateway/inbound/*
   // ============================================
-  app.post('/gateway/inbound', {
-    schema: {
-      description: 'Recebe mensagens inbound do gateway (Evolution API → Desk)',
-      tags: ['Gateway'],
-      body: {
-        type: 'object',
-        required: ['event_type', 'event_id', 'payload'],
-        properties: {
-          contract_version: { type: 'string' },
-          event_type: { type: 'string', const: 'WA_INBOUND' },
-          event_id: { type: 'string' },
-          correlation_id: { type: 'string' },
-          occurred_at: { type: 'string' },
-          provider: { type: 'string' },
-          channel: { type: 'string' },
-          payload: {
-            type: 'object',
-            required: ['instance', 'remoteJid', 'messageId', 'fromMe', 'type', 'timestamp'],
-            properties: {
-              instance: { type: 'string' },
-              remoteJid: { type: 'string' },
-              messageId: { type: 'string' },
-              fromMe: { type: 'boolean' },
-              pushName: { type: 'string' },
-              type: { type: 'string' },
-              text: { type: 'string' },
-              timestamp: { type: 'number' },
-            },
-          },
-        },
-      },
-    },
-  }, async (request, reply) => {
-    const event = request.body as WAInboundEvent;
-    request.log.info({ event_id: event.event_id, type: event.event_type }, '[Gateway] Inbound recebido');
+  app.post('/gateway/inbound', handleInbound);
+  app.post('/gateway/inbound/*', handleInbound);
 
-    const result = await handleGatewayInbound(event);
+  async function handleInbound(request: any, reply: any) {
+    const event = request.body as any;
 
-    if (result.isErr()) {
-      request.log.error({ err: result.error }, '[Gateway] Erro ao processar inbound');
-      return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
+    // Detectar tipo de evento do Evolution API
+    const path = request.url;
+    let eventType = event?.event || event?.event_type || '';
+
+    // Se o evento veio pela URL (ex: /gateway/inbound/messages-upsert)
+    if (path.includes('/gateway/inbound/') && !eventType) {
+      const urlEvent = path.split('/gateway/inbound/')[1];
+      eventType = urlEvent?.toUpperCase().replace(/-/g, '_') || '';
     }
 
-    return reply.status(200).send(result.value);
-  });
+    request.log.info({ event_type: eventType, path }, '[Gateway] Evento recebido');
+
+    // Roteamento por tipo de evento
+    switch (eventType) {
+      case 'WA_INBOUND':
+      case 'MESSAGES_UPSERT': {
+        // Mensagem recebida
+        const waEvent = normalizeEvolutionMessage(event, eventType);
+        if (waEvent) {
+          const result = await handleGatewayInbound(waEvent);
+          if (result.isErr()) {
+            return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
+          }
+          return reply.status(200).send(result.value);
+        }
+        return reply.status(200).send({ skipped: true });
+      }
+
+      case 'CONNECTION_UPDATE': {
+        // Status da conexão mudou
+        const instanceStatus = normalizeConnectionUpdate(event);
+        if (instanceStatus) {
+          await handleInstanceStatus(instanceStatus);
+        }
+        return reply.status(200).send({ processed: true });
+      }
+
+      case 'QRCODE_UPDATED': {
+        // QR Code atualizado
+        request.log.info({ instance: event?.instance }, '[Gateway] QR Code atualizado');
+        return reply.status(200).send({ processed: true });
+      }
+
+      case 'MESSAGES_UPDATE': {
+        // Status de mensagem atualizado (entrega, leitura)
+        const receipt = normalizeMessageUpdate(event);
+        if (receipt) {
+          await handleGatewayReceipt(receipt);
+        }
+        return reply.status(200).send({ processed: true });
+      }
+
+      case 'SEND_MESSAGE': {
+        // Mensagem enviada (confirmado pelo Evolution)
+        return reply.status(200).send({ processed: true });
+      }
+
+      default:
+        request.log.warn({ event_type: eventType }, '[Gateway] Evento desconhecido');
+        return reply.status(200).send({ skipped: true, event_type: eventType });
+    }
+  }
 
   // ============================================
   // WEBHOOK: Receipt do Gateway (WA_RECEIPT)

@@ -16,6 +16,11 @@ export interface ReceiveInboundMessageInput {
   contactPhone?: string;
   contactName?: string;
   sentAt?: Date;
+  // Media fields
+  mediaUrl?: string;
+  mediaType?: string;
+  mediaMimetype?: string;
+  mediaFilename?: string;
   metadata?: Record<string, unknown>;
   userId?: string; // Para auditoria (null para webhook externo)
 }
@@ -112,6 +117,11 @@ export async function receiveInboundMessage(
       externalMessageId: input.externalMessageId,
       sentAt: input.sentAt || new Date(),
       status: 'pending',
+      // Media fields
+      mediaUrl: input.mediaUrl,
+      mediaType: input.mediaType,
+      mediaMimetype: input.mediaMimetype,
+      mediaFilename: input.mediaFilename,
       metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
     });
 

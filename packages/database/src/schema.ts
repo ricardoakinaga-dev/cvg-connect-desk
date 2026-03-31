@@ -104,6 +104,11 @@ export const messages = pgTable('messages', {
   status: messageStatusEnum('status').default('pending').notNull(),
   externalMessageId: text('external_message_id'),
   metadata: text('metadata'),
+  // Media fields
+  mediaUrl: text('media_url'),
+  mediaType: text('media_type'), // 'image', 'audio', 'video', 'document'
+  mediaMimetype: text('media_mimetype'),
+  mediaFilename: text('media_filename'),
   sentAt: timestamp('sent_at'),
   deliveredAt: timestamp('delivered_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),

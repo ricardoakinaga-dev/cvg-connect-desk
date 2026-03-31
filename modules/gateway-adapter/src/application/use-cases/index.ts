@@ -37,6 +37,11 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
       contactPhone: normalized.contactPhone,
       contactName: normalized.contactName,
       sentAt: normalized.sentAt,
+      // Media fields
+      mediaUrl: normalized.mediaUrl,
+      mediaType: normalized.messageType,
+      mediaMimetype: normalized.mediaMimetype,
+      mediaFilename: normalized.mediaFilename,
       metadata: {
         gateway: true,
         instance: normalized.instance,
@@ -44,8 +49,6 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
         correlationId: normalized.correlationId,
         eventId: normalized.eventId,
         messageType: normalized.messageType,
-        mediaUrl: normalized.mediaUrl,
-        mediaMimetype: normalized.mediaMimetype,
       },
     });
 

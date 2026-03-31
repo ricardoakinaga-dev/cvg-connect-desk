@@ -1,5 +1,7 @@
 import type { WAInboundEvent } from '../types/gateway-contracts';
 
+import type { WAInboundEvent, InstanceStatusEvent, WAReceiptEvent } from '../types/gateway-contracts';
+
 /**
  * Normaliza payload WA_INBOUND do gateway para o formato interno do Connect Desk.
  */
@@ -69,4 +71,172 @@ export function formatPhone(phone: string): string {
     return `+55 ${cleaned.slice(0, 2)} ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
   }
   return `+${cleaned}`;
+}
+
+/**
+ * Normaliza mensagem do formato Evolution API para WA_INBOUND do gateway.
+ * O Evolution envia em formato diferente do contrato do gateway.
+ */
+export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAInboundEvent | null {
+  try {
+    // Evolution API v2 envia: { event, instance, data: { key, message, ... } }
+    const data = rawEvent.data || rawEvent;
+    const instance = rawEvent.instance || data.instance || 'unknown';
+
+    // Extrair dados da mensagem
+    const key = data.key || {};
+    const message = data.message || {};
+    const remoteJid = key.remoteJid || data.remoteJid || '';
+    const messageId = key.id || data.messageId || '';
+    const fromMe = key.fromMe || data.fromMe || false;
+    const pushName = data.pushName || key.pushName || '';
+
+    // Determinar tipo e conteúdo
+    let type = 'text';
+    let text = '';
+    let mediaUrl: string | undefined;
+    let mediaMimetype: string | undefined;
+    let mediaFilename: string | undefined;
+    let mediaBase64: string | undefined;
+
+    if (message.conversation) {
+      type = 'text';
+      text = message.conversation;
+    } else if (message.extendedTextMessage?.text) {
+      type = 'text';
+      text = message.extendedTextMessage.text;
+    } else if (message.imageMessage) {
+      type = 'image';
+      text = message.imageMessage.caption || '';
+      mediaUrl = message.imageMessage.url;
+      mediaMimetype = message.imageMessage.mimetype;
+      mediaBase64 = message.imageMessage.base64;
+    } else if (message.audioMessage) {
+      type = 'audio';
+      text = '';
+      mediaUrl = message.audioMessage.url;
+      mediaMimetype = message.audioMessage.mimetype;
+      mediaBase64 = message.audioMessage.base64;
+    } else if (message.videoMessage) {
+      type = 'video';
+      text = message.videoMessage.caption || '';
+      mediaUrl = message.videoMessage.url;
+      mediaMimetype = message.videoMessage.mimetype;
+      mediaBase64 = message.videoMessage.base64;
+    } else if (message.documentMessage) {
+      type = 'document';
+      text = message.documentMessage.fileName || '';
+      mediaUrl = message.documentMessage.url;
+      mediaMimetype = message.documentMessage.mimetype;
+      mediaFilename = message.documentMessage.fileName;
+      mediaBase64 = message.documentMessage.base64;
+    } else if (message.stickerMessage) {
+      type = 'sticker';
+      text = '';
+      mediaUrl = message.stickerMessage.url;
+      mediaMimetype = message.stickerMessage.mimetype;
+    } else {
+      type = 'unknown';
+      text = '';
+    }
+
+    // Se o Evolution enviou base64 da mídia, salvar como URL local
+    if (mediaBase64 && !mediaUrl) {
+      mediaUrl = `data:${mediaMimetype || 'application/octet-stream'};base64,${mediaBase64}`;
+    }
+
+    // Timestamp
+    const timestamp = data.messageTimestamp || Math.floor(Date.now() / 1000);
+
+    return {
+      contract_version: '1.0.0',
+      event_type: 'WA_INBOUND',
+      event_id: messageId || `evo_${Date.now()}`,
+      correlation_id: rawEvent.correlation_id,
+      occurred_at: new Date().toISOString(),
+      tenant: 'cvg',
+      provider: 'evolutionapi',
+      channel: 'whatsapp',
+      payload: {
+        instance,
+        remoteJid,
+        messageId,
+        fromMe,
+        pushName,
+        type: type as any,
+        text,
+        media: mediaUrl ? { url: mediaUrl, mimetype: mediaMimetype, filename: mediaFilename } : undefined,
+        timestamp: typeof timestamp === 'number' ? timestamp : parseInt(timestamp),
+        raw: rawEvent,
+      },
+    };
+  } catch (err) {
+    console.error('[normalizeEvolutionMessage] Erro:', err);
+    return null;
+  }
+}
+
+/**
+ * Normaliza CONNECTION_UPDATE do Evolution para INSTANCE_STATUS do gateway.
+ */
+export function normalizeConnectionUpdate(rawEvent: any): InstanceStatusEvent | null {
+  try {
+    const data = rawEvent.data || rawEvent;
+    const instance = rawEvent.instance || 'unknown';
+    const state = data.state || data.status || 'unknown';
+
+    return {
+      contract_version: '1.0.0',
+      event_type: 'INSTANCE_STATUS',
+      event_id: `conn_${Date.now()}`,
+      occurred_at: new Date().toISOString(),
+      tenant: 'cvg',
+      provider: 'evolutionapi',
+      channel: 'whatsapp',
+      payload: {
+        instance,
+        state: state as any,
+        state_at: new Date().toISOString(),
+        reason: data.reason,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Normaliza MESSAGES_UPDATE do Evolution para WA_RECEIPT do gateway.
+ */
+export function normalizeMessageUpdate(rawEvent: any): WAReceiptEvent | null {
+  try {
+    const data = rawEvent.data || rawEvent;
+    const instance = rawEvent.instance || 'unknown';
+    const key = data.key || {};
+    const update = data.update || {};
+
+    let status = 'sent';
+    if (update.status === 3 || update.status === 'READ') status = 'read';
+    else if (update.status === 2 || update.status === 'DELIVERED') status = 'delivered';
+    else if (update.status === 1 || update.status === 'SENT') status = 'sent';
+
+    return {
+      contract_version: '1.0.0',
+      event_type: 'WA_RECEIPT',
+      event_id: `receipt_${Date.now()}`,
+      occurred_at: new Date().toISOString(),
+      tenant: 'cvg',
+      provider: 'evolutionapi',
+      channel: 'whatsapp',
+      payload: {
+        instance,
+        remoteJid: key.remoteJid || '',
+        messageId: key.id || '',
+        status: status as any,
+        status_at: new Date().toISOString(),
+      },
+    };
+  } catch {
+    return null;
+  }
 }

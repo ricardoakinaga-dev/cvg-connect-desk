@@ -9,6 +9,7 @@ export function Inbox() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,15 +39,54 @@ export function Inbox() {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedId) return;
+    if ((!newMessage.trim() && !selectedFile) || !selectedId) return;
     const conv = conversations.find(c => c.id === selectedId);
     try {
-      await conversationApi.sendMessage({ conversationId: selectedId, content: newMessage, recipient: conv?.contactId || '' });
+      if (selectedFile) {
+        // Converter arquivo para base64
+        const base64 = await fileToBase64(selectedFile);
+        const mediaType = selectedFile.type.startsWith('image/') ? 'image' : 
+                         selectedFile.type.startsWith('audio/') ? 'audio' : 'document';
+        
+        await api.post('/messages', {
+          conversationId: selectedId,
+          content: newMessage || '',
+          recipient: conv?.contactId || '',
+          mediaUrl: base64,
+          mediaType,
+          mediaMimetype: selectedFile.type,
+          mediaFilename: selectedFile.name,
+        });
+        setSelectedFile(null);
+      } else {
+        await conversationApi.sendMessage({ conversationId: selectedId, content: newMessage, recipient: conv?.contactId || '' });
+      }
       setNewMessage('');
       fetchMessages(selectedId);
     } catch (err) {
       console.error('Erro:', err);
     }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Limitar a 16MB
+      if (file.size > 16 * 1024 * 1024) {
+        alert('Arquivo muito grande. Máximo 16MB.');
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   const statusBadge = (status: string) => {
@@ -159,8 +199,54 @@ export function Inbox() {
                 messages.map(msg => (
                   <div key={msg.id} className={`msg ${msg.direction}`}>
                     <div className="msg-bubble">
-                      <div className="msg-content">{msg.content}</div>
-                      <div className="msg-time">{new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+                      {/* Imagem */}
+                      {(msg as any).mediaType === 'image' && (msg as any).mediaUrl && (
+                        <div className="msg-media">
+                          <img 
+                            src={(msg as any).mediaUrl} 
+                            alt="Imagem" 
+                            className="msg-image"
+                            onClick={() => window.open((msg as any).mediaUrl, '_blank')}
+                          />
+                        </div>
+                      )}
+
+                      {/* Áudio */}
+                      {(msg as any).mediaType === 'audio' && (msg as any).mediaUrl && (
+                        <div className="msg-media">
+                          <audio controls className="msg-audio">
+                            <source src={(msg as any).mediaUrl} type={(msg as any).mediaMimetype || 'audio/ogg'} />
+                            Seu navegador não suporta áudio.
+                          </audio>
+                        </div>
+                      )}
+
+                      {/* Documento */}
+                      {(msg as any).mediaType === 'document' && (
+                        <div className="msg-media">
+                          <a href={(msg as any).mediaUrl} target="_blank" rel="noopener" className="msg-document">
+                            📄 {(msg as any).mediaFilename || 'Documento'}
+                          </a>
+                        </div>
+                      )}
+
+                      {/* Vídeo */}
+                      {(msg as any).mediaType === 'video' && (msg as any).mediaUrl && (
+                        <div className="msg-media">
+                          <video controls className="msg-video">
+                            <source src={(msg as any).mediaUrl} type={(msg as any).mediaMimetype || 'video/mp4'} />
+                          </video>
+                        </div>
+                      )}
+
+                      {/* Texto (caption ou mensagem pura) */}
+                      {msg.content && (
+                        <div className="msg-content">{msg.content}</div>
+                      )}
+                      
+                      <div className="msg-time">
+                        {new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </div>
                     </div>
                   </div>
                 ))
@@ -168,9 +254,23 @@ export function Inbox() {
             </div>
 
             <form className="chat-composer" onSubmit={handleSend}>
-              <button type="button" className="btn-attach" title="Anexo">📎</button>
-              <input placeholder="Digite sua mensagem..." value={newMessage} onChange={e => setNewMessage(e.target.value)} />
-              <button type="submit" className="btn-send" disabled={!newMessage.trim()}>
+              <label className="btn-attach" title="Enviar imagem">
+                📷
+                <input 
+                  type="file" 
+                  accept="image/*,audio/*" 
+                  onChange={handleFileSelect}
+                  style={{ display: 'none' }}
+                />
+              </label>
+              {selectedFile && (
+                <div className="file-preview">
+                  <span>{selectedFile.name}</span>
+                  <button type="button" onClick={() => setSelectedFile(null)}>✕</button>
+                </div>
+              )}
+              <input placeholder={selectedFile ? "Legenda (opcional)..." : "Digite sua mensagem..."} value={newMessage} onChange={e => setNewMessage(e.target.value)} />
+              <button type="submit" className="btn-send" disabled={!newMessage.trim() && !selectedFile}>
                 <span>Enviar</span> ➤
               </button>
             </form>

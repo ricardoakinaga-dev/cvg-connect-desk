@@ -7,9 +7,13 @@ import { authenticate, requirePermission } from '@cvg/auth';
 
 interface SendMessageBody {
   conversationId: string;
-  content: string;
+  content?: string;
   recipient: string;
   sender?: string;
+  mediaUrl?: string;
+  mediaType?: string;
+  mediaMimetype?: string;
+  mediaFilename?: string;
 }
 
 export async function registerOutboundController(app: FastifyInstance) {
@@ -22,24 +26,32 @@ export async function registerOutboundController(app: FastifyInstance) {
           type: 'object',
           properties: {
             conversationId: { type: 'string', format: 'uuid' },
-            content: { type: 'string', minLength: 1 },
+            content: { type: 'string' },
             recipient: { type: 'string', minLength: 1 },
             sender: { type: 'string' },
+            mediaUrl: { type: 'string' },
+            mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document'] },
+            mediaMimetype: { type: 'string' },
+            mediaFilename: { type: 'string' },
           },
-          required: ['conversationId', 'content', 'recipient'],
+          required: ['conversationId', 'recipient'],
         },
       },
     },
     async (request: FastifyRequest<{ Body: SendMessageBody }>, reply: FastifyReply) => {
       try {
-        const { conversationId, content, recipient, sender } = request.body;
+        const { conversationId, content, recipient, sender, mediaUrl, mediaType, mediaMimetype, mediaFilename } = request.body;
         const userId = request.user?.id;
 
         const result = await sendOutboundMessage({
           conversationId,
-          content,
+          content: content || '',
           recipient,
           sender,
+          mediaUrl,
+          mediaType,
+          mediaMimetype,
+          mediaFilename,
           userId,
         });
 
