@@ -1,0 +1,15 @@
+{
+  "name": "@cvg/gateway-adapter",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": { "dev": "echo 'gateway-adapter module'" },
+  "dependencies": {
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*",
+    "@cvg/chat": "workspace:*",
+    "@cvg/alerts": "workspace:*",
+    "axios": "^1.6.0",
+    "uuid": "^9.0.1"
+  }
+}

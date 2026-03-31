@@ -57,4 +57,25 @@ export const messageRepository = {
       .returning();
     return message;
   },
+
+  async update(id: string, data: Partial<NewMessage>) {
+    const [message] = await db
+      .update(schema.messages)
+      .set(data)
+      .where(eq(schema.messages.id, id))
+      .returning();
+    return message;
+  },
+
+  async findPendingOutbound(limit = 10) {
+    return db
+      .select()
+      .from(schema.messages)
+      .where(and(
+        eq(schema.messages.direction, 'outbound'),
+        eq(schema.messages.status, 'pending')
+      ))
+      .orderBy(schema.messages.createdAt)
+      .limit(limit);
+  },
 };
