@@ -1,5 +1,5 @@
 /* ==========================================
-   LAYOUT — Telegram-like Sidebar
+   LAYOUT — Light Blue Professional
    ========================================== */
 
 .layout {
@@ -12,39 +12,43 @@
 /* === Sidebar === */
 .sidebar {
   width: var(--sidebar-width);
-  background: var(--bg-sidebar);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
   flex-shrink: 0;
   z-index: 10;
+  box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
 }
 
 .sidebar-header {
-  padding: 16px 20px;
+  padding: 20px 20px 16px;
   border-bottom: 1px solid var(--border);
 }
 
 .logo {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 0;
+  padding: 8px 0;
 }
 
 .nav-section-label {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 16px 20px 6px;
+  letter-spacing: 1.2px;
+  padding: 20px 20px 6px;
 }
 
 .nav-item {
@@ -54,25 +58,26 @@
   padding: 10px 20px;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   transition: var(--transition);
-  border-left: 3px solid transparent;
+  margin: 1px 8px;
+  border-radius: var(--radius-sm);
 }
 
 .nav-item:hover {
-  background: var(--bg-surface-hover);
+  background: var(--primary-lighter);
   color: var(--text-primary);
 }
 
 .nav-item.active {
   background: var(--primary-light);
   color: var(--primary);
-  border-left-color: var(--primary);
+  font-weight: 600;
 }
 
 .nav-icon {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   width: 24px;
   text-align: center;
   flex-shrink: 0;
@@ -98,7 +103,7 @@
   border: none;
   background: none;
   color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: var(--transition);
@@ -115,4 +120,9 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  background: var(--bg-app);
+  /* Subtle texture */
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.02) 0%, transparent 40%);
 }

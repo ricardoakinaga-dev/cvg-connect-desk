@@ -1,5 +1,5 @@
 /* ==========================================
-   SHARED PAGE STYLES — Telegram-like Dark Theme
+   SHARED PAGE STYLES — Light Blue Professional
    ========================================== */
 
 .page-container {
@@ -21,9 +21,10 @@
 
 .page-header h1 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   color: var(--text-primary);
   font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .page-actions {
@@ -35,24 +36,24 @@
 
 .page-search {
   padding: 10px 16px;
-  border: 1.5px solid var(--border-light);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
   min-width: 250px;
   transition: var(--transition);
-  background: var(--bg-input);
+  background: var(--bg-surface);
   color: var(--text-primary);
 }
 
 .page-search::placeholder { color: var(--text-muted); }
-.page-search:focus { outline: none; border-color: var(--primary); background: var(--bg-surface); }
+.page-search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08); }
 
 .page-filter {
   padding: 10px 16px;
-  border: 1.5px solid var(--border-light);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
-  background: var(--bg-input);
+  background: var(--bg-surface);
   color: var(--text-primary);
   cursor: pointer;
 }
@@ -70,16 +71,17 @@
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 
 .btn-primary:hover { background: var(--primary-hover); }
-.btn-primary:disabled { background: var(--bg-surface-active); color: var(--text-muted); cursor: not-allowed; }
+.btn-primary:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
 
 .btn-secondary {
   padding: 10px 22px;
   background: var(--bg-surface);
   color: var(--text-secondary);
-  border: 1.5px solid var(--border-light);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
   font-weight: 600;
@@ -87,13 +89,13 @@
   transition: var(--transition);
 }
 
-.btn-secondary:hover { background: var(--bg-surface-hover); color: var(--text-primary); }
+.btn-secondary:hover { background: var(--bg-surface-hover); color: var(--text-primary); border-color: var(--text-muted); }
 
 .btn-danger {
   padding: 10px 22px;
-  background: rgba(224, 93, 93, 0.12);
+  background: rgba(220, 38, 38, 0.06);
   color: var(--error);
-  border: 1.5px solid rgba(224, 93, 93, 0.3);
+  border: 1.5px solid rgba(220, 38, 38, 0.2);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
   font-weight: 600;
@@ -101,13 +103,13 @@
   transition: var(--transition);
 }
 
-.btn-danger:hover { background: rgba(224, 93, 93, 0.2); }
+.btn-danger:hover { background: rgba(220, 38, 38, 0.1); }
 
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
   transition: var(--transition);
@@ -119,7 +121,7 @@
 .btn-close {
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   color: var(--text-muted);
   padding: 4px 8px;
@@ -131,43 +133,36 @@
 /* Table */
 .page-table-wrapper {
   background: var(--bg-surface);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-.page-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.page-table thead {
-  background: var(--bg-surface-hover);
-}
+.page-table { width: 100%; border-collapse: collapse; }
+.page-table thead { background: var(--bg-input); }
 
 .page-table th {
   padding: 14px 18px;
   text-align: left;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
 }
 
 .page-table td {
   padding: 14px 18px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .page-table tbody tr:last-child td { border-bottom: none; }
-
 .clickable-row { cursor: pointer; transition: var(--transition); }
 .clickable-row:hover { background: var(--bg-surface-hover); }
-
 .cell-name { font-weight: 600; color: var(--text-primary); }
 .cell-actions { white-space: nowrap; }
 
@@ -185,7 +180,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(15, 23, 42, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -196,8 +191,8 @@
 
 .modal-content {
   background: var(--bg-surface);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   padding: 28px;
   width: 90%;
   max-width: 480px;
@@ -212,7 +207,7 @@
 
 .modal-content h2 {
   margin: 0 0 20px;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: var(--text-primary);
   font-weight: 700;
 }
@@ -222,7 +217,7 @@
 
 .form-group label {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 6px;
@@ -233,12 +228,12 @@
 .form-group textarea {
   width: 100%;
   padding: 11px 16px;
-  border: 1.5px solid var(--border-light);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.9rem;
   box-sizing: border-box;
   transition: var(--transition);
-  background: var(--bg-input);
+  background: var(--bg-surface);
   color: var(--text-primary);
 }
 
@@ -250,12 +245,7 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  background: var(--bg-surface);
-}
-
-.form-group select option {
-  background: var(--bg-surface);
-  color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
 .form-actions {
@@ -268,10 +258,11 @@
 /* Detail Panel */
 .detail-panel {
   background: var(--bg-surface);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 22px;
   margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
   animation: fadeIn 0.15s ease;
 }
 
@@ -282,9 +273,8 @@
   margin-bottom: 16px;
 }
 
-.detail-header h2 { margin: 0; font-size: 1.2rem; color: var(--text-primary); font-weight: 700; }
-
-.detail-info p { margin: 8px 0; font-size: 0.9rem; color: var(--text-secondary); }
+.detail-header h2 { margin: 0; font-size: 1.15rem; color: var(--text-primary); font-weight: 700; }
+.detail-info p { margin: 8px 0; font-size: 0.88rem; color: var(--text-secondary); }
 
 .detail-section {
   margin-top: 16px;
@@ -292,14 +282,14 @@
   border-top: 1px solid var(--border-light);
 }
 
-.detail-section h3 { margin: 0 0 10px; font-size: 0.95rem; color: var(--text-secondary); }
+.detail-section h3 { margin: 0 0 10px; font-size: 0.92rem; color: var(--text-secondary); font-weight: 600; }
 
 .detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .detail-actions {
@@ -310,7 +300,7 @@
   border-top: 1px solid var(--border-light);
 }
 
-/* Loading & Empty States */
+/* Loading & Empty */
 .loading-center {
   display: flex;
   justify-content: center;
@@ -321,7 +311,7 @@
 .spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid var(--border-light);
+  border: 3px solid var(--border);
   border-top-color: var(--primary);
   border-radius: var(--radius-full);
   animation: spin 0.7s linear infinite;
@@ -335,8 +325,8 @@
   color: var(--text-muted);
 }
 
-.empty-state span { font-size: 3rem; display: block; margin-bottom: 12px; }
-.empty-state p { margin: 0 0 16px; font-size: 0.95rem; }
+.empty-state span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+.empty-state p { margin: 0 0 16px; font-size: 0.92rem; }
 
 @keyframes fadeIn {
   from { opacity: 0; }

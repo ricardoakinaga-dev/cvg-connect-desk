@@ -1,5 +1,5 @@
 /* ==========================================
-   LOGIN — Telegram-like Dark
+   LOGIN — Light Blue Gradient
    ========================================== */
 
 .login-page {
@@ -7,7 +7,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-app);
+  /* Gradient background with texture */
+  background:
+    linear-gradient(135deg, #DBEAFE 0%, #EFF6FF 30%, #F0F4F8 60%, #E0EAFF 100%);
   position: relative;
   overflow: hidden;
 }
@@ -22,30 +24,30 @@
 .bg-circle {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(100px);
   opacity: 0.15;
 }
 
 .c1 {
-  width: 400px;
-  height: 400px;
-  background: var(--primary);
-  top: -100px;
+  width: 500px;
+  height: 500px;
+  background: #3B82F6;
+  top: -150px;
   right: -100px;
 }
 
 .c2 {
-  width: 300px;
-  height: 300px;
-  background: #5BA3E8;
-  bottom: -50px;
-  left: -50px;
+  width: 400px;
+  height: 400px;
+  background: #60A5FA;
+  bottom: -100px;
+  left: -100px;
 }
 
 .c3 {
-  width: 200px;
-  height: 200px;
-  background: #1C5FA0;
+  width: 250px;
+  height: 250px;
+  background: #93C5FD;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -55,13 +57,14 @@
 .login-card {
   position: relative;
   z-index: 1;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-xl);
   padding: 40px 36px;
   width: 100%;
   max-width: 400px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
   animation: fadeIn 0.3s ease;
 }
 
@@ -76,9 +79,8 @@
 }
 
 .login-logo {
-  font-size: 3.5rem;
+  font-size: 3rem;
   margin-bottom: 16px;
-  filter: drop-shadow(0 4px 12px rgba(51, 144, 236, 0.3));
 }
 
 .login-header h1 {
@@ -92,7 +94,7 @@
 .login-header p {
   margin: 6px 0 0;
   font-size: 0.88rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 /* Form */
@@ -103,13 +105,13 @@
 }
 
 .login-error {
-  background: rgba(224, 93, 93, 0.12);
+  background: rgba(220, 38, 38, 0.08);
   color: var(--error);
   padding: 12px 16px;
   border-radius: var(--radius-md);
   font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid rgba(224, 93, 93, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.15);
 }
 
 .input-group {
@@ -121,17 +123,17 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1rem;
-  opacity: 0.6;
+  font-size: 0.95rem;
+  opacity: 0.5;
 }
 
 .input-group input {
   width: 100%;
   padding: 13px 16px 13px 42px;
-  border: 1.5px solid var(--border-light);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.92rem;
-  background: var(--bg-input);
+  background: white;
   color: var(--text-primary);
   transition: var(--transition);
   box-sizing: border-box;
@@ -142,19 +144,18 @@
 .input-group input:focus {
   outline: none;
   border-color: var(--primary);
-  background: var(--bg-surface);
-  box-shadow: 0 0 0 3px rgba(51, 144, 236, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .btn-login {
   width: 100%;
   padding: 13px;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), #3B82F6);
   color: white;
   border: none;
   border-radius: var(--radius-md);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   margin-top: 6px;
@@ -162,10 +163,21 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
-.btn-login:hover { background: var(--primary-hover); transform: translateY(-1px); }
-.btn-login:disabled { background: var(--bg-surface-active); cursor: not-allowed; transform: none; }
+.btn-login:hover {
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.btn-login:disabled {
+  background: var(--border);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 .btn-spinner {
   width: 20px;
