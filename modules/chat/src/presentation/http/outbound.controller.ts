@@ -145,11 +145,29 @@ export async function registerOutboundController(app: FastifyInstance) {
         const userId = (request.user as any)?.id;
         const conversations = await conversationRepository.findAll({ status, queueId, teamId, sectorId, userId });
         
+        // Buscar contatos para resolver nomes
+        const contactIds = [...new Set(conversations.map(c => c.contactId).filter(Boolean))];
+        const contactsMap = new Map<string, { name: string | null; phone: string | null }>();
+        
+        if (contactIds.length > 0) {
+          const { db } = await import('@cvg/database');
+          const { contacts, inArray } = await import('@cvg/database');
+          const contactsResult = await db.select({ id: contacts.id, name: contacts.name, phone: contacts.phone })
+            .from(contacts)
+            .where(inArray(contacts.id, contactIds as string[]));
+          for (const c of contactsResult) {
+            contactsMap.set(c.id, { name: c.name, phone: c.phone });
+          }
+        }
+
         const conversationsWithLastMessage = await Promise.all(
           conversations.map(async (conv) => {
             const messages = await messageRepository.findRecentByConversationId(conv.id, 1);
+            const contact = conv.contactId ? contactsMap.get(conv.contactId) : null;
             return {
               ...conv,
+              contactName: contact?.name || null,
+              contactPhone: contact?.phone || null,
               lastMessage: messages[0] || null,
             };
           })
