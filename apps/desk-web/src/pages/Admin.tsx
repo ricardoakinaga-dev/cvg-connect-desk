@@ -212,12 +212,34 @@ export function Admin() {
     }
   };
 
-  const tabs: { key: Tab; label: string; icon: string }[] = [
-    { key: 'users', label: 'Usuários', icon: '👥' },
-    { key: 'roles', label: 'Papéis', icon: '🔑' },
-    { key: 'queues', label: 'Filas', icon: '📋' },
-    { key: 'teams', label: 'Times', icon: '🏢' },
+  const tabs: { key: Tab; label: string; icon: string; description: string }[] = [
+    { 
+      key: 'users', 
+      label: 'Usuários', 
+      icon: '👥',
+      description: 'Pessoas que acessam o sistema (atendentes, veterinários, recepcionistas). Cada usuário tem login, senha e permissões específicas por setor.'
+    },
+    { 
+      key: 'roles', 
+      label: 'Papéis', 
+      icon: '🔑',
+      description: 'Grupos de permissões pré-definidos (ex: Admin, Veterinário, Recepcionista). Ao atribuir um papel a um usuário, ele ganha todas as permissões daquele papel automaticamente.'
+    },
+    { 
+      key: 'queues', 
+      label: 'Filas', 
+      icon: '📋',
+      description: 'Fila de espera para distribuir atendimentos. Ex: quando chega uma mensagem, ela pode ser direcionada para a "Fila Recepção" e depois para a "Fila Clínica". Útil para organizar o fluxo de trabalho.'
+    },
+    { 
+      key: 'teams', 
+      label: 'Times', 
+      icon: '🏢',
+      description: 'Grupos de usuários que trabalham juntos. Ex: "Equipe Clínica" (Dr. João + Dra. Maria), "Equipe Recepção" (Ana + Pedro). Facilita a atribuição de conversas para grupos.'
+    },
   ];
+
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   return (
     <div className="admin-page">
@@ -233,10 +255,30 @@ export function Admin() {
 
       <div className="admin-tabs">
         {tabs.map(t => (
-          <button key={t.key} className={`admin-tab ${tab === t.key ? 'active' : ''}`} onClick={() => { setTab(t.key); setShowCreate(false); }}>
-            {t.icon} {t.label}
-          </button>
+          <div key={t.key} className="tab-wrapper">
+            <button
+              className={`admin-tab ${tab === t.key ? 'active' : ''}`}
+              onClick={() => { setTab(t.key); setShowCreate(false); }}
+              onMouseEnter={() => setHoveredTab(t.key)}
+              onMouseLeave={() => setHoveredTab(null)}
+            >
+              {t.icon} {t.label}
+              <span className="tab-info-icon">ⓘ</span>
+            </button>
+            {hoveredTab === t.key && (
+              <div className="tab-tooltip">
+                <div className="tooltip-title">{t.icon} {t.label}</div>
+                <div className="tooltip-desc">{t.description}</div>
+              </div>
+            )}
+          </div>
         ))}
+      </div>
+
+      {/* Descrição fixa da aba selecionada */}
+      <div className="tab-description">
+        {tabs.find(t => t.key === tab)?.icon} <strong>{tabs.find(t => t.key === tab)?.label}:</strong>{' '}
+        {tabs.find(t => t.key === tab)?.description}
       </div>
 
       {showCreate && (
