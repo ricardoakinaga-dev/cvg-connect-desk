@@ -56,8 +56,8 @@ services:
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
-      SECRETARY_URL: ${SECRETARY_URL:-}
-      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      SECRETARY_URL: http://secretary:3000
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-desk-secretary-key-change-me}
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
     volumes:
       - .:/app
@@ -104,18 +104,16 @@ services:
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
-      SECRETARY_URL: ${SECRETARY_URL:-}
-      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      SECRETARY_URL: http://secretary:3000
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-desk-secretary-key-change-me}
     volumes:
       - .:/app
       - /app/node_modules
     depends_on:
-      db-init:
-        condition: service_completed_successfully
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - secretary
+      - db-init
+      - postgres
+      - redis
     command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile && pnpm --filter @cvg/message-worker exec tsx src/index.ts"
 
   realtime-service:
@@ -147,6 +145,35 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+
+  secretary:
+    build:
+      context: ../../cvg-lab/projects/cvg-secretary
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CHATWOOT_API_URL: http://localhost:3000
+      CHATWOOT_API_TOKEN: placeholder
+      WEBHOOK_SECRET: desk-integration-secret
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-desk-secretary-key-change-me}
+      LOG_LEVEL: info
+    ports:
+      - "8083:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
 
 volumes:
   pgdata:

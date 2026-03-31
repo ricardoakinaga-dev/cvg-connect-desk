@@ -63,10 +63,10 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório em produção}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
-      SECRETARY_URL: ${SECRETARY_URL:-}
-      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      SECRETARY_URL: http://secretary:3000
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-desk-secretary-key-change-me}
       SECRETARY_TIMEOUT_MS: ${SECRETARY_TIMEOUT_MS:-30000}
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-desk-integration-secret-32chars-minimum}
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
     ports:
       - "127.0.0.1:3000:3000"
@@ -158,6 +158,37 @@ services:
     networks:
       - internal
       - frontend
+
+  secretary:
+    build:
+      context: ../../cvg-lab/projects/cvg-secretary
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CHATWOOT_API_URL: ${CHATWOOT_API_URL:-http://localhost:3000}
+      CHATWOOT_API_TOKEN: ${CHATWOOT_API_TOKEN:-placeholder}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-desk-integration-secret-32chars-minimum}
+      SECRETARY_API_KEY: ${SECRETARY_API_KEY:-desk-secretary-key-change-me}
+      LOG_LEVEL: info
+    ports:
+      - "127.0.0.1:8083:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    networks:
+      - internal
 
 volumes:
   pgdata:
