@@ -57,6 +57,12 @@
   text-align: center;
 }
 
+.ws-status {
+  font-size: 0.55rem;
+  margin-left: 4px;
+  cursor: help;
+}
+
 .btn-new-conv {
   width: 40px;
   height: 40px;

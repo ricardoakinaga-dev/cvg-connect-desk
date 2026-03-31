@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { api, conversationApi, sectorApi, type ConversationListItem, type Message, type Sector } from '../lib/api';
+import { realtimeClient } from '../lib/realtime';
+import { useAuthStore } from '../store/auth';
 import './Inbox.css';
 
 // ==========================================
@@ -121,6 +123,7 @@ export function Inbox() {
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [wsConnected, setWsConnected] = useState(false);
 
   // ==========================================
   // Data fetching
@@ -148,9 +151,11 @@ export function Inbox() {
 
   useEffect(() => {
     fetchConversations();
-    const interval = setInterval(fetchConversations, 8000);
+    // Poll less frequently when WebSocket is connected, more when disconnected
+    const intervalMs = wsConnected ? 30000 : 8000;
+    const interval = setInterval(fetchConversations, intervalMs);
     return () => clearInterval(interval);
-  }, [fetchConversations]);
+  }, [fetchConversations, wsConnected]);
 
   // Fetch messages for selected conversation
   const fetchMessages = useCallback(async (id: string) => {
@@ -184,6 +189,65 @@ export function Inbox() {
     const convId = searchParams.get('conversation');
     if (convId && convId !== selectedConv) setSelectedConv(convId);
   }, [searchParams]);
+
+  // ==========================================
+  // Realtime (WebSocket)
+  // ==========================================
+  useEffect(() => {
+    const { user, token } = useAuthStore.getState();
+    if (!user?.id || !token) return;
+
+    realtimeClient.connect(user.id, token);
+
+    const checkConnection = () => {
+      const ws = (realtimeClient as any).ws;
+      setWsConnected(ws?.readyState === WebSocket.OPEN);
+    };
+
+    const checkInterval = setInterval(checkConnection, 3000);
+
+    return () => clearInterval(checkInterval);
+  }, []);
+
+  // Subscribe to realtime events
+  useEffect(() => {
+    const onMessagePersisted = (event: any) => {
+      const msg = event.payload;
+      if (!msg?.conversationId) return;
+
+      if (msg.conversationId === selectedConv) {
+        setMessages(prev => {
+          if (prev.some(m => m.id === msg.id)) return prev;
+          return [...prev, msg as Message];
+        });
+        requestAnimationFrame(() => {
+          messagesContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+        });
+        api.post(`/conversations/${msg.conversationId}/mark-read`).catch(() => {});
+      }
+      fetchConversations();
+    };
+
+    const onConversationCreated = () => fetchConversations();
+
+    const onConversationStatusChanged = (event: any) => {
+      const convId = event.payload?.id;
+      if (convId === selectedConv && selectedConvData) {
+        setSelectedConvData(prev => prev ? { ...prev, statusV2: event.payload?.status } : null);
+      }
+      fetchConversations();
+    };
+
+    realtimeClient.subscribe('message.persisted', onMessagePersisted);
+    realtimeClient.subscribe('conversation.created', onConversationCreated);
+    realtimeClient.subscribe('conversation.status.changed', onConversationStatusChanged);
+
+    return () => {
+      realtimeClient.unsubscribe('message.persisted', onMessagePersisted);
+      realtimeClient.unsubscribe('conversation.created', onConversationCreated);
+      realtimeClient.unsubscribe('conversation.status.changed', onConversationStatusChanged);
+    };
+  }, [selectedConv, selectedConvData, fetchConversations]);
 
   // ==========================================
   // Actions
@@ -403,6 +467,9 @@ export function Inbox() {
           <div className="sidebar-title">
             <h2>💬 Conversas</h2>
             {totalUnread > 0 && <span className="total-unread-badge">{totalUnread}</span>}
+            <span className={`ws-status ${wsConnected ? 'connected' : 'disconnected'}`} title={wsConnected ? 'Tempo real conectado' : 'Usando polling'}>
+              {wsConnected ? '🟢' : '🟡'}
+            </span>
           </div>
           <button
             className={`btn-new-conv ${showNewConv ? 'active' : ''}`}
