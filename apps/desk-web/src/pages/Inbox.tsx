@@ -1,85 +1,79 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { api, conversationApi, labelApi, sectorApi, type Conversation, type Message, type Label, type Sector } from '../lib/api';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { api, conversationApi, sectorApi, type Conversation, type Message, type Sector } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import './Inbox.css';
 
 export function Inbox() {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Data
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [labels, setLabels] = useState<Label[]>([]);
 
   // Selection
   const [selectedSector, setSelectedSector] = useState<string>('all');
   const [selectedConv, setSelectedConv] = useState<string | null>(null);
   const [selectedConvData, setSelectedConvData] = useState<Conversation | null>(null);
 
-  // UI state
+  // UI
   const [loading, setLoading] = useState(true);
-  const [loadingMessages, setLoadingMessages] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [showLabels, setShowLabels] = useState(false);
-  const [showTransfer, setShowTransfer] = useState(false);
+  const [showNewConv, setShowNewConv] = useState(false);
+  const [newConvTab, setNewConvTab] = useState<'contacts' | 'collaborators'>('contacts');
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [contactSearch, setContactSearch] = useState('');
 
-  // Fetch sectors
+  // Fetch
   useEffect(() => {
     sectorApi.list().then(setSectors).catch(() => {});
-    labelApi.list().then(setLabels).catch(() => {});
+    api.get<any[]>('/contacts').then(setContacts).catch(() => {});
   }, []);
 
-  // Fetch conversations
   const fetchConversations = useCallback(async () => {
     try {
       const params: any = {};
       if (selectedSector !== 'all') params.sectorId = selectedSector;
       const data = await conversationApi.list(params);
       setConversations(data.conversations || []);
-    } catch (err) { console.error('Erro:', err); }
+    } catch (err) { console.error(err); }
     finally { setLoading(false); }
   }, [selectedSector]);
 
-  useEffect(() => { fetchConversations(); const i = setInterval(fetchConversations, 10000); return () => clearInterval(i); }, [fetchConversations]);
+  useEffect(() => { fetchConversations(); const i = setInterval(fetchConversations, 8000); return () => clearInterval(i); }, [fetchConversations]);
 
-  // Fetch messages when conversation selected
   const fetchMessages = useCallback(async (id: string) => {
-    setLoadingMessages(true);
     try {
       const data = await conversationApi.getMessages(id);
       setMessages(data.messages || []);
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-    } catch (err) { console.error('Erro:', err); }
-    finally { setLoadingMessages(false); }
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+    } catch (err) { console.error(err); }
   }, []);
 
   useEffect(() => { if (selectedConv) fetchMessages(selectedConv); }, [selectedConv, fetchMessages]);
+  useEffect(() => { const c = searchParams.get('conversation'); if (c) setSelectedConv(c); }, [searchParams]);
 
-  // Auto-select from URL
-  useEffect(() => {
-    const convId = searchParams.get('conversation');
-    if (convId) setSelectedConv(convId);
-  }, [searchParams]);
-
-  // Select conversation
+  // Select
   const selectConv = (conv: Conversation) => {
     setSelectedConv(conv.id);
     setSelectedConvData(conv);
+    setShowNewConv(false);
   };
 
-  // Send message
+  // Send
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if ((!newMessage.trim() && !selectedFile) || !selectedConv) return;
     try {
       if (selectedFile) {
-        const base64 = await fileToBase64(selectedFile);
+        const base64 = await new Promise<string>((res, rej) => { const r = new FileReader(); r.readAsDataURL(selectedFile); r.onload = () => res(r.result as string); r.onerror = rej; });
         const mediaType = selectedFile.type.startsWith('image/') ? 'image' : selectedFile.type.startsWith('audio/') ? 'audio' : 'document';
         await api.post('/messages', { conversationId: selectedConv, content: newMessage || '', recipient: selectedConvData?.contactId || '', mediaUrl: base64, mediaType, mediaMimetype: selectedFile.type, mediaFilename: selectedFile.name });
         setSelectedFile(null);
@@ -89,107 +83,119 @@ export function Inbox() {
       setNewMessage('');
       fetchMessages(selectedConv);
       fetchConversations();
-    } catch (err) { console.error('Erro:', err); }
+    } catch (err) { console.error(err); }
   };
 
-  const fileToBase64 = (file: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(file); r.onload = () => res(r.result as string); r.onerror = rej; });
-
-  // Transfer conversation
-  const handleTransfer = async (toSectorId: string) => {
-    if (!selectedConv || !selectedConvData?.contactId) return;
+  // Start new conversation
+  const handleStartConversation = async (contactId: string) => {
     try {
-      await api.post('/transfers', { contactId: selectedConvData.contactId, conversationId: selectedConv, toSectorId, fromSectorId: selectedConvData.sectorId || undefined, autoAccept: true });
-      setShowTransfer(false);
+      const result = await api.post<{ conversationId: string; isNew: boolean }>(`/contacts/${contactId}/start-conversation`, { sectorId: selectedSector !== 'all' ? selectedSector : undefined });
+      setShowNewConv(false);
       fetchConversations();
+      setSelectedConv(result.conversationId);
     } catch (err: any) { alert(err.message); }
   };
 
   // Helpers
-  const statusBadge = (s: string) => {
-    const map: Record<string, { label: string; class: string }> = {
-      novo: { label: 'Novo', class: 'novo' }, em_atendimento: { label: 'Atendendo', class: 'atendendo' },
-      pendente: { label: 'Pendente', class: 'pendente' }, em_espera: { label: 'Espera', class: 'espera' },
-      finalizado: { label: 'Finalizado', class: 'finalizado' }, open: { label: 'Aberto', class: 'novo' },
-      pending: { label: 'Pendente', class: 'pendente' }, closed: { label: 'Fechado', class: 'finalizado' },
-    };
-    return map[s] || { label: s, class: 'default' };
+  const statusColor = (s: string) => {
+    const map: Record<string, string> = { novo: '#22c55e', em_atendimento: '#3b82f6', pendente: '#eab308', em_espera: '#f97316', finalizado: '#9ca3af', open: '#22c55e', pending: '#eab308', closed: '#9ca3af' };
+    return map[s] || '#999';
   };
 
-  const timeAgo = (d: string) => { const m = Math.floor((Date.now() - new Date(d).getTime()) / 60000); if (m < 1) return 'agora'; if (m < 60) return `${m}min`; if (m < 1440) return `${Math.floor(m / 60)}h`; return `${Math.floor(m / 1440)}d`; };
+  const timeAgo = (d: string) => { const m = Math.floor((Date.now() - new Date(d).getTime()) / 60000); if (m < 1) return 'agora'; if (m < 60) return `${m}min`; if (m < 1440) return `${Math.floor(m / 60)}h`; return new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }); };
 
-  const filtered = conversations.filter(c => !searchTerm || (c.contactId || '').toLowerCase().includes(searchTerm.toLowerCase()) || (c.externalConversationId || '').toLowerCase().includes(searchTerm.toLowerCase()));
+  const filtered = conversations.filter(c => !searchTerm || (c.contactId || '').toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const filteredContacts = contacts.filter(c => !contactSearch || (c.name || '').toLowerCase().includes(contactSearch.toLowerCase()) || (c.phone || '').includes(contactSearch));
+
+  const sectorCount = (id: string) => conversations.filter(c => c.sectorId === id).length;
 
   const activeSector = sectors.find(s => s.id === selectedSector);
-  const sectorConvCount = (sectorId: string) => conversations.filter(c => c.sectorId === sectorId).length;
 
   return (
-    <div className="inbox-premium">
-      {/* COLUNA 0 — SETORES */}
-      <div className="inbox-sectors">
-        <div className="sectors-header">
-          <h3>📥 Inbox</h3>
-        </div>
+    <div className="inbox-v2">
+      {/* ===== COLUNA CONVERSAS ===== */}
+      <div className="inbox-sidebar">
+        {/* Header */}
+        <div className="sidebar-top">
+          <div className="sidebar-title-row">
+            <h2>💬 Conversas</h2>
+            <button className="btn-new-conv" onClick={() => setShowNewConv(!showNewConv)} title="Nova conversa">
+              {showNewConv ? '✕' : '✏️'}
+            </button>
+          </div>
 
-        <div className={`sector-item ${selectedSector === 'all' ? 'active' : ''}`} onClick={() => setSelectedSector('all')}>
-          <div className="sector-icon" style={{ background: '#4361ee' }}>💬</div>
-          <div className="sector-info">
-            <div className="sector-name">Todos</div>
-            <div className="sector-count">{conversations.length}</div>
+          {/* Setores tabs */}
+          <div className="sector-tabs">
+            <button className={`sector-tab ${selectedSector === 'all' ? 'active' : ''}`} onClick={() => setSelectedSector('all')}>
+              Todos <span className="tab-badge">{conversations.length}</span>
+            </button>
+            {sectors.filter(s => s.isActive).map(s => (
+              <button key={s.id} className={`sector-tab ${selectedSector === s.id ? 'active' : ''}`} onClick={() => setSelectedSector(s.id)} style={selectedSector === s.id ? { borderColor: s.color, color: s.color } : {}}>
+                {s.icon} {s.name.split(' ')[0]} {sectorCount(s.id) > 0 && <span className="tab-badge">{sectorCount(s.id)}</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* Search */}
+          <div className="sidebar-search">
+            <input placeholder="🔍 Pesquisar conversas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
           </div>
         </div>
 
-        <div className="sectors-divider" />
-
-        {sectors.filter(s => s.isActive).map(sector => (
-          <div key={sector.id} className={`sector-item ${selectedSector === sector.id ? 'active' : ''}`} onClick={() => setSelectedSector(sector.id)}>
-            <div className="sector-icon" style={{ background: sector.color }}>{sector.icon}</div>
-            <div className="sector-info">
-              <div className="sector-name">{sector.name}</div>
-              <div className="sector-count">{sectorConvCount(sector.id)}</div>
+        {/* Nova conversa panel */}
+        {showNewConv && (
+          <div className="new-conv-panel">
+            <div className="new-conv-tabs">
+              <button className={`new-conv-tab ${newConvTab === 'contacts' ? 'active' : ''}`} onClick={() => setNewConvTab('contacts')}>👤 Clientes</button>
+              <button className={`new-conv-tab ${newConvTab === 'collaborators' ? 'active' : ''}`} onClick={() => setNewConvTab('collaborators')}>👩‍⚕️ Colaboradores</button>
             </div>
+            <input className="new-conv-search" placeholder="Buscar..." value={contactSearch} onChange={e => setContactSearch(e.target.value)} />
+            <div className="new-conv-list">
+              {filteredContacts.map(c => (
+                <div key={c.id} className="new-conv-item" onClick={() => handleStartConversation(c.id)}>
+                  <div className="new-conv-avatar">{(c.name || '?')[0].toUpperCase()}</div>
+                  <div className="new-conv-info">
+                    <div className="new-conv-name">{c.name}</div>
+                    <div className="new-conv-phone">{c.phone}</div>
+                  </div>
+                  <span className="new-conv-arrow">💬</span>
+                </div>
+              ))}
+              {filteredContacts.length === 0 && <div className="new-conv-empty">Nenhum contato encontrado</div>}
+            </div>
+            <button className="btn-add-contact" onClick={() => navigate('/contacts')}>
+              ＋ Cadastrar novo contato
+            </button>
           </div>
-        ))}
-      </div>
+        )}
 
-      {/* COLUNA 1 — LISTA */}
-      <div className="inbox-list">
-        <div className="list-header">
-          <div className="list-title">
-            {activeSector ? (
-              <><span className="list-sector-icon" style={{ background: activeSector.color }}>{activeSector.icon}</span> {activeSector.name}</>
-            ) : (
-              <><span className="list-sector-icon" style={{ background: '#4361ee' }}>💬</span> Todas as conversas</>
-            )}
-          </div>
-          <span className="list-count">{filtered.length}</span>
-        </div>
-
-        <div className="list-search">
-          <span className="search-icon">🔍</span>
-          <input placeholder="Buscar conversas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-        </div>
-
-        <div className="conv-list">
+        {/* Lista de conversas */}
+        <div className="conv-list-v2">
           {loading ? (
-            <div className="loading-state"><div className="spinner" /></div>
+            <div className="loading-center"><div className="spinner" /></div>
           ) : filtered.length === 0 ? (
-            <div className="empty-sm">Nenhuma conversa {activeSector ? `em ${activeSector.name}` : ''}</div>
+            <div className="empty-list">
+              <span>📭</span>
+              <p>Nenhuma conversa</p>
+            </div>
           ) : (
             filtered.map(conv => {
-              const badge = statusBadge(conv.statusV2 || conv.status);
-              const isSelected = selectedConv === conv.id;
+              const isActive = selectedConv === conv.id;
+              const sector = sectors.find(s => s.id === conv.sectorId);
               return (
-                <div key={conv.id} className={`conv-item ${isSelected ? 'selected' : ''}`} onClick={() => selectConv(conv)}>
-                  <div className="conv-avatar">{(conv.contactId || '?')[0].toUpperCase()}</div>
-                  <div className="conv-body">
-                    <div className="conv-top">
-                      <span className="conv-name">{conv.contactId?.slice(0, 14) || 'Contato'}</span>
-                      <span className="conv-time">{timeAgo(conv.createdAt)}</span>
+                <div key={conv.id} className={`conv-row ${isActive ? 'active' : ''}`} onClick={() => selectConv(conv)}>
+                  <div className="conv-avatar-v2" style={{ background: sector?.color || '#4361ee' }}>
+                    {(conv.contactId || '?')[0].toUpperCase()}
+                  </div>
+                  <div className="conv-content">
+                    <div className="conv-header-row">
+                      <span className="conv-name-v2">{conv.contactId?.slice(0, 16) || 'Contato'}</span>
+                      <span className="conv-time-v2">{timeAgo(conv.createdAt)}</span>
                     </div>
-                    <div className="conv-bottom">
-                      <span className={`status-dot ${badge.class}`} />
-                      <span className="conv-preview">{conv.externalConversationId || 'Conversa'}</span>
-                      <span className={`badge-mini ${badge.class}`}>{badge.label}</span>
+                    <div className="conv-preview-row">
+                      <span className="conv-last-msg">{conv.externalConversationId || 'Nova conversa'}</span>
+                      <span className="conv-status-dot" style={{ background: statusColor(conv.statusV2 || conv.status) }} />
                     </div>
                   </div>
                 </div>
@@ -199,127 +205,108 @@ export function Inbox() {
         </div>
       </div>
 
-      {/* COLUNA 2 — CHAT */}
-      <div className="inbox-chat">
+      {/* ===== COLUNA CHAT ===== */}
+      <div className="inbox-main">
         {selectedConv && selectedConvData ? (
           <>
-            {/* Header do chat */}
-            <div className="chat-header">
-              <div className="chat-contact">
-                <div className="chat-avatar">{(selectedConvData.contactId || '?')[0].toUpperCase()}</div>
-                <div className="chat-info">
-                  <div className="chat-name">{selectedConvData.contactId?.slice(0, 16) || 'Contato'}</div>
-                  <div className="chat-meta">
-                    {(() => { const b = statusBadge(selectedConvData.statusV2 || selectedConvData.status); return <span className={`badge-mini ${b.class}`}>{b.label}</span>; })()}
-                    <span className="chat-sector-badge" style={{ background: activeSector?.color || '#666' }}>
+            {/* Chat Header */}
+            <div className="main-header">
+              <div className="header-left">
+                <div className="header-avatar" style={{ background: activeSector?.color || '#4361ee' }}>
+                  {(selectedConvData.contactId || '?')[0].toUpperCase()}
+                </div>
+                <div className="header-info">
+                  <div className="header-name">{selectedConvData.contactId?.slice(0, 20) || 'Contato'}</div>
+                  <div className="header-meta">
+                    <span className="header-sector" style={{ background: (activeSector?.color || '#666') + '20', color: activeSector?.color || '#666' }}>
                       {activeSector?.icon || '📋'} {activeSector?.name || 'Sem setor'}
+                    </span>
+                    <span className="header-status" style={{ color: statusColor(selectedConvData.statusV2 || selectedConvData.status) }}>
+                      ● {(selectedConvData.statusV2 || selectedConvData.status || 'novo').replace(/_/g, ' ')}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="chat-actions">
-                <button className="btn-icon" onClick={() => setShowTransfer(!showTransfer)} title="Transferir setor">🔄</button>
-                <button className="btn-icon" onClick={() => setShowLabels(!showLabels)} title="Labels">🏷️</button>
-                <button className="btn-icon" title="Finalizar conversa">✅</button>
+              <div className="header-actions">
+                <button className="header-btn" title="Buscar na conversa">🔍</button>
+                <button className="header-btn" title="Transferir">🔄</button>
+                <button className="header-btn" title="Informações">ℹ️</button>
+                <button className="header-btn" title="Mais opções">⋮</button>
               </div>
             </div>
 
-            {/* Transfer dropdown */}
-            {showTransfer && (
-              <div className="transfer-dropdown">
-                <div className="dropdown-title">Transferir para:</div>
-                {sectors.filter(s => s.isActive && s.id !== selectedConvData.sectorId).map(s => (
-                  <button key={s.id} className="dropdown-item" onClick={() => handleTransfer(s.id)}>
-                    <span style={{ color: s.color }}>{s.icon}</span> {s.name}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Chat Background Pattern */}
+            <div className="chat-bg">
+              <div className="chat-messages-v2">
+                {messages.length === 0 ? (
+                  <div className="empty-chat-v2">
+                    <div className="empty-bubble">👋</div>
+                    <p>Início da conversa</p>
+                    <span>Envie uma mensagem para começar o atendimento</span>
+                  </div>
+                ) : (
+                  <>
+                    {/* Date separator */}
+                    <div className="date-separator">
+                      <span>Hoje</span>
+                    </div>
 
-            {/* Labels dropdown */}
-            {showLabels && (
-              <div className="labels-dropdown">
-                <div className="dropdown-title">Aplicar label:</div>
-                {labels.map(l => (
-                  <button key={l.id} className="dropdown-item" onClick={async () => { await labelApi.addToConversation(selectedConv, l.id); setShowLabels(false); }}>
-                    <span className="label-dot" style={{ background: l.color }} /> {l.name}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Mensagens */}
-            <div className="chat-messages">
-              {loadingMessages ? (
-                <div className="loading-state"><div className="spinner" /></div>
-              ) : messages.length === 0 ? (
-                <div className="empty-chat">
-                  <span>💬</span>
-                  <p>Nenhuma mensagem ainda</p>
-                  <span className="empty-hint">Envie uma mensagem para iniciar o atendimento</span>
-                </div>
-              ) : (
-                <>
-                  {messages.map(msg => (
-                    <div key={msg.id} className={`msg ${msg.direction}`}>
-                      <div className="msg-bubble">
-                        {/* Mídia */}
+                    {messages.map(msg => (
+                      <div key={msg.id} className={`message ${msg.direction}`}>
                         {(msg as any).mediaType === 'image' && (msg as any).mediaUrl && (
-                          <div className="msg-media"><img src={(msg as any).mediaUrl} alt="Imagem" className="msg-image" onClick={() => window.open((msg as any).mediaUrl, '_blank')} /></div>
+                          <div className="msg-media-v2">
+                            <img src={(msg as any).mediaUrl} alt="Imagem" />
+                          </div>
                         )}
                         {(msg as any).mediaType === 'audio' && (msg as any).mediaUrl && (
-                          <div className="msg-media"><audio controls className="msg-audio"><source src={(msg as any).mediaUrl} /></audio></div>
+                          <div className="msg-media-v2">
+                            <audio controls><source src={(msg as any).mediaUrl} /></audio>
+                          </div>
                         )}
-                        {(msg as any).mediaType === 'document' && (
-                          <div className="msg-media"><a href={(msg as any).mediaUrl} target="_blank" className="msg-document">📄 {(msg as any).mediaFilename || 'Documento'}</a></div>
-                        )}
-                        {msg.content && <div className="msg-content">{msg.content}</div>}
-                        <div className="msg-time">
-                          {new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                          {msg.direction === 'outbound' && <span className="msg-check"> ✓✓</span>}
+                        {msg.content && <div className="msg-text">{msg.content}</div>}
+                        <div className="msg-footer">
+                          <span className="msg-timestamp">
+                            {new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                          {msg.direction === 'outbound' && <span className="msg-ticks">✓✓</span>}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </>
-              )}
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Composer */}
-            <form className="chat-composer" onSubmit={handleSend}>
-              <label className="btn-attach">
-                📷
-                <input type="file" accept="image/*,audio/*" onChange={e => { const f = e.target.files?.[0]; if (f && f.size <= 16 * 1024 * 1024) setSelectedFile(f); e.target.value = ''; }} style={{ display: 'none' }} />
-              </label>
+            <div className="composer-v2">
               {selectedFile && (
-                <div className="file-preview">
+                <div className="file-bar">
                   <span>📎 {selectedFile.name}</span>
-                  <button type="button" onClick={() => setSelectedFile(null)}>✕</button>
+                  <button onClick={() => setSelectedFile(null)}>✕</button>
                 </div>
               )}
-              <input
-                className="composer-input"
-                placeholder={selectedFile ? 'Legenda (opcional)...' : 'Digite uma mensagem...'}
-                value={newMessage}
-                onChange={e => setNewMessage(e.target.value)}
-              />
-              <button type="submit" className="btn-send" disabled={!newMessage.trim() && !selectedFile}>
-                {newMessage.trim() || selectedFile ? '➤' : '🎤'}
-              </button>
-            </form>
+              <form className="composer-row" onSubmit={handleSend}>
+                <button type="button" className="composer-btn" title="Emoji">😊</button>
+                <input ref={fileInputRef} type="file" accept="image/*,audio/*" onChange={e => { const f = e.target.files?.[0]; if (f && f.size <= 16 * 1024 * 1024) setSelectedFile(f); e.target.value = ''; }} style={{ display: 'none' }} />
+                <button type="button" className="composer-btn" title="Anexar" onClick={() => fileInputRef.current?.click()}>📎</button>
+                <input className="composer-input-v2" placeholder="Mensagem" value={newMessage} onChange={e => setNewMessage(e.target.value)} autoFocus />
+                <button type="submit" className="composer-send">
+                  {newMessage.trim() || selectedFile ? '➤' : '🎤'}
+                </button>
+              </form>
+            </div>
           </>
         ) : (
-          <div className="empty-chat-full">
-            <div className="empty-chat-content">
-              <div className="empty-icon-big">💬</div>
+          /* Empty state */
+          <div className="inbox-empty">
+            <div className="empty-center">
+              <div className="empty-logo">🐾</div>
               <h2>CVG Connect Desk</h2>
-              <p>Selecione uma conversa para começar o atendimento</p>
-              <div className="empty-tips">
-                <div className="tip">📥 Escolha um setor na barra lateral</div>
-                <div className="tip">👤 Ou acesse Contatos para iniciar uma nova conversa</div>
-                <div className="tip">🔄 Transfira conversas entre setores quando necessário</div>
-              </div>
+              <p>Selecione uma conversa ou inicie uma nova</p>
+              <button className="btn-start-new" onClick={() => setShowNewConv(true)}>
+                ✏️ Nova Conversa
+              </button>
             </div>
           </div>
         )}
