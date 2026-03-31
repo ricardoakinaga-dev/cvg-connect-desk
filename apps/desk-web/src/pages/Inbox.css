@@ -1,17 +1,47 @@
 .inbox-v2 { display: grid; grid-template-columns: 380px 1fr; height: calc(100vh - 1px); }
 
 /* ===== SIDEBAR ===== */
-.inbox-sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
-.sidebar-top { flex-shrink: 0; }
+.inbox-sidebar { 
+  background: #fff; 
+  border-right: 1px solid #ddd; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden; 
+  height: calc(100vh - 1px);
+}
+.sidebar-top { flex-shrink: 0; overflow: hidden; }
 .sidebar-title-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 10px; }
 .sidebar-title-row h2 { margin: 0; font-size: 1.3rem; color: #111; }
 .btn-new-conv { width: 40px; height: 40px; border-radius: 50%; background: #00a884; color: #fff; border: none; font-size: 1.1rem; cursor: pointer; transition: all 0.2s; }
 .btn-new-conv:hover { background: #008f72; }
 
 /* Setores */
-.sector-tabs { display: flex; gap: 6px; padding: 4px 16px 10px; overflow-x: auto; }
-.sector-tabs::-webkit-scrollbar { height: 0; }
-.sector-tab { padding: 6px 14px; border: 1.5px solid #ddd; border-radius: 20px; background: #fff; font-size: 0.78rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; color: #444; font-weight: 500; }
+.sector-tabs { 
+  display: flex; 
+  gap: 6px; 
+  padding: 4px 16px 10px; 
+  overflow-x: auto; 
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  max-height: 44px;
+  scrollbar-width: none;
+}
+.sector-tabs::-webkit-scrollbar { display: none; }
+.sector-tab { 
+  padding: 6px 12px; 
+  border: 1.5px solid #ddd; 
+  border-radius: 20px; 
+  background: #fff; 
+  font-size: 0.72rem; 
+  cursor: pointer; 
+  white-space: nowrap; 
+  transition: all 0.2s; 
+  color: #444; 
+  font-weight: 500;
+  flex-shrink: 0;
+  height: fit-content;
+}
 .sector-tab:hover { border-color: #00a884; color: #00a884; }
 .sector-tab.active { background: #00a884; border-color: #00a884; color: #fff; }
 .tab-badge { background: rgba(0,0,0,0.1); padding: 1px 6px; border-radius: 10px; font-size: 0.65rem; margin-left: 3px; }
@@ -41,7 +71,7 @@
 .btn-add-contact:hover { background: #f0fdf4; border-color: #00a884; }
 
 /* Conversas */
-.conv-list-v2 { flex: 1; overflow-y: auto; }
+.conv-list-v2 { flex: 1; overflow-y: auto; min-height: 0; }
 .conv-row { display: flex; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f0f0f0; }
 .conv-row:hover { background: #f5f6f6; }
 .conv-row.active { background: #e8edf2; }
