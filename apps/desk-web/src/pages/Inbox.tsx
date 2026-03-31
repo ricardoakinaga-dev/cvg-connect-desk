@@ -316,8 +316,38 @@ export function Inbox() {
     }
   }, [newMessage, selectedFile, selectedConv, selectedConvData, sendingMessage, fetchMessages, fetchConversations]);
 
-  const handleStartConversation = useCallback(async (contactId: string) => {
+  const handleStartConversation = useCallback(async (id: string, isCollaborator?: boolean) => {
     try {
+      let contactId = id;
+
+      // Se for colaborador, criar contato a partir do usuário primeiro
+      if (isCollaborator) {
+        const collab = collaborators.find(c => c.id === id);
+        if (collab) {
+          try {
+            // Tentar criar contato (falha se já existe)
+            const newContact = await api.post<Contact>('/contacts', {
+              name: collab.name,
+              phone: collab.email, // usar email como identificador
+            });
+            contactId = newContact.id;
+          } catch {
+            // Contato já existe — buscar pelo nome
+            const existing = contacts.find(c => c.name === collab.name);
+            if (existing) {
+              contactId = existing.id;
+            } else {
+              // Fallback: recarregar contatos e tentar encontrar
+              const refreshed = await api.get<Contact[]>('/contacts');
+              setContacts(refreshed);
+              const found = refreshed.find(c => c.name === collab.name);
+              if (found) contactId = found.id;
+              else return; // Não foi possível resolver
+            }
+          }
+        }
+      }
+
       const result = await api.post<{ conversationId: string; isNew: boolean }>(
         `/contacts/${contactId}/start-conversation`,
         { sectorId: selectedSector !== 'all' ? selectedSector : undefined }
@@ -329,7 +359,7 @@ export function Inbox() {
     } catch (err: any) {
       console.error('[Inbox] Erro ao iniciar conversa:', err);
     }
-  }, [selectedSector, fetchConversations]);
+  }, [selectedSector, fetchConversations, collaborators, contacts]);
 
   const handleTransfer = useCallback(async (toSectorId: string) => {
     if (!selectedConv) return;
@@ -588,7 +618,7 @@ export function Inbox() {
 
             <div className="new-conv-list">
               {filteredContacts.length > 0 ? filteredContacts.map(c => (
-                <div key={c.id} className="new-conv-item" onClick={() => handleStartConversation(c.id)}>
+                <div key={c.id} className="new-conv-item" onClick={() => handleStartConversation(c.id, newConvTab === 'collaborators')}>
                   <div className="new-conv-avatar">
                     {(c.name || '?')[0].toUpperCase()}
                   </div>
