@@ -467,10 +467,11 @@ export function Inbox() {
           <div className="sidebar-title">
             <h2>💬 Conversas</h2>
             {totalUnread > 0 && <span className="total-unread-badge">{totalUnread}</span>}
-            <span className={`ws-status ${wsConnected ? 'connected' : 'disconnected'}`} title={wsConnected ? 'Tempo real conectado' : 'Usando polling'}>
-              {wsConnected ? '🟢' : '🟡'}
-            </span>
           </div>
+        </header>
+
+        {/* Sector buttons + New conversation — same row */}
+        <div className="sector-btns-row">
           <button
             className={`btn-new-conv ${showNewConv ? 'active' : ''}`}
             onClick={() => { setShowNewConv(!showNewConv); setContactSearch(''); }}
@@ -478,32 +479,28 @@ export function Inbox() {
           >
             {showNewConv ? '✕' : '✏️'}
           </button>
-        </header>
 
-        {/* Sector tabs — horizontal scrollable */}
-        <div className="sector-tabs-container">
-          <div className="sector-tabs">
+          <button
+            className={`sector-btn ${selectedSector === 'all' ? 'active' : ''}`}
+            onClick={() => setSelectedSector('all')}
+          >
+            Todos
+            {sectorCounts.all > 0 && <span className="sector-count">{sectorCounts.all}</span>}
+          </button>
+
+          {sectors.filter(s => s.isActive).map(s => (
             <button
-              className={`sector-tab ${selectedSector === 'all' ? 'active' : ''}`}
-              onClick={() => setSelectedSector('all')}
+              key={s.id}
+              className={`sector-btn ${selectedSector === s.id ? 'active' : ''}`}
+              onClick={() => setSelectedSector(s.id)}
+              style={selectedSector === s.id ? { background: s.color, borderColor: s.color } : {}}
             >
-              Todos
-              <span className="tab-count">{sectorCounts.all}</span>
+              {s.icon} {s.name}
+              {(sectorCounts[s.id] || 0) > 0 && (
+                <span className="sector-count">{sectorCounts[s.id]}</span>
+              )}
             </button>
-            {sectors.filter(s => s.isActive).map(s => (
-              <button
-                key={s.id}
-                className={`sector-tab ${selectedSector === s.id ? 'active' : ''}`}
-                onClick={() => setSelectedSector(s.id)}
-                style={selectedSector === s.id ? { background: s.color, borderColor: s.color } : {}}
-              >
-                {s.icon} {s.name}
-                {(sectorCounts[s.id] || 0) > 0 && (
-                  <span className="tab-count">{sectorCounts[s.id]}</span>
-                )}
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
 
         {/* Search */}
