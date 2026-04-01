@@ -7,10 +7,14 @@
   "scripts": {
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "echo test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@cvg/audit": "workspace:*",
+    "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
-    "@cvg/shared": "workspace:*"
+    "@cvg/shared": "workspace:*",
+    "fastify": "^5.0.0"
   }
 }

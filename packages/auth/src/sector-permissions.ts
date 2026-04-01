@@ -61,7 +61,7 @@ export const sectorPermissionService = {
       .innerJoin(roles, eqOp(userRoles.roleId, roles.id))
       .where(eqOp(userRoles.userId, userId));
 
-    return result.some(r => r.name === 'Admin');
+    return result.some(r => r.roleName === 'Admin');
   },
 
   /**

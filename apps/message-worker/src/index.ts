@@ -7,6 +7,7 @@ import {
   defaultRetryConfig,
   type RetryConfig 
 } from '@cvg/events';
+import { deadLetterStore } from '@cvg/events';
 import { createAlert } from '@cvg/alerts';
 import { db, schema } from '@cvg/database';
 import { eq } from 'drizzle-orm';
@@ -32,7 +33,7 @@ async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
   if (payload.newHandler === 'human' && payload.reason) {
     const alertResult = await createAlert({
       conversationId: payload.conversationId,
-      type: 'handoff',
+      type: 'system',
       title: 'Conversa transferida para atendimento humano',
       message: `Motivo: ${payload.reason}`,
       severity: 'info',
@@ -95,6 +96,7 @@ async function processEventWithRetry(event: EventEnvelope): Promise<void> {
   for (const handler of handlers) {
     const handlerName = handler.name || 'anonymous';
     let attempt = 0;
+    let lastError: Error | unknown = null;
 
     while (true) {
       try {
@@ -102,10 +104,20 @@ async function processEventWithRetry(event: EventEnvelope): Promise<void> {
         console.log(`[Worker] Successfully processed ${event.event_type} (${event.event_id})`);
         break;
       } catch (error) {
+        lastError = error;
         const context = createRetryContext(event, handlerName, attempt + 1, error);
         
         if (!shouldRetry(context, RETRY_CONFIG)) {
           console.error(`[Worker] Non-retryable error in ${handlerName}:`, error);
+          deadLetterStore.add({
+            eventType: event.event_type,
+            eventId: event.event_id,
+            payload: event.payload,
+            error: error instanceof Error ? error.message : String(error),
+            retryCount: attempt,
+            handlerName,
+            correlationId: event.correlation_id,
+          });
           break;
         }
 
@@ -116,6 +128,15 @@ async function processEventWithRetry(event: EventEnvelope): Promise<void> {
         
         if (attempt >= RETRY_CONFIG.maxRetries) {
           console.error(`[Worker] Max retries exceeded for ${handlerName}:`, error);
+          deadLetterStore.add({
+            eventType: event.event_type,
+            eventId: event.event_id,
+            payload: event.payload,
+            error: error instanceof Error ? error.message : String(error),
+            retryCount: attempt,
+            handlerName,
+            correlationId: event.correlation_id,
+          });
           break;
         }
 

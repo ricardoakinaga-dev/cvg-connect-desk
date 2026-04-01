@@ -14,6 +14,7 @@ export interface DeadLetterEntry {
   handlerName: string;
   resolved: boolean;
   resolvedAt?: Date;
+  correlationId?: string;
 }
 
 export class DeadLetterStore {

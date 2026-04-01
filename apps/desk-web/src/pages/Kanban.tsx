@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../lib/api';
+import { realtimeClient } from '../lib/realtime';
 import './Kanban.css';
 
 interface KanbanCard {
@@ -55,6 +56,19 @@ export function Kanban() {
   }, [filterSector]);
 
   useEffect(() => { fetchBoard(); }, [fetchBoard]);
+
+  // Realtime Kanban updates
+  useEffect(() => {
+    const onEvent = () => fetchBoard();
+    realtimeClient.subscribe('conversation.status.changed', onEvent);
+    realtimeClient.subscribe('conversation.assigned', onEvent);
+    realtimeClient.subscribe('message.persisted', onEvent);
+    return () => {
+      realtimeClient.unsubscribe('conversation.status.changed', onEvent);
+      realtimeClient.unsubscribe('conversation.assigned', onEvent);
+      realtimeClient.unsubscribe('message.persisted', onEvent);
+    };
+  }, [fetchBoard]);
 
   const handleDragStart = (cardId: string) => {
     setDraggedCard(cardId);

@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@cvg/audit": ["../../modules/audit/src/index.ts"],
+      "@cvg/auth": ["../../packages/auth/src/index.ts"],
+      "@cvg/database": ["../../packages/database/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*", "../../modules/audit/src/**/*", "../../packages/auth/src/**/*", "../../packages/database/src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

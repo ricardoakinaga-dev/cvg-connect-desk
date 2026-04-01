@@ -309,6 +309,30 @@ export const dashboardApi = {
     return api.get<DashboardSummary>('/metrics/summary');
   },
 
+  getPremium: () => {
+    return api.get('/metrics/premium');
+  },
+
+  getResponseTime: () => {
+    return api.get<{ avgFirstResponseTime: number | null; avgResponseTime: number | null; totalConversationsWithResponse: number }>('/metrics/response-time');
+  },
+
+  getHandoff: () => {
+    return api.get<{ totalHandoffs: number; totalConversations: number; handoffRate: number | null }>('/metrics/handoff');
+  },
+
+  getSectorBacklog: () => {
+    return api.get<Array<{ sectorId: string; sectorName: string; openConversations: number; pendingConversations: number; totalBacklog: number }>>('/metrics/sector-backlog');
+  },
+
+  getAging: (limit = 20) => {
+    return api.get(`/metrics/aging?limit=${limit}`);
+  },
+
+  getAlertsByCriticality: () => {
+    return api.get<{ critical: number; error: number; warning: number; info: number }>('/metrics/alerts/criticality');
+  },
+
   getConversations: () => {
     return api.get<{ open: number; pending: number; closed: number; total: number }>('/metrics/conversations');
   },

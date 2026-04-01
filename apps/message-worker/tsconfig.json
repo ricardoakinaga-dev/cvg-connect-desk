@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ES2022"],
     "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,8 +12,17 @@
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@cvg/events": ["../../packages/events/src/index.ts"],
+      "@cvg/database": ["../../packages/database/src/index.ts"],
+      "@cvg/shared": ["../../packages/shared/src/index.ts"],
+      "@cvg/alerts": ["../../modules/alerts/src/index.ts"],
+      "@cvg/audit": ["../../modules/audit/src/index.ts"],
+      "@cvg/auth": ["../../packages/auth/src/index.ts"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../modules/alerts/src/**/*", "../../modules/audit/src/**/*", "../../packages/auth/src/**/*", "../../packages/events/src/**/*", "../../packages/database/src/**/*", "../../packages/shared/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

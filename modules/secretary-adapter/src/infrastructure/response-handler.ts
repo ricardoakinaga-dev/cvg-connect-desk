@@ -21,9 +21,9 @@ export function handleSecretaryResponse(
 ): Result<ParsedSecretaryResponse, Error> {
   if (!response.success) {
     return err(new AppError(
-      'SECRETARY_ERROR',
       response.error || 'Unknown error from Secretary',
-      500
+      500,
+      'SECRETARY_ERROR'
     ));
   }
 

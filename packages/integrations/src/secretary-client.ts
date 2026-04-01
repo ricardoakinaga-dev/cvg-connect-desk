@@ -58,9 +58,9 @@ export class SecretaryClient {
       if (!response.ok) {
         const errorBody = await response.text();
         return err(new AppError(
-          'SECRETARY_ERROR',
           `Secretary API error: ${response.status}`,
-          response.status
+          response.status,
+          'SECRETARY_ERROR'
         ));
       }
 
@@ -68,7 +68,7 @@ export class SecretaryClient {
       return ok(data);
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        return err(new AppError('SECRETARY_TIMEOUT', 'Secretary request timed out', 504));
+        return err(new AppError('Secretary request timed out', 504, 'SECRETARY_TIMEOUT'));
       }
       return err(error as Error);
     }

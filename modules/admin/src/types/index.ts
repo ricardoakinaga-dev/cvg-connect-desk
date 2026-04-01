@@ -1,4 +1,4 @@
-import type { User, Role, Permission, Queue, Team } from '@cvg/database';
+// Types for Admin module — defined locally since @cvg/database exports tables, not types
 
 // User
 export interface UserListItem {
@@ -29,7 +29,7 @@ export interface UpdateUserInput {
 export interface RoleListItem {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   createdAt: Date;
   _count?: { permissions: number };
 }
@@ -58,8 +58,8 @@ export type PermissionName =
 
 export interface PermissionItem {
   id: string;
-  name: PermissionName;
-  description?: string;
+  name: PermissionName | string;
+  description: string | null;
   createdAt: Date;
 }
 
@@ -72,7 +72,7 @@ export interface CreatePermissionInput {
 export interface QueueItem {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   createdAt: Date;
 }
 

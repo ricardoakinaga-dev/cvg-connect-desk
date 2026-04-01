@@ -6,6 +6,7 @@ import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { db, schema } from '@cvg/database';
 import { eq, desc, asc, and, inArray, sql } from 'drizzle-orm';
+import { publishConversationStatusChanged, publishConversationAssigned } from '../../application/events/chat-publisher';
 
 interface SendMessageBody {
   conversationId: string;
@@ -156,6 +157,10 @@ export async function registerOutboundController(app: FastifyInstance) {
       if (!conversation) return reply.status(404).send({ error: 'NOT_FOUND', message: 'Conversation not found' });
       const updated = await conversationRepository.updateStatusV2(conversationId, statusV2, userId);
       await conversationRepository.addStatusHistory(conversationId, statusV2, userId);
+
+      // Publish event for realtime consumers
+      await publishConversationStatusChanged(conversationId, conversation.statusV2 || conversation.status, statusV2);
+
       return reply.status(200).send(updated);
     } catch (error) {
       request.log.error(error);
@@ -186,12 +191,21 @@ export async function registerOutboundController(app: FastifyInstance) {
   });
 
   app.patch('/conversations/:conversationId/assign', {
-    preHandler: [authenticate, requirePermission('chat:write')],
-  }, async (request: FastifyRequest<{ Params: { conversationId: string }; Body: { userId: string } }>, reply: FastifyReply) => {
+    preHandler: [authenticate as any, requirePermission('chat:write') as any],
+  }, async (request, reply) => {
     try {
-      const { conversationId } = request.params;
-      const { userId: assignUserId } = request.body;
+      const params = request.params as { conversationId: string };
+      const body = request.body as { userId: string };
+      const { conversationId } = params;
+      const { userId: assignUserId } = body;
+      const existing = await conversationRepository.findById(conversationId);
       const updated = await conversationRepository.assignUser(conversationId, assignUserId);
+      await publishConversationAssigned(
+        conversationId,
+        (existing as any)?.assignedTo ?? undefined,
+        assignUserId,
+        (request as any).user?.id,
+      );
       return reply.status(200).send(updated);
     } catch (error) {
       request.log.error(error);
@@ -200,11 +214,12 @@ export async function registerOutboundController(app: FastifyInstance) {
   });
 
   app.post('/conversations/:conversationId/close', {
-    preHandler: [authenticate, requirePermission('chat:write')],
-  }, async (request: FastifyRequest<{ Params: { conversationId: string } }>, reply: FastifyReply) => {
+    preHandler: [authenticate as any, requirePermission('chat:write') as any],
+  }, async (request, reply) => {
     try {
-      const { conversationId } = request.params;
-      const userId = (request.user as any)?.id;
+      const params = request.params as { conversationId: string };
+      const { conversationId } = params;
+      const userId = (request as any).user?.id;
       const updated = await conversationRepository.close(conversationId);
       await conversationRepository.addStatusHistory(conversationId, 'finalizado', userId, 'Conversa fechada');
       return reply.status(200).send(updated);

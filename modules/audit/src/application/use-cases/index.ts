@@ -23,6 +23,18 @@ export async function getEntityAuditHistory(entityType: string, entityId: string
   return auditRepository.findByEntity(entityType, entityId);
 }
 
+export async function getConversationAudit(conversationId: string) {
+  return auditRepository.findByConversation(conversationId);
+}
+
+export async function getCorrelationTrail(correlationId: string, limit = 50) {
+  return auditRepository.findByCorrelationId(correlationId, limit);
+}
+
 export async function getUserAuditTrail(userId: string, limit = 50) {
   return auditRepository.findByUser(userId, limit);
+}
+
+export async function searchAuditActions(pattern: string, limit = 50) {
+  return auditRepository.searchActions(pattern, limit);
 }

@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, desc, and, gte, lte } from 'drizzle-orm';
+import { eq, desc, and, gte, lte, or, like } from 'drizzle-orm';
 
 export interface AuditLogEntry {
   id: string;
@@ -23,6 +23,7 @@ export interface AuditFilter {
   action?: string;
   startDate?: Date;
   endDate?: Date;
+  correlationId?: string;
 }
 
 export const auditRepository = {
@@ -74,6 +75,9 @@ export const auditRepository = {
     if (filter?.action) {
       conditions.push(eq(schema.auditLogs.action, filter.action));
     }
+    if (filter?.correlationId) {
+      conditions.push(eq(schema.auditLogs.correlationId, filter.correlationId));
+    }
     if (filter?.startDate) {
       conditions.push(gte(schema.auditLogs.createdAt, filter.startDate));
     }
@@ -104,11 +108,54 @@ export const auditRepository = {
       .orderBy(desc(schema.auditLogs.createdAt));
   },
 
+  async findByConversation(conversationId: string): Promise<AuditLogEntry[]> {
+    return db
+      .select()
+      .from(schema.auditLogs)
+      .where(or(
+        and(
+          eq(schema.auditLogs.entityType, 'conversation'),
+          eq(schema.auditLogs.entityId, conversationId)
+        ),
+        and(
+          eq(schema.auditLogs.entityType, 'message'),
+          eq(schema.auditLogs.entityId, conversationId)
+        ),
+        and(
+          eq(schema.auditLogs.entityType, 'handoff'),
+          eq(schema.auditLogs.entityId, conversationId)
+        ),
+        and(
+          eq(schema.auditLogs.entityType, 'transfer'),
+          eq(schema.auditLogs.entityId, conversationId)
+        )
+      ))
+      .orderBy(desc(schema.auditLogs.createdAt));
+  },
+
+  async findByCorrelationId(correlationId: string, limit = 50): Promise<AuditLogEntry[]> {
+    return db
+      .select()
+      .from(schema.auditLogs)
+      .where(eq(schema.auditLogs.correlationId, correlationId))
+      .orderBy(desc(schema.auditLogs.createdAt))
+      .limit(limit);
+  },
+
   async findByUser(userId: string, limit = 50): Promise<AuditLogEntry[]> {
     return db
       .select()
       .from(schema.auditLogs)
       .where(eq(schema.auditLogs.userId, userId))
+      .orderBy(desc(schema.auditLogs.createdAt))
+      .limit(limit);
+  },
+
+  async searchActions(pattern: string, limit = 50): Promise<AuditLogEntry[]> {
+    return db
+      .select()
+      .from(schema.auditLogs)
+      .where(like(schema.auditLogs.action, `%${pattern}%`))
       .orderBy(desc(schema.auditLogs.createdAt))
       .limit(limit);
   },

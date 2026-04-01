@@ -5,9 +5,10 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "echo build",
+    "build": "tsc --noEmit",
     "lint": "echo lint",
     "test": "echo test",
+    "typecheck": "tsc --noEmit",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -29,6 +30,9 @@
     "@cvg/kanban": "workspace:*",
     "@cvg/gateway-adapter": "workspace:*",
     "@cvg/contacts": "workspace:*",
+    "@cvg/tutors": "workspace:*",
+    "@cvg/patients": "workspace:*",
+    "@cvg/events": "workspace:*",
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.1",
     "@fastify/rate-limit": "^10.3.0",

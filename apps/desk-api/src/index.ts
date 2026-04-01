@@ -39,7 +39,8 @@ const app = Fastify({
 
 // Handler global de erros não capturados
 app.setErrorHandler((error, request, reply) => {
-  const statusCode = error.statusCode || 500;
+  const err = error as Error & { statusCode?: number; code?: string };
+  const statusCode = err.statusCode || 500;
 
   // Log detalhado para erros internos
   if (statusCode >= 500) {
@@ -50,11 +51,11 @@ app.setErrorHandler((error, request, reply) => {
 
   // Resposta padronizada
   reply.status(statusCode).send({
-    error: error.code || 'INTERNAL_ERROR',
-    message: statusCode >= 500 ? 'Internal server error' : error.message,
+    error: err.code || 'INTERNAL_ERROR',
+    message: statusCode >= 500 ? 'Internal server error' : err.message,
     statusCode,
     timestamp: new Date().toISOString(),
-    ...(process.env.NODE_ENV === 'development' && { stack: error.stack }),
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 });
 

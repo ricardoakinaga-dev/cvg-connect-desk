@@ -74,14 +74,9 @@ class RealtimeServer {
     });
 
     this.sendToClient(clientId, {
-      event: 'connected',
-      data: {
-        type: 'connection.established',
-        aggregateType: 'Client',
-        aggregateId: clientId,
-        occurredAt: new Date().toISOString(),
-        payload: { clientId },
-      },
+      event_type: 'connection.established',
+      payload: { clientId },
+      occurred_at: new Date().toISOString(),
     });
   }
 
@@ -117,14 +112,9 @@ class RealtimeServer {
     const userId = message.userId;
     if (!userId) {
       this.sendToClient(clientId, {
-        event: 'error',
-        data: {
-          type: 'auth.error',
-          aggregateType: 'Client',
-          aggregateId: clientId,
-          occurredAt: new Date().toISOString(),
-          payload: { error: 'Missing userId' },
-        },
+        event_type: 'auth.error',
+        payload: { error: 'Missing userId' },
+        occurred_at: new Date().toISOString(),
       });
       return;
     }
@@ -135,14 +125,9 @@ class RealtimeServer {
     console.log(`[Realtime] Client ${clientId} authenticated as user ${userId}`);
 
     this.sendToClient(clientId, {
-      event: 'auth.success',
-      data: {
-        type: 'auth.success',
-        aggregateType: 'Client',
-        aggregateId: clientId,
-        occurredAt: new Date().toISOString(),
-        payload: { userId },
-      },
+      event_type: 'auth.success',
+      payload: { userId },
+      occurred_at: new Date().toISOString(),
     });
   }
 
@@ -153,14 +138,9 @@ class RealtimeServer {
     const channel = message.channel;
     if (!channel) {
       this.sendToClient(clientId, {
-        event: 'error',
-        data: {
-          type: 'subscribe.error',
-          aggregateType: 'Client',
-          aggregateId: clientId,
-          occurredAt: new Date().toISOString(),
-          payload: { error: 'Missing channel' },
-        },
+        event_type: 'subscribe.error',
+        payload: { error: 'Missing channel' },
+        occurred_at: new Date().toISOString(),
       });
       return;
     }
@@ -169,14 +149,9 @@ class RealtimeServer {
     console.log(`[Realtime] Client ${clientId} subscribed to ${channel}`);
 
     this.sendToClient(clientId, {
-      event: 'subscribed',
-      data: {
-        type: 'subscription.success',
-        aggregateType: 'Client',
-        aggregateId: clientId,
-        occurredAt: new Date().toISOString(),
-        payload: { channel },
-      },
+      event_type: 'subscription.success',
+      payload: { channel },
+      occurred_at: new Date().toISOString(),
     });
   }
 
@@ -244,8 +219,10 @@ class RealtimeServer {
     }
 
     const message: RealtimeMessage = {
-      event: projection.type,
-      data: projection,
+      event_type: projection.type,
+      payload: projection.payload as Record<string, unknown>,
+      occurred_at: projection.occurredAt,
+      correlation_id: projection.correlationId,
     };
 
     const aggregateId = projection.aggregateId;

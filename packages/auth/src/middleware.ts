@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest, FastifyReply, preHandlerHookHandler } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { authRepository } from './infrastructure/repositories/auth.repository';
@@ -14,7 +14,7 @@ declare module 'fastify' {
   }
 }
 
-export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
+export const authenticate: preHandlerHookHandler = async (request, reply) => {
   const authHeader = request.headers.authorization;
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

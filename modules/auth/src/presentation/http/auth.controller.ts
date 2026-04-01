@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { authRepository } from '../../infrastructure/repositories/auth.repository';
+import { createAuditLog } from '@cvg/audit';
 
 interface LoginBody {
   email: string;
@@ -34,6 +35,11 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const user = await authRepository.findUserByEmail(email);
 
         if (!user) {
+          await createAuditLog({
+            action: 'auth.login_failed',
+            entityType: 'user',
+            metadata: { email, reason: 'user_not_found' },
+          });
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid credentials',
@@ -41,6 +47,13 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         }
 
         if (!user.isActive) {
+          await createAuditLog({
+            userId: user.id,
+            action: 'auth.login_failed',
+            entityType: 'user',
+            entityId: user.id,
+            metadata: { email, reason: 'user_inactive' },
+          });
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'User account is inactive',
@@ -50,6 +63,13 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const isValidPassword = await authRepository.verifyPassword(password, user.passwordHash);
 
         if (!isValidPassword) {
+          await createAuditLog({
+            userId: user.id,
+            action: 'auth.login_failed',
+            entityType: 'user',
+            entityId: user.id,
+            metadata: { email, reason: 'invalid_password' },
+          });
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid credentials',
@@ -58,6 +78,14 @@ export async function registerAuthRoutes(app: FastifyInstance) {
 
         const roles = await authRepository.getUserRoles(user.id);
         const token = await authRepository.createSession(user.id);
+
+        await createAuditLog({
+          userId: user.id,
+          action: 'auth.login',
+          entityType: 'user',
+          entityId: user.id,
+          metadata: { email: user.email },
+        });
 
         request.log.info({
           userId: user.id,
@@ -100,6 +128,12 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const token = authHeader.substring(7);
         
         await authRepository.invalidateSession(token);
+
+        await createAuditLog({
+          action: 'auth.logout',
+          entityType: 'session',
+          metadata: { tokenPrefix: token.substring(0, 8) + '...' },
+        });
 
         request.log.info({ token: token.substring(0, 8) + '...' }, 'User logged out');
 

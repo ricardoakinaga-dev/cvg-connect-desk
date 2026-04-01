@@ -6,7 +6,7 @@ import { createAuditLog } from '@cvg/audit';
 export interface CreateAlertInput {
   conversationId?: string;
   taskId?: string;
-  type: string;
+  type: 'message' | 'deadline' | 'assignment' | 'system';
   title: string;
   message?: string;
   severity?: 'info' | 'warning' | 'error' | 'critical';

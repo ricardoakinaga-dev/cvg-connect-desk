@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "echo test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@cvg/database": "workspace:*",

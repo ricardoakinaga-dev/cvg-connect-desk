@@ -5,8 +5,12 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo build",
+    "build": "tsc --noEmit",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "redis": "^4.6.0"
   }
 }

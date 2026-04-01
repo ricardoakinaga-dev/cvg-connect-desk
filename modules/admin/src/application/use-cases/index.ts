@@ -2,6 +2,19 @@ import { ok, err, type Result } from '@cvg/shared';
 import { AppError, BadRequestError, NotFoundError } from '@cvg/shared';
 import { adminRepository } from '../../infrastructure/repositories';
 import * as bcrypt from 'bcryptjs';
+import type {
+  CreateUserInput, UpdateUserInput,
+  CreateRoleInput, UpdateRoleInput,
+  CreatePermissionInput,
+  CreateQueueInput, UpdateQueueInput,
+  CreateTeamInput, UpdateTeamInput,
+} from '../../types';
+import type { users, roles, permissions, queues, teams } from '@cvg/database';
+type User = typeof users.$inferSelect;
+type Role = typeof roles.$inferSelect;
+type Permission = typeof permissions.$inferSelect;
+type Queue = typeof queues.$inferSelect;
+type Team = typeof teams.$inferSelect;
 
 // User Use Cases
 export async function createUser(input: CreateUserInput): Promise<Result<User, Error>> {
@@ -12,7 +25,7 @@ export async function createUser(input: CreateUserInput): Promise<Result<User, E
 
     const existing = await adminRepository.userRepository.findByEmail(input.email);
     if (existing) {
-      return err(new AppError('USER_EXISTS', 'User with this email already exists', 409));
+      return err(new AppError('User with this email already exists', 409, 'USER_EXISTS'));
     }
 
     const passwordHash = await bcrypt.hash(input.password, 12);
@@ -91,7 +104,7 @@ export async function createRole(input: CreateRoleInput): Promise<Result<Role, E
 
     const existing = await adminRepository.roleRepository.findByName(input.name);
     if (existing) {
-      return err(new AppError('ROLE_EXISTS', 'Role with this name already exists', 409));
+      return err(new AppError('Role with this name already exists', 409, 'ROLE_EXISTS'));
     }
 
     const role = await adminRepository.roleRepository.create(input);
@@ -134,7 +147,7 @@ export async function createPermission(input: CreatePermissionInput): Promise<Re
   try {
     const existing = await adminRepository.permissionRepository.findByName(input.name);
     if (existing) {
-      return err(new AppError('PERMISSION_EXISTS', 'Permission with this name already exists', 409));
+      return err(new AppError('Permission with this name already exists', 409, 'PERMISSION_EXISTS'));
     }
 
     const permission = await adminRepository.permissionRepository.create(input);

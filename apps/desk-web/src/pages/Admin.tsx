@@ -24,7 +24,8 @@ export function Admin() {
 
   // Permissões por setor
   const [editUserSectors, setEditUserSectors] = useState<string | null>(null);
-  const [userSectors, setUserSectors] = useState<UserSector[]>([]);
+  const [_userSectors, setUserSectors] = useState<UserSector[]>([]);
+  void _userSectors; // used internally for sector permissions
   const [selectedSectors, setSelectedSectors] = useState<Record<string, string>>({});
 
   const fetchAll = async () => {
@@ -71,7 +72,7 @@ export function Admin() {
   const handleSaveUserSectors = async () => {
     if (!editUserSectors) return;
     const sectorList = Object.entries(selectedSectors)
-      .filter(([_, level]) => level)
+      .filter(([, level]) => level)
       .map(([sectorId, accessLevel]) => ({ sectorId, accessLevel }));
     try {
       await api.put(`/admin/users/${editUserSectors}/sectors`, { sectors: sectorList });

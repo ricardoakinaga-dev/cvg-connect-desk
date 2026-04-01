@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { createNote } from '../../application/use-cases/create-note.use-case';
 import { noteRepository } from '../../infrastructure/repositories/note.repository';
 import { AppError } from '@cvg/shared';
@@ -39,11 +39,12 @@ export async function registerNoteRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Body: CreateNoteBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
+        const body = request.body as CreateNoteBody;
         const result = await createNote({
-          ...request.body,
+          ...body,
           userId,
         });
 
@@ -66,9 +67,10 @@ export async function registerNoteRoutes(app: FastifyInstance) {
     }
   );
 
-  app.get('/notes', { preHandler: [authenticate, requirePermission('notes:read')] }, async (request: FastifyRequest<{ Querystring: { conversationId?: string; taskId?: string } }>, reply: FastifyReply) => {
+  app.get('/notes', { preHandler: [authenticate, requirePermission('notes:read')] }, async (request, reply) => {
     try {
-      const { conversationId, taskId } = request.query;
+      const query = request.query as { conversationId?: string; taskId?: string };
+      const { conversationId, taskId } = query;
       
       let notes;
       if (conversationId) {
@@ -89,9 +91,10 @@ export async function registerNoteRoutes(app: FastifyInstance) {
   app.get(
     '/notes/:id',
     { preHandler: [authenticate, requirePermission('notes:read')] },
-    async (request: FastifyRequest<{ Params: NoteParams }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const note = await noteRepository.findById(request.params.id);
+        const params = request.params as NoteParams;
+        const note = await noteRepository.findById(params.id);
         if (!note) {
           return reply.status(404).send({ error: 'NOT_FOUND', message: 'Note not found' });
         }

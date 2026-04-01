@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@cvg/audit": ["../../modules/audit/src/index.ts"],
+      "@cvg/auth": ["../../packages/auth/src/index.ts"],
+      "@cvg/database": ["../../packages/database/src/index.ts"],
+      "@cvg/events": ["../../packages/events/src/index.ts"],
+      "@cvg/gateway-adapter": ["../../modules/gateway-adapter/src/index.ts"],
+      "@cvg/shared": ["../../packages/shared/src/index.ts"],
+      "@cvg/secretary-adapter": ["../../modules/secretary-adapter/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*", "../../modules/audit/src/**/*", "../../packages/auth/src/**/*", "../../packages/database/src/**/*", "../../packages/events/src/**/*", "../../modules/gateway-adapter/src/**/*", "../../packages/shared/src/**/*", "../../modules/secretary-adapter/src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

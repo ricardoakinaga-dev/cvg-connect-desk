@@ -19,7 +19,7 @@ export async function registerInboundWebhook(app: FastifyInstance) {
   app.post(
     '/webhook/inbound',
     {
-      preHandler: webhookGuard,
+      preHandler: [webhookGuard as any],
       schema: {
         description: 'Webhook inbound do Gateway — recebe mensagens do WhatsApp',
         tags: ['Webhook'],
@@ -55,14 +55,15 @@ export async function registerInboundWebhook(app: FastifyInstance) {
 
         const messageContent = content || text || '';
         const sentAt = timestamp ? new Date(timestamp) : new Date();
+        const senderPhone = from || 'unknown';
 
         const result = await receiveInboundMessage({
           externalMessageId: messageId || `msg_${Date.now()}`,
           externalConversationId: conversationId,
           content: messageContent,
-          sender: from,
+          sender: senderPhone,
           senderType: 'contact',
-          contactPhone: from,
+          contactPhone: senderPhone,
           sentAt,
         });
 

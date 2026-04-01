@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@cvg/auth": ["../../packages/auth/src/index.ts"],
+      "@cvg/database": ["../../packages/database/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*", "../../packages/auth/src/**/*", "../../packages/database/src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -67,6 +67,8 @@ export function projectEvent(event: EventEnvelope): RealtimeProjection | null {
       return projectAlertEvent(event_type as RealtimeEventType, event);
     case 'handoff.completed':
       return projectHandoffCompleted(event as EventEnvelope<HandoffPayload>);
+    case 'conversation.assigned':
+      return projectConversationAssigned(event as EventEnvelope<{ conversationId: string; previousAssignee?: string; newAssignee: string }>);
     default:
       return null;
   }
@@ -145,10 +147,26 @@ function projectHandoffCompleted(event: EventEnvelope<HandoffPayload>): Realtime
   };
 }
 
+function projectConversationAssigned(event: EventEnvelope<{ conversationId: string; previousAssignee?: string; newAssignee: string }>): RealtimeProjection {
+  return {
+    type: 'conversation.assigned',
+    aggregateType: 'Conversation',
+    aggregateId: event.payload.conversationId,
+    occurredAt: event.occurred_at,
+    payload: {
+      conversationId: event.payload.conversationId,
+      previousAssignee: event.payload.previousAssignee,
+      newAssignee: event.payload.newAssignee,
+    },
+    correlationId: event.correlation_id,
+  };
+}
+
 export function shouldProject(event: EventEnvelope): boolean {
   const projectableTypes = [
     'conversation.created',
     'conversation.status.changed',
+    'conversation.assigned',
     'message.persisted',
     'task.created',
     'task.updated',

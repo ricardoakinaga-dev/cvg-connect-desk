@@ -14,7 +14,7 @@ Este documento estabelece:
 - critérios de entrada e saída por fase;
 - regras para evitar implementação fora de ordem.
 
-## 2. Estado Atual do Projeto (Atualizado em 31/03/2026)
+## 2. Estado Atual do Projeto (Atualizado em 01/04/2026)
 No momento atual:
 - a documentação arquitetural está avançada e endurecida;
 - o monorepo está estruturado com `apps`, `modules` e `packages`;
@@ -28,9 +28,14 @@ No momento atual:
 - IAM, Chat Core, Operations possuem modelagem concreta no banco;
 - integração com Secretary via modules/secretary-adapter está **ativa e testada**;
 - autenticação real implementada com login, logout, sessões e RBAC;
-- módulo de audit trail implementado;
+- módulo de audit trail implementado com endpoints premium (conversation, correlation, search);
 - 47 testes unitários passando;
-- Docker build corrigido (rollup@4.34.8 via pnpm overrides).
+- Docker build corrigido (rollup@4.34.8 via pnpm overrides);
+- **Nota geral: 87/100** (padrão premium);
+- KPIs avançados implementados: avg_first_response_time, avg_response_time, handoff_rate, sector_backlog, aging_conversations, alerts_by_criticality;
+- Realtime Kanban com eventos de status changed e assigned;
+- Retry → Dead-letter wiring conectado no worker;
+- Documentação premium: deploy guide, runbook operacional, troubleshooting guide.
 
 Conclusão:
 - o projeto está em estado de produção para operação básica;

@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest, FastifyReply, preHandlerHookHandler } from 'fastify';
 import { hasPermission, Permission, Role } from './rbac';
 
 declare module 'fastify' {
@@ -12,8 +12,8 @@ declare module 'fastify' {
   }
 }
 
-export function requirePermission(...permissions: Permission[]) {
-  return async (request: FastifyRequest, reply: FastifyReply) => {
+export function requirePermission(...permissions: Permission[]): preHandlerHookHandler {
+  return async (request, reply) => {
     if (!request.user) {
       return reply.status(401).send({
         error: 'UNAUTHORIZED',

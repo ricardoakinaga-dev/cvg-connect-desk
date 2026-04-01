@@ -39,10 +39,19 @@ export interface ConversationStatusChangedPayload {
   changedAt: string;
 }
 
+export interface ConversationAssignedPayload {
+  conversationId: string;
+  previousAssignee?: string;
+  newAssignee: string;
+  assignedBy?: string;
+  assignedAt: string;
+}
+
 export type MessageInboundEvent = EventEnvelope<MessageInboundPayload>;
 export type MessagePersistedEvent = EventEnvelope<MessagePersistedPayload>;
 export type ConversationCreatedEvent = EventEnvelope<ConversationCreatedPayload>;
 export type ConversationStatusChangedEvent = EventEnvelope<ConversationStatusChangedPayload>;
+export type ConversationAssignedEvent = EventEnvelope<ConversationAssignedPayload>;
 
 export function createMessageInboundEvent(payload: MessageInboundPayload, correlationId?: string): MessageInboundEvent {
   return createEvent('message.inbound.received', 'Message', payload.messageId, payload, { correlationId });
@@ -58,4 +67,8 @@ export function createConversationCreatedEvent(payload: ConversationCreatedPaylo
 
 export function createConversationStatusChangedEvent(payload: ConversationStatusChangedPayload, correlationId?: string): ConversationStatusChangedEvent {
   return createEvent('conversation.status.changed', 'Conversation', payload.conversationId, payload, { correlationId });
+}
+
+export function createConversationAssignedEvent(payload: ConversationAssignedPayload, correlationId?: string): ConversationAssignedEvent {
+  return createEvent('conversation.assigned', 'Conversation', payload.conversationId, payload, { correlationId });
 }

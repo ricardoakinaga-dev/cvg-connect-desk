@@ -1,1 +1,1 @@
-export * from './admin.repository.ts';
+export * from './admin.repository';

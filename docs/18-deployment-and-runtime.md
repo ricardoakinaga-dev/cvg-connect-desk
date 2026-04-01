@@ -1,11 +1,11 @@
 # Deployment e Runtime
 
 ## 1. Estado Atual dos Runtimes
-No estado atual do monorepo, os seguintes runtimes estão implementados e operacionais:
-- `apps/desk-api` - API Fastify com rotas de chat, tasks, notes, alerts, dashboard e auth
-- `apps/desk-web` - Frontend React/Vite (operacional com auth real)
-- `apps/message-worker` - Worker para processamento assíncrono de eventos
-- `apps/realtime-service` - Servidor WebSocket para realtime (implementado, não conectado ao frontend)
+No estado atual do monorepo (01/04/2026), os seguintes runtimes estão implementados e operacionais:
+- `apps/desk-api` - API Fastify com rotas de chat, tasks, notes, alerts, dashboard, audit e auth
+- `apps/desk-web` - Frontend React/Vite (operacional com auth real, KPIs premium, realtime)
+- `apps/message-worker` - Worker para processamento assíncrono de eventos (com retry → DLQ wiring)
+- `apps/realtime-service` - Servidor WebSocket para realtime (conectado ao frontend, projeta eventos)
 
 ## 2. Runtimes e Suas Responsabilidades
 
@@ -16,14 +16,14 @@ No estado atual do monorepo, os seguintes runtimes estão implementados e operac
 
 **Health check**: GET `/health` - Retorna status básico do serviço
 
-**Readiness check**: GET `/readiness` - Verifica conectividade com banco de dados
+**Readiness check**: GET `/readiness` - Verifica conectividade com banco de dados e Redis
 
 **Dependências**:
 - PostgreSQL (obrigatório)
-- Redis (opcional, para sessão se desejado)
+- Redis (obrigatório para RedisEventBus)
 
 ### 2.2 desk-web (Frontend)
-**Responsabilidade**: Interface operacional para atendentes e gestores, consumir API, exibir dados.
+**Responsabilidade**: Interface operacional para atendentes e gestores, consumir API, exibir dados, KPIs premium, realtime.
 
 **Porta padrão**: 5173 (dev), build para produção
 

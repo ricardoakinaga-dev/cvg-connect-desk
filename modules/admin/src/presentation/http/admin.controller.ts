@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import {
   createUser, updateUser, deleteUser, assignRolesToUser,
   createRole, updateRole, deleteRole,
@@ -6,7 +6,7 @@ import {
   createQueue, updateQueue, deleteQueue,
   createTeam, updateTeam, deleteTeam,
 } from '../../application/use-cases';
-import { adminRepository } from '../../infrastructure/repositories/admin.repository.ts';
+import { adminRepository } from '../../infrastructure/repositories/admin.repository';
 import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
 import type {
@@ -15,12 +15,12 @@ import type {
   CreatePermissionInput,
   CreateQueueInput, UpdateQueueInput,
   CreateTeamInput, UpdateTeamInput,
-} from '../types';
+} from '../../types';
 
 // User routes
 export async function registerAdminRoutes(app: FastifyInstance) {
   // Users
-  app.get('/admin/users', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
+  app.get('/admin/users', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
       const users = await adminRepository.userRepository.findAll();
       return reply.status(200).send(users);
@@ -30,9 +30,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.get('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
-      const user = await adminRepository.userRepository.findById(req.params.id);
+      const params = req.params as { id: string };
+      const user = await adminRepository.userRepository.findById(params.id);
       if (!user) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'User not found' });
       }
@@ -43,9 +44,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/users', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateUserInput }>, reply: FastifyReply) => {
+  app.post('/admin/users', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await createUser(req.body);
+      const body = req.body as CreateUserInput;
+      const result = await createUser(body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -60,9 +62,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateUserInput }>, reply: FastifyReply) => {
+  app.put('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await updateUser(req.params.id, req.body);
+      const params = req.params as { id: string };
+      const body = req.body as UpdateUserInput;
+      const result = await updateUser(params.id, body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -77,9 +81,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await deleteUser(req.params.id);
+      const params = req.params as { id: string };
+      const result = await deleteUser(params.id);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -95,7 +100,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   });
 
   // Roles
-  app.get('/admin/roles', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
+  app.get('/admin/roles', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
       const roles = await adminRepository.roleRepository.findAll();
       return reply.status(200).send(roles);
@@ -105,9 +110,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.get('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
-      const role = await adminRepository.roleRepository.findById(req.params.id);
+      const params = req.params as { id: string };
+      const role = await adminRepository.roleRepository.findById(params.id);
       if (!role) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'Role not found' });
       }
@@ -118,9 +124,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/roles', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateRoleInput }>, reply: FastifyReply) => {
+  app.post('/admin/roles', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await createRole(req.body);
+      const body = req.body as CreateRoleInput;
+      const result = await createRole(body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -135,9 +142,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateRoleInput }>, reply: FastifyReply) => {
+  app.put('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await updateRole(req.params.id, req.body);
+      const params = req.params as { id: string };
+      const body = req.body as UpdateRoleInput;
+      const result = await updateRole(params.id, body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -152,9 +161,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await deleteRole(req.params.id);
+      const params = req.params as { id: string };
+      const result = await deleteRole(params.id);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -170,7 +180,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   });
 
   // Permissions (readonly)
-  app.get('/admin/permissions', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
+  app.get('/admin/permissions', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
       const permissions = await adminRepository.permissionRepository.findAll();
       return reply.status(200).send(permissions);
@@ -181,7 +191,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   });
 
   // Queues
-  app.get('/admin/queues', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
+  app.get('/admin/queues', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
       const queues = await adminRepository.queueRepository.findAll();
       return reply.status(200).send(queues);
@@ -191,9 +201,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/queues', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateQueueInput }>, reply: FastifyReply) => {
+  app.post('/admin/queues', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await createQueue(req.body);
+      const body = req.body as CreateQueueInput;
+      const result = await createQueue(body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -208,9 +219,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateQueueInput }>, reply: FastifyReply) => {
+  app.put('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await updateQueue(req.params.id, req.body);
+      const params = req.params as { id: string };
+      const body = req.body as UpdateQueueInput;
+      const result = await updateQueue(params.id, body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -225,9 +238,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await deleteQueue(req.params.id);
+      const params = req.params as { id: string };
+      const result = await deleteQueue(params.id);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -243,7 +257,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   });
 
   // Teams
-  app.get('/admin/teams', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
+  app.get('/admin/teams', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req, reply) => {
     try {
       const teams = await adminRepository.teamRepository.findAll();
       return reply.status(200).send(teams);
@@ -253,9 +267,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/teams', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateTeamInput }>, reply: FastifyReply) => {
+  app.post('/admin/teams', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await createTeam(req.body);
+      const body = req.body as CreateTeamInput;
+      const result = await createTeam(body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -270,9 +285,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateTeamInput }>, reply: FastifyReply) => {
+  app.put('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await updateTeam(req.params.id, req.body);
+      const params = req.params as { id: string };
+      const body = req.body as UpdateTeamInput;
+      const result = await updateTeam(params.id, body);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -287,9 +304,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
-      const result = await deleteTeam(req.params.id);
+      const params = req.params as { id: string };
+      const result = await deleteTeam(params.id);
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -311,11 +329,6 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   // Listar setores de um usuário
   app.get('/admin/users/:id/sectors', {
     preHandler: [authenticate, requirePermission('admin:read')],
-    schema: {
-      description: 'Listar setores com acesso de um usuário',
-      tags: ['Admin'],
-      security: [{ bearerAuth: [] }],
-    },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     try {
@@ -331,28 +344,6 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   // Definir setores de um usuário (substitui todos)
   app.put('/admin/users/:id/sectors', {
     preHandler: [authenticate, requirePermission('admin:write')],
-    schema: {
-      description: 'Definir permissões de setor de um usuário',
-      tags: ['Admin'],
-      security: [{ bearerAuth: [] }],
-      body: {
-        type: 'object',
-        required: ['sectors'],
-        properties: {
-          sectors: {
-            type: 'array',
-            items: {
-              type: 'object',
-              required: ['sectorId', 'accessLevel'],
-              properties: {
-                sectorId: { type: 'string' },
-                accessLevel: { type: 'string', enum: ['read', 'write', 'admin'] },
-              },
-            },
-          },
-        },
-      },
-    },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const { sectors: sectorPerms } = request.body as { sectors: { sectorId: string; accessLevel: 'read' | 'write' | 'admin' }[] };
@@ -398,11 +389,6 @@ export async function registerAdminRoutes(app: FastifyInstance) {
   // Remover setor de um usuário
   app.delete('/admin/users/:id/sectors/:sectorId', {
     preHandler: [authenticate, requirePermission('admin:write')],
-    schema: {
-      description: 'Remover permissão de setor de um usuário',
-      tags: ['Admin'],
-      security: [{ bearerAuth: [] }],
-    },
   }, async (request, reply) => {
     const { id, sectorId } = request.params as { id: string; sectorId: string };
     try {

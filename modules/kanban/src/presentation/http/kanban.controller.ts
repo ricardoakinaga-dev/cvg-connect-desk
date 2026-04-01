@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { authenticate } from '@cvg/auth';
 import { KanbanRepository } from '../../infrastructure/kanban.repository';
 import type { KanbanBoard, KanbanColumn } from '../../types';
+import { publishConversationStatusChanged, publishConversationAssigned } from '@cvg/chat';
 
 const STATUS_CONFIG: Record<string, { label: string; icon: string; color: string }> = {
   'novo': { label: 'Novo', icon: '🟢', color: '#22c55e' },
@@ -111,11 +112,18 @@ export async function registerKanbanRoutes(app: FastifyInstance) {
     const conv = await conversationRepository.findById(id);
     if (!conv) return reply.status(404).send({ error: 'NOT_FOUND', message: 'Conversa não encontrada' });
 
+    const previousStatus = (conv as any).statusV2 || 'novo';
     await conversationRepository.updateStatusV2(id, status, userId);
+    if (status !== previousStatus) {
+      await publishConversationStatusChanged(id, previousStatus, status, userId, 'Movido via Kanban');
+    }
     if (sectorId) await conversationRepository.updateSector(id, sectorId);
-    if (assignedUserId) await conversationRepository.assignUser(id, assignedUserId);
+    if (assignedUserId) {
+      await conversationRepository.assignUser(id, assignedUserId);
+      await publishConversationAssigned(id, (conv as any).assignedTo ?? undefined, assignedUserId, userId);
+    }
 
-    return { success: true, id, status };
+    return { success: true, id, status, previousStatus };
   });
 
   // Filtros disponíveis

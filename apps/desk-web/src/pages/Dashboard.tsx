@@ -1,16 +1,111 @@
 import { useState, useEffect } from 'react';
 import { dashboardApi, type DashboardSummary } from '../lib/api';
+import { realtimeClient } from '../lib/realtime';
 import './Dashboard.css';
+
+interface ResponseTimeMetrics {
+  avgFirstResponseTime: number | null;
+  avgResponseTime: number | null;
+  totalConversationsWithResponse: number;
+}
+
+interface HandoffMetrics {
+  totalHandoffs: number;
+  totalConversations: number;
+  handoffRate: number | null;
+}
+
+interface SectorBacklog {
+  sectorId: string;
+  sectorName: string;
+  openConversations: number;
+  pendingConversations: number;
+  totalBacklog: number;
+}
+
+interface AlertsByCriticality {
+  critical: number;
+  error: number;
+  warning: number;
+  info: number;
+}
+
+interface ConversationAging {
+  conversationId: string;
+  status: string;
+  sectorName: string | null;
+  lastMessageAt: string | null;
+  hoursSinceLastMessage: number | null;
+  agingBucket: 'fresh' | 'normal' | 'old' | 'critical';
+}
+
+const formatTime = (seconds: number | null): string => {
+  if (seconds === null) return '—';
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}min`;
+  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}min`;
+};
+
+const agingBucketConfig = {
+  fresh: { label: 'Recente', color: '#22c55e', icon: '🟢', maxHours: 2 },
+  normal: { label: 'Normal', color: '#eab308', icon: '🟡', maxHours: 8 },
+  old: { label: 'Antiga', color: '#f97316', icon: '🟠', maxHours: 24 },
+  critical: { label: 'Crítica', color: '#ef4444', icon: '🔴', maxHours: Infinity },
+};
 
 export function Dashboard() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [responseTime, setResponseTime] = useState<ResponseTimeMetrics | null>(null);
+  const [handoff, setHandoff] = useState<HandoffMetrics | null>(null);
+  const [sectorBacklog, setSectorBacklog] = useState<SectorBacklog[]>([]);
+  const [alertsByCriticality, setAlertsByCriticality] = useState<AlertsByCriticality | null>(null);
+  const [agingConversations, setAgingConversations] = useState<ConversationAging[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchAll = async () => {
+    try {
+      const [s, rt, ho, sb, ac, aging] = await Promise.all([
+        dashboardApi.getSummary().catch(() => null),
+        dashboardApi.getResponseTime?.().catch(() => null),
+        dashboardApi.getHandoff?.().catch(() => null),
+        dashboardApi.getSectorBacklog?.().catch(() => []),
+        dashboardApi.getAlertsByCriticality?.().catch(() => null),
+        dashboardApi.getAging?.(15).catch(() => []),
+      ]);
+      setSummary(s);
+      if (rt) setResponseTime(rt);
+      if (ho) setHandoff(ho);
+      if (sb) setSectorBacklog(sb);
+      if (ac) setAlertsByCriticality(ac);
+      if (aging && Array.isArray(aging)) setAgingConversations(aging);
+    } catch (err) {
+      console.error('Erro ao carregar dashboard:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    dashboardApi.getSummary()
-      .then(setSummary)
-      .catch(err => console.error('Erro:', err))
-      .finally(() => setLoading(false));
+    fetchAll();
+    const interval = setInterval(fetchAll, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Realtime updates
+  useEffect(() => {
+    const onEvent = () => fetchAll();
+    realtimeClient.subscribe('message.persisted', onEvent);
+    realtimeClient.subscribe('conversation.status.changed', onEvent);
+    realtimeClient.subscribe('conversation.created', onEvent);
+    realtimeClient.subscribe('alert.created', onEvent);
+    realtimeClient.subscribe('task.status.changed', onEvent);
+    return () => {
+      realtimeClient.unsubscribe('message.persisted', onEvent);
+      realtimeClient.unsubscribe('conversation.status.changed', onEvent);
+      realtimeClient.unsubscribe('conversation.created', onEvent);
+      realtimeClient.unsubscribe('alert.created', onEvent);
+      realtimeClient.unsubscribe('task.status.changed', onEvent);
+    };
   }, []);
 
   if (loading) return <div className="dashboard-page"><div className="loading-state"><div className="spinner" /> Carregando dashboard...</div></div>;
@@ -50,6 +145,47 @@ export function Dashboard() {
           </div>
         ))}
       </div>
+
+      {/* KPIs Avançados */}
+      {(responseTime || handoff) && (
+        <div className="dashboard-sections">
+          <div className="section-card">
+            <h3>⏱️ Tempo de Resposta</h3>
+            <div className="kpi-grid">
+              <div className="kpi-item">
+                <span className="kpi-label">1ª Resposta (média)</span>
+                <span className="kpi-value">{formatTime(responseTime?.avgFirstResponseTime ?? null)}</span>
+              </div>
+              <div className="kpi-item">
+                <span className="kpi-label">Resposta (média)</span>
+                <span className="kpi-value">{formatTime(responseTime?.avgResponseTime ?? null)}</span>
+              </div>
+              <div className="kpi-item">
+                <span className="kpi-label">Conversas com resposta</span>
+                <span className="kpi-value">{responseTime?.totalConversationsWithResponse ?? 0}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="section-card">
+            <h3>🔄 Handoff Rate</h3>
+            <div className="kpi-grid">
+              <div className="kpi-item">
+                <span className="kpi-label">Taxa de Handoff</span>
+                <span className="kpi-value">{handoff?.handoffRate !== null ? `${handoff?.handoffRate}%` : '—'}</span>
+              </div>
+              <div className="kpi-item">
+                <span className="kpi-label">Total Handoffs</span>
+                <span className="kpi-value">{handoff?.totalHandoffs ?? 0}</span>
+              </div>
+              <div className="kpi-item">
+                <span className="kpi-label">Total Conversas</span>
+                <span className="kpi-value">{handoff?.totalConversations ?? 0}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="dashboard-sections">
         <div className="section-card">
@@ -94,10 +230,10 @@ export function Dashboard() {
           <h3>🔔 Alertas por Severidade</h3>
           <div className="severity-grid">
             {[
-              { label: 'Crítico', value: summary.alerts.bySeverity.critical, icon: '🔴', color: '#dc2626' },
-              { label: 'Erro', value: summary.alerts.bySeverity.error, icon: '🟠', color: '#ea580c' },
-              { label: 'Aviso', value: summary.alerts.bySeverity.warning, icon: '🟡', color: '#ca8a04' },
-              { label: 'Info', value: summary.alerts.bySeverity.info, icon: '🔵', color: '#2563eb' },
+              { label: 'Crítico', value: alertsByCriticality?.critical ?? summary.alerts.bySeverity.critical, icon: '🔴', color: '#dc2626' },
+              { label: 'Erro', value: alertsByCriticality?.error ?? summary.alerts.bySeverity.error, icon: '🟠', color: '#ea580c' },
+              { label: 'Aviso', value: alertsByCriticality?.warning ?? summary.alerts.bySeverity.warning, icon: '🟡', color: '#ca8a04' },
+              { label: 'Info', value: alertsByCriticality?.info ?? summary.alerts.bySeverity.info, icon: '🔵', color: '#2563eb' },
             ].map((s, i) => (
               <div key={i} className="severity-item">
                 <span className="sev-icon">{s.icon}</span>
@@ -107,6 +243,45 @@ export function Dashboard() {
             ))}
           </div>
         </div>
+
+        {sectorBacklog.length > 0 && (
+          <div className="section-card">
+            <h3>📊 Backlog por Setor</h3>
+            <div className="backlog-list">
+              {sectorBacklog.slice(0, 10).map(s => (
+                <div key={s.sectorId} className="backlog-item">
+                  <span className="backlog-name">{s.sectorName}</span>
+                  <span className="backlog-open" style={{ color: '#22c55e' }}>{s.openConversations} abertas</span>
+                  <span className="backlog-pending" style={{ color: '#eab308' }}>{s.pendingConversations} pendentes</span>
+                  <span className="backlog-total">{s.totalBacklog} total</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {agingConversations.length > 0 && (
+          <div className="section-card">
+            <h3>⏰ Conversas por Tempo de Espera</h3>
+            <div className="aging-list">
+              {agingConversations.map(a => {
+                const config = agingBucketConfig[a.agingBucket];
+                return (
+                  <div key={a.conversationId} className="aging-item" style={{ borderLeftColor: config.color }}>
+                    <span className="aging-status" style={{ color: config.color }}>{config.icon} {config.label}</span>
+                    <span className="aging-sector">{a.sectorName || 'Sem setor'}</span>
+                    <span className="aging-time">
+                      {a.hoursSinceLastMessage !== null
+                        ? `${a.hoursSinceLastMessage}h sem resposta`
+                        : 'Sem mensagens'}
+                    </span>
+                    <span className="aging-id">{a.conversationId.slice(0, 8)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

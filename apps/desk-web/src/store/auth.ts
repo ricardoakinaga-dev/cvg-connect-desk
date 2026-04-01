@@ -61,6 +61,7 @@ export const useAuthStore = create<AuthState>()(
             await api.post('/auth/logout');
           }
         } catch {
+          // Logout failure is non-critical — proceed with clearing state
         } finally {
           set({ user: null, token: null, isAuthenticated: false, error: null });
         }

@@ -290,7 +290,7 @@ export function Inbox() {
         await api.post('/messages', {
           conversationId: selectedConv,
           content: newMessage || '',
-          recipient: selectedConvData?.contactId || '',
+          recipient: selectedConvData?.contactPhone || '',
           mediaUrl: base64,
           mediaType,
           mediaMimetype: selectedFile.type,
@@ -301,7 +301,7 @@ export function Inbox() {
         await conversationApi.sendMessage({
           conversationId: selectedConv,
           content: newMessage,
-          recipient: selectedConvData?.contactId || '',
+          recipient: selectedConvData?.contactPhone || '',
         });
       }
 

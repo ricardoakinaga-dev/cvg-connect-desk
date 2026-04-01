@@ -16,7 +16,7 @@ export interface CreateNoteInput {
 
 export interface CreateNoteOutput {
   id: string;
-  conversationId: string;
+  conversationId?: string;
   createdAt: Date;
 }
 

@@ -1,4 +1,4 @@
-import { eventPublisher, createMessagePersistedEvent, createConversationCreatedEvent, createConversationStatusChangedEvent } from '@cvg/events';
+import { eventPublisher, createMessagePersistedEvent, createConversationCreatedEvent, createConversationStatusChangedEvent, createConversationAssignedEvent } from '@cvg/events';
 
 export async function publishMessagePersisted(message: {
   id: string;
@@ -50,6 +50,17 @@ export async function publishConversationStatusChanged(conversationId: string, p
     changedBy,
     reason,
     changedAt: new Date().toISOString(),
+  });
+  await eventPublisher.publish(event);
+}
+
+export async function publishConversationAssigned(conversationId: string, previousAssignee: string | undefined, newAssignee: string, assignedBy?: string) {
+  const event = createConversationAssignedEvent({
+    conversationId,
+    previousAssignee,
+    newAssignee,
+    assignedBy,
+    assignedAt: new Date().toISOString(),
   });
   await eventPublisher.publish(event);
 }

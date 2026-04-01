@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ok, err, Result } from '../result';
+import { ok, err, Result, Ok } from '../result';
 
 describe('Result Pattern', () => {
   describe('ok', () => {
@@ -36,7 +36,7 @@ describe('Result Pattern', () => {
 
     it('executa caminho de erro', () => {
       const result: Result<string, Error> = err(new Error('erro'));
-      const value = result.isOk() ? result.value : 'fallback';
+      const value = result.isOk() ? 'unexpected' : 'fallback';
       expect(value).toBe('fallback');
     });
   });

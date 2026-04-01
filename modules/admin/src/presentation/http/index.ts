@@ -1,1 +1,1 @@
-export * from './admin.controller.ts';
+export * from './admin.controller';

@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { createTask } from '../../application/use-cases/create-task.use-case';
 import { updateTaskStatus } from '../../application/use-cases/update-task-status.use-case';
 import { taskRepository } from '../../infrastructure/repositories/task.repository';
@@ -50,12 +50,13 @@ export async function registerTaskRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Body: CreateTaskBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
+        const body = request.body as CreateTaskBody;
         const result = await createTask({
-          ...request.body,
-          dueAt: request.body.dueAt ? new Date(request.body.dueAt) : undefined,
+          ...body,
+          dueAt: body.dueAt ? new Date(body.dueAt) : undefined,
           userId,
         });
 
@@ -78,9 +79,10 @@ export async function registerTaskRoutes(app: FastifyInstance) {
     }
   );
 
-  app.get('/tasks', { preHandler: [authenticate, requirePermission('tasks:read')] }, async (request: FastifyRequest<{ Querystring: { status?: string; assignedTo?: string; priority?: string } }>, reply: FastifyReply) => {
+  app.get('/tasks', { preHandler: [authenticate, requirePermission('tasks:read')] }, async (request, reply) => {
     try {
-      const { status, assignedTo, priority } = request.query;
+      const query = request.query as { status?: string; assignedTo?: string; priority?: string };
+      const { status, assignedTo, priority } = query;
       const tasks = await taskRepository.findAll({ status, assignedTo, priority });
       return reply.status(200).send(tasks);
     } catch (error) {
@@ -92,9 +94,10 @@ export async function registerTaskRoutes(app: FastifyInstance) {
   app.get(
     '/tasks/:id',
     { preHandler: [authenticate, requirePermission('tasks:read')] },
-    async (request: FastifyRequest<{ Params: TaskParams }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const task = await taskRepository.findById(request.params.id);
+        const params = request.params as TaskParams;
+        const task = await taskRepository.findById(params.id);
         if (!task) {
           return reply.status(404).send({ error: 'NOT_FOUND', message: 'Task not found' });
         }
@@ -122,14 +125,16 @@ export async function registerTaskRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: TaskParams; Body: UpdateStatusBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
+        const params = request.params as TaskParams;
+        const body = request.body as { status: 'pending' | 'in_progress' | 'completed' | 'cancelled'; changedBy?: string; reason?: string };
         const result = await updateTaskStatus({
-          taskId: request.params.id,
-          status: request.body.status,
-          changedBy: request.body.changedBy,
-          reason: request.body.reason,
+          taskId: params.id,
+          status: body.status,
+          changedBy: body.changedBy,
+          reason: body.reason,
           userId,
         });
 

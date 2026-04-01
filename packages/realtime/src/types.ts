@@ -1,4 +1,9 @@
 export type RealtimeEventType = 
+  | 'connection.established'
+  | 'auth.success'
+  | 'auth.error'
+  | 'subscribe.error'
+  | 'subscription.success'
   | 'conversation.created'
   | 'conversation.updated'
   | 'conversation.status.changed'
@@ -22,9 +27,16 @@ export interface RealtimeProjection<T = unknown> {
   correlationId?: string;
 }
 
+/**
+ * Formato unificado para websocket:
+ * O frontend espera { event_type, payload, occurred_at }
+ * O servidor envia neste mesmo formato para manter contrato estável.
+ */
 export interface RealtimeMessage {
-  event: string;
-  data: RealtimeProjection;
+  event_type: RealtimeEventType;
+  payload: Record<string, unknown>;
+  occurred_at: string;
+  correlation_id?: string;
 }
 
 export interface RealtimeSubscription {
