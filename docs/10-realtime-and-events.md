@@ -82,14 +82,13 @@ Estrutura conceitual mínima:
 {
   "event_id": "string",
   "event_type": "string",
-  "event_version": "number|string",
+  "event_version": "number",
   "aggregate_type": "string",
   "aggregate_id": "string",
   "occurred_at": "ISO8601",
-  "produced_by": "string",
   "correlation_id": "string|null",
   "causation_id": "string|null",
-  "idempotency_key": "string|null",
+  "version": "number",
   "payload": {},
   "metadata": {}
 }
@@ -98,18 +97,17 @@ Estrutura conceitual mínima:
 ### 5.1 Campos Mínimos Obrigatórios
 - `event_id`: identificador único do evento interno;
 - `event_type`: nome canônico do evento;
+- `event_version`: versao explicita do contrato do evento;
 - `aggregate_type`: domínio raiz relacionado;
 - `aggregate_id`: ID da entidade raiz;
 - `occurred_at`: timestamp do fato;
-- `produced_by`: origem lógica do evento;
+- `version`: versão operacional do aggregate no outbox;
 - `payload`: dados relevantes já normalizados;
 - `metadata`: metadados auxiliares.
 
 ### 5.2 Campos Recomendados
-- `event_version`;
 - `correlation_id`;
-- `causation_id`;
-- `idempotency_key`.
+- `causation_id`.
 
 ## 6. Regras do Envelope
 
@@ -205,6 +203,7 @@ Pode consumir eventos para:
 Regra:
 - worker não cria verdade primária invisível;
 - mudanças de estado feitas por worker devem ser rastreáveis e persistidas adequadamente.
+- quando uma falha se torna terminal, o worker grava dead-letter com o `sourceEvent` original para permitir replay administrativo contextual.
 
 ### 8.3 Realtime (`realtime-service`)
 Pode consumir eventos para:
@@ -218,6 +217,7 @@ Regra:
 - realtime só projeta;
 - não decide;
 - não persiste estado primário.
+- eventos não projetáveis são ackados/ignorados para evitar dead-letter replayável sem boundary terminal real.
 
 ## 9. Fluxo Entre API, Worker e Frontend
 

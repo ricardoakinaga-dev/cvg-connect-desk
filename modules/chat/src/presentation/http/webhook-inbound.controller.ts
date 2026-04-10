@@ -26,16 +26,17 @@ export async function registerInboundWebhook(app: FastifyInstance) {
         body: {
           type: 'object',
           properties: {
-            messageId: { type: 'string' },
-            conversationId: { type: 'string' },
-            from: { type: 'string' },
-            to: { type: 'string' },
-            content: { type: 'string' },
-            text: { type: 'string' },
-            timestamp: { type: 'string' },
-            type: { type: 'string' },
+            messageId: { type: 'string', maxLength: 128 },
+            conversationId: { type: 'string', maxLength: 128 },
+            from: { type: 'string', minLength: 1, maxLength: 32 },
+            to: { type: 'string', maxLength: 32 },
+            content: { type: 'string', maxLength: 10000 },
+            text: { type: 'string', maxLength: 10000 },
+            timestamp: { type: 'string', maxLength: 32 },
+            type: { type: 'string', maxLength: 32 },
           },
           required: ['from'],
+          additionalProperties: false,
         },
         response: {
           200: {

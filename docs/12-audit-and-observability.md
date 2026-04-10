@@ -25,10 +25,10 @@ No estado atual do repositório:
 - `apps/desk-api` já possui endpoints reais de `health` e `readiness`, além do logger básico do Fastify;
 - `apps/message-worker` já possui worker implementado com polling e handlers;
 - `apps/realtime-service` já possui servidor WebSocket implementado;
-- logs estruturados implementados com userId e ação;
-- este documento descreve o **estado atual** e o **alvo de refinement**.
-
-Este documento reflete o que já foi implementado (audit, health, readiness, logs, worker) e o que ainda precisa de refinement (métricas de produção, tracing).
+- logs estruturados JSON implementados com campos semânticos (`event_type`, `event_id`, `correlation_id`, `level`);
+- Worker e Realtime emitem logs em JSON com nível explícito (`debug`/`info`/`warn`/`error`);
+- Dead-letter com `retry_decision` e `failure_stage` para triagem operacional;
+- este documento foi consolidado para refletir o estado real após a Fase 2 de observabilidade.
 
 ## 3. Princípios Gerais
 
@@ -147,6 +147,9 @@ Todos os runtimes relevantes devem produzir logs estruturados contendo, quando a
 - `event_id` quando existir;
 - `aggregate_type` e `aggregate_id` quando fizer sentido;
 - contexto de erro quando aplicável.
+- `reason` ou código operacional quando o runtime estiver rejeitando ou classificando uma falha;
+- `failureContext` resumido quando o evento tiver virado dead-letter e precisar de triagem.
+- contadores/resumos operacionais quando o runtime expuser superfície mínima de triagem, como `/admin/dead-letters/stats` e `/admin/webhook-security/stats`.
 
 ### 6.2 Runtimes Esperados
 Logs devem ser consistentes entre, no mínimo:
@@ -161,6 +164,106 @@ Logs devem ser consistentes entre, no mínimo:
 - logar senha ou hash de forma indevida;
 - despejar payloads inteiros sem critério;
 - usar texto sem estrutura como padrão principal.
+
+### 6.4 Formato Real dos Logs — Worker e Realtime
+
+Os runtimes `message-worker` e `realtime-service` emitem logs em JSON com a seguinte estrutura:
+
+#### Worker (`apps/message-worker/src/index.ts`)
+
+**Inicio do worker:**
+```json
+{"msg":"[Worker] Starting message worker","consumer_id":"worker","handlers":[...],"poll_interval_ms":500,"level":"info"}
+```
+
+**Processamento de evento:**
+```json
+{"msg":"[Worker] Processing handoff.completed","event_type":"handoff.completed","event_id":"...","correlation_id":"...","conversation_id":"...","level":"info"}
+{"msg":"[Worker] Processing secretary.invocation","event_type":"secretary.invocation","event_id":"...","correlation_id":"...","conversation_id":"...","action":"...","status":"...","level":"info"}
+{"msg":"[Worker] Processing message.persisted","event_type":"message.persisted","event_id":"...","correlation_id":"...","conversation_id":"...","direction":"inbound|outbound","level":"debug"}
+```
+
+**Falhas e retry:**
+```json
+{"msg":"[Worker] Retrying event after error","event_type":"...","event_id":"...","correlation_id":"...","handler":"...","attempt":1,"max_retries":3,"delay_ms":1000,"error":"...","level":"warn"}
+{"msg":"[Worker] Non-retryable error — sending to dead-letter","event_type":"...","event_id":"...","correlation_id":"...","handler":"...","error":"...","retry_count":1,"retry_decision":"dead-letter","failure_stage":"worker-terminal","level":"error"}
+{"msg":"[Worker] Max retries exceeded — sending to dead-letter","event_type":"...","event_id":"...","correlation_id":"...","handler":"...","error":"...","attempt":3,"max_retries":3,"retry_decision":"dead-letter","failure_stage":"worker-terminal","level":"error"}
+```
+
+**Secretary invocation failure:**
+```json
+{"msg":"[Worker] Secretary invocation failed","event_type":"secretary.invocation","event_id":"...","correlation_id":"...","conversation_id":"...","action":"...","status":"failed","error":"...","level":"warn"}
+```
+
+**Shutdown:**
+```json
+{"msg":"[Worker] Received SIGTERM, shutting down gracefully","level":"info"}
+```
+
+#### Realtime (`apps/realtime-service/src/index.ts`)
+
+**Server lifecycle:**
+```json
+{"msg":"[Realtime] WebSocket server listening","port":8080,"level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Server stopped","level":"info"}
+```
+
+**Connections:**
+```json
+{"msg":"[Realtime] Legacy connection with token in URL","client_id":"...","auth_method":"url-token","level":"warn"}
+{"msg":"[Realtime] New connection awaiting message-based auth","client_id":"...","level":"info"}
+{"msg":"[Realtime] Client authenticated","client_id":"...","user_id":"...","level":"info"}
+{"msg":"[Realtime] Connection closed","client_id":"...","level":"info"}
+{"msg":"[Realtime] Client subscribed to channel","client_id":"...","channel":"...","level":"info"}
+{"msg":"[Realtime] Client unsubscribed from channel","client_id":"...","channel":"...","level":"info"}
+```
+
+**Auth failures:**
+```json
+{"msg":"[Realtime] Authentication rejected","client_id":"...","reason":"...","close_code":4003,"level":"warn"}
+{"msg":"[Realtime] Auth timeout, closing connection","client_id":"...","level":"warn"}
+{"msg":"[Realtime] Token revalidation failed","client_id":"...","http_status":401,"level":"warn"}
+{"msg":"[Realtime] Revalidation failure — closing connection","client_id":"...","reason":"Token revoked: 401","close_code":4002,"level":"warn"}
+```
+
+**Event processing:**
+```json
+{"msg":"[Realtime] Processing events from outbox","count":5,"level":"info"}
+{"msg":"[Realtime] Skipping non-projectable event","event_type":"...","event_id":"...","level":"debug"}
+{"msg":"[Realtime] Projected event","event_type":"message.persisted","aggregate_id":"...","aggregate_type":"Message","level":"info"}
+{"msg":"[Realtime] Broadcast to channel","channel":"global","recipient_count":3,"level":"info"}
+```
+
+**Polling modes:**
+```json
+{"msg":"[Realtime] Using consumer-aware outbox for event polling","consumer":"realtime","level":"info"}
+{"msg":"[Realtime] HTTP polling started","api_url":"http://localhost:3000","level":"info"}
+```
+
+#### Campos semânticos
+
+| Campo | Descrição |
+|-------|-----------|
+| `msg` | Mensagem descritiva curta com prefixo do runtime |
+| `event_type` | Tipo do evento do envelope (quando aplicável) |
+| `event_id` | ID único do evento (quando aplicável) |
+| `correlation_id` | ID de correlação do fluxo (quando aplicável) |
+| `conversation_id` | ID da conversa afetada (quando aplicável) |
+| `client_id` | ID do cliente WebSocket (realtime) |
+| `user_id` | ID do usuário autenticado (realtime) |
+| `auth_method` | `url-token` (legacy) ou `message-token` (recomendado) |
+| `close_code` | Código de fechamento WebSocket (4001/4002/4003) |
+| `handler` | Nome do handler que processou o evento (worker) |
+| `attempt` | Tentativa atual de retry |
+| `max_retries` | Máximo de tentativas configurado |
+| `delay_ms` | Delay antes do próximo retry |
+| `retry_decision` | `dead-letter` quando evento vai para DLQ |
+| `failure_stage` | `worker-terminal` quando todos os retries se esgotaram |
+| `level` | `debug`/`info`/`warn`/`error` — severidade segundo RFC 5424 |
+| `consumer` | ID do consumer (`worker` ou `realtime`) |
+| `poll_interval_ms` | Intervalo de polling em milissegundos |
+| `recipient_count` | Número de clientes que receberam o broadcast |
 
 ## 7. Correlação e Traceabilidade
 
@@ -226,6 +329,12 @@ Ao investigar um problema relevante, deve ser possível responder:
 - qual conversa ou entidade foi afetada;
 - se houve erro de validação, integração ou processamento;
 - se houve retry;
+- se a entrada acabou em dead-letter e qual ação foi executada no admin (`retry` ou `resolve`);
+- se o dead-letter preservou `sourceEvent` suficiente para replay do envelope original;
+- se o dead-letter carrega `failureContext` estruturado com motivo, handler e decisão operacional;
+- se o painel operacional consegue ver o resumo agregado em `/admin/dead-letters/stats` sem abrir cada item;
+- se os bloqueios de webhook podem ser triados por `reason` agregado em `/admin/webhook-security/stats`;
+- se o runtime realmente tinha boundary terminal para produzir dead-letter replayável;
 - se houve evento publicado e consumido;
 - se houve impacto em outbound ou realtime.
 
@@ -242,8 +351,11 @@ Sinalizar situações que exigem ação humana ou investigação técnica.
 ### 11.2 Exemplos Mínimos
 - falha persistente de outbound;
 - falha recorrente de webhook;
+- webhook com `reason` operacional claro na resposta e no log para `missing_secret`, `missing_signature`, `invalid_signature_format` e `invalid_signature`;
 - consumer falhando repetidamente;
 - retry excedido;
+- dead-letter persistente sem tratamento no admin;
+- dead-letter replayável sem tratamento no admin, mas com `sourceEvent` salvo aguardando `retry`;
 - Secretary indisponível quando necessária ao fluxo;
 - erro crítico de banco ou fila;
 - readiness falhando.

@@ -218,7 +218,62 @@ WebSocket disponível em:
 9. `pnpm --filter @cvg/message-worker dev`
 10. `pnpm --filter @cvg/realtime-service dev`
 
-## 8. Checklist rápido de validação
+## 8. Smoke E2E mínimo com Playwright
+
+Depois de ter o banco disponível, execute:
+
+```bash
+pnpm exec playwright install chromium
+pnpm test:e2e
+pnpm e2e:stack:up
+pnpm test:e2e:smoke
+pnpm e2e:stack:down
+```
+
+O comando `pnpm test:e2e`:
+
+- carrega `.env` automaticamente na stack E2E;
+- aplica migrations;
+- garante o usuário `admin@cvg.com` com senha `admin123`;
+- sobe `desk-api`, `realtime-service` e `desk-web` em portas isoladas para o smoke;
+- executa os smoke browser-driven de login, inbox, kanban e criação de tarefa.
+
+## 9. Suites PostgreSQL real em CI, reproduzíveis localmente
+
+Para reproduzir localmente a esteira mínima que entrou em CI, suba apenas o PostgreSQL e rode:
+
+```bash
+docker compose -f docker-compose.smoke.yml up -d postgres
+set -a
+source .env
+set +a
+pnpm test:postgres-real
+```
+
+O comando `pnpm test:postgres-real`:
+
+- aplica `db:types` e migrations do banco;
+- executa `packages/events` real-db;
+- executa `modules/chat` inbound idempotency;
+- executa as integrações críticas da `desk-api` com PostgreSQL real.
+- roda os arquivos-alvo de forma direta com `vitest run`, para não puxar suítes adjacentes do mesmo pacote.
+
+Limite atual:
+
+- a esteira cobre apenas as suítes mais valiosas e maduras o bastante para CI;
+- E2E/browser smoke continua separado em `.github/workflows/smoke-e2e.yml`;
+- suítes condicionais ou mais frágeis continuam fora desta esteira mínima.
+
+O comando `pnpm test:e2e:smoke` é o caminho reproduzível para time/CI local quando a stack mínima do smoke já estiver de pé:
+
+- PostgreSQL e Redis via `docker-compose.smoke.yml`;
+- banco em `localhost:55432`;
+- redis em `localhost:56379`;
+- API em `localhost:4330`;
+- realtime em `localhost:4930`;
+- web em `localhost:4173`.
+
+## 10. Checklist rápido de validação
 
 Depois de subir os serviços:
 
@@ -228,7 +283,7 @@ Depois de subir os serviços:
 - frontend abre em `http://localhost:5173`
 - login funciona com `admin@cvg.com` / `admin123`
 
-## 9. Problemas comuns
+## 11. Problemas comuns
 
 ### API sobe mas não conecta no banco
 

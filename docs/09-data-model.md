@@ -23,6 +23,7 @@ No estado atual do repositório:
 - existem migrations `0000_famous_whirlwind.sql`, `0001_chat_core.sql` e `0002_operations.sql` materializando as fases já implementadas;
 - a modelagem atual continua parcial em relação ao alvo completo deste documento, especialmente em `admin`, `dashboard`, integrações futuras e refinamentos de constraints;
 - ainda não existe schema relacional consolidado para tudo o que está previsto além das fases já implementadas;
+- o pipeline de eventos já usa `outbox_events` como base operacional e agora também persiste `event_version` explícito no envelope, separado da versão operacional do aggregate;
 - este documento descreve o **modelo alvo obrigatório** para orientar migrations e implementação futura;
 - nada aqui deve ser lido como afirmação de que todas as tabelas já existem no banco.
 

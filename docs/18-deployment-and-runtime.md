@@ -1,11 +1,17 @@
 # Deployment e Runtime
 
+> **Status do Documento:** ATUALIZADO EM 2026-04-10
+>
+> Este documento foi revisado e corrigido para refletir o estado real do código.
+> Divergências anteriores: porta do realtime (3001 → 8080), rate limiting ("não implementado" → implementado),
+> realtime ("não conectado" → conectado ao frontend).
+
 ## 1. Estado Atual dos Runtimes
 No estado atual do monorepo, os seguintes runtimes estão implementados e operacionais:
 - `apps/desk-api` - API Fastify com rotas de chat, tasks, notes, alerts, dashboard e auth
-- `apps/desk-web` - Frontend React/Vite (operacional com auth real)
+- `apps/desk-web` - Frontend React/Vite (operacional com auth real e realtime)
 - `apps/message-worker` - Worker para processamento assíncrono de eventos
-- `apps/realtime-service` - Servidor WebSocket para realtime (implementado, não conectado ao frontend)
+- `apps/realtime-service` - Servidor WebSocket para realtime (implementado e conectado ao frontend)
 
 ## 2. Runtimes e Suas Responsabilidades
 
@@ -31,6 +37,7 @@ No estado atual do monorepo, os seguintes runtimes estão implementados e operac
 
 **Dependências**:
 - API (desk-api) para funcionamento
+- Admin inclui a aba `Dead-letter`, que consome `/admin/dead-letters` e expõe `retry` contextual ou `resolve` manual
 
 ### 2.3 message-worker (Worker)
 **Responsabilidade**: Processar eventos assíncronos, executar handlers secundários (alertas derivados de handoff, falhas de Secretary).
@@ -39,12 +46,15 @@ No estado atual do monorepo, os seguintes runtimes estão implementados e operac
 - PostgreSQL (obrigatório)
 - Event publisher do desk-api
 
+**Observabilidade operacional**: as falhas terminais registradas pelo worker carregam `failureContext` estruturado na dead-letter, incluindo handler, decisão, retry count e `reason` operacional para triagem no admin.
+**Superfície operacional mínima**: o admin expõe `/admin/dead-letters/stats` para resumo agregado da DLQ e `/admin/webhook-security/stats` para contagem dos `reason` de bloqueio do webhook. Esses resumos são process-local/in-memory e servem para triagem operacional no processo atual, não para retenção histórica.
+
 ### 2.4 realtime-service (WebSocket)
 **Responsabilidade**: Manter conexões WebSocket com clientes, projetar eventos para realtime.
 
-**Porta padrão**: 3001
+**Porta padrão**: 8080
 
-**Status**: Implementado, não conectado ao frontend (fallback por polling ativo)
+**Status**: Implementado e conectado ao frontend via WebSocket. O Inbox utiliza realtime para atualizações em tempo real com polling de fallback configurável e autenticação por mensagem com token.
 
 ## 3. Infra-Agonistic (EasyPanel / Docker)
 Não faremos dependência de Vercel/Netlify se a clínica preza pela Cloud Local (ou Nuvem VPS com EasyPanel). Todo App `apps/desk-api` e `apps/desk-web` tem que ter `Dockerfile` multistage compatível com `alpine-linux` e port mapping direto.
@@ -57,12 +67,13 @@ Não faremos dependência de Vercel/Netlify se a clínica preza pela Cloud Local
 
 ### Frontend:
 - `VITE_API_URL` (URL da API, ex: http://localhost:3000)
+- `VITE_REALTIME_URL` (URL do websocket realtime, ex: ws://localhost:8080)
 
 ### Opcionais:
 - `REDIS_URL` (Redis Cloud, Redis Local)
 - `GATEWAY_URL` (url do serviço externo pre-existente)
 - `WORKER_POLL_INTERVAL_MS` (Intervalo de polling do worker, default: 5000)
-- `REALTIME_PORT` (Porta do servidor WebSocket, default: 3001)
+- `REALTIME_PORT` (Porta do servidor WebSocket, default: 8080)
 - `REALTIME_POLL_INTERVAL_MS` (Intervalo de polling de eventos, default: 1000)
 - `SECRETARY_API_KEY` (Chave da API Secretary)
 - `SECRETARY_URL` (URL do serviço Secretary)
@@ -128,12 +139,19 @@ Antes de colocar em produção, os seguintes itens devem ser configurados:
 - Variáveis de ambiente properly configuradas (sem valores hardcoded)
 - Credenciais da Secretary (se integrada)
 - SSL/TLS configurado (recomendado)
-- Rate limiting implementado (não implementado atualmente)
+- Rate limiting implementado (via @fastify/rate-limit, configurável via `RATE_LIMIT_MAX` e `RATE_LIMIT_WINDOW`)
 - Monitoring/basic alerting (não implementado atualmente)
 
 ## 9. Limitações Atuais
 
-- Rate limiting ainda não implementado
+> **Nota:** As limitações listadas aqui foram revalidadas em 2026-04-10.
+
 - Monitoring/alerting de produção não implementado
-- Realtime service não conectado ao frontend (fallback por polling ativo)
-- Webhook security precisa de endurecimento adicional
+- Pipeline de eventos utiliza publisher in-memory (não é ainda interprocesso real em múltiplas máquinas)
+- Autenticação do canal realtime no cliente principal usa message-based auth com token no payload; o servidor ainda mantém compatibilidade legada com `?token=<jwt>` para clientes antigos
+- Webhook security: fail-secure em produção (WEBHOOK_SECRET obrigatório), bypass com warning em dev. A API emite erro em stderr no bootstrap se NODE_ENV=production e WEBHOOK_SECRET ausente. Respostas de falha expõem `reason` operacional (`missing_secret`, `missing_signature`, `invalid_signature_format`, `invalid_signature`) para triagem mais rápida. Configuração de produção: `NODE_ENV=production` ou `DESK_ENV=production`
+- Webhook security: além das respostas e logs com `reason`, o admin agrega os bloqueios em `/admin/webhook-security/stats`, reduzindo dependência de inspeção manual de eventos individuais.
+- O guard de webhook agora tem fonte única em `packages/shared/src/webhook-guard.ts`; a cópia manual `webhook-guard.js` foi removida para reduzir drift de manutenção.
+- Dead-letter admin UI existe; o `message-worker` grava automaticamente `sourceEvent` nas falhas terminais cobertas, além de `failureContext` estruturado com handler, decisão, retry count e motivo operacional, permitindo `retry` contextual no admin. O `realtime-service` foi auditado e não entra no mesmo padrão replayável porque eventos não projetáveis são apenas ackados/ignorados. Entradas legadas ou sem envelope continuam usando `resolve` manual
+- Dead-letter admin UI também consome `/admin/dead-letters/stats` para mostrar replayáveis, manuais e motivos principais sem abrir cada entrada
+- Smoke Playwright usa portas isoladas (`4330`/`4930`/`4173`) e `VITE_API_URL=http://localhost:4330` / `VITE_REALTIME_URL=ws://localhost:4930`; o banco do smoke fica em `localhost:55432` e o Redis em `localhost:56379`

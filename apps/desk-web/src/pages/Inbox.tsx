@@ -2,16 +2,19 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { api, conversationApi, sectorApi, type Conversation, type Message, type Sector } from '../lib/api';
 import { useAuthStore } from '../store/auth';
+import { realtimeClient, type RealtimeEvent } from '../lib/realtime';
 import './Inbox.css';
 
-interface ConversationWithContact extends Conversation {
+type ConversationWithContact = Omit<Conversation, 'lastMessage'> & {
   contactName?: string | null;
   contactPhone?: string | null;
+  sectorId?: string;
+  statusV2?: string;
   lastMessage?: { content: string; direction: string } | null;
-}
+};
 
 export function Inbox() {
-  const { user } = useAuthStore();
+  const { token } = useAuthStore();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -49,8 +52,6 @@ export function Inbox() {
     finally { setLoading(false); }
   }, [selectedSector]);
 
-  useEffect(() => { fetchConversations(); const i = setInterval(fetchConversations, 10000); return () => clearInterval(i); }, [fetchConversations]);
-
   const fetchMessages = useCallback(async (id: string) => {
     try {
       const data = await conversationApi.getMessages(id);
@@ -59,8 +60,77 @@ export function Inbox() {
     } catch (err) { console.error(err); }
   }, []);
 
+  // Realtime connection - substitui polling agressivo
+  useEffect(() => {
+    if (!token) return;
+
+    realtimeClient.connect(token);
+
+    console.log('[Inbox] Realtime client connected');
+
+    return () => {
+      realtimeClient.disconnect();
+      console.log('[Inbox] Realtime client disconnected');
+    };
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const handleMessagePersisted = (event: RealtimeEvent) => {
+      const payload = event.payload as { conversationId?: string };
+      if (payload.conversationId && payload.conversationId === selectedConv) {
+        fetchMessages(payload.conversationId);
+      }
+      fetchConversations();
+    };
+
+    const handleConversationChanged = () => {
+      fetchConversations();
+    };
+
+    const handleStatusChanged = () => {
+      fetchConversations();
+    };
+
+    const handleHandoffCompleted = () => {
+      fetchConversations();
+    };
+
+    realtimeClient.subscribe('message.persisted', handleMessagePersisted);
+    realtimeClient.subscribe('conversation.created', handleConversationChanged);
+    realtimeClient.subscribe('conversation.status.changed', handleStatusChanged);
+    realtimeClient.subscribe('handoff.completed', handleHandoffCompleted);
+
+    return () => {
+      realtimeClient.unsubscribe('message.persisted', handleMessagePersisted);
+      realtimeClient.unsubscribe('conversation.created', handleConversationChanged);
+      realtimeClient.unsubscribe('conversation.status.changed', handleStatusChanged);
+      realtimeClient.unsubscribe('handoff.completed', handleHandoffCompleted);
+    };
+  }, [token, selectedConv, fetchConversations, fetchMessages]);
+
+  // Polling de fallback (apenas se WS não estiver activo ou a cada 30s para reconectar state)
+  useEffect(() => {
+    fetchConversations();
+    const i = setInterval(fetchConversations, 30000);
+    return () => clearInterval(i);
+  }, [fetchConversations]);
+
+  useEffect(() => {
+    if (!token) return;
+    fetchConversations();
+  }, [token, fetchConversations]);
+
   useEffect(() => { if (selectedConv) fetchMessages(selectedConv); }, [selectedConv, fetchMessages]);
   useEffect(() => { const c = searchParams.get('conversation'); if (c) setSelectedConv(c); }, [searchParams]);
+  useEffect(() => {
+    if (!selectedConv) return;
+    const matched = conversations.find(conv => conv.id === selectedConv);
+    if (matched && matched.id !== selectedConvData?.id) {
+      setSelectedConvData(matched);
+    }
+  }, [conversations, selectedConv, selectedConvData?.id]);
 
   const selectConv = (conv: ConversationWithContact) => {
     setSelectedConv(conv.id);
@@ -264,12 +334,12 @@ export function Inbox() {
                 <div className="header-info">
                   <div className="header-name">{getDisplayName(selectedConvData)}</div>
                   <div className="header-meta">
-                    <span className="header-phone">{formatPhone(selectedConvData.contactPhone)}</span>
+                    <span className="header-phone">{formatPhone(selectedConvData.contactPhone ?? null)}</span>
                     <span className="header-sector" style={{ background: (activeSector?.color || '#666') + '20', color: activeSector?.color || '#666' }}>
                       {activeSector?.icon} {activeSector?.name}
                     </span>
-                    <span className="header-status" style={{ color: statusColor(selectedConvData.statusV2 || selectedConvData.status) }}>
-                      ● {statusLabel(selectedConvData.statusV2 || selectedConvData.status)}
+                    <span className="header-status" style={{ color: statusColor(selectedConvData.statusV2 ?? selectedConvData.status) }}>
+                      ● {statusLabel(selectedConvData.statusV2 ?? selectedConvData.status)}
                     </span>
                   </div>
                 </div>

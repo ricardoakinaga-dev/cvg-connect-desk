@@ -1,0 +1,87 @@
+name: Smoke E2E
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  smoke-e2e:
+    name: Smoke E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium
+
+      - name: Free smoke ports
+        run: |
+          fuser -k 4330/tcp 4930/tcp 4173/tcp 8082/tcp 2>/dev/null || true
+          fuser -k 55432/tcp 56379/tcp 2>/dev/null || true
+
+      - name: Start smoke stack
+        run: pnpm e2e:stack:up
+
+      - name: Wait for smoke stack to be healthy
+        run: |
+          echo "Waiting for smoke stack to be healthy..."
+          for i in $(seq 1 30); do
+            pg_health=$(docker compose -f docker-compose.smoke.yml ps postgres --format json 2>/dev/null | jq -r '.[0].Health // ""')
+            rd_health=$(docker compose -f docker-compose.smoke.yml ps redis --format json 2>/dev/null | jq -r '.[0].Health // ""')
+            if [ "$pg_health" = "healthy" ] && [ "$rd_health" = "healthy" ]; then
+              echo "Smoke stack is healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Smoke stack failed to become healthy within timeout"
+          docker compose -f docker-compose.smoke.yml logs
+          docker compose -f docker-compose.smoke.yml ps
+          exit 1
+
+      - name: Run smoke E2E tests
+        run: pnpm test:e2e:smoke
+        env:
+          DATABASE_URL: postgresql://connect_desk:root@localhost:55432/connect_desk_db
+          REDIS_URL: redis://localhost:56379
+          PORT: 4330
+          REALTIME_PORT: 4930
+          VITE_API_URL: http://localhost:4330
+          VITE_REALTIME_URL: ws://localhost:4930
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: playwright-traces/
+          retention-days: 7
+
+      - name: Teardown smoke stack
+        if: always()
+        run: pnpm e2e:stack:down

@@ -92,17 +92,21 @@ export class ContactRepository {
     }));
 
     // Contar notas
-    const [notesCount] = await db.select({ count: count() })
-      .from(internalNotes)
-      .where(and(
-        eq(internalNotes.referenceType, 'conversation'),
-        sql`${internalNotes.referenceId} IN (${sql.join(convos.map(c => sql`${c.id}`), sql`, `)})`
-      ));
+    const [notesCount] = convos.length > 0
+      ? await db.select({ count: count() })
+        .from(internalNotes)
+        .where(and(
+          eq(internalNotes.referenceType, 'conversation'),
+          sql`${internalNotes.referenceId} IN (${sql.join(convos.map((c) => sql`${c.id}`), sql`, `)})`
+        ))
+      : [{ count: 0 }];
 
     // Contar tasks
-    const [tasksCount] = await db.select({ count: count() })
-      .from(tasks)
-      .where(eq(tasks.conversationId, convos[0]?.id || ''));
+    const [tasksCount] = convos[0]?.id
+      ? await db.select({ count: count() })
+        .from(tasks)
+        .where(eq(tasks.conversationId, convos[0].id))
+      : [{ count: 0 }];
 
     // Buscar labels
     const contactLabelsResult = await db.select({

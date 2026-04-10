@@ -3,6 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "main": "src/index.ts",
-  "scripts": { "dev": "echo 'contact-groups module'" },
-  "dependencies": { "@cvg/database": "workspace:*", "@cvg/shared": "workspace:*", "@cvg/auth": "workspace:*" }
+  "scripts": {
+    "dev": "echo 'contact-groups module'",
+    "build": "echo build",
+    "lint": "echo lint",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@cvg/database": "workspace:*",
+    "@cvg/shared": "workspace:*",
+    "@cvg/auth": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  }
 }

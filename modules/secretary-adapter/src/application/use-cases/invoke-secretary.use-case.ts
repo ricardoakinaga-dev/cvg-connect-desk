@@ -35,7 +35,7 @@ const INVOCATION_ID_PREFIX = 'sec_';
 export async function invokeSecretary(input: InvokeSecretaryInput): Promise<Result<InvokeSecretaryOutput, Error>> {
   const client = getSecretaryClient();
   if (!client) {
-    return err(new AppError('SECRETARY_NOT_CONFIGURED', 'Secretary client not initialized', 500));
+    return err(new AppError('Secretary client not initialized', 500, 'SECRETARY_NOT_CONFIGURED'));
   }
 
   const invocationId = `${INVOCATION_ID_PREFIX}${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -82,7 +82,7 @@ export async function invokeSecretary(input: InvokeSecretaryInput): Promise<Resu
     const response = result.value;
 
     if (!validateSecretaryResponse(response)) {
-      const error = new AppError('SECRETARY_INVALID_RESPONSE', 'Invalid response format from Secretary', 500);
+      const error = new AppError('Invalid response format from Secretary', 500, 'SECRETARY_INVALID_RESPONSE');
       
       await publishSecretaryInvocation({
         conversationId: input.conversationId,

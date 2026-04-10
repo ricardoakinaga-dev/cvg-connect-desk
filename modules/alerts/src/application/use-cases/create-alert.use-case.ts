@@ -33,7 +33,7 @@ export async function createAlert(input: CreateAlertInput): Promise<Result<Creat
     const alert = await alertRepository.create({
       conversationId: input.conversationId,
       taskId: input.taskId,
-      type: input.type,
+      type: input.type as 'message' | 'deadline' | 'assignment' | 'system',
       title: input.title,
       message: input.message,
       severity: input.severity || 'info',

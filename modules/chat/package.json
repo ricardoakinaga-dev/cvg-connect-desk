@@ -7,12 +7,19 @@
   "scripts": {
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
+    "@cvg/audit": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "@cvg/secretary-adapter": "workspace:*"
+    "@cvg/secretary-adapter": "workspace:*",
+    "@cvg/integrations": "workspace:*",
+    "@cvg/gateway-adapter": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

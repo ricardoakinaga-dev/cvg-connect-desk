@@ -6,11 +6,16 @@
   "scripts": {
     "dev": "echo 'sectors module'",
     "build": "echo build",
-    "lint": "echo lint"
+    "lint": "echo lint",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/auth": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

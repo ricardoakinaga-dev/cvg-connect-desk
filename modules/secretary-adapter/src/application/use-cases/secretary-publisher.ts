@@ -1,4 +1,4 @@
-import { eventPublisher, createSecretaryInvocationEvent, createHandoffRequestedEvent, createHandoffCompletedEvent } from '@cvg/events';
+import { databaseEventPublisher, createSecretaryInvocationEvent, createHandoffRequestedEvent, createHandoffCompletedEvent } from '@cvg/events';
 
 export async function publishSecretaryInvocation(payload: {
   conversationId: string;
@@ -18,7 +18,7 @@ export async function publishSecretaryInvocation(payload: {
     errorMessage: payload.errorMessage,
     metadata: payload.metadata,
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }
 
 export async function publishHandoffRequested(payload: {
@@ -37,7 +37,7 @@ export async function publishHandoffRequested(payload: {
     triggeredBy: payload.triggeredBy,
     metadata: payload.metadata,
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }
 
 export async function publishHandoffCompleted(payload: {
@@ -55,5 +55,5 @@ export async function publishHandoffCompleted(payload: {
     triggeredBy: payload.triggeredBy,
     completedAt: new Date().toISOString(),
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }

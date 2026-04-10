@@ -1,0 +1,45 @@
+# docker-compose.smoke.yml — Stack mínima dedicada ao smoke E2E
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-connect_desk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-connect_desk_db}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - smoke_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-connect_desk} -d ${POSTGRES_DB:-connect_desk_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - smoke
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:56379:6379"
+    volumes:
+      - smoke_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - smoke
+
+volumes:
+  smoke_pgdata:
+  smoke_redisdata:
+
+networks:
+  smoke:
+    driver: bridge

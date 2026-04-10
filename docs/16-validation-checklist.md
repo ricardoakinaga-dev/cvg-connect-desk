@@ -11,6 +11,8 @@ Critérios reais baseados nas demandas da prompt_master.md.
 ## Check da FASE 1 (Database/Auth)
 - [ ] Conexão de Postgres configurada e acessível na `desk-api`.
 - [ ] Criação do JWT token ao bater na Rota `/api/v1/auth/login`.
+- [x] CI executa suites reais críticas com PostgreSQL (`.github/workflows/postgres-real-tests.yml`).
+- [x] Admin expõe stats operacionais para dead-letter e webhook security (`/admin/dead-letters/stats`, `/admin/webhook-security/stats`).
 
 ## Check da FASE 2 (Chat Inbound/Outbound)
 - [ ] Payload JSON da Evolution bate no Webhook do desk-api.
@@ -23,8 +25,20 @@ Critérios reais baseados nas demandas da prompt_master.md.
 - [ ] Tarefa gerada clica e vincula pro Contact / Tutor / Participant atrelado ao número da UI.
 
 ## Check da FASE 4 (Handoff Secretary AI)
-- [ ] O Agent Secretary chuta "handoff-event" para nossa camada.
+- [x] O Agent Secretary chuta "handoff-event" para nossa camada.
 - [ ] A Conversa no BD vira `status: open`, `assigned_to: none|queue` e `bot_active: false`.
 
 ## Check da FASE 5
 - [ ] Dashboard conta quantas conversas foram para human handoff hoje.
+
+## Check da FASE 6 (Browser Smoke)
+- [x] Playwright smoke mínimo sobe a stack e faz login real.
+- [x] Inbox autenticada carrega sem quebrar.
+- [x] Kanban abre e renderiza o board.
+- [x] Create task smoke cria e exibe uma tarefa.
+- [x] GitHub Actions CI valida smoke em push/PR (`.github/workflows/smoke-e2e.yml`).
+- [x] GitHub Actions CI valida suites reais com PostgreSQL (`.github/workflows/postgres-real-tests.yml`).
+
+## Check da FASE 7 (Frontend Local)
+- [x] Testes locais de página/componentes centrais do `desk-web` existem e passam para `Login`, `Inbox` e `Kanban`.
+- [x] Os testes locais cobrem comportamento útil: submit/autenticação, listagem de conversas/mensagens e movimentação do board.

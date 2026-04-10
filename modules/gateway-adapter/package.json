@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",
-  "scripts": { "dev": "echo 'gateway-adapter module'" },
+  "scripts": {
+    "dev": "echo 'gateway-adapter module'",
+    "build": "echo build",
+    "lint": "echo lint",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
+  },
   "dependencies": {
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
@@ -11,5 +17,8 @@
     "@cvg/alerts": "workspace:*",
     "axios": "^1.6.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

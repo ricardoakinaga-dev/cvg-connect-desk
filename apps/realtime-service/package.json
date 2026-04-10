@@ -9,9 +9,12 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
+    "@cvg/auth": "workspace:*",
+    "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
     "@cvg/realtime": "workspace:*",
     "@cvg/shared": "workspace:*",
@@ -19,7 +22,9 @@
   },
   "devDependencies": {
     "@types/ws": "^8.5.10",
+    "dotenv": "^17.3.1",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
   }
 }

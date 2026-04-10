@@ -7,9 +7,15 @@
   "scripts": {
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
-    "@cvg/database": "workspace:*"
+    "@cvg/database": "workspace:*",
+    "@cvg/auth": "workspace:*",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

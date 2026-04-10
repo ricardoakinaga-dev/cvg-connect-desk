@@ -4,7 +4,6 @@ import { ok, err, type Result } from '@cvg/shared';
 import { BadRequestError } from '@cvg/shared';
 import { publishMessagePersisted, publishConversationCreated } from '../events/chat-publisher';
 import { processMessageWithSecretary, type ProcessMessageWithSecretaryOutput } from './process-message-with-secretary.use-case';
-import { triggerHandoff } from '@cvg/secretary-adapter';
 import { createAuditLog } from '@cvg/audit';
 
 export interface ReceiveInboundMessageInput {
@@ -177,18 +176,6 @@ export async function receiveInboundMessage(
                 },
               });
             }
-
-            // Dispara eventos de handoff (best-effort)
-            await triggerHandoff({
-              conversationId,
-              previousHandler: 'bot',
-              newHandler: 'human',
-              reason: secretaryOutput.classification?.handoffReason || 'Secretary requested handoff',
-              metadata: {
-                classification: secretaryOutput.classification,
-                messageId: message.id,
-              },
-            });
           }
         }
       }

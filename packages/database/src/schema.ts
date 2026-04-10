@@ -447,3 +447,49 @@ export const userSectors = pgTable('user_sectors', {
   userIdx: index('idx_user_sectors_user').on(t.userId),
   sectorIdx: index('idx_user_sectors_sector').on(t.sectorId),
 }));
+
+// ============================================
+// Outbox de Eventos (Pipeline Interprocesso)
+// ============================================
+
+export const outboxEvents = pgTable('outbox_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  eventId: text('event_id').notNull().unique(),
+  eventType: text('event_type').notNull(),
+  eventVersion: integer('event_version').notNull().default(1),
+  aggregateType: text('aggregate_type').notNull(),
+  aggregateId: text('aggregate_id').notNull(),
+  occurredAt: timestamp('occurred_at').notNull(),
+  payload: text('payload').notNull(),
+  metadata: text('metadata'),
+  correlationId: text('correlation_id'),
+  causationId: text('causation_id'),
+  version: integer('version').notNull().default(1),
+  processedAt: timestamp('processed_at'),
+  retryCount: integer('retry_count').notNull().default(0),
+  lastError: text('last_error'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  eventIdIdx: uniqueIndex('idx_outbox_event_id').on(t.eventId),
+  eventTypeIdx: index('idx_outbox_event_type').on(t.eventType),
+  aggregateIdx: index('idx_outbox_aggregate').on(t.aggregateType, t.aggregateId),
+  processedIdx: index('idx_outbox_processed').on(t.processedAt),
+  createdAtIdx: index('idx_outbox_created').on(t.createdAt),
+}));
+
+// ============================================
+// Outbox Consumer Acks (Fan-out por Consumer)
+// Permite que múltiplos consumers processem o mesmo evento independentemente
+// ============================================
+
+export const outboxConsumerAcks = pgTable('outbox_consumer_acks', {
+  eventId: text('event_id').notNull(),
+  consumerId: text('consumer_id').notNull(),
+  processedAt: timestamp('processed_at'),
+  lastError: text('last_error'),
+  retryCount: integer('retry_count').notNull().default(0),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  pk: { columns: [t.eventId, t.consumerId] },
+  consumerIdx: index('idx_acks_consumer').on(t.consumerId),
+}));

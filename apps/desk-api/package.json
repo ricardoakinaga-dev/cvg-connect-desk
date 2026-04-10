@@ -7,7 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "@cvg/chat": "workspace:*",
     "@cvg/dashboard": "workspace:*",
     "@cvg/database": "workspace:*",
+    "@cvg/events": "workspace:*",
     "@cvg/notes": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tasks": "workspace:*",
@@ -42,6 +44,7 @@
   "devDependencies": {
     "fastify-plugin": "^5.1.0",
     "pino-pretty": "^13.0.0",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "vitest": "^3.0.0"
   }
 }

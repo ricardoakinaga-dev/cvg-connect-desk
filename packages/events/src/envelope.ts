@@ -1,6 +1,7 @@
 export interface EventEnvelope<T = unknown> {
   event_id: string;
   event_type: string;
+  event_version?: number;
   aggregate_type: string;
   aggregate_id: string;
   occurred_at: string;
@@ -20,12 +21,14 @@ export function createEvent<T>(
     correlationId?: string;
     causationId?: string;
     metadata?: Record<string, unknown>;
+    eventVersion?: number;
     version?: number;
   }
 ): EventEnvelope<T> {
   return {
     event_id: crypto.randomUUID(),
     event_type: eventType,
+    event_version: options?.eventVersion ?? 1,
     aggregate_type: aggregateType,
     aggregate_id: aggregateId,
     occurred_at: new Date().toISOString(),

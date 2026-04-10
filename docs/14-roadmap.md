@@ -15,23 +15,39 @@ Este documento estabelece:
 - regras para evitar implementação fora de ordem.
 
 ## 2. Estado Atual do Projeto
+
+> **Nota de leitura:** Revisado em 2026-04-09. "Fase concluída" significa que a estrutura foi construída, não necessariamente que está em produção sem gaps. Verificar seção de pendências.
+
 No momento atual:
 - a documentação arquitetural está avançada e endurecida;
 - o monorepo está estruturado com `apps`, `modules` e `packages`;
 - as fases 0, 1, 2, 3, 4, 5 e 7 já materializaram: backend API, chat, tasks, notes, alerts, events, worker, realtime, dashboard e frontend MVP;
 - existe pipeline assíncrono com worker implementado (apps/message-worker);
-- existe realtime-service implementado (apps/realtime-service);
+- existe realtime-service implementado (apps/realtime-service) **e conectado ao frontend**;
 - existe frontend operacional (apps/desk-web) com Inbox 3 colunas, Tasks, Alerts, Dashboard;
 - IAM, Chat Core, Operations já possuem modelagem concreta no banco;
-- existe integração com Secretary via modules/secretary-adapter;
+- existe integração com Secretary via modules/secretary-adapter (integrada ao fluxo inbound);
 - autenticação real implementada com login, logout, sessões e RBAC;
 - existe módulo de audit trail implementado;
-- realtime ainda não está conectado ao frontend (fallback por polling ativo).
+- rate limiting implementado via @fastify/rate-limit.
 
-Conclusão:
+**Conclusão:**
 - o projeto já possui backend funcional e frontend MVP operacional com hardening;
 - autenticação real, RBAC e auditoria estão implementados;
-- o próximo passo é refinement de produção e deployment.
+- realtime e Secretary estão integrados ao fluxo;
+- ainda há gaps técnicos de produção (ver pendências abaixo).
+
+### Pendências Técnicas Conhecidas (Gaps de Produção)
+
+> Estas não bloqueiam operação, mas são limitações para escala e segurança:
+
+| Gap | Descrição | Impacto |
+|-----|-----------|---------|
+| Cobertura de testes | A esteira já evoluiu bastante, mas ainda não cobre a profundidade enterprise total | Risco residual de regressão |
+| Runtime/deploy | Setup local e CI estão maduros, mas produção ainda tem arestas operacionais | Prontidão premium parcial |
+| Observabilidade/KPIs | Dashboard e auditoria existem, mas ainda faltam métricas e diagnósticos mais profundos | Visão gerencial/operacional ainda incompleta |
+
+**Nota:** os gaps antigos de pipeline in-memory, realtime desconectado, auth realtime fraca e webhook sem fail-secure já foram mitigados no código. Para a fotografia mais atual, consultar `docs/GAPS-TECNICOS.md` e `docs/60-relatorio-consolidado-estado-construcao-cvg-connect-desk.md`.
 
 ## 3. Princípios do Roadmap
 
@@ -78,7 +94,7 @@ Phase 4 -> Realtime                    [CONCLUÍDA]
 Phase 5 -> Dashboard + Observability   [CONCLUÍDA]
 Phase 6 -> Frontend MVP                [CONCLUÍDA]
 Phase 7 -> Hardening + Production      [CONCLUÍDA]
-Phase 8 -> Refinement & Deployment     [PENDENTE]
+Phase 8 -> Refinement & Deployment     [CONCLUÍDA]
 ```
 
 ## 5. Phase 0 — Foundation

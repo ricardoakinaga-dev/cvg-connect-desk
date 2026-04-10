@@ -1,5 +1,25 @@
 # Relatório Comparativo: Documentação vs Implementação — CVG Connect Desk
 
+> **⚠️ DOCUMENTO HISTÓRICO — 30 de março de 2026**
+>
+> Este documento é uma **fotografia de um momento específico** e pode conter afirmações que já não correspondem ao estado atual do código.
+>
+> **Antes de usar como referência, valide os pontos críticos no código atual.**
+>
+> Para o estado mais atualizado, consultar:
+> - `docs/26-relatorio-analise-documentacao-vs-implementacao.md`
+> - `docs/27-relatorio-executivo-rastreabilidade-documentacao-vs-codigo.md`
+>
+> **Principais afirmações deste documento que foram REVALIDADAS como desatualizadas:**
+> - "Módulo admin vazio" → **IMPLEMENTADO** (controller existe em `modules/admin/.../admin.controller.ts`)
+> - "Secretary não integrada" → **JÁ INTEGRADA** (confirmado em `modules/chat/.../receive-inbound-message.use-case.ts:150`)
+> - "Eventos de handoff não publicados" → **PUBLICADOS** (confirmado em `modules/secretary-adapter/.../trigger-handoff.use-case.ts`)
+> - "Rate limiting não implementado" → **IMPLEMENTADO** (`@fastify/rate-limit` em `apps/desk-api/src/index.ts:96`)
+> - "Tasks sem tutorId/patientId" → **CAMPOS EXISTEM** (schema em `packages/database/src/schema.ts`)
+> - "Notes sem reference_type genérico" → **EXISTE** (enum e campos no schema)
+
+---
+
 **Data:** 30 de março de 2026
 **Fase atual:** Phase 8 — Refinement & Deployment
 **Escopo:** Comparar documentação em `/docs` com código implementado no monorepo

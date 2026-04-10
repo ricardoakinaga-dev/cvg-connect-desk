@@ -67,8 +67,6 @@ export function Labels() {
     }
   };
 
-  const categories = [...new Set(labels.map(l => l.category).filter(Boolean))];
-
   return (
     <div className="labels-page">
       <div className="page-header">

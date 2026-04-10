@@ -1,15 +1,15 @@
 import 'dotenv/config';
-import { eventPublisher, eventConsumer, type EventEnvelope } from '@cvg/events';
-import { 
-  shouldRetry, 
-  calculateNextDelay, 
-  createRetryContext, 
-  defaultRetryConfig,
-  type RetryConfig 
+import {
+  shouldRetry,
+  calculateNextDelay,
+  createRetryContext,
+  type RetryConfig,
+  type EventEnvelope,
+  ConsumerAwareOutboxReader,
+  CONSUMER_IDS,
 } from '@cvg/events';
 import { createAlert } from '@cvg/alerts';
-import { db, schema } from '@cvg/database';
-import { eq } from 'drizzle-orm';
+import { recordWorkerDeadLetter } from './dead-letter';
 
 const RETRY_CONFIG: RetryConfig = {
   maxRetries: 3,
@@ -17,6 +17,12 @@ const RETRY_CONFIG: RetryConfig = {
   maxDelayMs: 30000,
   backoffMultiplier: 2,
 };
+
+const workerReader = new ConsumerAwareOutboxReader({
+  consumerId: CONSUMER_IDS.WORKER,
+  batchSize: 50,
+  maxRetries: 3,
+});
 
 async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
   const payload = event.payload as {
@@ -27,7 +33,16 @@ async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
     triggeredBy?: string;
   };
 
-  console.log(`[Worker] Processing handoff.completed for conversation ${payload.conversationId}`);
+  console.log(JSON.stringify({
+    msg: '[Worker] Processing handoff.completed',
+    event_type: event.event_type,
+    event_id: event.event_id,
+    correlation_id: event.correlation_id,
+    conversation_id: payload.conversationId,
+    previousHandler: payload.previousHandler,
+    newHandler: payload.newHandler,
+    level: 'info',
+  }));
 
   if (payload.newHandler === 'human' && payload.reason) {
     const alertResult = await createAlert({
@@ -45,7 +60,12 @@ async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
     });
 
     if (alertResult.isErr()) {
-      console.error(`[Worker] Failed to create alert for handoff:`, alertResult.error);
+      console.error(JSON.stringify({
+        msg: '[Worker] Failed to create alert for handoff',
+        conversation_id: payload.conversationId,
+        error: alertResult.error.message,
+        level: 'error',
+      }));
     }
   }
 }
@@ -58,9 +78,29 @@ async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
     errorMessage?: string;
   };
 
-  console.log(`[Worker] Processing secretary.invocation (${payload.status}) for conversation ${payload.conversationId}`);
+  console.log(JSON.stringify({
+    msg: '[Worker] Processing secretary.invocation',
+    event_type: event.event_type,
+    event_id: event.event_id,
+    correlation_id: event.correlation_id,
+    conversation_id: payload.conversationId,
+    action: payload.action,
+    status: payload.status,
+    level: 'info',
+  }));
 
   if (payload.status === 'failed' && payload.errorMessage) {
+    console.warn(JSON.stringify({
+      msg: '[Worker] Secretary invocation failed',
+      event_type: event.event_type,
+      event_id: event.event_id,
+      correlation_id: event.correlation_id,
+      conversation_id: payload.conversationId,
+      action: payload.action,
+      status: payload.status,
+      error: payload.errorMessage,
+      level: 'warn',
+    }));
     const alertResult = await createAlert({
       conversationId: payload.conversationId,
       type: 'system',
@@ -74,7 +114,12 @@ async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
     });
 
     if (alertResult.isErr()) {
-      console.error(`[Worker] Failed to create alert for secretary failure:`, alertResult.error);
+      console.error(JSON.stringify({
+        msg: '[Worker] Failed to create alert for secretary failure',
+        conversation_id: payload.conversationId,
+        error: alertResult.error.message,
+        level: 'error',
+      }));
     }
   }
 }
@@ -86,89 +131,190 @@ async function handleMessagePersisted(event: EventEnvelope): Promise<void> {
     content: string;
   };
 
-  console.log(`[Worker] Processing message.persisted for conversation ${payload.conversationId}`);
+  console.log(JSON.stringify({
+    msg: '[Worker] Processing message.persisted',
+    event_type: event.event_type,
+    event_id: event.event_id,
+    correlation_id: event.correlation_id,
+    conversation_id: payload.conversationId,
+    direction: payload.direction,
+    level: 'debug',
+  }));
 }
 
-async function processEventWithRetry(event: EventEnvelope): Promise<void> {
-  const handlers = eventConsumer['handlers'].get(event.event_type) || [];
+const handlers: Record<string, (event: EventEnvelope) => Promise<void>> = {
+  'handoff.completed': handleHandoffCompleted,
+  'secretary.invocation': handleSecretaryInvocation,
+  'message.persisted': handleMessagePersisted,
+};
+
+async function processEventFromOutbox(eventId: string, event: EventEnvelope): Promise<void> {
+  const handler = handlers[event.event_type];
   
-  for (const handler of handlers) {
-    const handlerName = handler.name || 'anonymous';
-    let attempt = 0;
+  if (!handler) {
+    console.warn(JSON.stringify({
+      msg: '[Worker] No handler for event type, acknowledging without processing',
+      event_type: event.event_type,
+      event_id: event.event_id,
+      correlation_id: event.correlation_id,
+      level: 'warn',
+    }));
+    await workerReader.acknowledge(eventId);
+    return;
+  }
 
-    while (true) {
-      try {
-        await handler(event);
-        console.log(`[Worker] Successfully processed ${event.event_type} (${event.event_id})`);
+  let attempt = 0;
+
+  while (true) {
+    try {
+      await handler(event);
+      console.info(JSON.stringify({
+        msg: '[Worker] Successfully processed event',
+        event_type: event.event_type,
+        event_id: event.event_id,
+        correlation_id: event.correlation_id,
+        handler: handler.name || event.event_type,
+        level: 'info',
+      }));
+      await workerReader.acknowledge(eventId);
+      break;
+    } catch (error) {
+      const err = error as Error;
+      const failureCount = attempt + 1;
+      const updatedContext = createRetryContext(event, event.event_type, failureCount, err);
+
+      if (!shouldRetry(updatedContext, RETRY_CONFIG)) {
+        console.error(JSON.stringify({
+          msg: '[Worker] Non-retryable error — sending to dead-letter',
+          event_type: event.event_type,
+          event_id: event.event_id,
+          correlation_id: event.correlation_id,
+          handler: handler.name || event.event_type,
+          error: err.message,
+          retry_count: failureCount,
+          retry_decision: 'dead-letter',
+          failure_stage: 'worker-terminal',
+          level: 'error',
+        }));
+        await workerReader.acknowledgeWithError(eventId, err.message);
+        recordWorkerDeadLetter({
+          event,
+          error: err.message,
+          retryCount: failureCount,
+          handlerName: handler.name || event.event_type,
+        });
         break;
-      } catch (error) {
-        const context = createRetryContext(event, handlerName, attempt + 1, error);
-        
-        if (!shouldRetry(context, RETRY_CONFIG)) {
-          console.error(`[Worker] Non-retryable error in ${handlerName}:`, error);
-          break;
-        }
-
-        attempt++;
-        const delay = calculateNextDelay(RETRY_CONFIG, attempt);
-        
-        console.log(`[Worker] Retry ${attempt}/${RETRY_CONFIG.maxRetries} for ${handlerName} after ${delay}ms`);
-        
-        if (attempt >= RETRY_CONFIG.maxRetries) {
-          console.error(`[Worker] Max retries exceeded for ${handlerName}:`, error);
-          break;
-        }
-
-        await new Promise(resolve => setTimeout(resolve, delay));
       }
+
+      attempt = failureCount;
+      const delay = calculateNextDelay(RETRY_CONFIG, attempt);
+
+      console.warn(JSON.stringify({
+        msg: '[Worker] Retrying event after error',
+        event_type: event.event_type,
+        event_id: event.event_id,
+        correlation_id: event.correlation_id,
+        handler: handler.name || event.event_type,
+        attempt,
+        max_retries: RETRY_CONFIG.maxRetries,
+        delay_ms: delay,
+        error: err.message,
+        level: 'warn',
+      }));
+
+      if (attempt >= RETRY_CONFIG.maxRetries) {
+        console.error(JSON.stringify({
+          msg: '[Worker] Max retries exceeded — sending to dead-letter',
+          event_type: event.event_type,
+          event_id: event.event_id,
+          correlation_id: event.correlation_id,
+          handler: handler.name || event.event_type,
+          error: err.message,
+          attempt,
+          max_retries: RETRY_CONFIG.maxRetries,
+          retry_decision: 'dead-letter',
+          failure_stage: 'worker-terminal',
+          level: 'error',
+        }));
+        await workerReader.acknowledgeWithError(eventId, err.message);
+        recordWorkerDeadLetter({
+          event,
+          error: err.message,
+          retryCount: attempt,
+          handlerName: handler.name || event.event_type,
+        });
+        break;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 }
 
 async function startWorker(): Promise<void> {
-  console.log('[Worker] Starting message worker...');
+  const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS) || 500;
 
-  eventConsumer.subscribe('handoff.completed', handleHandoffCompleted);
-  eventConsumer.subscribe('secretary.invocation', handleSecretaryInvocation);
-  eventConsumer.subscribe('message.persisted', handleMessagePersisted);
+  console.info(JSON.stringify({
+    msg: '[Worker] Starting message worker',
+    consumer_id: CONSUMER_IDS.WORKER,
+    handlers: ['handoff.completed', 'secretary.invocation', 'message.persisted'],
+    poll_interval_ms: outboxPollInterval,
+    level: 'info',
+  }));
 
-  console.log('[Worker] Registered handlers for: handoff.completed, secretary.invocation, message.persisted');
+  setInterval(async () => {
+    try {
+      const pendingEvents = await workerReader.fetchPendingEvents();
 
-  const pollInterval = Number(process.env.WORKER_POLL_INTERVAL_MS) || 1000;
-  
-  console.log(`[Worker] Starting event polling every ${pollInterval}ms`);
+      if (pendingEvents.length > 0) {
+        console.info(JSON.stringify({
+          msg: '[Worker] Fetched pending events from outbox',
+          count: pendingEvents.length,
+          level: 'info',
+        }));
 
-  setInterval(() => {
-    const events = eventPublisher.getEvents();
-    
-    if (events.length > 0) {
-      console.log(`[Worker] Processing ${events.length} events`);
-      
-      events.forEach(event => {
-        processEventWithRetry(event).catch(error => {
-          console.error('[Worker] Error processing event:', error);
-        });
-      });
-      
-      eventPublisher.clear();
+        for (const outboxEvent of pendingEvents) {
+          const eventEnvelope = workerReader.toEventEnvelope(outboxEvent);
+          await processEventFromOutbox(outboxEvent.eventId, eventEnvelope);
+        }
+      }
+    } catch (error) {
+      console.error(JSON.stringify({
+        msg: '[Worker] Error polling outbox',
+        error: (error as Error).message,
+        level: 'error',
+      }));
     }
-  }, pollInterval);
+  }, outboxPollInterval);
 
-  console.log('[Worker] Worker started successfully');
+  console.info(JSON.stringify({
+    msg: '[Worker] Worker started successfully',
+    level: 'info',
+  }));
 }
 
 startWorker().catch(error => {
-  console.error('[Worker] Failed to start worker:', error);
+  console.error(JSON.stringify({
+    msg: '[Worker] Failed to start worker',
+    error: error instanceof Error ? error.message : String(error),
+    level: 'error',
+  }));
   process.exit(1);
 });
 
 process.on('SIGTERM', () => {
-  console.log('[Worker] Received SIGTERM, shutting down gracefully');
+  console.info(JSON.stringify({
+    msg: '[Worker] Received SIGTERM, shutting down gracefully',
+    level: 'info',
+  }));
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('[Worker] Received SIGINT, shutting down gracefully');
+  console.info(JSON.stringify({
+    msg: '[Worker] Received SIGINT, shutting down gracefully',
+    level: 'info',
+  }));
   process.exit(0);
 });
 

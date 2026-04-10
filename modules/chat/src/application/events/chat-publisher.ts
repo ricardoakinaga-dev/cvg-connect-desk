@@ -1,4 +1,4 @@
-import { eventPublisher, createMessagePersistedEvent, createConversationCreatedEvent, createConversationStatusChangedEvent } from '@cvg/events';
+import { databaseEventPublisher, createMessagePersistedEvent, createConversationCreatedEvent, createConversationStatusChangedEvent } from '@cvg/events';
 
 export async function publishMessagePersisted(message: {
   id: string;
@@ -20,7 +20,7 @@ export async function publishMessagePersisted(message: {
     status: message.status,
     createdAt: message.createdAt.toISOString(),
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }
 
 export async function publishConversationCreated(conversation: {
@@ -39,7 +39,7 @@ export async function publishConversationCreated(conversation: {
     interactionType: conversation.interactionType ?? undefined,
     createdAt: conversation.createdAt.toISOString(),
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }
 
 export async function publishConversationStatusChanged(conversationId: string, previousStatus: string, newStatus: string, changedBy?: string, reason?: string) {
@@ -51,5 +51,5 @@ export async function publishConversationStatusChanged(conversationId: string, p
     reason,
     changedAt: new Date().toISOString(),
   });
-  await eventPublisher.publish(event);
+  await databaseEventPublisher.publish(event);
 }

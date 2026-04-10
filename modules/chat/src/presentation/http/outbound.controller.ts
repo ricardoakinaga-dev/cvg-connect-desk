@@ -4,6 +4,7 @@ import { conversationRepository, Conversation } from '../../infrastructure/repos
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
+import { inArray } from 'drizzle-orm';
 
 interface SendMessageBody {
   conversationId: string;
@@ -151,7 +152,7 @@ export async function registerOutboundController(app: FastifyInstance) {
         
         if (contactIds.length > 0) {
           const { db } = await import('@cvg/database');
-          const { contacts, inArray } = await import('@cvg/database');
+          const { contacts } = await import('@cvg/database');
           const contactsResult = await db.select({ id: contacts.id, name: contacts.name, phone: contacts.phone })
             .from(contacts)
             .where(inArray(contacts.id, contactIds as string[]));

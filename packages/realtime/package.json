@@ -7,12 +7,14 @@
   "scripts": {
     "build": "tsc",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/events": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
   }
 }

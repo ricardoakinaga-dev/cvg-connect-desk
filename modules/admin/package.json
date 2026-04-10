@@ -7,12 +7,17 @@
   "scripts": {
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/database": "workspace:*",
+    "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/auth": "workspace:*",
     "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

@@ -75,6 +75,13 @@ class ApiClient {
     });
   }
 
+  async put<T>(endpoint: string, data: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
   async delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE' });
   }
@@ -146,6 +153,109 @@ export interface Alert {
   resolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface DeadLetterEntry {
+  id: string;
+  eventType: string;
+  eventId: string;
+  payload: unknown;
+  error: string;
+  failedAt: string;
+  retryCount: number;
+  handlerName: string;
+  sourceEvent?: {
+    event_id: string;
+    event_type: string;
+    aggregate_type: string;
+    aggregate_id: string;
+    occurred_at: string;
+    payload: unknown;
+    metadata?: Record<string, unknown>;
+    correlation_id?: string;
+    causation_id?: string;
+    version: number;
+  };
+  failureContext?: {
+    stage: 'worker-terminal';
+    decision: 'dead-letter';
+    handlerName: string;
+    eventType: string;
+    eventId: string;
+    retryCount: number;
+    retryable: boolean;
+    reason: string;
+    eventVersion?: number;
+    correlationId?: string;
+    causationId?: string;
+  };
+  resolved: boolean;
+  resolvedAt?: string;
+}
+
+export interface DeadLetterStats {
+  total: number;
+  unresolved: number;
+  resolved: number;
+}
+
+export interface DeadLetterOperationalSummary {
+  total: number;
+  unresolved: number;
+  resolved: number;
+  replayable: number;
+  manualOnly: number;
+  byHandler: Array<{
+    handlerName: string;
+    total: number;
+    unresolved: number;
+    resolved: number;
+    replayable: number;
+    manualOnly: number;
+  }>;
+  byReason: Array<{
+    reason: string;
+    total: number;
+    unresolved: number;
+    resolved: number;
+    replayable: number;
+    manualOnly: number;
+  }>;
+  lastFailedAt: string | null;
+}
+
+export interface WebhookSecurityStats {
+  total: number;
+  allowed: number;
+  denied: number;
+  byReason: {
+    missing_secret: number;
+    missing_signature: number;
+    invalid_signature_format: number;
+    invalid_signature: number;
+    signature_valid: number;
+  };
+  lastDecisionAt: string | null;
+  lastDecision: {
+    reason: 'missing_secret' | 'missing_signature' | 'invalid_signature_format' | 'invalid_signature' | 'signature_valid';
+    allowed: boolean;
+    webhookMode: 'strict-production' | 'development-bypass' | 'hmac';
+    hasSecret: boolean;
+    signaturePresent?: boolean;
+    statusCode?: number;
+    timestamp: string;
+  } | null;
+}
+
+export interface DeadLetterListResponse {
+  data: DeadLetterEntry[];
+  stats: DeadLetterStats;
+}
+
+export interface DeadLetterActionResponse {
+  success: boolean;
+  replayed: boolean;
+  entry: DeadLetterEntry | null;
 }
 
 export interface DashboardSummary {
@@ -271,6 +381,34 @@ export const dashboardApi = {
 
   getActiveAlertsCount: () => {
     return api.get<{ count: number }>('/metrics/alerts/active');
+  },
+};
+
+export const deadLetterApi = {
+  list: (filters?: { resolved?: boolean; limit?: number }) => {
+    const params = new URLSearchParams();
+    if (filters?.resolved !== undefined) params.append('resolved', String(filters.resolved));
+    if (filters?.limit) params.append('limit', String(filters.limit));
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return api.get<DeadLetterListResponse>(`/admin/dead-letters${query}`);
+  },
+
+  stats: () => {
+    return api.get<DeadLetterOperationalSummary>('/admin/dead-letters/stats');
+  },
+
+  retry: (id: string) => {
+    return api.post<DeadLetterActionResponse>(`/admin/dead-letters/${id}/retry`, {});
+  },
+
+  resolve: (id: string) => {
+    return api.post<DeadLetterActionResponse>(`/admin/dead-letters/${id}/resolve`, {});
+  },
+};
+
+export const webhookSecurityApi = {
+  stats: () => {
+    return api.get<WebhookSecurityStats>('/admin/webhook-security/stats');
   },
 };
 

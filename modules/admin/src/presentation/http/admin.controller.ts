@@ -9,6 +9,8 @@ import {
 import { adminRepository } from '../../infrastructure/repositories/admin.repository.ts';
 import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
+import { deadLetterStore, publishToOutbox } from '@cvg/events';
+import { getWebhookSecurityStats } from '@cvg/shared';
 import type {
   CreateUserInput, UpdateUserInput,
   CreateRoleInput, UpdateRoleInput,
@@ -302,6 +304,116 @@ export async function registerAdminRoutes(app: FastifyInstance) {
       req.log.error(error);
       return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to delete team' });
     }
+  });
+
+  // Dead letters
+  app.get('/admin/dead-letters', {
+    preHandler: [authenticate, requirePermission('admin:read')],
+    schema: {
+      description: 'Lista eventos na dead-letter queue',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+      querystring: {
+        type: 'object',
+        properties: {
+          resolved: { type: 'boolean' },
+          limit: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const query = request.query as { resolved?: boolean; limit?: number };
+    const entries = deadLetterStore.getAll({ resolved: query.resolved, limit: query.limit || 50 });
+    const stats = deadLetterStore.getStats();
+    return reply.status(200).send({ data: entries, stats });
+  });
+
+  app.get('/admin/dead-letters/stats', {
+    preHandler: [authenticate, requirePermission('admin:read')],
+    schema: {
+      description: 'Resumo operacional da dead-letter queue',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (_request, reply) => {
+    return reply.status(200).send(deadLetterStore.getOperationalStats());
+  });
+
+  app.post('/admin/dead-letters/:id/retry', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      description: 'Tenta republicar uma entrada da dead-letter quando houver envelope suficiente',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const entry = deadLetterStore.getById(id);
+
+    if (!entry) {
+      return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
+    }
+
+    if (entry.resolved) {
+      return reply.status(409).send({ error: 'ALREADY_RESOLVED', message: 'Dead-letter entry already resolved' });
+    }
+
+    if (!entry.sourceEvent) {
+      return reply.status(409).send({
+        error: 'NOT_REPLAYABLE',
+        message: 'This dead-letter entry does not include enough event context to retry automatically',
+      });
+    }
+
+    try {
+      await publishToOutbox(entry.sourceEvent);
+      deadLetterStore.resolve(id);
+      return reply.status(200).send({
+        success: true,
+        replayed: true,
+        entry: deadLetterStore.getById(id),
+      });
+    } catch (error) {
+      request.log.error({ err: error, id }, 'Failed to retry dead-letter entry');
+      return reply.status(500).send({
+        error: 'INTERNAL_ERROR',
+        message: 'Failed to retry dead-letter entry',
+      });
+    }
+  });
+
+  app.post('/admin/dead-letters/:id/resolve', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      description: 'Marca uma entrada da dead-letter como resolvida após tratamento manual',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const entry = deadLetterStore.getById(id);
+
+    if (!entry) {
+      return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
+    }
+
+    deadLetterStore.resolve(id);
+    return reply.status(200).send({
+      success: true,
+      replayed: false,
+      entry: deadLetterStore.getById(id),
+    });
+  });
+
+  app.get('/admin/webhook-security/stats', {
+    preHandler: [authenticate, requirePermission('admin:read')],
+    schema: {
+      description: 'Resumo operacional dos bloqueios de webhook',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (_request, reply) => {
+    return reply.status(200).send(getWebhookSecurityStats());
   });
 
   // ============================================

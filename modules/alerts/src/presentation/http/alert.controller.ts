@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance, FastifyReply } from 'fastify';
 import { createAlert, acknowledgeAlert, resolveAlert } from '../../application/use-cases';
 import { alertRepository } from '../../infrastructure/repositories/alert.repository';
 import { AppError } from '@cvg/shared';
@@ -44,11 +44,11 @@ export async function registerAlertRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Body: CreateAlertBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
         const result = await createAlert({
-          ...request.body,
+          ...(request.body as CreateAlertBody),
           userId,
         });
 
@@ -71,9 +71,9 @@ export async function registerAlertRoutes(app: FastifyInstance) {
     }
   );
 
-  app.get('/alerts', { preHandler: [authenticate, requirePermission('alerts:read')] }, async (request: FastifyRequest<{ Querystring: { status?: string; severity?: string; type?: string } }>, reply: FastifyReply) => {
+  app.get('/alerts', { preHandler: [authenticate, requirePermission('alerts:read')] }, async (request, reply) => {
     try {
-      const { status, severity, type } = request.query;
+      const { status, severity, type } = request.query as { status?: string; severity?: string; type?: string };
       const alerts = await alertRepository.findAll({ status, severity, type });
       return reply.status(200).send(alerts);
     } catch (error) {
@@ -85,9 +85,9 @@ export async function registerAlertRoutes(app: FastifyInstance) {
   app.get(
     '/alerts/:id',
     { preHandler: [authenticate, requirePermission('alerts:read')] },
-    async (request: FastifyRequest<{ Params: AlertParams }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const alert = await alertRepository.findById(request.params.id);
+        const alert = await alertRepository.findById((request.params as AlertParams).id);
         if (!alert) {
           return reply.status(404).send({ error: 'NOT_FOUND', message: 'Alert not found' });
         }
@@ -113,12 +113,14 @@ export async function registerAlertRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: AlertParams; Body: AlertActionBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
+        const params = request.params as AlertParams;
+        const body = request.body as AlertActionBody;
         const result = await acknowledgeAlert({
-          alertId: request.params.id,
-          acknowledgedBy: request.body.acknowledgedBy!,
+          alertId: params.id,
+          acknowledgedBy: body.acknowledgedBy!,
           userId,
         });
 
@@ -155,12 +157,14 @@ export async function registerAlertRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: AlertParams; Body: AlertActionBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const userId = request.user?.id;
+        const userId = (request as any).user?.id;
+        const params = request.params as AlertParams;
+        const body = request.body as AlertActionBody;
         const result = await resolveAlert({
-          alertId: request.params.id,
-          resolvedBy: request.body.resolvedBy!,
+          alertId: params.id,
+          resolvedBy: body.resolvedBy!,
           userId,
         });
 

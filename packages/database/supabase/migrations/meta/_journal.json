@@ -8,6 +8,90 @@
       "when": 1774778604079,
       "tag": "0000_famous_whirlwind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774778605079,
+      "tag": "0001_chat_core",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774778606079,
+      "tag": "0002_operations",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774778607079,
+      "tag": "0003_auth_audit",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1774778608079,
+      "tag": "0004_add_current_handler",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1774778609079,
+      "tag": "0005_notes_reference_generic",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1774778610079,
+      "tag": "0006_tasks_tutor_patient",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1774778611079,
+      "tag": "0007_enterprise_premium",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774778612079,
+      "tag": "0008_user_sectors",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1774778613079,
+      "tag": "0009_media_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1775212800000,
+      "tag": "0010_outbox_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1775212860000,
+      "tag": "0011_outbox_consumer_acks",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1775212920000,
+      "tag": "0012_outbox_event_version",
+      "breakpoints": true
     }
   ]
 }

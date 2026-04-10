@@ -19,7 +19,7 @@ No estado atual do monorepo:
 - autenticação real implementada com integração ao backend de auth;
 - estado de autenticação com Zustand e persistência de sessão;
 - fallback por polling para conversas, tasks e alerts;
-- realtime ainda não está conectado ao frontend;
+- realtime já está conectado ao frontend principal (`Inbox`) com autenticação por mensagem, mantendo polling apenas como apoio em fluxos específicos;
 - a arquitetura abaixo descreve o **estado atual** e o **alvo de evolução**.
 
 Este documento deve ser lido como afirmação de que o frontend operacional já foi entregue com hardening de autenticação.

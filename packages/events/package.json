@@ -7,6 +7,11 @@
   "scripts": {
     "build": "echo build",
     "lint": "echo lint",
-    "test": "echo test"
+    "test:real-db": "vitest run src/__tests__/outbox-fanout-behavioral.test.ts src/__tests__/outbox-reader-real.test.ts src/__tests__/schema-check.test.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@cvg/database": "workspace:*"
   }
 }

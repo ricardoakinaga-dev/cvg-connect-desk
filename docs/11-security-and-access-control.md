@@ -184,6 +184,19 @@ Sempre que tecnicamente possível, o webhook deve validar:
 - aceitar webhook anônimo sem justificativa documentada;
 - tratar payload externo como confiável por padrão.
 
+### 8.5 Comportamento Operacional (2026-04-10)
+O webhook usa `WEBHOOK_SECRET` para validar assinatura HMAC-SHA256 (`X-Webhook-Signature: sha256=<hex>`).
+Produção é detectada por `NODE_ENV=production` ou `DESK_ENV=production`.
+- **Produção sem `WEBHOOK_SECRET`**: 500 `CONFIGURATION_ERROR` em cada request + erro em stderr no bootstrap da API. A resposta inclui `reason: missing_secret` para acelerar triagem.
+- **Desenvolvimento sem `WEBHOOK_SECRET`**: warning log + bypass permitido (trade-off intencional de DX)
+- **Assinatura ausente/inválida**: 401 `UNAUTHORIZED` com `reason` operacional específico (`missing_signature`, `invalid_signature_format`, `invalid_signature`)
+- **Assinatura válida**: request aceito normalmente
+
+Os logs do guard também carregam `reason` e `webhook_mode`, distinguindo misconfiguration, ausência de assinatura e falha de HMAC sem depender de leitura manual do stack trace.
+O admin agrega os bloqueios em `/admin/webhook-security/stats`, com contagem por `reason`, para triagem operacional rápida sem depender apenas de log grep.
+
+Configuração de produção documentada em `.env.production.example`. Variável `WEBHOOK_SECRET` é mandatória em produção.
+
 ## 9. Segurança de Integrações Externas
 
 ### 9.1 Gateway

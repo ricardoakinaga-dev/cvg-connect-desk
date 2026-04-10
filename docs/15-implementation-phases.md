@@ -23,7 +23,7 @@ No estado atual do monorepo:
 - `modules/secretary-adapter` já possui integração com Secretary;
 - autenticação real implementada com login, logout, sessões e RBAC;
 - audit trail implementado;
-- realtime service implementado mas não conectado ao frontend (fallback por polling).
+- realtime service implementado e conectado ao frontend principal, com autenticação por mensagem e revalidação periódica.
 
 Regra de leitura:
 - este documento reflete o estado atual do repositório;
@@ -39,7 +39,7 @@ No momento deste rebaseline:
 - Phase 5 — Dashboard + Observability: concluída;
 - Phase 6 — Frontend MVP: concluída;
 - Phase 7 — Hardening + Production Readiness: concluída;
-- Phase 8 — Refinement & Deployment: em andamento.
+- Phase 8 — Refinement & Deployment: concluída;
 
 ## 3. Princípio Central
 

@@ -23,11 +23,11 @@ export interface TriggerHandoffOutput {
 export async function triggerHandoff(input: TriggerHandoffInput): Promise<Result<TriggerHandoffOutput, Error>> {
   try {
     if (!input.conversationId) {
-      return err(new AppError('INVALID_INPUT', 'Conversation ID is required', 400));
+      return err(new AppError('Conversation ID is required', 400, 'INVALID_INPUT'));
     }
 
     if (input.previousHandler === input.newHandler) {
-      return err(new AppError('INVALID_INPUT', 'Previous and new handler must be different', 400));
+      return err(new AppError('Previous and new handler must be different', 400, 'INVALID_INPUT'));
     }
 
     await publishHandoffRequested({

@@ -29,7 +29,7 @@ export async function processMessageWithSecretary(
   try {
     const conversation = await conversationRepository.findById(input.conversationId);
     if (!conversation) {
-      return err(new AppError('NOT_FOUND', 'Conversation not found', 404));
+      return err(new AppError('Conversation not found', 404, 'NOT_FOUND'));
     }
 
     const recentMessages = await messageRepository.findRecentByConversationId(input.conversationId, 10);

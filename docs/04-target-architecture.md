@@ -34,13 +34,28 @@ O sistema **não** é fonte da verdade para:
 Esses componentes permanecem externos e preservados.
 
 ## 3. Estado Atual do Repositório e Leitura Correta desta Arquitetura
-No estado atual do monorepo:
-- existem `apps/desk-api` e `apps/desk-web` como aplicações scaffoldadas;
-- existem `packages/events` e `packages/realtime` como pacotes de apoio;
-- existem módulos previstos em `modules/` para `chat`, `tasks`, `notes`, `alerts`, `admin`, `audit`, `dashboard`, `secretary-adapter` e `chatwoot-compat`;
-- não existem ainda serviços de runtime implementados para `message-worker` ou `realtime-service`.
 
-Portanto, este documento descreve a **arquitetura alvo obrigatória**. Quando nomes como `message-worker` e `realtime-service` aparecerem abaixo, eles representam papéis arquiteturais e componentes de runtime esperados para as próximas fases, não serviços já implementados no código atual.
+> **Última revisão:** 2026-04-09 — Estado revalidado
+
+**Estado atual do repositório:**
+- `apps/desk-api` — API Fastify operacional com módulos registrados
+- `apps/desk-web` — Frontend React/Vite operacional com realtime conectado
+- `apps/message-worker` — Worker implementado e funcional
+- `apps/realtime-service` — WebSocket server implementado e conectado ao frontend
+- `packages/events` e `packages/realtime` — pacotes de apoio funcionais
+- Módulos em `modules/` para `chat`, `tasks`, `notes`, `alerts`, `admin`, `audit`, `dashboard`, `secretary-adapter`, `labels`, `sectors`, `transfers`, `contacts`, `kanban`, `gateway-adapter`
+
+**Este documento descreve:**
+1. A **arquitetura alvo** — direção que o sistema deve seguir
+2. Os **componentes já implementados** — estado atual funcional
+3. Os **gaps técnicos conhecidos** — áreas que ainda precisam evoluir
+
+**Gaps técnicos conhecidos (não impedem operação, mas limitam escala):**
+- Pipeline de eventos utiliza `InMemoryEventPublisher` — não é ainda interprocesso real em topologia distribuída
+- Autenticação do realtime é baseada em userId enviado pelo cliente — não valida sessão no banco
+- Webhook: HMAC opcional quando `WEBHOOK_SECRET` não configurado
+
+Para verificar o estado de implementação dos runtimes, consultar `docs/18-deployment-and-runtime.md`.
 
 ## 4. Fluxo Arquitetural Alvo
 
@@ -188,16 +203,14 @@ Responsável por:
 - integrações assíncronas;
 - acionamento controlado da Secretary quando aplicável.
 
-Observação:
-- no estado atual do monorepo, esse componente ainda não existe como aplicação ou processo scaffoldado dedicado.
+**Estado atual (2026-04-09):** Implementado em `apps/message-worker/src/index.ts`. Funciona como processo separado consumindo do `InMemoryEventPublisher`.
 
 ### 6.3 `realtime-service`
 Responsável por:
 - notificação em tempo real para a interface web;
 - projeção de eventos internos para consumidores autenticados.
 
-Observação:
-- no estado atual do monorepo, existe `packages/realtime`, mas não há ainda um serviço separado scaffoldado com esse nome.
+**Estado atual (2026-04-09):** Implementado em `apps/realtime-service/src/index.ts` (porta 8080). Conectado ao frontend via WebSocket em `apps/desk-web/src/lib/realtime.ts`.
 
 ### 6.4 `desk-web`
 Responsável por:

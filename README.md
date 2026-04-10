@@ -46,6 +46,9 @@ WhatsApp → Evolution API → Gateway → CVG Connect Desk → Agent Secretary 
 
 ### Instalação
 
+> **⚠️ Para setup completo e atual, consulte [docs/21-instalacao-local.md](./docs/21-instalacao-local.md).**
+> Este guia mostra os comandos mais comuns. O documento de instalação local tem informações mais detalhadas e atualizadas.
+
 ```bash
 # Clonar
 git clone <repo-url> && cd connect_desk
@@ -62,7 +65,7 @@ cp .env.example .env
 # Subir infraestrutura (Postgres + Redis)
 docker compose up -d postgres redis
 
-# Executar migrations e seed
+# Executar migrations e seed (via package database)
 pnpm --filter @cvg/database db:migrate
 pnpm --filter @cvg/database db:seed
 
@@ -72,6 +75,8 @@ pnpm --filter @cvg/desk-web dev
 pnpm --filter @cvg/message-worker dev
 pnpm --filter @cvg/realtime-service dev
 ```
+
+> **Nota sobre scripts de banco:** Os scripts `pnpm db:migrate` e `pnpm db:seed` na raiz são placeholders que redirecionam para `@cvg/database`. Os comandos reais estão em `packages/database/package.json`.
 
 ### Docker (Produção)
 
