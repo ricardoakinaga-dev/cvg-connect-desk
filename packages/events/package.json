@@ -5,13 +5,15 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo build",
-    "lint": "echo lint",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx",
     "test:real-db": "vitest run src/__tests__/outbox-fanout-behavioral.test.ts src/__tests__/outbox-reader-real.test.ts src/__tests__/schema-check.test.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@cvg/database": "workspace:*"
+    "@cvg/database": "workspace:*",
+    "drizzle-orm": "0.45.2"
   }
 }

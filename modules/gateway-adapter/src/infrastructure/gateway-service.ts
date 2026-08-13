@@ -1,9 +1,12 @@
 import axios from 'axios';
 import type { CWOutboundEvent } from '../types/gateway-contracts';
-import { v4 as uuidv4 } from 'uuid';
 
 const GATEWAY_URL = process.env.GATEWAY_URL || 'http://localhost:3000';
 const GATEWAY_API_KEY = process.env.GATEWAY_API_KEY || '';
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
 
 /**
  * Serviço de integração com o gateway_evochatwoot.
@@ -27,7 +30,7 @@ export const gatewayService = {
       const event: CWOutboundEvent = {
         contract_version: '1.0.0',
         event_type: 'CW_OUTBOUND',
-        event_id: uuidv4(),
+        event_id: crypto.randomUUID(),
         occurred_at: new Date().toISOString(),
         tenant: 'cvg',
         provider: 'chatwoot',
@@ -50,7 +53,7 @@ export const gatewayService = {
       };
 
       // Enviar para o endpoint outbound do gateway
-      const response = await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
+      await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': GATEWAY_API_KEY,
@@ -59,9 +62,10 @@ export const gatewayService = {
       });
 
       return { success: true, messageId: event.event_id };
-    } catch (error: any) {
-      console.error('[GatewayService] Erro ao enviar outbound:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[GatewayService] Erro ao enviar outbound:', message);
+      return { success: false, error: message };
     }
   },
 
@@ -80,7 +84,7 @@ export const gatewayService = {
   /**
    * Verifica status das instâncias Evolution.
    */
-  async getInstanceStatus(instance?: string): Promise<any> {
+  async getInstanceStatus(instance?: string): Promise<unknown> {
     try {
       const url = instance
         ? `${GATEWAY_URL}/instances/${instance}/status`

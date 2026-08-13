@@ -1,4 +1,11 @@
 export type RealtimeEventType = 
+  | 'connection.established'
+  | 'auth.required'
+  | 'auth.success'
+  | 'auth.error'
+  | 'auth.revalidate.error'
+  | 'subscribe.error'
+  | 'subscription.success'
   | 'conversation.created'
   | 'conversation.updated'
   | 'conversation.status.changed'

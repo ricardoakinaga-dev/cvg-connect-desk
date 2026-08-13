@@ -39,7 +39,6 @@ const defaultLogger: Pick<Console, 'log' | 'warn' | 'error' | 'debug'> = console
 export class RealtimeClient {
   private ws: RealtimeSocketLike | null = null;
   private url: string;
-  private authToken: string | null = null;
   private authenticated = false;
   private handlers: Map<string, RealtimeHandler[]> = new Map();
   private reconnectInterval: ReturnType<typeof setInterval> | null = null;
@@ -56,23 +55,12 @@ export class RealtimeClient {
     this.logger = options.logger ?? defaultLogger;
   }
 
-  connect(token: string) {
-    if (!token) {
-      this.logger.warn('[Realtime] Cannot connect: missing auth token');
-      return;
-    }
-
+  connect() {
     this.shouldReconnect = true;
-    this.authToken = token;
     this.attemptConnect();
   }
 
   private attemptConnect() {
-    if (!this.authToken) {
-      this.logger.warn('[Realtime] Cannot connect: missing auth token');
-      return;
-    }
-
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       return;
     }
@@ -87,7 +75,6 @@ export class RealtimeClient {
 
       this.ws.onopen = () => {
         this.logger.log('[Realtime] Connected');
-        this.sendAuth();
       };
 
       this.ws.onmessage = (event) => {
@@ -115,12 +102,6 @@ export class RealtimeClient {
     } catch (error) {
       this.logger.error('[Realtime] Failed to create WebSocket:', error);
       this.scheduleReconnect();
-    }
-  }
-
-  private sendAuth() {
-    if (this.ws?.readyState === WebSocket.OPEN && this.authToken) {
-      this.ws.send(JSON.stringify({ type: 'auth', token: this.authToken }));
     }
   }
 
@@ -225,7 +206,6 @@ export class RealtimeClient {
     this.shouldReconnect = false;
     this.clearReconnectTimer();
     this.authenticated = false;
-    this.authToken = null;
     this.ws?.close();
     this.ws = null;
   }

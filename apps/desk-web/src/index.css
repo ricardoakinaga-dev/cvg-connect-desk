@@ -1,16 +1,21 @@
 :root {
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-secondary: #64748b;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-secondary: #475569;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-critical: #dc2626;
-  --color-bg: #f8fafc;
+  --color-bg: #f4f7fb;
   --color-surface: #ffffff;
-  --color-border: #e2e8f0;
-  --color-text: #1e293b;
+  --color-surface-soft: #f8fafc;
+  --color-border: #d9e2ee;
+  --color-border-strong: #c5d1e1;
+  --color-text: #0f172a;
   --color-text-secondary: #64748b;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.1);
+  --shadow-blue: 0 10px 24px rgba(29, 78, 216, 0.18);
   --sidebar-width: 240px;
   --header-height: 56px;
 }
@@ -23,7 +28,12 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  background-color: var(--color-bg);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.72) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.72) 1px, transparent 1px),
+    radial-gradient(circle at 30% 20%, rgba(29, 78, 216, 0.08), transparent 28%),
+    var(--color-bg);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
   color: var(--color-text);
   line-height: 1.5;
 }
@@ -52,6 +62,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn {
@@ -64,16 +75,18 @@ body {
   font-weight: 500;
   cursor: pointer;
   border: none;
-  transition: all 0.2s;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .btn-primary {
   background: var(--color-primary);
   color: white;
+  box-shadow: var(--shadow-blue);
 }
 
 .btn-primary:hover {
   background: var(--color-primary-hover);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -84,6 +97,8 @@ body {
 
 .btn-secondary:hover {
   background: var(--color-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .input {
@@ -98,6 +113,46 @@ body {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.page-hero {
+  padding: 2px 0;
+}
+
+.hero-left h2 {
+  letter-spacing: 0;
+}
+
+.loading-state,
+.empty-state {
+  color: var(--color-text-secondary);
+}
+
+.empty-icon,
+.empty-icon-big,
+.metric-icon,
+.sev-icon {
+  font-family: inherit;
 }
 
 .badge {

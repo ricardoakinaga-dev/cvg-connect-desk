@@ -47,7 +47,7 @@ No estado atual do monorepo, os seguintes runtimes estão implementados e operac
 - Event publisher do desk-api
 
 **Observabilidade operacional**: as falhas terminais registradas pelo worker carregam `failureContext` estruturado na dead-letter, incluindo handler, decisão, retry count e `reason` operacional para triagem no admin.
-**Superfície operacional mínima**: o admin expõe `/admin/dead-letters/stats` para resumo agregado da DLQ e `/admin/webhook-security/stats` para contagem dos `reason` de bloqueio do webhook. Esses resumos são process-local/in-memory e servem para triagem operacional no processo atual, não para retenção histórica.
+**Superfície operacional mínima**: o admin expõe `/admin/dead-letters/stats` para resumo agregado da DLQ, `/admin/webhook-security/stats` para contagem persistente dos `reason` de segurança do webhook e `/admin/operational/metrics` para outbox/DLQ, idade e limiares. A fonte operacional é PostgreSQL compartilhado entre réplicas; logs e conexões realtime continuam sendo estado local por processo.
 
 ### 2.4 realtime-service (WebSocket)
 **Responsabilidade**: Manter conexões WebSocket com clientes, projetar eventos para realtime.

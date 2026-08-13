@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import crypto from 'crypto';
-import { recordWebhookSecurityDecision } from './webhook-security-stats';
+import { recordWebhookSecurityDecisionAndPersist } from './webhook-security-stats';
 
 /**
  * Middleware de segurança para webhook inbound.
@@ -17,7 +17,7 @@ function isProduction(): boolean {
   return env === 'production' || env === 'prod';
 }
 
-function denyWebhook(
+async function denyWebhook(
   reply: FastifyReply,
   statusCode: number,
   reason: string,
@@ -28,7 +28,7 @@ function denyWebhook(
     signaturePresent?: boolean;
   },
 ) {
-  recordWebhookSecurityDecision({
+  await recordWebhookSecurityDecisionAndPersist({
     reason: reason as 'missing_secret' | 'missing_signature' | 'invalid_signature_format' | 'invalid_signature',
     allowed: false,
     webhookMode: metadata.webhookMode,
@@ -64,7 +64,7 @@ export function createWebhookGuard() {
         webhook_mode: 'development-bypass',
         has_secret: false,
       }, '[WebhookGuard] WEBHOOK_SECRET não configurado — validação desabilitada (desenvolvimento apenas)');
-      recordWebhookSecurityDecision({
+      await recordWebhookSecurityDecisionAndPersist({
         reason: 'missing_secret',
         allowed: true,
         webhookMode: 'development-bypass',
@@ -126,7 +126,7 @@ export function createWebhookGuard() {
       });
     }
 
-    recordWebhookSecurityDecision({
+    await recordWebhookSecurityDecisionAndPersist({
       reason: 'signature_valid',
       allowed: true,
       webhookMode: 'hmac',

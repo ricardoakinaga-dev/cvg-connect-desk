@@ -2,11 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   api,
   deadLetterApi,
+  getErrorMessage,
   webhookSecurityApi,
+  operationalMetricsApi,
   type DeadLetterEntry,
   type DeadLetterStats,
   type DeadLetterOperationalSummary,
   type WebhookSecurityStats,
+  type OperationalMetrics,
 } from '../lib/api';
 import './Admin.css';
 
@@ -44,6 +47,12 @@ const emptyWebhookSecurityStats: WebhookSecurityStats = {
   },
   lastDecisionAt: null,
   lastDecision: null,
+};
+const emptyOperationalMetrics: OperationalMetrics = {
+  generatedAt: '',
+  outbox: { pending: 0, retrying: 0, oldestCreatedAt: null, oldestAgeMs: 0 },
+  deadLetter: { unresolved: 0, retrying: 0, oldestFailedAt: null, oldestAgeMs: 0 },
+  thresholds: { outboxPending: 100, deadLetterUnresolved: 10, triggered: [] },
 };
 
 function formatDate(value?: string | null) {
@@ -103,6 +112,7 @@ export function Admin() {
   const [deadLetterStats, setDeadLetterStats] = useState<DeadLetterStats>(emptyDeadLetterStats);
   const [deadLetterSummary, setDeadLetterSummary] = useState<DeadLetterOperationalSummary>(emptyDeadLetterOperationalSummary);
   const [webhookSecurityStats, setWebhookSecurityStats] = useState<WebhookSecurityStats>(emptyWebhookSecurityStats);
+  const [operationalMetrics, setOperationalMetrics] = useState<OperationalMetrics>(emptyOperationalMetrics);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [newItem, setNewItem] = useState<Record<string, string>>({});
@@ -121,7 +131,7 @@ export function Admin() {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const [u, r, q, t, s, dl, dlSummary, webhookStats] = await Promise.all([
+      const [u, r, q, t, s, dl, dlSummary, webhookStats, operations] = await Promise.all([
         api.get<User[]>('/admin/users').catch(() => []),
         api.get<Role[]>('/admin/roles').catch(() => []),
         api.get<Queue[]>('/admin/queues').catch(() => []),
@@ -130,6 +140,7 @@ export function Admin() {
         deadLetterApi.list({ limit: 100 }).catch(() => ({ data: [], stats: emptyDeadLetterStats })),
         deadLetterApi.stats().catch(() => emptyDeadLetterOperationalSummary),
         webhookSecurityApi.stats().catch(() => emptyWebhookSecurityStats),
+        operationalMetricsApi.get().catch(() => emptyOperationalMetrics),
       ]);
 
       setUsers(u);
@@ -141,6 +152,7 @@ export function Admin() {
       setDeadLetterStats(dl.stats);
       setDeadLetterSummary(dlSummary);
       setWebhookSecurityStats(webhookStats);
+      setOperationalMetrics(operations);
     } catch (error) {
       console.error('Erro ao carregar admin:', error);
     } finally {
@@ -205,8 +217,8 @@ export function Admin() {
       setNewItem({});
       setShowCreate(false);
       fetchAll();
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
@@ -216,8 +228,8 @@ export function Admin() {
     try {
       await api.delete(`/admin/${tab}/${id}`);
       fetchAll();
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
@@ -232,8 +244,8 @@ export function Admin() {
       await api.put(`/admin/users/${editUserSectors}/sectors`, { sectors: sectorList });
       alert('Permissões salvas!');
       fetchUserSectors(editUserSectors);
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      alert(getErrorMessage(error));
     }
   };
 
@@ -271,8 +283,8 @@ export function Admin() {
 
       await fetchAll();
       setSelectedDeadLetterId(entry.id);
-    } catch (error: any) {
-      setDeadLetterError(error.message || 'Falha ao executar ação');
+    } catch (error: unknown) {
+      setDeadLetterError(getErrorMessage(error, 'Falha ao executar ação'));
     } finally {
       setDeadLetterActionId(null);
     }
@@ -329,10 +341,10 @@ export function Admin() {
               <td>{formatDate(user.createdAt)}</td>
               <td>
                 <button className="btn-sector" onClick={() => { setEditUserSectors(user.id); fetchUserSectors(user.id); }}>
-                  🏢 Setores
+                  Setores
                 </button>
               </td>
-              <td><button className="btn-delete-sm" onClick={() => handleDelete(user.id)}>🗑️</button></td>
+              <td><button className="btn-delete-sm" onClick={() => handleDelete(user.id)}>DEL</button></td>
             </tr>
           ))}
         </tbody>
@@ -342,7 +354,7 @@ export function Admin() {
         <div className="modal-overlay" onClick={() => setEditUserSectors(null)}>
           <div className="modal-content" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h3>🏢 Permissões por Setor</h3>
+              <h3>Permissões por Setor</h3>
               <button className="btn-close" onClick={() => setEditUserSectors(null)}>✕</button>
             </div>
             <div className="modal-body">
@@ -366,9 +378,9 @@ export function Admin() {
                       {isSelected && (
                         <div className="access-level-select">
                           <select value={level} onChange={(event) => changeAccessLevel(sector.id, event.target.value)}>
-                            <option value="read">👁️ Somente Leitura</option>
-                            <option value="write">✏️ Leitura e Escrita</option>
-                            <option value="admin">🔑 Admin do Setor</option>
+                            <option value="read">Somente Leitura</option>
+                            <option value="write">Leitura e Escrita</option>
+                            <option value="admin">Admin do Setor</option>
                           </select>
                         </div>
                       )}
@@ -379,7 +391,7 @@ export function Admin() {
 
               <div className="modal-actions">
                 <button className="btn-cancel" onClick={() => setEditUserSectors(null)}>Cancelar</button>
-                <button className="btn-save" onClick={handleSaveUserSectors}>💾 Salvar Permissões</button>
+                <button className="btn-save" onClick={handleSaveUserSectors}>Salvar Permissões</button>
               </div>
             </div>
           </div>
@@ -478,6 +490,31 @@ export function Admin() {
             <div>
               <span className="detail-label">Última decisão</span>
               <strong>{webhookSecurityStats.lastDecision ? `${webhookSecurityStats.lastDecision.reason} • ${webhookSecurityStats.lastDecision.allowed ? 'permitido' : 'bloqueado'}` : 'Sem eventos'}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section className="observability-card">
+          <div className="section-header">
+            <h4>Backlog compartilhado</h4>
+            <p>Fonte PostgreSQL comum a todas as réplicas.</p>
+          </div>
+          <div className="dead-letter-stats">
+            <div className="stat-card">
+              <span className="stat-label">Outbox pendente</span>
+              <strong>{operationalMetrics.outbox.pending}</strong>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Outbox retry</span>
+              <strong>{operationalMetrics.outbox.retrying}</strong>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">DLQ aberta</span>
+              <strong>{operationalMetrics.deadLetter.unresolved}</strong>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Alertas ativos</span>
+              <strong>{operationalMetrics.thresholds.triggered.length}</strong>
             </div>
           </div>
         </section>
@@ -655,31 +692,31 @@ export function Admin() {
     {
       key: 'users',
       label: 'Usuários',
-      icon: '👥',
+      icon: 'US',
       description: 'Pessoas que acessam o sistema (atendentes, veterinários, recepcionistas). Cada usuário tem login, senha e permissões específicas por setor.',
     },
     {
       key: 'roles',
       label: 'Papéis',
-      icon: '🔑',
+      icon: 'AC',
       description: 'Grupos de permissões pré-definidos (ex: Admin, Veterinário, Recepcionista). Ao atribuir um papel a um usuário, ele ganha todas as permissões daquele papel automaticamente.',
     },
     {
       key: 'queues',
       label: 'Filas',
-      icon: '📋',
+      icon: 'FL',
       description: 'Fila de espera para distribuir atendimentos. Ex: quando chega uma mensagem, ela pode ser direcionada para a "Fila Recepção" e depois para a "Fila Clínica". Útil para organizar o fluxo de trabalho.',
     },
     {
       key: 'teams',
       label: 'Times',
-      icon: '🏢',
+      icon: 'TM',
       description: 'Grupos de usuários que trabalham juntos. Ex: "Equipe Clínica" (Dr. João + Dra. Maria), "Equipe Recepção" (Ana + Pedro). Facilita a atribuição de conversas para grupos.',
     },
     {
       key: 'dead-letters',
       label: 'Dead-letter',
-      icon: '☠️',
+      icon: 'DL',
       description: 'Fila operacional de eventos que falharam após retry. Permite filtrar, inspecionar o payload e executar retry quando o backend tiver contexto suficiente, ou marcar como resolvida após tratamento manual.',
     },
   ];
@@ -690,7 +727,7 @@ export function Admin() {
     <div className="admin-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>⚙️ Administração</h2>
+          <h2>Administração</h2>
           <p>Gerencie usuários, papéis, filas, times e dead-letters</p>
         </div>
         {tab !== 'dead-letters' && (
@@ -753,7 +790,7 @@ export function Admin() {
                   <tr key={role.id}>
                     <td><strong>{role.name}</strong></td>
                     <td>{role.description || '—'}</td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(role.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" onClick={() => handleDelete(role.id)}>DEL</button></td>
                   </tr>
                 ))}
               </tbody>
@@ -768,7 +805,7 @@ export function Admin() {
                     <td><strong>{queue.name}</strong></td>
                     <td>{queue.description || '—'}</td>
                     <td><span className={`badge ${queue.isActive ? 'active' : 'inactive'}`}>{queue.isActive ? 'Ativa' : 'Inativa'}</span></td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(queue.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" onClick={() => handleDelete(queue.id)}>DEL</button></td>
                   </tr>
                 ))}
               </tbody>
@@ -783,7 +820,7 @@ export function Admin() {
                     <td><strong>{team.name}</strong></td>
                     <td>{team.description || '—'}</td>
                     <td><span className={`badge ${team.isActive ? 'active' : 'inactive'}`}>{team.isActive ? 'Ativo' : 'Inativo'}</span></td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(team.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" onClick={() => handleDelete(team.id)}>DEL</button></td>
                   </tr>
                 ))}
               </tbody>

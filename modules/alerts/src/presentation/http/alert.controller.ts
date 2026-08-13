@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply } from 'fastify';
+import { FastifyInstance, type FastifyRequest } from 'fastify';
 import { createAlert, acknowledgeAlert, resolveAlert } from '../../application/use-cases';
 import { alertRepository } from '../../infrastructure/repositories/alert.repository';
 import { AppError } from '@cvg/shared';
@@ -21,6 +21,12 @@ interface AlertActionBody {
 
 interface AlertParams {
   id: string;
+}
+
+type AuthenticatedRequest = FastifyRequest & { user?: { id?: string } };
+
+function getUserId(request: FastifyRequest): string | undefined {
+  return (request as AuthenticatedRequest).user?.id;
 }
 
 export async function registerAlertRoutes(app: FastifyInstance) {
@@ -46,7 +52,7 @@ export async function registerAlertRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (request as any).user?.id;
+        const userId = getUserId(request);
         const result = await createAlert({
           ...(request.body as CreateAlertBody),
           userId,
@@ -115,7 +121,7 @@ export async function registerAlertRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (request as any).user?.id;
+        const userId = getUserId(request);
         const params = request.params as AlertParams;
         const body = request.body as AlertActionBody;
         const result = await acknowledgeAlert({
@@ -159,7 +165,7 @@ export async function registerAlertRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (request as any).user?.id;
+        const userId = getUserId(request);
         const params = request.params as AlertParams;
         const body = request.body as AlertActionBody;
         const result = await resolveAlert({

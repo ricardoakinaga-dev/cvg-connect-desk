@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -60,7 +60,7 @@ describe('Auth routes integration', () => {
     await app.close();
   });
 
-  it('login valido retorna sessao/token e dados do usuario', async () => {
+  it('login valido retorna sessao em cookie HttpOnly e dados do usuario', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/auth/login',
@@ -69,11 +69,11 @@ describe('Auth routes integration', () => {
 
     expect(response.statusCode).toBe(200);
 
-    const body = response.json() as { user: { email: string; roles: string[] }; token: string };
+    const body = response.json() as { user: { email: string; roles: string[] } };
     expect(body.user.email).toBe(email);
     expect(body.user.roles).toContain(roleName);
-    expect(body.token).toBeTypeOf('string');
-    expect(body.token).not.toHaveLength(0);
+    expect(getSessionCookie(response)).toContain('cvg_session=');
+    expect(body).not.toHaveProperty('token');
   });
 
   it('login invalido falha com 401', async () => {
@@ -98,12 +98,12 @@ describe('Auth routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    const token = (login.json() as { token: string }).token;
+    const sessionCookie = getSessionCookie(login);
 
     const me = await app.inject({
       method: 'GET',
       url: '/auth/me',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(sessionCookie),
     });
 
     expect(me.statusCode).toBe(200);

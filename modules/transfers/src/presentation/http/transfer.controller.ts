@@ -1,7 +1,14 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, type FastifyRequest } from 'fastify';
 import { authenticate } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
+import type { CreateTransferInput } from '../../application/use-cases';
+
+type AuthenticatedRequest = FastifyRequest & { user?: { id?: string } };
+
+function getUserId(request: FastifyRequest): string | undefined {
+  return (request as AuthenticatedRequest).user?.id;
+}
 
 export async function registerTransferRoutes(app: FastifyInstance) {
   // Criar transferência
@@ -26,16 +33,11 @@ export async function registerTransferRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.createTransfer({
-      ...(request.body as any),
+      ...(request.body as CreateTransferInput),
       fromUserId: userId,
     });
-    if (result.isErr()) {
-      const e = result.error;
-      if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
-      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
-    }
     return reply.status(201).send(result.value);
   });
 
@@ -78,7 +80,7 @@ export async function registerTransferRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.acceptTransfer(id, userId);
     if (result.isErr()) {
       const e = result.error;

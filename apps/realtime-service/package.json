@@ -2,13 +2,15 @@
   "name": "@cvg/realtime-service",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
-    "lint": "echo lint",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -18,13 +20,13 @@
     "@cvg/events": "workspace:*",
     "@cvg/realtime": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "ws": "^8.16.0"
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "@types/ws": "^8.5.10",
     "dotenv": "^17.3.1",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

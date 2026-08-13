@@ -1,10 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["DATABASE_URL", "REQUIRE_REAL_DB", "REDIS_URL", "INTERNAL_EVENTS_SECRET"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": []
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -14,7 +15,10 @@
       "persistent": true
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "outputs": []
+    },
+    "typecheck": {
+      "outputs": []
     }
   }
 }

@@ -17,6 +17,7 @@ describe('Events polling integration', () => {
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
 
   beforeAll(async () => {
+    process.env.INTERNAL_EVENTS_SECRET = process.env.INTERNAL_EVENTS_SECRET || 'integration-internal-events-secret';
     app = await buildDeskApiApp();
     await app.ready();
   });
@@ -93,6 +94,7 @@ describe('Events polling integration', () => {
     const firstResponse = await app.inject({
       method: 'GET',
       url: '/events?limit=2',
+      headers: { 'x-internal-service-key': process.env.INTERNAL_EVENTS_SECRET },
     });
 
     expect(firstResponse.statusCode).toBe(200);
@@ -141,6 +143,7 @@ describe('Events polling integration', () => {
     const sinceResponse = await app.inject({
       method: 'GET',
       url: `/events?since=${encodeURIComponent(new Date(baseOccurredAt.getTime() + 90_000).toISOString())}&limit=10`,
+      headers: { 'x-internal-service-key': process.env.INTERNAL_EVENTS_SECRET },
     });
 
     expect(sinceResponse.statusCode).toBe(200);

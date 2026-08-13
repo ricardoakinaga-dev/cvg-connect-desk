@@ -3,6 +3,9 @@ import { eq, desc, and } from 'drizzle-orm';
 
 export type Task = typeof schema.tasks.$inferSelect;
 export type NewTask = typeof schema.tasks.$inferInsert;
+export type TaskStatus = typeof schema.tasks.status.enumValues[number];
+type TaskPriority = typeof schema.tasks.priority.enumValues[number];
+type TaskStatusHistoryStatus = typeof schema.taskStatusHistory.status.enumValues[number];
 
 export const taskRepository = {
   async create(data: NewTask) {
@@ -25,15 +28,19 @@ export const taskRepository = {
 
   async findAll(filters?: { status?: string; assignedTo?: string; priority?: string }) {
     let query = db.select().from(schema.tasks).$dynamic();
+    const conditions = [];
 
     if (filters?.status) {
-      query = query.where(eq(schema.tasks.status, filters.status as any));
+      conditions.push(eq(schema.tasks.status, filters.status as TaskStatus));
     }
     if (filters?.assignedTo) {
-      query = query.where(eq(schema.tasks.assignedTo, filters.assignedTo));
+      conditions.push(eq(schema.tasks.assignedTo, filters.assignedTo));
     }
     if (filters?.priority) {
-      query = query.where(eq(schema.tasks.priority, filters.priority as any));
+      conditions.push(eq(schema.tasks.priority, filters.priority as TaskPriority));
+    }
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
     }
 
     return query.orderBy(desc(schema.tasks.createdAt));
@@ -49,7 +56,7 @@ export const taskRepository = {
   },
 
   async updateStatus(id: string, status: string) {
-    const updateData: Partial<NewTask> = { status: status as any, updatedAt: new Date() };
+    const updateData: Partial<NewTask> = { status: status as TaskStatus, updatedAt: new Date() };
     if (status === 'completed') {
       updateData.completedAt = new Date();
     }
@@ -64,7 +71,7 @@ export const taskRepository = {
   async addStatusHistory(taskId: string, status: string, changedBy?: string, reason?: string) {
     const [history] = await db
       .insert(schema.taskStatusHistory)
-      .values({ taskId, status: status as any, changedBy, reason })
+      .values({ taskId, status: status as TaskStatusHistoryStatus, changedBy, reason })
       .returning();
     return history;
   },

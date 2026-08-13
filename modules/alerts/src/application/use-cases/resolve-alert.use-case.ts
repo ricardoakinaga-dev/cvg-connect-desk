@@ -2,6 +2,7 @@ import { alertRepository } from '../../infrastructure/repositories/alert.reposit
 import { ok, err, type Result } from '@cvg/shared';
 import { NotFoundError, BadRequestError } from '@cvg/shared';
 import { createAuditLog } from '@cvg/audit';
+import { databaseEventPublisher, createAlertResolvedEvent } from '@cvg/events';
 
 export interface ResolveAlertInput {
   alertId: string;
@@ -31,6 +32,13 @@ export async function resolveAlert(input: ResolveAlertInput): Promise<Result<Res
     const alert = await alertRepository.resolve(input.alertId, input.resolvedBy);
 
     await alertRepository.addEvent(alert.id, 'resolved', oldStatus, 'resolved', input.resolvedBy);
+
+    // Publish alert.resolved event to outbox
+    const alertEvent = createAlertResolvedEvent({
+      alertId: alert.id,
+      resolvedBy: input.resolvedBy,
+    });
+    await databaseEventPublisher.publish(alertEvent);
 
     // Audit: registrar resolução do alerta
     const auditorUserId = input.userId || input.resolvedBy;

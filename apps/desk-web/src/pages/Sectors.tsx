@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './Sectors.css';
 
 interface Sector {
@@ -18,7 +18,7 @@ export function Sectors() {
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
-  const [newSector, setNewSector] = useState({ name: '', code: '', description: '', color: '#4361ee', icon: '📋' });
+  const [newSector, setNewSector] = useState({ name: '', code: '', description: '', color: '#1d4ed8', icon: 'OP' });
 
   const fetchSectors = async () => {
     try {
@@ -38,11 +38,11 @@ export function Sectors() {
     if (!newSector.name.trim() || !newSector.code.trim()) return;
     try {
       await api.post('/sectors', newSector);
-      setNewSector({ name: '', code: '', description: '', color: '#4361ee', icon: '📋' });
+      setNewSector({ name: '', code: '', description: '', color: '#1d4ed8', icon: 'OP' });
       setShowCreate(false);
       fetchSectors();
-    } catch (err: any) {
-      alert(err.message || 'Erro ao criar setor');
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, 'Erro ao criar setor'));
     }
   };
 
@@ -50,17 +50,18 @@ export function Sectors() {
     try {
       await api.put(`/sectors/${sector.id}`, { isActive: !sector.isActive });
       fetchSectors();
-    } catch (err) {
-      console.error('Erro ao atualizar setor:', err);
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, 'Erro ao atualizar setor'));
     }
   };
 
-  const iconOptions = ['📋', '🏥', '🩺', '🏨', '⚕️', '💼', '💊', '🦷', '🔬', '📞', '🛒', '🐾'];
+  const iconOptions = ['OP', 'CL', 'AT', 'RC', 'UR', 'AD', 'RX', 'OD', 'LB', 'TEL', 'LOJ', 'CVG'];
+  const sectorMark = (sector: Sector) => (/^[A-Z0-9]{2,4}$/.test(sector.icon) ? sector.icon : sector.name.slice(0, 2).toUpperCase());
 
   return (
     <div className="sectors-page">
       <div className="page-header">
-        <h2>🏢 Setores</h2>
+        <h2>Setores</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
           {showCreate ? '✕ Cancelar' : '+ Novo Setor'}
         </button>
@@ -87,7 +88,7 @@ export function Sectors() {
         <div className="sectors-grid">
           {sectors.map(sector => (
             <div key={sector.id} className="sector-card" style={{ borderTopColor: sector.color }}>
-              <div className="sector-icon" style={{ background: sector.color }}>{sector.icon}</div>
+              <div className="sector-icon" style={{ background: sector.color }}>{sectorMark(sector)}</div>
               <div className="sector-info">
                 <div className="sector-name">{sector.name}</div>
                 <div className="sector-code">{sector.code}</div>
@@ -100,7 +101,7 @@ export function Sectors() {
               </div>
               <div className="sector-actions">
                 <button className={`btn-toggle ${sector.isActive ? 'on' : 'off'}`} onClick={() => handleToggleActive(sector)}>
-                  {sector.isActive ? '🟢' : '🔴'}
+                  {sector.isActive ? 'ON' : 'OFF'}
                 </button>
               </div>
             </div>

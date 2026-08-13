@@ -1,6 +1,6 @@
 import { db } from '@cvg/database';
-import { userSectors, sectors } from '@cvg/database';
-import { eq, and, inArray } from 'drizzle-orm';
+import { userSectors, sectors, userRoles, roles } from '@cvg/database';
+import { eq, and } from 'drizzle-orm';
 
 export type AccessLevel = 'read' | 'write' | 'admin';
 
@@ -52,14 +52,10 @@ export const sectorPermissionService = {
    * Um admin é identificado por ter a role Admin
    */
   async isGlobalAdmin(userId: string): Promise<boolean> {
-    const { db: database, schema } = await import('@cvg/database');
-    const { userRoles, roles } = schema;
-    const { eq: eqOp } = await import('drizzle-orm');
-
-    const result = await database.select({ roleName: roles.name })
+    const result = await db.select({ roleName: roles.name })
       .from(userRoles)
-      .innerJoin(roles, eqOp(userRoles.roleId, roles.id))
-      .where(eqOp(userRoles.userId, userId));
+      .innerJoin(roles, eq(userRoles.roleId, roles.id))
+      .where(eq(userRoles.userId, userId));
 
     return result.some(r => r.roleName === 'Admin');
   },

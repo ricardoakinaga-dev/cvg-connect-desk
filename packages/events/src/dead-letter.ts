@@ -106,19 +106,21 @@ export class DeadLetterStore {
     };
 
     this.entries.set(fullEntry.id, fullEntry);
-    console.error(JSON.stringify({
-      msg: '[DeadLetter] Recorded terminal failure',
-      event_type: fullEntry.eventType,
-      event_id: fullEntry.eventId,
-      handler_name: fullEntry.handlerName,
-      retry_count: fullEntry.retryCount,
-      retryable: fullEntry.failureContext.retryable,
-      reason: fullEntry.failureContext.reason,
-      correlation_id: fullEntry.failureContext.correlationId,
-      causation_id: fullEntry.failureContext.causationId,
-      event_version: fullEntry.failureContext.eventVersion,
-      level: 'error',
-    }));
+    if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
+      console.error(JSON.stringify({
+        msg: '[DeadLetter] Recorded terminal failure',
+        event_type: fullEntry.eventType,
+        event_id: fullEntry.eventId,
+        handler_name: fullEntry.handlerName,
+        retry_count: fullEntry.retryCount,
+        retryable: failureContext.retryable,
+        reason: failureContext.reason,
+        correlation_id: failureContext.correlationId,
+        causation_id: failureContext.causationId,
+        event_version: failureContext.eventVersion,
+        level: 'error',
+      }));
+    }
     return fullEntry;
   }
 

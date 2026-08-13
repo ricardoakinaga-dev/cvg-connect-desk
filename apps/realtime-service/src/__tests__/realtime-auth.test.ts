@@ -9,19 +9,21 @@ describe('Realtime Service Auth Implementation', () => {
   const realtimePath = resolve(__dirname, '../index.ts');
   const content = readFileSync(realtimePath, 'utf-8');
 
-  describe('Token validation via API', () => {
-    it('should validate token by calling /auth/me endpoint', () => {
+  describe('Cookie validation via API', () => {
+    it('should validate session by calling /auth/me endpoint', () => {
       expect(content).toContain('/auth/me');
     });
 
-    it('should use Bearer token in Authorization header', () => {
-      expect(content).toContain('Authorization');
-      expect(content).toContain('Bearer');
+    it('should use the session cookie instead of bearer authorization', () => {
+      expect(content).toContain('Cookie:');
+      expect(content).toContain('SESSION_COOKIE_NAME');
+      expect(content).not.toContain('Authorization');
+      expect(content).not.toContain('Bearer');
     });
 
-    it('should extract token from URL query string', () => {
+    it('should reject token from URL query string', () => {
       expect(content).toContain('searchParams.get');
-      expect(content).toContain('token');
+      expect(content).toContain('URL token authentication is disabled');
     });
   });
 
@@ -59,9 +61,9 @@ describe('Realtime Service Auth Implementation', () => {
       expect(content).toContain('subscribe.error');
     });
 
-    it('should require token for authenticated connections', () => {
-      expect(content).toContain('handleConnectionWithAuth');
-      expect(content).toContain('handleConnectionWithoutAuth');
+    it('should require session cookie for authenticated connections', () => {
+      expect(content).toContain('handleConnectionWithCookie');
+      expect(content).toContain('Missing session cookie');
     });
   });
 
@@ -84,7 +86,7 @@ describe('Realtime Service Auth Implementation', () => {
       expect(content).toContain('Authentication service unavailable');
     });
 
-    it('should reject invalid token with status', () => {
+    it('should reject invalid session with status', () => {
       expect(content).toContain('Invalid token');
     });
   });
@@ -94,12 +96,12 @@ describe('Realtime Authentication Flow Verification', () => {
   const realtimePath = resolve(__dirname, '../index.ts');
   const content = readFileSync(realtimePath, 'utf-8');
 
-  it('follows secure auth pattern: token in URL -> validate via API -> set authenticated flag', () => {
-    const hasTokenExtraction = content.includes('extractTokenFromUrl') || content.includes('searchParams.get');
+  it('follows secure auth pattern: cookie -> validate via API -> set authenticated flag', () => {
+    const hasCookieAuth = content.includes('SESSION_COOKIE_NAME') && content.includes('parseCookieHeader');
     const hasAPICall = content.includes('/auth/me');
     const hasAuthFlag = content.includes('authenticated = true');
 
-    expect(hasTokenExtraction).toBe(true);
+    expect(hasCookieAuth).toBe(true);
     expect(hasAPICall).toBe(true);
     expect(hasAuthFlag).toBe(true);
   });

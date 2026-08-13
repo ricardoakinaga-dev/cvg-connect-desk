@@ -4,9 +4,11 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { WebSocket } from 'ws';
 import { RealtimeServer } from '../index.ts';
 
+type WebSocketMessage = Record<string, unknown>;
+
 interface TestClient {
   ws: WebSocket;
-  messages: any[];
+  messages: WebSocketMessage[];
   closeCode?: number;
   closeReason?: string;
 }
@@ -39,8 +41,12 @@ async function startAuthServer() {
 
   const server = createServer((req: IncomingMessage, res: ServerResponse) => {
     if (req.url === '/auth/me') {
-      const authorization = req.headers.authorization || '';
-      const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+      const cookie = req.headers.cookie || '';
+      const token = cookie
+        .split(';')
+        .map((part) => part.trim())
+        .find((part) => part.startsWith('cvg_session='))
+        ?.slice('cvg_session='.length) || '';
       const callCount = (tokenCalls.get(token) || 0) + 1;
       tokenCalls.set(token, callCount);
 
@@ -127,17 +133,17 @@ async function startAuthServer() {
   };
 }
 
-async function connectClient(url: string): Promise<TestClient> {
+async function connectClient(url: string, sessionCookie?: string): Promise<TestClient> {
   return await new Promise<TestClient>((resolve, reject) => {
-    const messages: any[] = [];
+    const messages: WebSocketMessage[] = [];
     const client: TestClient = {
-      ws: new WebSocket(url),
+      ws: new WebSocket(url, sessionCookie ? { headers: { Cookie: `cvg_session=${sessionCookie}` } } : undefined),
       messages,
     };
 
     client.ws.on('message', (data: Buffer) => {
       try {
-        messages.push(JSON.parse(data.toString()));
+        messages.push(JSON.parse(data.toString()) as WebSocketMessage);
       } catch {
         messages.push(data.toString());
       }
@@ -153,7 +159,7 @@ async function connectClient(url: string): Promise<TestClient> {
   });
 }
 
-async function waitForMessage(client: TestClient, predicate: (message: any) => boolean, timeoutMs = 15000) {
+async function waitForMessage(client: TestClient, predicate: (message: WebSocketMessage) => boolean, timeoutMs = 15000) {
   const startedAt = Date.now();
 
   while (!client.messages.some(predicate)) {
@@ -221,28 +227,20 @@ describe('RealtimeServer behavioral auth flow', () => {
     delete process.env.REALTIME_AUTH_REVALIDATE_MS;
   });
 
-  it('blocks subscribe before auth and emits subscribe.error', async () => {
-    authServer.setTokenStatus('message-token', 'user-message', 200);
+  it('rejects connections without a session cookie', async () => {
     const client = await connectClient(realtimeBaseUrl);
 
-    await waitForMessage(client, (message) => message.event === 'auth.required');
-
-    client.ws.send(JSON.stringify({ type: 'subscribe', channel: 'global' }));
-
-    await waitForMessage(client, (message) => message.event === 'error' && message.data?.type === 'subscribe.error');
+    await waitForMessage(client, (message) => message.event === 'auth.error');
+    await waitForCloseCode(client, 4003);
 
     expect(client.messages.some((message) => message.event === 'subscribed')).toBe(false);
 
     await closeClient(client);
   });
 
-  it('accepts message-based auth and allows subscribe after auth.success', async () => {
+  it('accepts cookie auth and allows subscribe after auth.success', async () => {
     authServer.setTokenStatus('message-token', 'user-message', 200);
-    const client = await connectClient(realtimeBaseUrl);
-
-    await waitForMessage(client, (message) => message.event === 'auth.required');
-
-    client.ws.send(JSON.stringify({ type: 'auth', token: 'message-token' }));
+    const client = await connectClient(realtimeBaseUrl, 'message-token');
 
     await waitForMessage(client, (message) => message.event === 'auth.success');
 
@@ -255,12 +253,8 @@ describe('RealtimeServer behavioral auth flow', () => {
     await closeClient(client);
   });
 
-  it('revalidates the stored token and closes the connection on failure', async () => {
-    const client = await connectClient(realtimeBaseUrl);
-
-    await waitForMessage(client, (message) => message.event === 'auth.required');
-
-    client.ws.send(JSON.stringify({ type: 'auth', token: 'revoking-token' }));
+  it('revalidates the stored cookie session and closes the connection on failure', async () => {
+    const client = await connectClient(realtimeBaseUrl, 'revoking-token');
 
     await waitForMessage(client, (message) => message.event === 'auth.success');
 
@@ -273,17 +267,12 @@ describe('RealtimeServer behavioral auth flow', () => {
     await closeClient(client);
   });
 
-  it('keeps legacy URL-token authentication working for compatibility', async () => {
+  it('rejects legacy URL-token authentication', async () => {
     authServer.setTokenStatus('legacy-token', 'user-legacy', 200);
     const client = await connectClient(`${realtimeBaseUrl}?token=legacy-token`);
 
-    await waitForMessage(client, (message) => message.event === 'auth.success');
-
-    client.ws.send(JSON.stringify({ type: 'subscribe', channel: 'global' }));
-
-    await waitForMessage(client, (message) => message.event === 'subscribed');
-
-    expect(client.messages.find((message) => message.event === 'auth.success')?.data?.payload?.userId).toBe('user-legacy');
+    await waitForCloseCode(client, 4003);
+    expect(client.messages.some((message) => message.event === 'auth.success')).toBe(false);
 
     await closeClient(client);
   });

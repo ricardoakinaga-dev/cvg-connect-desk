@@ -1,7 +1,7 @@
 import { db } from '@cvg/database';
 import { labels, conversationLabels, contactLabels } from '@cvg/database';
 import { eq, and } from 'drizzle-orm';
-import type { CreateLabelInput, UpdateLabelInput, LabelAssignment } from '../types';
+import type { CreateLabelInput, UpdateLabelInput } from '../../types';
 
 export class LabelRepository {
   async findAll() {

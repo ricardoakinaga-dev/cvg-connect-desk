@@ -47,7 +47,7 @@ export interface HandoffPayload {
 }
 
 export function projectEvent(event: EventEnvelope): RealtimeProjection | null {
-  const { event_type, aggregate_type, aggregate_id, occurred_at, payload, correlation_id } = event;
+  const { event_type } = event;
 
   switch (event_type) {
     case 'conversation.created':

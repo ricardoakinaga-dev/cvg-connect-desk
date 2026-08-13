@@ -9,3 +9,4 @@ export const db = drizzle(pool, { schema: schemaModule });
 export { schemaModule as schema };
 
 export * from './schema';
+export * from './operational-stores';

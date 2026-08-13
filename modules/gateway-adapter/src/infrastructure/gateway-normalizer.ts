@@ -1,6 +1,25 @@
-import type { WAInboundEvent } from '../types/gateway-contracts';
-
 import type { WAInboundEvent, InstanceStatusEvent, WAReceiptEvent } from '../types/gateway-contracts';
+
+type EvolutionRecord = Record<string, unknown>;
+type InboundType = WAInboundEvent['payload']['type'];
+type InstanceState = InstanceStatusEvent['payload']['state'];
+type ReceiptStatus = WAReceiptEvent['payload']['status'];
+
+function asRecord(value: unknown): EvolutionRecord {
+  return value && typeof value === 'object' ? value as EvolutionRecord : {};
+}
+
+function stringValue(value: unknown, fallback = ''): string {
+  return typeof value === 'string' ? value : fallback;
+}
+
+function optionalString(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
+}
+
+function booleanValue(value: unknown, fallback = false): boolean {
+  return typeof value === 'boolean' ? value : fallback;
+}
 
 /**
  * Normaliza payload WA_INBOUND do gateway para o formato interno do Connect Desk.
@@ -77,19 +96,20 @@ export function formatPhone(phone: string): string {
  * Normaliza mensagem do formato Evolution API para WA_INBOUND do gateway.
  * O Evolution envia em formato diferente do contrato do gateway.
  */
-export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAInboundEvent | null {
+export function normalizeEvolutionMessage(rawEventInput: unknown, _eventType: string): WAInboundEvent | null {
   try {
+    const rawEvent = asRecord(rawEventInput);
     // Evolution API v2 envia: { event, instance, data: { key, message, ... } }
-    const data = rawEvent.data || rawEvent;
-    const instance = rawEvent.instance || data.instance || 'unknown';
+    const data = asRecord(rawEvent.data || rawEvent);
+    const instance = stringValue(rawEvent.instance || data.instance, 'unknown');
 
     // Extrair dados da mensagem
-    const key = data.key || {};
-    const message = data.message || {};
-    const remoteJid = key.remoteJid || data.remoteJid || '';
-    const messageId = key.id || data.messageId || '';
-    const fromMe = key.fromMe || data.fromMe || false;
-    const pushName = data.pushName || key.pushName || '';
+    const key = asRecord(data.key);
+    const message = asRecord(data.message);
+    const remoteJid = stringValue(key.remoteJid || data.remoteJid);
+    const messageId = stringValue(key.id || data.messageId);
+    const fromMe = booleanValue(key.fromMe || data.fromMe);
+    const pushName = stringValue(data.pushName || key.pushName);
 
     // Determinar tipo e conteúdo
     let type = 'text';
@@ -99,42 +119,47 @@ export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAI
     let mediaFilename: string | undefined;
     let mediaBase64: string | undefined;
 
-    if (message.conversation) {
+    if (typeof message.conversation === 'string') {
       type = 'text';
       text = message.conversation;
-    } else if (message.extendedTextMessage?.text) {
+    } else if (typeof asRecord(message.extendedTextMessage).text === 'string') {
       type = 'text';
-      text = message.extendedTextMessage.text;
+      text = stringValue(asRecord(message.extendedTextMessage).text);
     } else if (message.imageMessage) {
+      const imageMessage = asRecord(message.imageMessage);
       type = 'image';
-      text = message.imageMessage.caption || '';
-      mediaUrl = message.imageMessage.url;
-      mediaMimetype = message.imageMessage.mimetype;
-      mediaBase64 = message.imageMessage.base64;
+      text = stringValue(imageMessage.caption);
+      mediaUrl = optionalString(imageMessage.url);
+      mediaMimetype = optionalString(imageMessage.mimetype);
+      mediaBase64 = optionalString(imageMessage.base64);
     } else if (message.audioMessage) {
+      const audioMessage = asRecord(message.audioMessage);
       type = 'audio';
       text = '';
-      mediaUrl = message.audioMessage.url;
-      mediaMimetype = message.audioMessage.mimetype;
-      mediaBase64 = message.audioMessage.base64;
+      mediaUrl = optionalString(audioMessage.url);
+      mediaMimetype = optionalString(audioMessage.mimetype);
+      mediaBase64 = optionalString(audioMessage.base64);
     } else if (message.videoMessage) {
+      const videoMessage = asRecord(message.videoMessage);
       type = 'video';
-      text = message.videoMessage.caption || '';
-      mediaUrl = message.videoMessage.url;
-      mediaMimetype = message.videoMessage.mimetype;
-      mediaBase64 = message.videoMessage.base64;
+      text = stringValue(videoMessage.caption);
+      mediaUrl = optionalString(videoMessage.url);
+      mediaMimetype = optionalString(videoMessage.mimetype);
+      mediaBase64 = optionalString(videoMessage.base64);
     } else if (message.documentMessage) {
+      const documentMessage = asRecord(message.documentMessage);
       type = 'document';
-      text = message.documentMessage.fileName || '';
-      mediaUrl = message.documentMessage.url;
-      mediaMimetype = message.documentMessage.mimetype;
-      mediaFilename = message.documentMessage.fileName;
-      mediaBase64 = message.documentMessage.base64;
+      text = stringValue(documentMessage.fileName);
+      mediaUrl = optionalString(documentMessage.url);
+      mediaMimetype = optionalString(documentMessage.mimetype);
+      mediaFilename = optionalString(documentMessage.fileName);
+      mediaBase64 = optionalString(documentMessage.base64);
     } else if (message.stickerMessage) {
+      const stickerMessage = asRecord(message.stickerMessage);
       type = 'sticker';
       text = '';
-      mediaUrl = message.stickerMessage.url;
-      mediaMimetype = message.stickerMessage.mimetype;
+      mediaUrl = optionalString(stickerMessage.url);
+      mediaMimetype = optionalString(stickerMessage.mimetype);
     } else {
       type = 'unknown';
       text = '';
@@ -152,7 +177,7 @@ export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAI
       contract_version: '1.0.0',
       event_type: 'WA_INBOUND',
       event_id: messageId || `evo_${Date.now()}`,
-      correlation_id: rawEvent.correlation_id,
+      correlation_id: stringValue(rawEvent.correlation_id),
       occurred_at: new Date().toISOString(),
       tenant: 'cvg',
       provider: 'evolutionapi',
@@ -163,10 +188,10 @@ export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAI
         messageId,
         fromMe,
         pushName,
-        type: type as any,
+        type: type as InboundType,
         text,
         media: mediaUrl ? { url: mediaUrl, mimetype: mediaMimetype, filename: mediaFilename } : undefined,
-        timestamp: typeof timestamp === 'number' ? timestamp : parseInt(timestamp),
+        timestamp: typeof timestamp === 'number' ? timestamp : parseInt(String(timestamp)),
         raw: rawEvent,
       },
     };
@@ -179,11 +204,12 @@ export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAI
 /**
  * Normaliza CONNECTION_UPDATE do Evolution para INSTANCE_STATUS do gateway.
  */
-export function normalizeConnectionUpdate(rawEvent: any): InstanceStatusEvent | null {
+export function normalizeConnectionUpdate(rawEventInput: unknown): InstanceStatusEvent | null {
   try {
-    const data = rawEvent.data || rawEvent;
-    const instance = rawEvent.instance || 'unknown';
-    const state = data.state || data.status || 'unknown';
+    const rawEvent = asRecord(rawEventInput);
+    const data = asRecord(rawEvent.data || rawEvent);
+    const instance = stringValue(rawEvent.instance, 'unknown');
+    const state = stringValue(data.state || data.status, 'unknown');
 
     return {
       contract_version: '1.0.0',
@@ -195,9 +221,9 @@ export function normalizeConnectionUpdate(rawEvent: any): InstanceStatusEvent | 
       channel: 'whatsapp',
       payload: {
         instance,
-        state: state as any,
+        state: state as InstanceState,
         state_at: new Date().toISOString(),
-        reason: data.reason,
+        reason: optionalString(data.reason),
       },
     };
   } catch {
@@ -208,12 +234,13 @@ export function normalizeConnectionUpdate(rawEvent: any): InstanceStatusEvent | 
 /**
  * Normaliza MESSAGES_UPDATE do Evolution para WA_RECEIPT do gateway.
  */
-export function normalizeMessageUpdate(rawEvent: any): WAReceiptEvent | null {
+export function normalizeMessageUpdate(rawEventInput: unknown): WAReceiptEvent | null {
   try {
-    const data = rawEvent.data || rawEvent;
-    const instance = rawEvent.instance || 'unknown';
-    const key = data.key || {};
-    const update = data.update || {};
+    const rawEvent = asRecord(rawEventInput);
+    const data = asRecord(rawEvent.data || rawEvent);
+    const instance = stringValue(rawEvent.instance, 'unknown');
+    const key = asRecord(data.key);
+    const update = asRecord(data.update);
 
     let status = 'sent';
     if (update.status === 3 || update.status === 'READ') status = 'read';
@@ -230,9 +257,9 @@ export function normalizeMessageUpdate(rawEvent: any): WAReceiptEvent | null {
       channel: 'whatsapp',
       payload: {
         instance,
-        remoteJid: key.remoteJid || '',
-        messageId: key.id || '',
-        status: status as any,
+        remoteJid: stringValue(key.remoteJid),
+        messageId: stringValue(key.id),
+        status: status as ReceiptStatus,
         status_at: new Date().toISOString(),
       },
     };

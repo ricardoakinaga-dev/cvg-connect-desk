@@ -3,6 +3,9 @@ import { eq, desc, and, count, inArray } from 'drizzle-orm';
 
 export type Conversation = typeof schema.conversations.$inferSelect;
 export type NewConversation = typeof schema.conversations.$inferInsert;
+type ConversationStatus = typeof schema.conversations.status.enumValues[number];
+type ConversationStatusV2 = typeof schema.conversations.statusV2.enumValues[number];
+type StatusHistoryStatus = typeof schema.conversationStatusHistory.status.enumValues[number];
 
 export const conversationRepository = {
   async create(data: NewConversation) {
@@ -36,8 +39,8 @@ export const conversationRepository = {
     let query = db.select().from(schema.conversations).$dynamic();
     const conditions = [];
 
-    if (filters?.status) conditions.push(eq(schema.conversations.status, filters.status as any));
-    if (filters?.statusV2) conditions.push(eq(schema.conversations.statusV2, filters.statusV2 as any));
+    if (filters?.status) conditions.push(eq(schema.conversations.status, filters.status as ConversationStatus));
+    if (filters?.statusV2) conditions.push(eq(schema.conversations.statusV2, filters.statusV2 as ConversationStatusV2));
     if (filters?.queueId) conditions.push(eq(schema.conversations.queueId, filters.queueId));
     if (filters?.teamId) conditions.push(eq(schema.conversations.teamId, filters.teamId));
     if (filters?.sectorId) conditions.push(eq(schema.conversations.sectorId, filters.sectorId));
@@ -74,10 +77,10 @@ export const conversationRepository = {
   },
 
   async updateStatusV2(id: string, statusV2: string, userId?: string) {
-    const updateData: any = { statusV2, updatedAt: new Date() };
+    const updateData: Partial<NewConversation> = { statusV2: statusV2 as ConversationStatusV2, updatedAt: new Date() };
 
     // Mapear statusV2 para status legado
-    const statusMap: Record<string, string> = {
+    const statusMap: Record<string, ConversationStatus> = {
       'novo': 'open',
       'em_atendimento': 'open',
       'pendente': 'pending',
@@ -132,7 +135,7 @@ export const conversationRepository = {
   async addStatusHistory(conversationId: string, status: string, changedBy?: string, reason?: string) {
     const [history] = await db
       .insert(schema.conversationStatusHistory)
-      .values({ conversationId, status: status as any, changedBy, reason })
+      .values({ conversationId, status: status as StatusHistoryStatus, changedBy, reason })
       .returning();
     return history;
   },

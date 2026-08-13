@@ -16,38 +16,45 @@ Este documento estabelece:
 
 ## 2. Estado Atual do Projeto
 
-> **Nota de leitura:** Revisado em 2026-04-09. "Fase concluída" significa que a estrutura foi construída, não necessariamente que está em produção sem gaps. Verificar seção de pendências.
+> **Nota de leitura:** Revisado em 2026-04-24. O projeto está em **fase de maturação enterprise**.
 
 No momento atual:
 - a documentação arquitetural está avançada e endurecida;
 - o monorepo está estruturado com `apps`, `modules` e `packages`;
-- as fases 0, 1, 2, 3, 4, 5 e 7 já materializaram: backend API, chat, tasks, notes, alerts, events, worker, realtime, dashboard e frontend MVP;
+- todas as fases de 0 a 8 estão **concluídas**;
 - existe pipeline assíncrono com worker implementado (apps/message-worker);
 - existe realtime-service implementado (apps/realtime-service) **e conectado ao frontend**;
 - existe frontend operacional (apps/desk-web) com Inbox 3 colunas, Tasks, Alerts, Dashboard;
 - IAM, Chat Core, Operations já possuem modelagem concreta no banco;
-- existe integração com Secretary via modules/secretary-adapter (integrada ao fluxo inbound);
+- existe integração com Secretary via modules/secretary-adapter;
 - autenticação real implementada com login, logout, sessões e RBAC;
-- existe módulo de audit trail implementado;
-- rate limiting implementado via @fastify/rate-limit.
+- rate limiting implementado via @fastify/rate-limit;
+- **NEW:** Planos para elevação para 95/100 definidos em `docs/72-roadmap-95-porcento.md`
 
-**Conclusão:**
-- o projeto já possui backend funcional e frontend MVP operacional com hardening;
-- autenticação real, RBAC e auditoria estão implementados;
-- realtime e Secretary estão integrados ao fluxo;
-- ainda há gaps técnicos de produção (ver pendências abaixo).
+### Estado Consolidado: 84/100
 
-### Pendências Técnicas Conhecidas (Gaps de Produção)
+| Frente | Nota |
+|--------|------:|
+| Fundações | 90 |
+| Core | 84 |
+| Infraestrutura | 87 |
+| Interface | 81 |
+| Qualidade | 83 |
+| Deploy | 78 |
+| **TOTAL** | **84** |
 
-> Estas não bloqueiam operação, mas são limitações para escala e segurança:
+**Meta:** 95/100 — ver `docs/72-roadmap-95-porcento.md`
 
-| Gap | Descrição | Impacto |
-|-----|-----------|---------|
-| Cobertura de testes | A esteira já evoluiu bastante, mas ainda não cobre a profundidade enterprise total | Risco residual de regressão |
-| Runtime/deploy | Setup local e CI estão maduros, mas produção ainda tem arestas operacionais | Prontidão premium parcial |
-| Observabilidade/KPIs | Dashboard e auditoria existem, mas ainda faltam métricas e diagnósticos mais profundos | Visão gerencial/operacional ainda incompleta |
+### Pendências Técnicas Conhecidas
 
-**Nota:** os gaps antigos de pipeline in-memory, realtime desconectado, auth realtime fraca e webhook sem fail-secure já foram mitigados no código. Para a fotografia mais atual, consultar `docs/GAPS-TECNICOS.md` e `docs/60-relatorio-consolidado-estado-construcao-cvg-connect-desk.md`.
+| Gap | Descrição | Impacto | Prioridade |
+|-----|-----------|---------|------------|
+| Dashboard KPIs incompletos | Tempo médio resposta, handoff rate não têm fonte de dados | Analytics incompleto | P1 |
+| Runtime produção | Setup local OK, prod com arestas | Prontidão parcial | P2 |
+| Cobertura testes | Avançada mas não enterprise total | Risco regressão | P2 |
+| Validation checklist | 8/15 itens pendentes | Validação incompleta | P1 |
+
+---
 
 ## 3. Princípios do Roadmap
 
@@ -83,253 +90,85 @@ Depois:
 - sem pipeline complexo antes da necessidade;
 - sem otimização prematura.
 
+---
+
 ## 4. Visão Geral das Fases
 
 ```text
 Phase 0 -> Foundation                  [CONCLUÍDA]
 Phase 1 -> Core Chat                   [CONCLUÍDA]
 Phase 2 -> Operations (Tasks/Notes)     [CONCLUÍDA]
-Phase 3 -> Integrations + Secretary    [CONCLUÍDA]
+Phase 3 -> Integrations + Secretary     [CONCLUÍDA]
 Phase 4 -> Realtime                    [CONCLUÍDA]
-Phase 5 -> Dashboard + Observability   [CONCLUÍDA]
-Phase 6 -> Frontend MVP                [CONCLUÍDA]
+Phase 5 -> Dashboard + Observability  [CONCLUÍDA]
+Phase 6 -> Frontend MVP               [CONCLUÍDA]
 Phase 7 -> Hardening + Production      [CONCLUÍDA]
 Phase 8 -> Refinement & Deployment     [CONCLUÍDA]
+Phase 9 -> Enterprise 95/100          [PLANEJADA] ← NOVO
 ```
 
-## 5. Phase 0 — Foundation
+---
+
+## 5. Phase 9 — Enterprise 95/100
 
 ### Objetivo
-Criar base técnica mínima consistente para o restante do sistema.
+Elevar o projeto de 84/100 para 95/100, fechando lacunas de:
+- Dashboard KPIs completos
+- Runtime production hardened
+- Cobertura de testes enterprise
+- Observabilidade avançada
+- Validation checklist completa
 
 ### Inclui
-- estrutura de pacotes e módulos;
-- configuração de banco;
-- migrations iniciais;
-- evolução controlada de IAM;
-- setup auth básico sem fluxo completo;
-- configuração base da API;
-- contratos internos iniciais de persistência.
+- Implementação de KPIs faltantes (tempo médio resposta, handoff rate)
+- Health check ramificado com sub-checks
+- Readiness probing completo
+- Cobertura de testes 80%+ em modules core
+- Métricas Prometheus
+- OpenTelemetry tracing
+- Stress test e load testing
 
 ### Não Inclui
-- chat funcional;
-- integrações externas operacionais;
-- realtime;
-- dashboard.
-
-### Critério de Entrada
-- documentação base aprovada;
-- data model inicial definido;
-- arquitetura de backend e segurança já endurecidas.
-
-### Critério de Saída
-- API sobe;
-- banco conecta;
-- migrations executam;
-- estrutura de módulos está consistente;
-- base de IAM evolui sem quebrar o schema inicial já existente.
-
-## 6. Phase 1 — Core Chat
-
-### Objetivo
-Implementar o núcleo de conversa e mensagem.
-
-### Inclui
-- `conversations`;
-- `messages`;
-- inbound via webhook;
-- persistência de mensagens;
-- outbound básico;
-- assignment inicial;
-- status de conversa.
-
-### Não Inclui
-- tasks;
-- alerts derivados complexos;
-- dashboard;
-- IA avançada.
+- Reescrita de arquitetura
+- Novos domínios de negócio
+- Migração para outro stack
 
 ### Dependências
-- Phase 0 completa.
+- Phases 0-8 concluídas.
 
 ### Critério de Entrada
-- banco, migrations e estrutura de módulos prontos;
-- base mínima de auth e API disponível;
-- contratos de integração e data model aprovados.
+- CI verde
+- Todas as fases anteriores estáveis
+- Gap analysis validado
 
 ### Critério de Saída
-- mensagem inbound entra e é persistida;
-- mensagem outbound sai com rastreabilidade básica;
-- conversa possui lifecycle mínimo;
-- assignment e status deixam estado atual e histórico coerentes.
+- Scorecard 95/100 em todas as frentes
+- 15/15 validation checklist itens passando
+- Coverage ≥80% em modules core
+- Stress test passando
 
-## 7. Phase 2 — Operations
+---
+
+## 6. Phase 8 — Refinement & Deployment
+
+> Status: **CONCLUÍDA**
 
 ### Objetivo
-Adicionar operação interna acima do chat.
-
-### Inclui
-- tasks;
-- notes;
-- alerts básicos;
-- vínculo com conversa, tutor e patient.
-
-### Não Inclui
-- automação complexa;
-- analytics avançado;
-- materialização de métricas.
-
-### Dependências
-- Phase 1 completa.
-
-### Critério de Entrada
-- chat persistido e estável;
-- modelo de contexto operacional disponível;
-- trilha mínima de estado atual e histórico já confiável.
+Refinar detalhes finais e preparar deployment.
 
 ### Critério de Saída
-- tasks funcionam;
-- notes operacionais estão disponíveis;
-- alerts básicos funcionam;
-- operação interna consegue atuar sobre conversa e contexto associado.
+- Sistema estável;
+- documentado;
+- pronto para operação.
 
-## 8. Phase 3 — Integrations + Secretary
+---
 
-### Objetivo
-Integrar IA e automação controlada sem quebrar o core.
+## 7. Dependências Críticas
 
-### Inclui
-- `secretary-adapter`;
-- handoff bot ↔ humano;
-- chamadas controladas para IA;
-- fallback seguro;
-- eventos básicos ligados à invocação da Secretary.
-
-### Não Inclui
-- autonomia irrestrita;
-- decisões críticas sem controle;
-- expansão para HIS ou CRM completo.
-
-### Dependências
-- Phase 1 completa;
-- Phase 2 completa;
-- eventos básicos já disponíveis ou prontos para serem introduzidos sem inverter dependência.
-
-### Critério de Entrada
-- core de chat estável;
-- operação interna já persistida;
-- contratos de integração e segurança de fronteira definidos.
-
-### Critério de Saída
-- IA integrada por adapter dedicado;
-- handoff rastreável;
-- fallback operacional definido;
-- integração não contamina o core com payload cru.
-
-## 9. Phase 4 — Realtime
-
-### Objetivo
-Atualizar a UI em tempo real a partir de estado já aceito pelo backend.
-
-### Inclui
-- `realtime-service` como runtime ou papel operacional equivalente;
-- eventos internos -> frontend;
-- atualização de inbox;
-- atualização de conversa;
-- reconciliação incremental na UI.
-
-### Não Inclui
-- lógica de negócio no realtime;
-- bootstrap de estado pelo canal realtime;
-- cálculo de KPI no frontend.
-
-### Dependências
-- eventos estruturados;
-- persistência estável do core;
-- Phase 1 completa no mínimo;
-- preferencialmente Phase 2 completa para que projeções relevantes já existam.
-
-### Critério de Entrada
-- envelope de eventos definido;
-- papéis entre API, worker e realtime claros;
-- frontend preparado para consumir projeção sem virar fonte da verdade.
-
-### Critério de Saída
-- UI reflete eventos em tempo real;
-- reconnect e revalidação não quebram a consistência;
-- realtime continua sendo apenas projeção.
-
-## 10. Phase 5 — Dashboard + Observability
-
-### Objetivo
-Dar visibilidade operacional e gerencial confiável.
-
-### Inclui
-- KPIs definidos;
-- queries agregadas;
-- logs estruturados;
-- audit logs;
-- health e readiness;
-- troubleshooting mínimo viável;
-- alertas operacionais básicos.
-
-### Não Inclui
-- BI avançado;
-- machine learning;
-- analytics analítico fora do escopo atual.
-
-### Dependências
-- data model estável o suficiente para agregação;
-- eventos consistentes;
-- flows principais já persistidos;
-- critérios de audit e observabilidade já definidos.
-
-### Critério de Entrada
-- chat e operações já geram estado confiável;
-- eventos e correlação mínima estão definidos;
-- KPIs já têm fonte e fórmula explícitas.
-
-### Critério de Saída
-- métricas confiáveis;
-- troubleshooting mínimo possível;
-- health e readiness deixam o serviço operável;
-- logs e audit diferenciam claramente governança de diagnóstico técnico.
-
-## 11. Phase 6 — Hardening + Production Readiness
-
-### Objetivo
-Preparar o sistema para produção real.
-
-### Inclui
-- segurança endurecida;
-- rate limiting;
-- retry controlado;
-- observabilidade mais madura;
-- performance tuning;
-- políticas de fallback revisadas;
-- readiness operacional para produção.
-
-### Dependências
-- todas as fases anteriores.
-
-### Critério de Entrada
-- core funcional;
-- integrações controladas;
-- realtime e dashboard mínimos estáveis;
-- segurança, audit e observabilidade já presentes em nível básico.
-
-### Critério de Saída
-- sistema estável;
-- auditável;
-- observável;
-- operável em produção.
-
-## 12. Dependências Críticas
-
-### 12.1 Ordem Obrigatória
+### 7.1 Ordem Obrigatória
 - data model -> backend -> events -> realtime -> dashboard.
 
-### 12.2 Relações-Chave
+### 7.2 Relações-Chave
 - `messages` depende de `conversations`;
 - tasks dependem de `conversation`, `tutor` ou `patient`;
 - alerts dependem de eventos e estado operacional já persistido;
@@ -338,16 +177,10 @@ Preparar o sistema para produção real.
 - realtime depende de eventos e contratos internos consistentes;
 - frontend operacional depende de backend e contratos estáveis.
 
-## 13. O Que Não Fazer
-- construir UI completa antes da API;
-- criar eventos sem persistência;
-- usar realtime como fonte de verdade;
-- integrar IA antes do core estar estável;
-- criar dashboard sem definição de KPI;
-- criar tabela sem domínio claro;
-- introduzir worker antes de existir estado primário bem definido na API.
+---
 
-## 14. Critérios de Qualidade por Fase
+## 8. Critérios de Qualidade por Fase
+
 Cada fase deve:
 - não quebrar a anterior;
 - ser testável isoladamente;
@@ -356,24 +189,26 @@ Cada fase deve:
 - ter fallback seguro;
 - preservar coerência com os documentos já endurecidos.
 
-## 15. Regra de Execução
+---
+
+## 9. Regra de Execução
+
 Antes de iniciar qualquer fase, é obrigatório:
 - verificar dependências;
 - validar documentos anteriores;
 - confirmar ausência de conflito estrutural;
 - evitar implementar fora da fase atual.
 
-Se uma fase exigir componente ainda inexistente em fase anterior:
-- a dependência deve ser resolvida antes;
-- ou o roadmap deve ser atualizado explicitamente;
-- nunca deve ser resolvida por atalho ad hoc.
+---
 
-## 16. Regra de Precedência
-Este documento orienta:
-- ordem de implementação;
-- dependências;
-- sequência de desenvolvimento.
+## 10. Referências
 
-Se houver conflito entre execução e este roadmap:
-- corrigir a execução;
-- ou atualizar o roadmap explicitamente antes de prosseguir.
+- **Plano para 95/100:** `docs/72-roadmap-95-porcento.md`
+- **Backlog detalhado:** `docs/73-backlog-95-porcento.md`
+- **Relatório de gap:** `docs/71-relatorio-documentacao-vs-implementacao.md`
+- **Validation checklist:** `docs/16-validation-checklist.md`
+- **Dashboard KPIs:** `docs/13-dashboard-and-kpis.md`
+
+---
+
+**Última atualização:** 2026-04-24

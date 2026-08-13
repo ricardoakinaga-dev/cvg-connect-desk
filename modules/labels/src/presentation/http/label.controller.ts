@@ -1,7 +1,14 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, type FastifyRequest } from 'fastify';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
+import type { CreateLabelInput, UpdateLabelInput } from '../../types';
+
+type AuthenticatedRequest = FastifyRequest & { user?: { id?: string } };
+
+function getUserId(request: FastifyRequest): string | undefined {
+  return (request as AuthenticatedRequest).user?.id;
+}
 
 export async function registerLabelRoutes(app: FastifyInstance) {
   // Listar todas as labels
@@ -37,7 +44,7 @@ export async function registerLabelRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const result = await useCases.createLabel(request.body as any);
+    const result = await useCases.createLabel(request.body as CreateLabelInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -56,7 +63,7 @@ export async function registerLabelRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const result = await useCases.updateLabel(id, request.body as any);
+    const result = await useCases.updateLabel(id, request.body as UpdateLabelInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -117,7 +124,7 @@ export async function registerLabelRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const { labelId } = request.body as { labelId: string };
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.addConversationLabel(id, labelId, userId);
     if (result.isErr()) {
       const e = result.error;
@@ -175,7 +182,7 @@ export async function registerLabelRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const { labelId } = request.body as { labelId: string };
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.addContactLabel(id, labelId, userId);
     if (result.isErr()) {
       const e = result.error;

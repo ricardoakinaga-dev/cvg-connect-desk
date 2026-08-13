@@ -61,13 +61,16 @@ services:
       REDIS_URL: redis://redis:6379
       PORT: 3000
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório em produção}
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
       SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-100}
+      RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-1 minute}
       SECRETARY_TIMEOUT_MS: ${SECRETARY_TIMEOUT_MS:-30000}
       WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
-      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      CORS_ORIGIN: ${CORS_ORIGIN:?CORS_ORIGIN é obrigatório em produção}
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
@@ -116,6 +119,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
       REDIS_URL: redis://redis:6379
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      WORKER_HEALTH_PORT: ${WORKER_HEALTH_PORT:-9090}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
@@ -127,6 +131,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
     networks:
       - internal
 
@@ -141,6 +151,7 @@ services:
       REALTIME_PORT: 8080
       REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
       DESK_API_URL: http://desk-api:3000
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:

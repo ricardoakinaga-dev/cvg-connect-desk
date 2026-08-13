@@ -56,7 +56,6 @@ export class SecretaryClient {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        const errorBody = await response.text();
         return err(new AppError(
           `Secretary API error: ${response.status}`,
           response.status,

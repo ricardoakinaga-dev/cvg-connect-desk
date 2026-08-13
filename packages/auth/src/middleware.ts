@@ -2,6 +2,8 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { authRepository } from './infrastructure/repositories/auth.repository';
+import { getRequestSessionToken } from './session-cookies';
+import { cacheAuthUser, getCachedAuthUser } from './auth-cache';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -15,22 +17,23 @@ declare module 'fastify' {
 }
 
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
-  const authHeader = request.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const token = getRequestSessionToken(request);
+
+  if (!token) {
     return reply.status(401).send({
       error: 'UNAUTHORIZED',
       message: 'Missing token',
     });
   }
 
-  const token = authHeader.substring(7);
-  
+  const cachedUser = getCachedAuthUser(token);
+  if (cachedUser) {
+    request.user = cachedUser;
+    return;
+  }
+
   try {
-    const [session] = await db
-      .select()
-      .from(schema.sessions)
-      .where(eq(schema.sessions.token, token));
+    const session = await authRepository.findSessionByToken(token);
 
     if (!session) {
       return reply.status(401).send({
@@ -66,6 +69,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
       name: user.name,
       roles,
     };
+    cacheAuthUser(token, request.user, session.expiresAt);
   } catch (error) {
     request.log.error(error, 'Authentication failed');
     return reply.status(500).send({

@@ -1,66 +1,11 @@
-import { expect, type Page } from '@playwright/test';
-import { db, schema } from '@cvg/database';
+import { type Page } from '@playwright/test';
+const { db, schema } = await import('../../packages/database/src/index.ts');
 import { eq, and } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 
-export const ADMIN_EMAIL = 'admin@cvg.com';
-export const ADMIN_PASSWORD = 'admin123';
-let cachedAdminAuthStorage: string | null = null;
 
-type AuthStorageState = {
-  state: {
-    token: string;
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      roles: string[];
-    };
-    isAuthenticated: boolean;
-  };
-  version: number;
-};
-
-async function seedAdminSession(): Promise<string> {
-  const [adminUser] = await db
-    .select()
-    .from(schema.users)
-    .where(eq(schema.users.email, ADMIN_EMAIL))
-    .limit(1);
-
-  if (!adminUser) {
-    throw new Error(`Admin user ${ADMIN_EMAIL} not found`);
-  }
-
-  const userRoles = await db
-    .select({ roleId: schema.userRoles.roleId, roleName: schema.roles.name })
-    .from(schema.userRoles)
-    .innerJoin(schema.roles, eq(schema.roles.id, schema.userRoles.roleId))
-    .where(eq(schema.userRoles.userId, adminUser.id));
-
-  const token = randomUUID();
-  await db.insert(schema.sessions).values({
-    userId: adminUser.id,
-    token,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
-
-  const authStorage: AuthStorageState = {
-    state: {
-      token,
-      user: {
-        id: adminUser.id,
-        email: adminUser.email,
-        name: adminUser.name,
-        roles: userRoles.map(role => role.roleName),
-      },
-      isAuthenticated: true,
-    },
-    version: 0,
-  };
-
-  return JSON.stringify(authStorage);
-}
+export const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL || process.env.E2E_ADMIN_EMAIL || 'e2e-admin@cvg.test';
+export const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD || process.env.E2E_ADMIN_PASSWORD || 'E2eSmokePass!2026';
 
 /**
  * E2E Conversation Fixture — creates a stable contact + conversation + message
@@ -129,7 +74,7 @@ export async function ensureE2EConversation(): Promise<{
   } else {
     // Ensure the conversation is assigned to admin and has a sector
     const updates: Record<string, unknown> = { updatedAt: new Date() };
-    if (!conversation.assignedUserId && adminUser?.id) updates.assignedUserId = adminUser.id;
+    if (conversation.assignedUserId !== adminUser?.id && adminUser?.id) updates.assignedUserId = adminUser.id;
     if (!conversation.sectorId && preferredSector?.id) updates.sectorId = preferredSector.id;
     if (Object.keys(updates).length > 1) {
       [conversation] = await db
@@ -165,17 +110,17 @@ export async function ensureE2EConversation(): Promise<{
   return { conversationId: conversation.id, contactId: contact.id };
 }
 
-export async function loginAsAdmin(page: Page) {
-  if (cachedAdminAuthStorage) {
-    await page.addInitScript(storage => {
-      localStorage.setItem('auth-storage', storage);
-    }, cachedAdminAuthStorage);
-    return cachedAdminAuthStorage;
+export async function loginAsAdmin(page: Page): Promise<string> {
+  await page.goto('/login');
+  await page.getByPlaceholder('Email').fill(ADMIN_EMAIL);
+  await page.getByPlaceholder('Senha').fill(ADMIN_PASSWORD);
+  await page.getByRole('button', { name: 'Entrar' }).click();
+  await page.waitForURL('**/inbox');
+
+  const sessionCookie = (await page.context().cookies()).find(cookie => cookie.name === 'cvg_session');
+  if (!sessionCookie) {
+    throw new Error('Login did not set the cvg_session cookie');
   }
 
-  cachedAdminAuthStorage = await seedAdminSession();
-  await page.addInitScript(storage => {
-    localStorage.setItem('auth-storage', storage);
-  }, cachedAdminAuthStorage);
-  return cachedAdminAuthStorage;
+  return sessionCookie.value;
 }

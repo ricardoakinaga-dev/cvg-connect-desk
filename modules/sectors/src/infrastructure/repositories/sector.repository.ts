@@ -1,7 +1,9 @@
 import { db } from '@cvg/database';
-import { sectors, conversations, contactSectors } from '@cvg/database';
-import { eq, and, count, sql } from 'drizzle-orm';
-import type { CreateSectorInput, UpdateSectorInput } from '../types';
+import { sectors, conversations } from '@cvg/database';
+import { eq, and, count } from 'drizzle-orm';
+import type { CreateSectorInput, UpdateSectorInput } from '../../types';
+
+type ConversationStatusV2 = typeof conversations.statusV2.enumValues[number];
 
 export class SectorRepository {
   async findAll(activeOnly = true) {
@@ -39,7 +41,7 @@ export class SectorRepository {
 
   async getConversations(sectorId: string, status?: string) {
     const conditions = [eq(conversations.sectorId, sectorId)];
-    if (status) conditions.push(eq(conversations.statusV2, status as any));
+    if (status) conditions.push(eq(conversations.statusV2, status as ConversationStatusV2));
     return db.select().from(conversations).where(and(...conditions));
   }
 

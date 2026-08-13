@@ -10,6 +10,11 @@ import {
 } from '@cvg/events';
 import { createAlert } from '@cvg/alerts';
 import { recordWorkerDeadLetter } from './dead-letter';
+import { createLogger } from '@cvg/shared';
+import { createNoOverlapPoller } from './polling';
+import { startWorkerHealthServer } from './health';
+
+const logger = createLogger({ service: 'worker' });
 
 const RETRY_CONFIG: RetryConfig = {
   maxRetries: 3,
@@ -33,16 +38,14 @@ async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
     triggeredBy?: string;
   };
 
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing handoff.completed',
+  logger.info('[Worker] Processing handoff.completed', {
     event_type: event.event_type,
     event_id: event.event_id,
     correlation_id: event.correlation_id,
     conversation_id: payload.conversationId,
     previousHandler: payload.previousHandler,
     newHandler: payload.newHandler,
-    level: 'info',
-  }));
+  });
 
   if (payload.newHandler === 'human' && payload.reason) {
     const alertResult = await createAlert({
@@ -60,12 +63,10 @@ async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
     });
 
     if (alertResult.isErr()) {
-      console.error(JSON.stringify({
-        msg: '[Worker] Failed to create alert for handoff',
+      logger.error('[Worker] Failed to create alert for handoff', {
         conversation_id: payload.conversationId,
         error: alertResult.error.message,
-        level: 'error',
-      }));
+      });
     }
   }
 }
@@ -78,20 +79,17 @@ async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
     errorMessage?: string;
   };
 
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing secretary.invocation',
+  logger.info('[Worker] Processing secretary.invocation', {
     event_type: event.event_type,
     event_id: event.event_id,
     correlation_id: event.correlation_id,
     conversation_id: payload.conversationId,
     action: payload.action,
     status: payload.status,
-    level: 'info',
-  }));
+  });
 
   if (payload.status === 'failed' && payload.errorMessage) {
-    console.warn(JSON.stringify({
-      msg: '[Worker] Secretary invocation failed',
+    logger.warn('[Worker] Secretary invocation failed', {
       event_type: event.event_type,
       event_id: event.event_id,
       correlation_id: event.correlation_id,
@@ -99,8 +97,7 @@ async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
       action: payload.action,
       status: payload.status,
       error: payload.errorMessage,
-      level: 'warn',
-    }));
+    });
     const alertResult = await createAlert({
       conversationId: payload.conversationId,
       type: 'system',
@@ -114,12 +111,10 @@ async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
     });
 
     if (alertResult.isErr()) {
-      console.error(JSON.stringify({
-        msg: '[Worker] Failed to create alert for secretary failure',
+      logger.error('[Worker] Failed to create alert for secretary failure', {
         conversation_id: payload.conversationId,
         error: alertResult.error.message,
-        level: 'error',
-      }));
+      });
     }
   }
 }
@@ -131,15 +126,13 @@ async function handleMessagePersisted(event: EventEnvelope): Promise<void> {
     content: string;
   };
 
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing message.persisted',
+  logger.debug('[Worker] Processing message.persisted', {
     event_type: event.event_type,
     event_id: event.event_id,
     correlation_id: event.correlation_id,
     conversation_id: payload.conversationId,
     direction: payload.direction,
-    level: 'debug',
-  }));
+  });
 }
 
 const handlers: Record<string, (event: EventEnvelope) => Promise<void>> = {
@@ -150,15 +143,13 @@ const handlers: Record<string, (event: EventEnvelope) => Promise<void>> = {
 
 async function processEventFromOutbox(eventId: string, event: EventEnvelope): Promise<void> {
   const handler = handlers[event.event_type];
-  
+
   if (!handler) {
-    console.warn(JSON.stringify({
-      msg: '[Worker] No handler for event type, acknowledging without processing',
+    logger.warn('[Worker] No handler for event type, acknowledging without processing', {
       event_type: event.event_type,
       event_id: event.event_id,
       correlation_id: event.correlation_id,
-      level: 'warn',
-    }));
+    });
     await workerReader.acknowledge(eventId);
     return;
   }
@@ -168,14 +159,12 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
   while (true) {
     try {
       await handler(event);
-      console.info(JSON.stringify({
-        msg: '[Worker] Successfully processed event',
+      logger.info('[Worker] Successfully processed event', {
         event_type: event.event_type,
         event_id: event.event_id,
         correlation_id: event.correlation_id,
         handler: handler.name || event.event_type,
-        level: 'info',
-      }));
+      });
       await workerReader.acknowledge(eventId);
       break;
     } catch (error) {
@@ -184,8 +173,7 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
       const updatedContext = createRetryContext(event, event.event_type, failureCount, err);
 
       if (!shouldRetry(updatedContext, RETRY_CONFIG)) {
-        console.error(JSON.stringify({
-          msg: '[Worker] Non-retryable error — sending to dead-letter',
+        logger.error('[Worker] Non-retryable error — sending to dead-letter', {
           event_type: event.event_type,
           event_id: event.event_id,
           correlation_id: event.correlation_id,
@@ -194,10 +182,9 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
           retry_count: failureCount,
           retry_decision: 'dead-letter',
           failure_stage: 'worker-terminal',
-          level: 'error',
-        }));
+        });
         await workerReader.acknowledgeWithError(eventId, err.message);
-        recordWorkerDeadLetter({
+        await recordWorkerDeadLetter({
           event,
           error: err.message,
           retryCount: failureCount,
@@ -209,8 +196,7 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
       attempt = failureCount;
       const delay = calculateNextDelay(RETRY_CONFIG, attempt);
 
-      console.warn(JSON.stringify({
-        msg: '[Worker] Retrying event after error',
+      logger.warn('[Worker] Retrying event after error', {
         event_type: event.event_type,
         event_id: event.event_id,
         correlation_id: event.correlation_id,
@@ -219,12 +205,10 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
         max_retries: RETRY_CONFIG.maxRetries,
         delay_ms: delay,
         error: err.message,
-        level: 'warn',
-      }));
+      });
 
       if (attempt >= RETRY_CONFIG.maxRetries) {
-        console.error(JSON.stringify({
-          msg: '[Worker] Max retries exceeded — sending to dead-letter',
+        logger.error('[Worker] Max retries exceeded — sending to dead-letter', {
           event_type: event.event_type,
           event_id: event.event_id,
           correlation_id: event.correlation_id,
@@ -234,10 +218,9 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
           max_retries: RETRY_CONFIG.maxRetries,
           retry_decision: 'dead-letter',
           failure_stage: 'worker-terminal',
-          level: 'error',
-        }));
+        });
         await workerReader.acknowledgeWithError(eventId, err.message);
-        recordWorkerDeadLetter({
+        await recordWorkerDeadLetter({
           event,
           error: err.message,
           retryCount: attempt,
@@ -253,25 +236,31 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
 
 async function startWorker(): Promise<void> {
   const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS) || 500;
+  const healthPort = Number(process.env.WORKER_HEALTH_PORT) || 9090;
 
-  console.info(JSON.stringify({
-    msg: '[Worker] Starting message worker',
+  const healthServer = startWorkerHealthServer(healthPort);
+  healthServer.on('error', (error) => {
+    logger.fatal('[Worker] Health server failed', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    process.exit(1);
+  });
+
+  logger.info('[Worker] Starting message worker', {
     consumer_id: CONSUMER_IDS.WORKER,
     handlers: ['handoff.completed', 'secretary.invocation', 'message.persisted'],
     poll_interval_ms: outboxPollInterval,
-    level: 'info',
-  }));
+    health_port: healthPort,
+  });
 
-  setInterval(async () => {
+  createNoOverlapPoller(async () => {
     try {
       const pendingEvents = await workerReader.fetchPendingEvents();
 
       if (pendingEvents.length > 0) {
-        console.info(JSON.stringify({
-          msg: '[Worker] Fetched pending events from outbox',
+        logger.info('[Worker] Fetched pending events from outbox', {
           count: pendingEvents.length,
-          level: 'info',
-        }));
+        });
 
         for (const outboxEvent of pendingEvents) {
           const eventEnvelope = workerReader.toEventEnvelope(outboxEvent);
@@ -279,42 +268,29 @@ async function startWorker(): Promise<void> {
         }
       }
     } catch (error) {
-      console.error(JSON.stringify({
-        msg: '[Worker] Error polling outbox',
+      logger.error('[Worker] Error polling outbox', {
         error: (error as Error).message,
-        level: 'error',
-      }));
+      });
     }
   }, outboxPollInterval);
 
-  console.info(JSON.stringify({
-    msg: '[Worker] Worker started successfully',
-    level: 'info',
-  }));
+  logger.info('[Worker] Worker started successfully');
 }
 
 startWorker().catch(error => {
-  console.error(JSON.stringify({
-    msg: '[Worker] Failed to start worker',
+  logger.fatal('[Worker] Failed to start worker', {
     error: error instanceof Error ? error.message : String(error),
-    level: 'error',
-  }));
+  });
   process.exit(1);
 });
 
 process.on('SIGTERM', () => {
-  console.info(JSON.stringify({
-    msg: '[Worker] Received SIGTERM, shutting down gracefully',
-    level: 'info',
-  }));
+  logger.info('[Worker] Received SIGTERM, shutting down gracefully');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.info(JSON.stringify({
-    msg: '[Worker] Received SIGINT, shutting down gracefully',
-    level: 'info',
-  }));
+  logger.info('[Worker] Received SIGINT, shutting down gracefully');
   process.exit(0);
 });
 

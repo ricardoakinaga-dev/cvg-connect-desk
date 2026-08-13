@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import crypto from 'crypto';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
@@ -25,6 +25,7 @@ describe('Webhook security stats integration', () => {
     process.env.NODE_ENV = 'production';
     process.env.DESK_ENV = 'production';
     process.env.WEBHOOK_SECRET = secret;
+    process.env.CORS_ORIGIN = 'http://localhost:5173';
 
     app = await buildDeskApiApp();
     await app.ready();
@@ -68,7 +69,7 @@ describe('Webhook security stats integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -79,18 +80,26 @@ describe('Webhook security stats integration', () => {
   afterAll(async () => {
     resetWebhookSecurityStats();
     await cleanupWebhookArtifacts();
-    await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
-    await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
-    await db.delete(schema.users).where(eq(schema.users.id, userId));
+    if (userId) {
+      await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
+      await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
+      await db.delete(schema.users).where(eq(schema.users.id, userId));
+    }
 
     if (createdRole && roleId) {
       await db.delete(schema.roles).where(eq(schema.roles.id, roleId));
     }
 
     await app.close();
+    process.env.NODE_ENV = 'test';
+    process.env.DESK_ENV = '';
+    process.env.WEBHOOK_SECRET = '';
+    process.env.CORS_ORIGIN = '';
   });
 
   async function cleanupWebhookArtifacts(): Promise<void> {
+    await db.delete(schema.webhookSecurityEvents);
+
     const [conversation] = await db
       .select({ id: schema.conversations.id })
       .from(schema.conversations)
@@ -162,7 +171,7 @@ describe('Webhook security stats integration', () => {
     const statsResponse = await app.inject({
       method: 'GET',
       url: '/admin/webhook-security/stats',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(statsResponse.statusCode).toBe(200);

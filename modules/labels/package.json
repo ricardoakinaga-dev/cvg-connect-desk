@@ -5,16 +5,19 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "echo 'labels module'",
-    "build": "echo build",
-    "lint": "echo lint",
-    "test": "vitest run --passWithNoTests"
+    "build": "node ../../scripts/verify-package-source.mjs",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "node ../../scripts/typecheck-package.mjs"
   },
   "dependencies": {
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "@cvg/auth": "workspace:*"
+    "@cvg/auth": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "fastify": "^5.8.5"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

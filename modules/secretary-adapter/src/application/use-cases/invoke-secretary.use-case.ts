@@ -1,6 +1,6 @@
 import { ok, err, type Result } from '@cvg/shared';
 import { AppError } from '@cvg/shared';
-import { getSecretaryClient, type SecretaryResponse } from '@cvg/integrations';
+import { getSecretaryClient } from '@cvg/integrations';
 import { buildSecretaryRequest, handleSecretaryResponse, validateSecretaryResponse } from '../../infrastructure';
 import { publishSecretaryInvocation } from './secretary-publisher';
 

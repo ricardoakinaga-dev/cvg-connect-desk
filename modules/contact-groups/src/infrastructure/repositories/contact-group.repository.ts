@@ -1,7 +1,7 @@
 import { db } from '@cvg/database';
 import { contactGroups, contactGroupMembers, contacts } from '@cvg/database';
 import { eq, and, count } from 'drizzle-orm';
-import type { CreateGroupInput } from '../types';
+import type { CreateGroupInput } from '../../types';
 
 export class ContactGroupRepository {
   async findAll() {

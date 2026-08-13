@@ -1,7 +1,14 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, type FastifyRequest } from 'fastify';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
+import type { CreateGroupInput } from '../../types';
+
+type AuthenticatedRequest = FastifyRequest & { user?: { id?: string } };
+
+function getUserId(request: FastifyRequest): string | undefined {
+  return (request as AuthenticatedRequest).user?.id;
+}
 
 export async function registerContactGroupRoutes(app: FastifyInstance) {
   // Listar grupos
@@ -29,13 +36,8 @@ export async function registerContactGroupRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const userId = (request.user as any)?.id;
-    const result = await useCases.createGroup(request.body as any, userId);
-    if (result.isErr()) {
-      const e = result.error;
-      if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
-      return reply.status(500).send({ error: 'INTERNAL_ERROR' });
-    }
+    const userId = getUserId(request);
+    const result = await useCases.createGroup(request.body as CreateGroupInput, userId);
     return reply.status(201).send(result.value);
   });
 
@@ -45,7 +47,7 @@ export async function registerContactGroupRoutes(app: FastifyInstance) {
     schema: { description: 'Atualizar grupo', tags: ['Contact Groups'], security: [{ bearerAuth: [] }] },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const result = await useCases.updateGroup(id, request.body as any);
+    const result = await useCases.updateGroup(id, request.body as Partial<CreateGroupInput>);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -94,7 +96,7 @@ export async function registerContactGroupRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const { contactId } = request.body as { contactId: string };
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.addGroupMember(id, contactId, userId);
     if (result.isErr()) {
       const e = result.error;

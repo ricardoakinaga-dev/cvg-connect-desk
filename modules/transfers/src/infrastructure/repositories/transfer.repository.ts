@@ -2,6 +2,8 @@ import { db } from '@cvg/database';
 import { contactTransfers, conversations, contactSectors } from '@cvg/database';
 import { eq, and } from 'drizzle-orm';
 
+type ContactTransferStatus = typeof contactTransfers.status.enumValues[number];
+
 export class TransferRepository {
   async create(data: {
     contactId: string;
@@ -11,6 +13,7 @@ export class TransferRepository {
     fromUserId?: string;
     toUserId?: string;
     reason?: string;
+    status?: ContactTransferStatus;
   }) {
     const [transfer] = await db.insert(contactTransfers).values(data).returning();
     return transfer;

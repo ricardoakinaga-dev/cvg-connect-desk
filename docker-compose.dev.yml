@@ -1,5 +1,4 @@
 # docker-compose.dev.yml — Desenvolvimento (mantém volumes bind para hot-reload)
-version: '3.8'
 
 services:
   postgres:
@@ -59,6 +58,13 @@ services:
       SECRETARY_URL: ${SECRETARY_URL:-}
       SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
       JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:-dev-internal-events-secret}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-100}
+      RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-1 minute}
+      AUTH_CACHE_TTL_MS: ${AUTH_CACHE_TTL_MS:-60000}
+      HEALTH_CACHE_TTL_MS: ${HEALTH_CACHE_TTL_MS:-10000}
+      DASHBOARD_SUMMARY_CACHE_TTL_MS: ${DASHBOARD_SUMMARY_CACHE_TTL_MS:-10000}
+      GET_RESPONSE_CACHE_TTL_MS: ${GET_RESPONSE_CACHE_TTL_MS:-10000}
     volumes:
       - .:/app
       - /app/node_modules
@@ -83,15 +89,17 @@ services:
     image: node:20-alpine
     working_dir: /app
     environment:
+      CI: "true"
       VITE_API_URL: /api
       DOCKER: "true"
     volumes:
       - .:/app
+      - /app/node_modules
     ports:
       - "8081:5173"
     depends_on:
       - desk-api
-    command: sh -c "corepack enable && pnpm --filter @cvg/desk-web exec vite --host 0.0.0.0 --port 5173"
+    command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile --config.confirm-modules-purge=false && pnpm --filter @cvg/desk-web exec vite --host 0.0.0.0 --port 5173"
 
   message-worker:
     image: node:20-alpine
@@ -124,7 +132,10 @@ services:
     environment:
       CI: "true"
       NODE_ENV: development
+      DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
       REDIS_URL: redis://redis:6379
+      DESK_API_URL: http://desk-api:3000
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:-dev-internal-events-secret}
       REALTIME_PORT: 8080
       REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
@@ -139,6 +150,8 @@ services:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      desk-api:
         condition: service_healthy
     command: sh -c "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm install -r --no-lockfile && pnpm --filter @cvg/realtime-service exec tsx src/index.ts"
     healthcheck:

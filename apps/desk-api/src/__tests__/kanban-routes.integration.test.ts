@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -9,22 +9,29 @@ describe('Kanban routes integration', () => {
   const password = 'KanbanRoutePass!42';
   const passwordHash = '$2a$10$kOS6WENS2HZ/vSU96GD62O6aJbj.nc/B5O6Ctp/ecRh1mV5a8BCCO';
   const email = `kanban.integration.${Date.now()}@example.com`;
-  const roleName = `Kanban Integration ${Date.now()}`;
+  const roleName = 'Receptionist';
   const userId = randomUUID();
-  const roleId = randomUUID();
+  let roleId = randomUUID();
   const conversationId = randomUUID();
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
-  let token = '';
+  let sessionCookie = '';
+  let createdRole = false;
 
   beforeAll(async () => {
     app = await buildDeskApiApp();
     await app.ready();
 
-    await db.insert(schema.roles).values({
-      id: roleId,
-      name: roleName,
-      description: 'Role for kanban route integration tests',
-    });
+    const [existingRole] = await db.select().from(schema.roles).where(eq(schema.roles.name, roleName));
+    if (existingRole) {
+      roleId = existingRole.id;
+    } else {
+      await db.insert(schema.roles).values({
+        id: roleId,
+        name: roleName,
+        description: 'Role for kanban route integration tests',
+      });
+      createdRole = true;
+    }
 
     await db.insert(schema.users).values({
       id: userId,
@@ -46,7 +53,7 @@ describe('Kanban routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    sessionCookie = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -66,7 +73,9 @@ describe('Kanban routes integration', () => {
     await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
     await db.delete(schema.auditLogs).where(eq(schema.auditLogs.userId, userId));
     await db.delete(schema.users).where(eq(schema.users.id, userId));
-    await db.delete(schema.roles).where(eq(schema.roles.id, roleId));
+    if (createdRole) {
+      await db.delete(schema.roles).where(eq(schema.roles.id, roleId));
+    }
     await app.close();
   });
 
@@ -74,9 +83,7 @@ describe('Kanban routes integration', () => {
     const response = await app.inject({
       method: 'PATCH',
       url: `/kanban/card/${conversationId}/move`,
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(sessionCookie),
       payload: {
         status: 'finalizado',
       },
@@ -102,9 +109,7 @@ describe('Kanban routes integration', () => {
     const response = await app.inject({
       method: 'PATCH',
       url: `/kanban/card/${randomUUID()}/move`,
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(sessionCookie),
       payload: {
         status: 'finalizado',
       },

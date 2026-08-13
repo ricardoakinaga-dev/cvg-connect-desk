@@ -3,6 +3,7 @@ import { eq, desc, and } from 'drizzle-orm';
 
 export type InternalNote = typeof schema.internalNotes.$inferSelect;
 export type NewInternalNote = typeof schema.internalNotes.$inferInsert;
+type InternalNoteReferenceType = NonNullable<NewInternalNote['referenceType']>;
 
 export const noteRepository = {
   async create(data: NewInternalNote) {
@@ -29,7 +30,7 @@ export const noteRepository = {
       .from(schema.internalNotes)
       .where(
         and(
-          eq(schema.internalNotes.referenceType, referenceType as any),
+          eq(schema.internalNotes.referenceType, referenceType as InternalNoteReferenceType),
           eq(schema.internalNotes.referenceId, referenceId)
         )
       )

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './Contacts.css';
 
 interface Contact {
@@ -21,6 +21,12 @@ interface ContactDetail extends Contact {
   groups: { id: string; name: string; icon: string }[];
 }
 
+interface ContactNote {
+  id: string;
+  content: string;
+  createdAt: string;
+}
+
 export function Contacts() {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -31,7 +37,7 @@ export function Contacts() {
   const [showEdit, setShowEdit] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', phone: '', email: '', notes: '' });
   const [editContact, setEditContact] = useState({ name: '', phone: '', email: '', notes: '' });
-  const [contactNotes, setContactNotes] = useState<any[]>([]);
+  const [contactNotes, setContactNotes] = useState<ContactNote[]>([]);
   const [showNotes, setShowNotes] = useState(false);
   const [newNote, setNewNote] = useState('');
 
@@ -49,7 +55,7 @@ export function Contacts() {
       const data = await api.get<ContactDetail>(`/contacts/${id}`);
       setSelectedContact(data);
       // Buscar notas
-      const notes = await api.get<any[]>(`/notes?referenceType=conversation&referenceId=${data.conversations[0]?.id || 'none'}`).catch(() => []);
+      const notes = await api.get<ContactNote[]>(`/notes?referenceType=conversation&referenceId=${data.conversations[0]?.id || 'none'}`).catch(() => []);
       setContactNotes(notes);
     } catch (err) { console.error('Erro:', err); }
   };
@@ -65,7 +71,7 @@ export function Contacts() {
       setShowCreate(false);
       fetchContacts();
       fetchContactDetail(created.id);
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -75,7 +81,7 @@ export function Contacts() {
       await api.put(`/contacts/${selectedContact.id}`, editContact);
       setShowEdit(false);
       fetchContactDetail(selectedContact.id);
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const handleStartConversation = async () => {
@@ -83,7 +89,7 @@ export function Contacts() {
     try {
       const result = await api.post<{ conversationId: string; isNew: boolean }>(`/contacts/${selectedContact.id}/start-conversation`, {});
       navigate(`/inbox?conversation=${result.conversationId}`);
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const handleAddNote = async () => {
@@ -97,7 +103,7 @@ export function Contacts() {
       setNewNote('');
       setShowNotes(false);
       fetchContactDetail(selectedContact.id);
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const handleDelete = async () => {
@@ -106,7 +112,7 @@ export function Contacts() {
       await api.delete(`/contacts/${selectedContact.id}`);
       setSelectedContact(null);
       fetchContacts();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const openEdit = () => {
@@ -131,8 +137,8 @@ export function Contacts() {
   };
 
   const statusIcon = (s: string) => {
-    const map: Record<string, string> = { novo: '🟢', em_atendimento: '🔵', pendente: '🟡', em_espera: '⏳', finalizado: '✅', arquivado: '📁' };
-    return map[s] || '⚪';
+    const map: Record<string, string> = { novo: 'NV', em_atendimento: 'AT', pendente: 'PD', em_espera: 'ES', finalizado: 'OK', arquivado: 'AR' };
+    return map[s] || '--';
   };
 
   return (
@@ -140,12 +146,12 @@ export function Contacts() {
       {/* COLUNA 1 — Lista */}
       <div className="contacts-col-list">
         <div className="contacts-topbar">
-          <h2>👥 Contatos</h2>
+          <h2>Contatos</h2>
           <button className="btn-new" onClick={() => setShowCreate(true)} title="Novo contato">＋</button>
         </div>
 
         <div className="contacts-search">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon">⌕</span>
           <input placeholder="Buscar por nome, telefone..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
 
@@ -155,7 +161,7 @@ export function Contacts() {
           {loading ? (
             <div className="loading-state"><div className="spinner" /></div>
           ) : contacts.length === 0 ? (
-            <div className="empty-state"><span className="empty-icon">👤</span><p>Nenhum contato encontrado</p>
+            <div className="empty-state"><span className="empty-icon">CT</span><p>Nenhum contato encontrado</p>
               <button className="btn-primary-sm" onClick={() => setShowCreate(true)}>＋ Adicionar contato</button>
             </div>
           ) : (
@@ -183,13 +189,13 @@ export function Contacts() {
               <div className="profile-info">
                 <h2>{selectedContact.name || 'Sem nome'}</h2>
                 <div className="profile-phone">{formatPhone(selectedContact.phone)}</div>
-                {selectedContact.email && <div className="profile-email">📧 {selectedContact.email}</div>}
+                {selectedContact.email && <div className="profile-email">{selectedContact.email}</div>}
               </div>
               <div className="profile-actions">
-                <button className="btn-action-icon" onClick={handleStartConversation} title="Iniciar conversa">💬</button>
-                <button className="btn-action-icon" onClick={openEdit} title="Editar">✏️</button>
-                <button className="btn-action-icon" onClick={() => setShowNotes(!showNotes)} title="Notas">📝</button>
-                <button className="btn-action-icon danger" onClick={handleDelete} title="Excluir">🗑️</button>
+                <button className="btn-action-icon" onClick={handleStartConversation} title="Iniciar conversa">MSG</button>
+                <button className="btn-action-icon" onClick={openEdit} title="Editar">ED</button>
+                <button className="btn-action-icon" onClick={() => setShowNotes(!showNotes)} title="Notas">NT</button>
+                <button className="btn-action-icon danger" onClick={handleDelete} title="Excluir">DEL</button>
               </div>
             </div>
 
@@ -201,7 +207,7 @@ export function Contacts() {
                     <span key={l.id} className="tag-label" style={{ background: l.color + '20', color: l.color }}>{l.name}</span>
                   ))}
                   {selectedContact.groups?.map(g => (
-                    <span key={g.id} className="tag-group">{g.icon} {g.name}</span>
+                    <span key={g.id} className="tag-group">{g.name}</span>
                   ))}
                 </div>
               </div>
@@ -210,14 +216,14 @@ export function Contacts() {
             {/* Notas rápidas */}
             {showNotes && (
               <div className="profile-section notes-section">
-                <h4>📝 Notas do Contato</h4>
+                <h4>Notas do Contato</h4>
                 <div className="add-note">
                   <textarea placeholder="Adicionar nota..." value={newNote} onChange={e => setNewNote(e.target.value)} rows={2} />
                   <button className="btn-primary-sm" onClick={handleAddNote} disabled={!newNote.trim()}>Adicionar</button>
                 </div>
                 {contactNotes.length > 0 ? (
                   <div className="notes-list">
-                    {contactNotes.map((note: any) => (
+                    {contactNotes.map((note) => (
                       <div key={note.id} className="note-item">
                         <div className="note-content">{note.content}</div>
                         <div className="note-date">{formatDate(note.createdAt)}</div>
@@ -233,13 +239,13 @@ export function Contacts() {
             {/* Ação principal */}
             <div className="profile-section">
               <button className="btn-start-chat" onClick={handleStartConversation}>
-                💬 Iniciar Conversa
+                Iniciar Conversa
               </button>
             </div>
 
             {/* Conversas */}
             <div className="profile-section">
-              <h4>💬 Conversas ({selectedContact.conversations.length})</h4>
+              <h4>Conversas ({selectedContact.conversations.length})</h4>
               {selectedContact.conversations.length > 0 ? (
                 <div className="conversations-list">
                   {selectedContact.conversations.map(conv => (
@@ -290,7 +296,7 @@ export function Contacts() {
           </>
         ) : (
           <div className="empty-state profile-empty">
-            <span className="empty-icon-big">👤</span>
+            <span className="empty-icon-big">CT</span>
             <h3>Selecione um contato</h3>
             <p>Escolha um contato na lista para ver o perfil</p>
             <button className="btn-primary" onClick={() => setShowCreate(true)}>＋ Novo Contato</button>
@@ -337,7 +343,7 @@ export function Contacts() {
         <div className="modal-overlay" onClick={() => setShowEdit(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>✏️ Editar Contato</h3>
+              <h3>Editar Contato</h3>
               <button className="btn-close" onClick={() => setShowEdit(false)}>✕</button>
             </div>
             <form className="modal-body" onSubmit={handleUpdate}>

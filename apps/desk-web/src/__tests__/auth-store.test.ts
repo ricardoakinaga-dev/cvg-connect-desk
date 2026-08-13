@@ -41,8 +41,8 @@ describe('Frontend Auth Store Structure', () => {
     expect(content).toContain('user: User | null');
   });
 
-  it('has token state', () => {
-    expect(content).toContain('token: string | null');
+  it('does not keep session token state', () => {
+    expect(content).not.toContain('token: string | null');
   });
 
   it('has isLoading state', () => {
@@ -53,7 +53,8 @@ describe('Frontend Auth Store Structure', () => {
     expect(content).toContain('error: string | null');
   });
 
-  it('stores token in auth-storage', () => {
+  it('persists user state without session token', () => {
     expect(content).toContain("name: 'auth-storage'");
+    expect(content).not.toContain('token: state.token');
   });
 });

@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -57,7 +57,7 @@ describe('Sectors routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -87,7 +87,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/sectors',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -99,7 +99,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/sectors?all=true',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -112,7 +112,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/sectors',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         name: 'Novo Setor',
         code: sectorCode,
@@ -135,7 +135,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/sectors',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         name: 'Setor Duplicado',
         code: testSectorCode, // Already used by testSectorId
@@ -151,7 +151,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/sectors/${testSectorId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Setor Atualizado', description: 'Nova descricao' },
     });
 
@@ -165,7 +165,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/sectors/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Setor Inexistente' },
     });
 
@@ -185,7 +185,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/sectors/${sectorToDelete}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -196,7 +196,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/sectors/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -207,7 +207,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/sectors/${testSectorId}/conversations`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -219,7 +219,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/sectors/${testSectorId}/stats`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -232,7 +232,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/sectors/${fakeId}/stats`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -243,7 +243,7 @@ describe('Sectors routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/sectors/stats/overview',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './Labels.css';
 
 interface Label {
@@ -40,8 +40,8 @@ export function Labels() {
       setNewLabel({ name: '', color: '#4361ee', description: '', category: '' });
       setShowCreate(false);
       fetchLabels();
-    } catch (err) {
-      console.error('Erro ao criar label:', err);
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, 'Erro ao criar label'));
     }
   };
 
@@ -51,8 +51,8 @@ export function Labels() {
       setEditId(null);
       setEditData({});
       fetchLabels();
-    } catch (err) {
-      console.error('Erro ao atualizar label:', err);
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, 'Erro ao atualizar label'));
     }
   };
 
@@ -62,15 +62,15 @@ export function Labels() {
     try {
       await api.delete(`/labels/${id}`);
       fetchLabels();
-    } catch (err: any) {
-      alert(err.message || 'Erro ao deletar label');
+    } catch (err: unknown) {
+      alert(getErrorMessage(err, 'Erro ao deletar label'));
     }
   };
 
   return (
     <div className="labels-page">
       <div className="page-header">
-        <h2>🏷️ Labels</h2>
+        <h2>Labels</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
           {showCreate ? '✕ Cancelar' : '+ Nova Label'}
         </button>
@@ -112,8 +112,8 @@ export function Labels() {
                   <div className="label-actions">
                     {!label.isSystem && (
                       <>
-                        <button className="btn-edit-sm" onClick={() => { setEditId(label.id); setEditData({ name: label.name, color: label.color }); }}>✏️</button>
-                        <button className="btn-delete-sm" onClick={() => handleDelete(label.id, label.isSystem)}>🗑️</button>
+                        <button className="btn-edit-sm" onClick={() => { setEditId(label.id); setEditData({ name: label.name, color: label.color }); }}>ED</button>
+                        <button className="btn-delete-sm" onClick={() => handleDelete(label.id, label.isSystem)}>DEL</button>
                       </>
                     )}
                   </div>

@@ -4,15 +4,19 @@ import { ok, err, type Result } from '@cvg/shared';
 import { NotFoundError, BadRequestError } from '@cvg/shared';
 import { publishMessagePersisted } from '../events/chat-publisher';
 import { createAuditLog } from '@cvg/audit';
+import { getOutboundDeliveryService } from '../outbound-delivery';
 
 export interface SendOutboundMessageInput {
   conversationId: string;
   content: string;
   recipient: string;
   sender?: string;
+  senderType?: 'human' | 'bot' | 'system';
   // Media fields
   mediaUrl?: string;
   mediaType?: string; // 'image', 'audio', 'video', 'document'
+  latitude?: number;
+  longitude?: number;
   mediaMimetype?: string;
   mediaFilename?: string;
   metadata?: Record<string, unknown>;
@@ -34,8 +38,15 @@ export async function sendOutboundMessage(
     }
 
     // Texto ou mídia é obrigatório
-    if (!input.content && !input.mediaUrl) {
+    if (!input.content && !input.mediaUrl && !input.mediaType) {
       return err(new BadRequestError('Content or media is required'));
+    }
+
+    // Validação específica para localização
+    if (input.mediaType === 'location') {
+      if (typeof input.latitude !== 'number' || typeof input.longitude !== 'number') {
+        return err(new BadRequestError('Latitude and longitude are required for location media type'));
+      }
     }
 
     const conversation = await conversationRepository.findById(input.conversationId);
@@ -54,6 +65,7 @@ export async function sendOutboundMessage(
       content: input.content || '',
       recipient: input.recipient,
       sender: input.sender,
+      senderType: input.senderType || 'human',
       status: 'pending',
       // Media fields
       mediaUrl: input.mediaUrl,
@@ -88,7 +100,7 @@ export async function sendOutboundMessage(
       status: message.status,
     });
   } catch (error) {
-    return err(error as Error);
+    return err(new BadRequestError(error instanceof Error ? error.message : 'Failed to send outbound message'));
   }
 }
 
@@ -97,24 +109,18 @@ export async function sendOutboundMessage(
  */
 async function sendViaEvolution(recipient: string, input: SendOutboundMessageInput) {
   try {
-    // Extrair telefone do recipient (pode ser JID ou telefone puro)
+    const deliveryService = getOutboundDeliveryService();
+    if (!deliveryService) {
+      console.warn('[sendViaEvolution] Outbound delivery service not configured');
+      return;
+    }
     const phone = recipient.replace(/@.*$/, '').replace(/\D/g, '');
 
-    // Importar media service do gateway adapter
-    const { mediaService } = await import('@cvg/gateway-adapter');
-
-    let result: { success: boolean; messageId?: string; error?: string };
-
-    if (input.mediaUrl && input.mediaType === 'image') {
-      result = await mediaService.sendImage(phone, input.mediaUrl, input.content);
-    } else if (input.mediaUrl && input.mediaType === 'audio') {
-      result = await mediaService.sendAudio(phone, input.mediaUrl);
-    } else if (input.mediaUrl && input.mediaType === 'document') {
-      result = await mediaService.sendDocument(phone, input.mediaUrl, input.mediaFilename);
-    } else {
-      // Texto simples
-      result = await mediaService.sendText(phone, input.content);
-    }
+    const result = await deliveryService.send({
+      ...input,
+      recipient: phone,
+      content: input.mediaType === 'location' ? formatLocationMessage(input) : input.content,
+    });
 
     if (result.success) {
       console.log(`[sendViaEvolution] Mensagem enviada: ${result.messageId}`);
@@ -124,4 +130,16 @@ async function sendViaEvolution(recipient: string, input: SendOutboundMessageInp
   } catch (error) {
     console.error('[sendViaEvolution] Erro:', error);
   }
+}
+
+function formatLocationMessage(input: SendOutboundMessageInput): string {
+  const lat = input.latitude as number;
+  const lng = input.longitude as number;
+  const coordinates = `${lat.toFixed(6)},${lng.toFixed(6)}`;
+
+  if (input.content?.trim()) {
+    return `[Localização] ${input.content} (${coordinates})`;
+  }
+
+  return `[Localização] ${coordinates}`;
 }

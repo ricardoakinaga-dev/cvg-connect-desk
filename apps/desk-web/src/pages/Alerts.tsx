@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { alertApi, type Alert } from '../lib/api';
+import { alertApi, getErrorMessage, type Alert } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import './Alerts.css';
 
@@ -12,7 +12,7 @@ export function Alerts() {
 
   const fetchAlerts = async () => {
     try {
-      const filters: any = {};
+      const filters: { status?: string; severity?: string } = {};
       if (filterStatus) filters.status = filterStatus;
       if (filterSeverity) filters.severity = filterSeverity;
       const data = await alertApi.list(filters);
@@ -25,19 +25,19 @@ export function Alerts() {
 
   const handleAck = async (id: string) => {
     try { await alertApi.acknowledge(id, user?.id || ''); fetchAlerts(); }
-    catch (err) { console.error('Erro:', err); }
+    catch (err) { alert(getErrorMessage(err, 'Erro ao reconhecer alerta')); }
   };
 
   const handleResolve = async (id: string) => {
     try { await alertApi.resolve(id, user?.id || ''); fetchAlerts(); }
-    catch (err) { console.error('Erro:', err); }
+    catch (err) { alert(getErrorMessage(err, 'Erro ao resolver alerta')); }
   };
 
   const severityConfig: Record<string, { label: string; icon: string; color: string; bg: string; border: string }> = {
-    critical: { label: 'Crítico', icon: '🔴', color: '#dc2626', bg: '#fef2f2', border: '#fca5a5' },
-    error: { label: 'Erro', icon: '🟠', color: '#ea580c', bg: '#fff7ed', border: '#fdba74' },
-    warning: { label: 'Aviso', icon: '🟡', color: '#ca8a04', bg: '#fefce8', border: '#fde047' },
-    info: { label: 'Info', icon: '🔵', color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
+    critical: { label: 'Crítico', icon: 'CR', color: '#dc2626', bg: '#fef2f2', border: '#fca5a5' },
+    error: { label: 'Erro', icon: 'ER', color: '#ea580c', bg: '#fff7ed', border: '#fdba74' },
+    warning: { label: 'Aviso', icon: 'AV', color: '#ca8a04', bg: '#fefce8', border: '#fde047' },
+    info: { label: 'Info', icon: 'IN', color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
   };
 
   const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
@@ -66,7 +66,7 @@ export function Alerts() {
     <div className="alerts-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>🔔 Alertas</h2>
+          <h2>Alertas</h2>
           <p>Monitore alertas operacionais do sistema</p>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function Alerts() {
         <div className="stat-card active"><span className="stat-num">{stats.active}</span><span className="stat-label">Ativos</span></div>
         <div className="stat-card ack"><span className="stat-num">{stats.acknowledged}</span><span className="stat-label">Reconhecidos</span></div>
         <div className="stat-card resolved"><span className="stat-num">{stats.resolved}</span><span className="stat-label">Resolvidos</span></div>
-        {stats.critical > 0 && <div className="stat-card critical"><span className="stat-num">{stats.critical}</span><span className="stat-label">🔴 Críticos</span></div>}
+        {stats.critical > 0 && <div className="stat-card critical"><span className="stat-num">{stats.critical}</span><span className="stat-label">Críticos</span></div>}
       </div>
 
       <div className="filter-bar">
@@ -88,7 +88,7 @@ export function Alerts() {
         </div>
         <div className="filter-group">
           <span className="filter-label">Severidade:</span>
-          {[{ k: '', l: 'Todas' }, { k: 'critical', l: '🔴' }, { k: 'error', l: '🟠' }, { k: 'warning', l: '🟡' }, { k: 'info', l: '🔵' }].map(f => (
+          {[{ k: '', l: 'Todas' }, { k: 'critical', l: 'Crítico' }, { k: 'error', l: 'Erro' }, { k: 'warning', l: 'Aviso' }, { k: 'info', l: 'Info' }].map(f => (
             <button key={f.k} className={`chip ${filterSeverity === f.k ? 'active' : ''}`} onClick={() => setFilterSeverity(f.k)}>{f.l}</button>
           ))}
         </div>
@@ -97,7 +97,7 @@ export function Alerts() {
       {loading ? (
         <div className="loading-state"><div className="spinner" /> Carregando alertas...</div>
       ) : alerts.length === 0 ? (
-        <div className="empty-state"><span className="empty-icon">🔔</span><p>Nenhum alerta encontrado</p></div>
+        <div className="empty-state"><span className="empty-icon">AL</span><p>Nenhum alerta encontrado</p></div>
       ) : (
         <div className="alert-list">
           {alerts.map(alert => {
@@ -118,20 +118,20 @@ export function Alerts() {
                   <div className="alert-meta">
                     <span className="alert-type">{alert.type}</span>
                     <span className="alert-time">{timeAgo(alert.createdAt)}</span>
-                    {alert.acknowledgedAt && <span className="alert-ack">👁️ {timeAgo(alert.acknowledgedAt)}</span>}
-                    {alert.resolvedAt && <span className="alert-resolved">✅ {timeAgo(alert.resolvedAt)}</span>}
+                    {alert.acknowledgedAt && <span className="alert-ack">Reconhecido {timeAgo(alert.acknowledgedAt)}</span>}
+                    {alert.resolvedAt && <span className="alert-resolved">Resolvido {timeAgo(alert.resolvedAt)}</span>}
                   </div>
                 </div>
 
                 {alert.status === 'active' && (
                   <div className="alert-actions">
-                    <button className="btn-ack" onClick={() => handleAck(alert.id)}>👁️ Reconhecer</button>
-                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>✅ Resolver</button>
+                    <button className="btn-ack" onClick={() => handleAck(alert.id)}>Reconhecer</button>
+                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>Resolver</button>
                   </div>
                 )}
                 {alert.status === 'acknowledged' && (
                   <div className="alert-actions">
-                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>✅ Resolver</button>
+                    <button className="btn-resolve" onClick={() => handleResolve(alert.id)}>Resolver</button>
                   </div>
                 )}
               </div>

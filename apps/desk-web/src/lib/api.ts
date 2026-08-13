@@ -7,6 +7,14 @@ interface ApiError {
   message: string;
 }
 
+const CSRF_COOKIE_NAME = 'cvg_csrf';
+const CSRF_HEADER_NAME = 'X-CSRF-Token';
+const MUTABLE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+export function getErrorMessage(error: unknown, fallback = 'Erro inesperado'): string {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -14,36 +22,39 @@ class ApiClient {
     this.baseUrl = baseUrl;
   }
 
-  private getToken(): string | null {
-    try {
-      const stored = localStorage.getItem('auth-storage');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return parsed.state?.token || null;
-      }
-    } catch {
+  private getCookie(name: string): string | null {
+    if (typeof document === 'undefined') {
       return null;
     }
-    return null;
+
+    const prefix = `${name}=`;
+    const cookie = document.cookie
+      .split(';')
+      .map((part) => part.trim())
+      .find((part) => part.startsWith(prefix));
+
+    return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
   }
 
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const token = this.getToken();
+    const method = (options.method || 'GET').toUpperCase();
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
       ...options.headers,
     };
 
-    if (token) {
-      (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
+    const csrfToken = this.getCookie(CSRF_COOKIE_NAME);
+    if (csrfToken && MUTABLE_METHODS.has(method)) {
+      (headers as Record<string, string>)[CSRF_HEADER_NAME] = csrfToken;
     }
 
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers,
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -117,9 +128,17 @@ export interface Message {
   status: 'pending' | 'sent' | 'delivered' | 'failed';
   externalMessageId: string | null;
   metadata: string | null;
+  mediaType?: 'image' | 'audio' | 'document' | string | null;
+  mediaUrl?: string | null;
   sentAt: string | null;
   deliveredAt: string | null;
   createdAt: string;
+}
+
+export interface ContactSummary {
+  id: string;
+  name: string | null;
+  phone: string | null;
 }
 
 export interface Task {
@@ -247,6 +266,27 @@ export interface WebhookSecurityStats {
   } | null;
 }
 
+export interface OperationalMetrics {
+  generatedAt: string;
+  outbox: {
+    pending: number;
+    retrying: number;
+    oldestCreatedAt: string | null;
+    oldestAgeMs: number;
+  };
+  deadLetter: {
+    unresolved: number;
+    retrying: number;
+    oldestFailedAt: string | null;
+    oldestAgeMs: number;
+  };
+  thresholds: {
+    outboxPending: number;
+    deadLetterUnresolved: number;
+    triggered: string[];
+  };
+}
+
 export interface DeadLetterListResponse {
   data: DeadLetterEntry[];
   stats: DeadLetterStats;
@@ -290,11 +330,12 @@ export interface DashboardSummary {
 }
 
 export const conversationApi = {
-  list: (filters?: { status?: string; queueId?: string; teamId?: string }) => {
+  list: (filters?: { status?: string; queueId?: string; teamId?: string; sectorId?: string }) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.queueId) params.append('queueId', filters.queueId);
     if (filters?.teamId) params.append('teamId', filters.teamId);
+    if (filters?.sectorId) params.append('sectorId', filters.sectorId);
     const query = params.toString() ? `?${params.toString()}` : '';
     return api.get<{ conversations: Conversation[] }>(`/conversations${query}`);
   },
@@ -410,6 +451,10 @@ export const webhookSecurityApi = {
   stats: () => {
     return api.get<WebhookSecurityStats>('/admin/webhook-security/stats');
   },
+};
+
+export const operationalMetricsApi = {
+  get: () => api.get<OperationalMetrics>('/admin/operational/metrics'),
 };
 
 // ============================================

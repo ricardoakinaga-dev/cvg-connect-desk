@@ -5,19 +5,22 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo build",
-    "lint": "echo lint",
+    "build": "node ../../scripts/verify-package-source.mjs",
+    "lint": "eslint src --ext ts,tsx",
     "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "node ../../scripts/typecheck-package.mjs"
   },
   "dependencies": {
     "@cvg/audit": "workspace:*",
     "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "fastify": "^5.0.0"
+    "fastify": "^5.8.5",
+    "@cvg/events": "workspace:*",
+    "drizzle-orm": "0.45.2"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

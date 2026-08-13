@@ -38,6 +38,20 @@ WhatsApp → Evolution API → Gateway → CVG Connect Desk → Agent Secretary 
 
 ## Início Rápido
 
+### Comando rápido
+
+```bash
+pnpm run qa:full-cycle
+```
+
+Para a trilha de evidência, mantenha o padrão de `qa:full-cycle` em `p95=200ms` e, se necessário, execute:
+
+```bash
+QA_P95_THRESHOLD_MS=300 pnpm run qa:full-cycle:archive
+```
+
+Executa em sequência: subir `desk-api` (com rate limit alto), validar saúde da API, rodar `pnpm --filter @cvg/tasks test` e `pnpm test:stress`, imprimindo thresholds do `stress-test/summary.json`.
+
 ### Pré-requisitos
 
 - Node.js >= 20
@@ -176,6 +190,88 @@ pnpm --filter @cvg/shared test
 # Com coverage
 pnpm --filter @cvg/shared test --coverage
 ```
+
+### Ciclo de validação completo (padrão)
+
+Use um único comando para subir a API em `localhost:3000`, rodar testes de `@cvg/tasks` com coverage e executar `k6 stress` (via Docker, sem instalação local de `k6`):
+
+```bash
+pnpm run qa:full-cycle
+```
+
+Opções úteis:
+
+- `TARGET_URL` (padrão: `http://localhost:3000`)
+- `RATE_LIMIT_MAX` (padrão: `50000`)
+- `RATE_LIMIT_WINDOW` (padrão: `1m`)
+- `SUMMARY_PATH` (padrão: `stress-test/summary.json`)
+- `HEALTH_TIMEOUT` (padrão: `180`)
+- `TEARDOWN=1` para encerrar o `desk-api` ao final
+- `COMPOSE_FILE` para apontar outro `docker-compose` (padrão: `docker-compose.dev.yml`)
+- `SUMMARY_PATH` para sobrescrever o caminho de saída do summary (`stress-test/summary.json` por padrão)
+
+### Comando de evidência (P5)
+
+```bash
+pnpm run qa:full-cycle:archive
+```
+
+Este fluxo executa o ciclo completo e persiste:
+
+- log timestampado em `qa-runs/<YYYYMMDD-HHMMSS>/qa-full-cycle.log`
+- resumo da execução em `qa-runs/<YYYYMMDD-HHMMSS>/summary.json`
+- entrada automática em `docs/qa-full-cycle-log.md`
+
+Ambiente customizável para o comando de evidência:
+
+- `QA_EVIDENCE_DIR` para mudar pasta de saída (padrão: `qa-runs`)
+- `QA_DOC_LOG` para mudar arquivo de changelog (padrão: `docs/qa-full-cycle-log.md`)
+- `QA_RUN_TS` e `QA_RUN_DATE` para controlar timestamp e data do registro.
+
+## Checklist de decisão PASS/FAIL (padrão de operação)
+
+Use este checklist toda vez que executar:
+
+```bash
+pnpm run qa:full-cycle
+```
+
+### 1) Pré-requisitos do ambiente
+
+- [ ] `docker` encontrado
+- [ ] `pnpm` encontrado
+- [ ] `curl` encontrado
+- [ ] `docker compose` disponível
+- [ ] Arquivo de compose informado existe (`$COMPOSE_FILE` ou `docker-compose.dev.yml`)
+
+Falha esperada:
+- O comando deve terminar com erro não-zero e mensagem objetiva antes de subir qualquer serviço.
+
+### 2) Fluxo do ciclo
+
+- [ ] Health check OK (`GET /health` retornou 200)
+- [ ] Testes do pacote `@cvg/tasks` executaram sem falha
+- [ ] `stress-test/summary.json` foi gerado
+
+Falha esperada:
+- Se qualquer etapa falhar, o ciclo encerra com status não-zero.
+
+### 3) Regras de decisão dos thresholds
+
+Após rodar, valide:
+
+```bash
+jq '.scenario_thresholds' stress-test/summary.json
+```
+
+- [ ] `duration_p95_ms.passed = true` e `duration_p95_ms.actual <= duration_p95_ms.threshold`
+- [ ] `error_rate_5xx_percent.passed = true` e `error_rate_5xx_percent.actual <= error_rate_5xx_percent.threshold`
+- [ ] `checks_rate.passed = true` e `checks_rate.actual >= checks_rate.threshold`
+- [ ] `scenario_passed = true`
+
+Regra de decisão:
+- Se qualquer item acima estiver `false`, considerar **FAIL**, corrigir causa raiz e reexecutar.
+- Se todos os itens estiverem `true`, considerar **PASS** e registrar evidência.
 
 ## Documentação
 

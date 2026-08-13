@@ -7,7 +7,7 @@ describe('recordWorkerDeadLetter', () => {
     deadLetterStore.clear();
   });
 
-  it('stores the original event envelope for replay', () => {
+  it('stores the original event envelope for replay', async () => {
     const sourceEvent = {
       event_id: 'evt_123',
       event_type: 'handoff.completed',
@@ -24,7 +24,7 @@ describe('recordWorkerDeadLetter', () => {
       version: 1,
     };
 
-    const entry = recordWorkerDeadLetter({
+    const entry = await recordWorkerDeadLetter({
       event: sourceEvent,
       error: 'terminal failure',
       retryCount: 3,

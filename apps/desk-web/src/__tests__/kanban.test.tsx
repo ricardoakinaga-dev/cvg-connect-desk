@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { Kanban } from '../pages/Kanban';
 
 const mocks = vi.hoisted(() => ({
@@ -8,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('../lib/api', () => ({
+  getErrorMessage: (error: unknown, fallback = 'Erro inesperado') => error instanceof Error && error.message ? error.message : fallback,
   api: {
     get: mocks.apiGetMock,
     patch: mocks.apiPatchMock,
@@ -62,10 +64,12 @@ describe('Kanban page', () => {
       },
     });
 
-    render(<Kanban />);
+    render(<MemoryRouter><Kanban /></MemoryRouter>);
 
     expect(await screen.findByText('Ana Costa')).toBeTruthy();
     expect(screen.getByText('Em atendimento')).toBeTruthy();
+    expect(screen.getByText('Abrir')).toBeTruthy();
+    expect(screen.getByText('Avançar')).toBeTruthy();
 
     const sourceCard = screen.getByText('Ana Costa').closest('.kanban-card');
     const targetColumn = screen.getByText('Em atendimento').closest('.kanban-column');
@@ -78,6 +82,24 @@ describe('Kanban page', () => {
 
     await waitFor(() => {
       expect(mocks.apiPatchMock).toHaveBeenCalledWith('/kanban/card/card_1/move', { status: 'em_atendimento' });
+    });
+  });
+
+  it('shows an error state and retries loading the board', async () => {
+    mocks.apiGetMock.mockRejectedValue(new Error('Internal server error'));
+
+    render(<MemoryRouter><Kanban /></MemoryRouter>);
+
+    expect(await screen.findByText('Internal server error')).toBeTruthy();
+
+    mocks.apiGetMock.mockResolvedValue({
+      columns: [],
+      filters: { sectors: [], labels: [] },
+    });
+    fireEvent.click(screen.getByText('Tentar novamente'));
+
+    await waitFor(() => {
+      expect(mocks.apiGetMock).toHaveBeenCalledTimes(2);
     });
   });
 });

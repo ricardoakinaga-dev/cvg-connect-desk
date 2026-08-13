@@ -20,6 +20,7 @@ export interface ProcessMessageWithSecretaryOutput {
     confidence: number;
   };
   handoffTriggered: boolean;
+  handoffReason?: string;
   secretaryResponse?: string;
 }
 
@@ -76,6 +77,7 @@ export async function processMessageWithSecretary(
       classified: true,
       classification: secretaryOutput.classification,
       handoffTriggered: secretaryOutput.shouldHandoff && currentHandler === 'bot',
+      handoffReason: secretaryOutput.handoffReason,
       secretaryResponse: secretaryOutput.response,
     });
   } catch (error) {

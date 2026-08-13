@@ -39,10 +39,10 @@ describe('Realtime Auth Implementation', () => {
     expect(content).toContain("searchParams.get('token')");
   });
 
-  it('validates token via HTTP to desk-api', () => {
-    expect(content).toContain("validateTokenAndAuthenticate");
+  it('validates session cookie via HTTP to desk-api', () => {
+    expect(content).toContain("validateCookieAndAuthenticate");
     expect(content).toContain("/auth/me");
-    expect(content).toContain("Authorization");
+    expect(content).toContain("Cookie");
   });
 
   it('has authentication timeout for connections', () => {

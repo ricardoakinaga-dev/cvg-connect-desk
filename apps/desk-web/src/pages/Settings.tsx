@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/auth';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './Settings.css';
 
 interface UserProfile {
@@ -14,7 +14,7 @@ interface UserProfile {
 }
 
 export function Settings() {
-  const { user, token } = useAuthStore();
+  const { user } = useAuthStore();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +44,7 @@ export function Settings() {
       }
     };
     fetchProfile();
-  }, [user, token]);
+  }, [user]);
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,8 +67,8 @@ export function Settings() {
       setMessage({ type: 'success', text: 'Senha alterada com sucesso!' });
       setPasswords({ current: '', newPass: '', confirm: '' });
       setShowPassword(false);
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Erro ao alterar senha.' });
+    } catch (err: unknown) {
+      setMessage({ type: 'error', text: getErrorMessage(err, 'Erro ao alterar senha.') });
     }
   };
 
@@ -79,7 +79,7 @@ export function Settings() {
   return (
     <div className="settings-page">
       <div className="page-header">
-        <h2>👤 Configurações</h2>
+        <h2>Configurações</h2>
       </div>
 
       {message && (
@@ -88,7 +88,7 @@ export function Settings() {
 
       {/* Perfil */}
       <div className="settings-section">
-        <h3>📋 Perfil</h3>
+        <h3>Perfil</h3>
         <div className="profile-card">
           <div className="profile-avatar">
             {profile?.name?.charAt(0).toUpperCase() || '?'}
@@ -108,7 +108,7 @@ export function Settings() {
 
       {/* Papéis */}
       <div className="settings-section">
-        <h3>🔑 Papéis Atribuídos</h3>
+        <h3>Papéis Atribuídos</h3>
         <div className="roles-list">
           {profile?.roles && profile.roles.length > 0 ? (
             profile.roles.map(role => (
@@ -122,7 +122,7 @@ export function Settings() {
 
       {/* Permissões */}
       <div className="settings-section">
-        <h3>🛡️ Permissões</h3>
+        <h3>Permissões</h3>
         <div className="permissions-grid">
           {profile?.permissions && profile.permissions.length > 0 ? (
             profile.permissions.map(perm => (
@@ -140,7 +140,7 @@ export function Settings() {
       {/* Alterar Senha */}
       <div className="settings-section">
         <h3>
-          🔒 Segurança
+          Segurança
           <button className="btn-toggle" onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? 'Cancelar' : 'Alterar Senha'}
           </button>
@@ -160,7 +160,7 @@ export function Settings() {
         <h3>ℹ️ Sessão</h3>
         <div className="session-info">
           <div><strong>ID do Usuário:</strong> <code>{profile?.id}</code></div>
-          <div><strong>Token:</strong> <code>{token ? `${token.slice(0, 20)}...` : 'N/A'}</code></div>
+          <div><strong>Autenticação:</strong> <code>Cookie seguro HttpOnly</code></div>
         </div>
       </div>
     </div>

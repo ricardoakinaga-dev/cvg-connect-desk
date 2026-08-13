@@ -7,6 +7,19 @@ import type { ConsumerId } from '../outbox-reader';
 const connectionString = process.env.DATABASE_URL || 'postgresql://connect_desk:root@localhost:5432/connect_desk_db';
 const pool = new Pool({ connectionString });
 
+export const requiresRealDatabase = process.env.REQUIRE_REAL_DB === '1' || process.env.CI === 'true';
+
+export function assertRealDatabaseAvailable(result: { available: true } | { available: false; reason: string }): void {
+  if (result.available || !requiresRealDatabase) {
+    return;
+  }
+
+  throw new Error(
+    `[real-db] PostgreSQL is required for this test suite but is unavailable: ${result.reason}. ` +
+      'Start PostgreSQL, run migrations, and unset no required test gate.',
+  );
+}
+
 export const db = drizzle(pool, { schema });
 
 export async function closeRealDatabase(): Promise<void> {
@@ -35,25 +48,31 @@ export async function probeRealDatabase(): Promise<{ available: true } | { avail
     try {
       await db.execute(sql`SELECT 1 FROM outbox_events LIMIT 1`);
     } catch {
-      return {
+      const result = {
         available: false,
         reason: 'outbox_events table does not exist (run migrations)',
-      };
+      } as const;
+      assertRealDatabaseAvailable(result);
+      return result;
     }
     try {
       await db.execute(sql`SELECT 1 FROM outbox_consumer_acks LIMIT 1`);
     } catch {
-      return {
+      const result = {
         available: false,
         reason: 'outbox_consumer_acks table does not exist (run migrations)',
-      };
+      } as const;
+      assertRealDatabaseAvailable(result);
+      return result;
     }
     return { available: true };
   } catch (error) {
-    return {
+    const result = {
       available: false,
       reason: error instanceof Error ? error.message : String(error),
-    };
+    } as const;
+    assertRealDatabaseAvailable(result);
+    return result;
   }
 }
 

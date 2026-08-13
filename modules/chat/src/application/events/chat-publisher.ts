@@ -5,8 +5,8 @@ export async function publishMessagePersisted(message: {
   conversationId: string;
   direction: 'inbound' | 'outbound';
   content: string;
-  sender?: string;
-  recipient?: string;
+  sender?: string | null;
+  recipient?: string | null;
   status: string;
   createdAt: Date;
 }) {
@@ -15,8 +15,8 @@ export async function publishMessagePersisted(message: {
     conversationId: message.conversationId,
     direction: message.direction,
     content: message.content,
-    sender: message.sender,
-    recipient: message.recipient,
+    sender: message.sender ?? undefined,
+    recipient: message.recipient ?? undefined,
     status: message.status,
     createdAt: message.createdAt.toISOString(),
   });

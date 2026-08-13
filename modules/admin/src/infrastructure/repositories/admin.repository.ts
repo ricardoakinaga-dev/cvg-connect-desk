@@ -1,14 +1,18 @@
 import { db, schema } from '@cvg/database';
-import { eq, sql } from 'drizzle-orm';
-import type { User, Role, Permission, Queue, Team } from '@cvg/database';
+import { and, eq } from 'drizzle-orm';
 import type {
   UserListItem, CreateUserInput, UpdateUserInput,
   RoleListItem, CreateRoleInput, UpdateRoleInput,
-  PermissionItem, CreatePermissionInput,
+  PermissionItem, CreatePermissionInput, PermissionName,
   QueueItem, CreateQueueInput, UpdateQueueInput,
   TeamItem, CreateTeamInput, UpdateTeamInput,
-  AssignUserToTeamInput, AssignUserToQueueInput,
-} from '../types';
+} from '../../types';
+
+export type User = typeof schema.users.$inferSelect;
+export type Role = typeof schema.roles.$inferSelect;
+export type Permission = typeof schema.permissions.$inferSelect;
+export type Queue = typeof schema.queues.$inferSelect;
+export type Team = typeof schema.teams.$inferSelect;
 
 export class UserRepository {
   async findAll(): Promise<UserListItem[]> {
@@ -46,7 +50,7 @@ export class UserRepository {
   }
 
   async update(id: string, data: Partial<UpdateUserInput>): Promise<User> {
-    const updateData: any = {};
+    const updateData: Partial<Pick<User, 'name' | 'email' | 'passwordHash' | 'isActive'>> = {};
     if (data.name) updateData.name = data.name;
     if (data.email) updateData.email = data.email;
     if (data.password) updateData.passwordHash = data.password; // NOTE: hash no use case
@@ -75,20 +79,22 @@ export class UserRepository {
   }
 
   async getRoles(userId: string): Promise<Role[]> {
-    return db
+    const rows = await db
       .select()
       .from(schema.roles)
       .innerJoin(schema.userRoles, eq(schema.userRoles.roleId, schema.roles.id))
       .where(eq(schema.userRoles.userId, userId));
+    return rows.map(row => row.roles);
   }
 
   async getPermissions(userId: string): Promise<Permission[]> {
-    return db
+    const rows = await db
       .select()
       .from(schema.permissions)
       .innerJoin(schema.rolePermissions, eq(schema.rolePermissions.permissionId, schema.permissions.id))
       .innerJoin(schema.userRoles, eq(schema.userRoles.roleId, schema.rolePermissions.roleId))
       .where(eq(schema.userRoles.userId, userId));
+    return rows.map(row => row.permissions);
   }
 }
 
@@ -99,7 +105,7 @@ export class RoleRepository {
     return roles.map(r => ({
       id: r.id,
       name: r.name,
-      description: r.description,
+      description: r.description ?? undefined,
       createdAt: r.createdAt,
     }));
   }
@@ -126,7 +132,7 @@ export class RoleRepository {
   }
 
   async update(id: string, data: Partial<UpdateRoleInput>): Promise<Role> {
-    const updateData: any = {};
+    const updateData: Partial<Pick<Role, 'name' | 'description'>> = {};
     if (data.name) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
 
@@ -154,11 +160,12 @@ export class RoleRepository {
   }
 
   async getPermissions(roleId: string): Promise<Permission[]> {
-    return db
+    const rows = await db
       .select()
       .from(schema.permissions)
       .innerJoin(schema.rolePermissions, eq(schema.rolePermissions.permissionId, schema.permissions.id))
       .where(eq(schema.rolePermissions.roleId, roleId));
+    return rows.map(row => row.permissions);
   }
 }
 
@@ -167,8 +174,8 @@ export class PermissionRepository {
     const permissions = await db.select().from(schema.permissions);
     return permissions.map(p => ({
       id: p.id,
-      name: p.name as any,
-      description: p.description,
+      name: p.name as PermissionName,
+      description: p.description ?? undefined,
       createdAt: p.createdAt,
     }));
   }
@@ -202,7 +209,7 @@ export class QueueRepository {
     return queues.map(q => ({
       id: q.id,
       name: q.name,
-      description: q.description,
+      description: q.description ?? undefined,
       createdAt: q.createdAt,
     }));
   }
@@ -221,7 +228,7 @@ export class QueueRepository {
   }
 
   async update(id: string, data: UpdateQueueInput): Promise<Queue> {
-    const updateData: any = {};
+    const updateData: Partial<Pick<Queue, 'name' | 'description'>> = {};
     if (data.name) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
 
@@ -263,7 +270,7 @@ export class TeamRepository {
   }
 
   async update(id: string, data: UpdateTeamInput): Promise<Team> {
-    const updateData: any = {};
+    const updateData: Partial<Pick<Team, 'name'>> = {};
     if (data.name) updateData.name = data.name;
 
     const [team] = await db
@@ -278,7 +285,7 @@ export class TeamRepository {
     await db.delete(schema.teams).where(eq(schema.teams.id, id));
   }
 
-  async getUsers(teamId: string): Promise<User[]> {
+  async getUsers(_teamId: string): Promise<User[]> {
     // Nota: não há FK direta teams→users;需要通过 user_roles ou tabela de associação dedicada
     // Por enquanto retorna vazio
     return [];
@@ -298,7 +305,10 @@ export class AdminRepository {
 
   async removeUserRole(userId: string, roleId: string): Promise<void> {
     await db.delete(schema.userRoles).where(
-      eq(schema.userRoles.userId, userId) && eq(schema.userRoles.roleId, roleId)
+      and(
+        eq(schema.userRoles.userId, userId),
+        eq(schema.userRoles.roleId, roleId),
+      )
     );
   }
 }

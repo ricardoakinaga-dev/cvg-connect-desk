@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, and, gte, lt, inArray, sql, desc } from 'drizzle-orm';
+import { and, gte, lt, inArray, sql, lt as lessThan } from 'drizzle-orm';
 import type {
   ConversationMetrics,
   ConversationVolume,
@@ -7,6 +7,9 @@ import type {
   AlertMetrics,
   DashboardSummary,
   TimeRange,
+  FirstResponseTimeMetric,
+  HandoffRateMetric,
+  HandoffMetrics,
 } from '../types';
 
 export class DashboardRepository {
@@ -92,7 +95,7 @@ export class DashboardRepository {
       .select({ count: sql<number>`count(*)` })
       .from(schema.tasks)
       .where(and(
-        lt(schema.tasks.dueAt, new Date()),
+        lessThan(schema.tasks.dueAt, new Date()),
         sql`${schema.tasks.status} NOT IN ('completed', 'cancelled')`
       ));
     metrics.overdue = Number(overdueResult[0]?.count || 0);
@@ -177,7 +180,7 @@ export class DashboardRepository {
       .select({ count: sql<number>`count(*)` })
       .from(schema.tasks)
       .where(and(
-        lt(schema.tasks.dueAt, asOf),
+        lessThan(schema.tasks.dueAt, asOf),
         sql`${schema.tasks.status} NOT IN ('completed', 'cancelled')`
       ));
 
@@ -191,6 +194,166 @@ export class DashboardRepository {
       .where(inArray(schema.alerts.status, statuses));
 
     return Number(result[0]?.count || 0);
+  }
+
+  /**
+   * D1: Tempo Médio de Primeira Resposta
+   * Calcula o tempo entre a primeira mensagem inbound e a primeira resposta
+   * outbound classificada explicitamente como humana. Respostas de bot e
+   * sistema não entram no D1.
+   */
+  async getFirstResponseTimeMetric(timeRange: TimeRange): Promise<FirstResponseTimeMetric> {
+    const result = await db.execute(sql`
+      WITH first_inbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_inbound_at
+        FROM messages
+        WHERE direction = 'inbound'
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      ),
+      first_outbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_outbound_at
+        FROM messages
+        WHERE direction = 'outbound'
+          AND sender_type IN ('human', 'user', 'agent')
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      )
+      SELECT
+        COUNT(*) as count,
+        COALESCE(
+          AVG(EXTRACT(EPOCH FROM (fo.first_outbound_at - fi.first_inbound_at)) * 1000),
+          0
+        ) as avg_response_time_ms
+      FROM first_inbound fi
+      INNER JOIN first_outbound fo
+        ON fi.conversation_id = fo.conversation_id
+      WHERE fo.first_outbound_at > fi.first_inbound_at
+    `);
+
+    const row = result.rows[0] as { count: number; avg_response_time_ms: number } | undefined;
+
+    return {
+      avgResponseTimeMs: Number(row?.avg_response_time_ms || 0),
+      count: Number(row?.count || 0),
+      period: `${timeRange.start.toISOString()} - ${timeRange.end.toISOString()}`,
+      calculatedAt: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * D2: Taxa de Handoff (bot -> human)
+   * Calcula o percentual de conversas que transitaram de bot para human
+   */
+  async getHandoffRateMetric(timeRange: TimeRange): Promise<HandoffRateMetric> {
+    // Total de conversas na janela
+    const totalResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.conversations)
+      .where(and(
+        gte(schema.conversations.createdAt, timeRange.start),
+        lt(schema.conversations.createdAt, timeRange.end)
+      ));
+
+    const totalConversations = Number(totalResult[0]?.count || 0);
+
+    // Uma conversa teve handoff quando uma resposta humana explícita ocorreu
+    // depois do primeiro inbound.
+    const handoffResult = await db.execute(sql`
+      WITH conversation_first_inbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_inbound_at
+        FROM messages
+        WHERE direction = 'inbound'
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      ),
+      conversation_first_human_outbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_outbound_at
+        FROM messages
+        WHERE direction = 'outbound'
+          AND sender_type IN ('human', 'user', 'agent')
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      )
+      SELECT COUNT(*) as handoff_count
+      FROM conversation_first_inbound fi
+      INNER JOIN conversation_first_human_outbound fo
+        ON fi.conversation_id = fo.conversation_id
+      WHERE fo.first_outbound_at > fi.first_inbound_at
+    `);
+
+    const conversationsWithHandoff = Number(
+      (handoffResult.rows[0] as { handoff_count: number } | undefined)?.handoff_count || 0
+    );
+
+    const handoffRate = totalConversations > 0
+      ? (conversationsWithHandoff / totalConversations) * 100
+      : 0;
+
+    return {
+      handoffRate: Math.round(handoffRate * 100) / 100,
+      totalConversations,
+      conversationsWithHandoff,
+      period: `${timeRange.start.toISOString()} - ${timeRange.end.toISOString()}`,
+      calculatedAt: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * D2: Métricas detalhadas de Handoff
+   */
+  async getHandoffMetrics(timeRange: TimeRange): Promise<HandoffMetrics> {
+    // Total de handoffs (conversas com inbound E outbound humano explícito)
+    const totalResult = await db.execute(sql`
+      WITH conversation_first_inbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_inbound_at
+        FROM messages
+        WHERE direction = 'inbound'
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      ),
+      conversation_first_human_outbound AS (
+        SELECT DISTINCT ON (conversation_id)
+          conversation_id,
+          created_at as first_outbound_at
+        FROM messages
+        WHERE direction = 'outbound'
+          AND sender_type IN ('human', 'user', 'agent')
+          AND created_at >= ${timeRange.start}
+          AND created_at < ${timeRange.end}
+        ORDER BY conversation_id, created_at ASC
+      )
+      SELECT COUNT(*) as total
+      FROM conversation_first_inbound fi
+      INNER JOIN conversation_first_human_outbound fo
+        ON fi.conversation_id = fo.conversation_id
+      WHERE fo.first_outbound_at > fi.first_inbound_at
+    `);
+
+    const total = Number((totalResult.rows[0] as { total: number } | undefined)?.total || 0);
+
+    return {
+      total,
+      botToHuman: total, // Simplified: bot->human is when inbound (bot) then outbound human
+      humanToBot: 0, // Not tracked in current model
+      period: `${timeRange.start.toISOString()} - ${timeRange.end.toISOString()}`,
+      calculatedAt: new Date().toISOString(),
+    };
   }
 }
 

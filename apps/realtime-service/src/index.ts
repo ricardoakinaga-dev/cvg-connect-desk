@@ -2,28 +2,42 @@ import 'dotenv/config';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { EventEnvelope } from '@cvg/events';
-import {
-  projectEvent,
-  shouldProject,
-  type RealtimeMessage,
-  type RealtimeProjection
-} from '@cvg/realtime';
-import { ConsumerAwareOutboxReader, CONSUMER_IDS } from '@cvg/events';
+import type { RealtimeMessage } from '@cvg/realtime';
+import * as realtimeModule from '@cvg/realtime';
+import * as eventModule from '@cvg/events';
+import * as sharedModule from '@cvg/shared';
+import * as authModule from '@cvg/auth';
+
+type WorkspaceModule<T> = T & { default?: T };
+
+const unwrapWorkspaceModule = <T>(moduleValue: WorkspaceModule<T>): T => moduleValue.default ?? moduleValue;
+const realtimeExports = unwrapWorkspaceModule(
+  realtimeModule as WorkspaceModule<typeof import('@cvg/realtime')>,
+);
+const eventExports = unwrapWorkspaceModule(
+  eventModule as WorkspaceModule<typeof import('@cvg/events')>,
+);
+const sharedExports = unwrapWorkspaceModule(
+  sharedModule as WorkspaceModule<typeof import('@cvg/shared')>,
+);
+const authExports = unwrapWorkspaceModule(
+  authModule as WorkspaceModule<typeof import('@cvg/auth')>,
+);
+
+const { projectEvent, shouldProject } = realtimeExports;
+const { ConsumerAwareOutboxReader, CONSUMER_IDS } = eventExports;
+const { createLogger } = sharedExports;
+const { SESSION_COOKIE_NAME, parseCookieHeader } = authExports;
+const logger = createLogger({ service: 'realtime' });
 
 interface Client {
   id: string;
   ws: WebSocket;
   userId?: string;
-  token?: string;
+  sessionCookie?: string;
   subscriptions: Set<string>;
   authenticated: boolean;
   revalidateTimer?: NodeJS.Timeout;
-}
-
-interface AuthResult {
-  valid: boolean;
-  userId?: string;
-  error?: string;
 }
 
 class RealtimeServer {
@@ -37,44 +51,38 @@ class RealtimeServer {
 
   constructor(private port: number = 8080) {
     this.deskApiUrl = process.env.DESK_API_URL || 'http://localhost:3000';
-    this.revalidateIntervalMs = Number(process.env.REALTIME_AUTH_REVALIDATE_MS) || 300000; // 5 minutes default
+    this.revalidateIntervalMs = Number(process.env.REALTIME_AUTH_REVALIDATE_MS) || 300000;
   }
 
   start(): void {
     this.wss = new WebSocketServer({ port: this.port });
 
     this.wss.on('listening', () => {
-      console.info(JSON.stringify({
-        msg: '[Realtime] WebSocket server listening',
-        port: this.port,
-        level: 'info',
-      }));
+      logger.info('[Realtime] WebSocket server listening', { port: this.port });
     });
 
     this.wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
       const clientId = this.generateClientId();
-      const token = this.extractTokenFromUrl(req.url || '');
-      
-      if (token) {
-        this.handleConnectionWithAuth(clientId, ws, token);
-      } else {
-        this.handleConnectionWithoutAuth(clientId, ws);
+      const legacyToken = this.extractTokenFromUrl(req.url || '');
+
+      if (legacyToken) {
+        logger.warn('[Realtime] Rejecting legacy URL-token connection', {
+          client_id: clientId,
+          auth_method: 'url-token',
+        });
+        ws.close(4003, 'URL token authentication is disabled');
+        return;
       }
+
+      this.handleConnectionWithCookie(clientId, ws, req.headers.cookie);
     });
 
     this.wss.on('error', (error) => {
-      console.error(JSON.stringify({
-        msg: '[Realtime] WebSocket server error',
-        error: error.message,
-        level: 'error',
-      }));
+      logger.error('[Realtime] WebSocket server error', { error: error.message });
     });
 
     this.startEventPolling();
-    console.info(JSON.stringify({
-      msg: '[Realtime] Event polling started',
-      level: 'info',
-    }));
+    logger.info('[Realtime] Event polling started');
   }
 
   private extractTokenFromUrl(url: string): string | null {
@@ -91,54 +99,16 @@ class RealtimeServer {
     return `client_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
   }
 
-  private handleConnectionWithAuth(clientId: string, ws: WebSocket, token: string): void {
-    console.warn(JSON.stringify({
-      msg: '[Realtime] Legacy connection with token in URL',
-      client_id: clientId,
-      auth_method: 'url-token',
-      level: 'warn',
-    }));
+  private handleConnectionWithCookie(clientId: string, ws: WebSocket, cookieHeader: string | undefined): void {
+    logger.info('[Realtime] New cookie-authenticated connection', { client_id: clientId });
+    const cookies = parseCookieHeader(cookieHeader);
+    const sessionCookie = cookies[SESSION_COOKIE_NAME];
 
     const client: Client = {
       id: clientId,
       ws,
       userId: undefined,
-      token,
-      subscriptions: new Set(['global']),
-      authenticated: false,
-    };
-
-    this.clients.set(clientId, client);
-
-    const timeout = setTimeout(() => {
-      if (!client.authenticated) {
-        console.warn(JSON.stringify({
-          msg: '[Realtime] Auth timeout, closing connection',
-          client_id: clientId,
-          level: 'warn',
-        }));
-        ws.close(4001, 'Authentication timeout');
-        this.clearClient(clientId);
-      }
-      this.pendingAuth.delete(clientId);
-    }, this.authTimeout);
-
-    this.pendingAuth.set(clientId, timeout);
-
-    this.validateTokenAndAuthenticate(clientId, token);
-  }
-
-  private handleConnectionWithoutAuth(clientId: string, ws: WebSocket): void {
-    console.info(JSON.stringify({
-      msg: '[Realtime] New connection awaiting message-based auth',
-      client_id: clientId,
-      level: 'info',
-    }));
-
-    const client: Client = {
-      id: clientId,
-      ws,
-      userId: undefined,
+      sessionCookie,
       subscriptions: new Set(['global']),
       authenticated: false,
     };
@@ -150,52 +120,39 @@ class RealtimeServer {
     });
 
     ws.on('close', () => {
-      console.info(JSON.stringify({
-        msg: '[Realtime] Connection closed',
-        client_id: clientId,
-        level: 'info',
-      }));
+      logger.info('[Realtime] Connection closed', { client_id: clientId });
       this.clearClient(clientId);
     });
 
     ws.on('error', (error) => {
-      console.error(JSON.stringify({
-        msg: '[Realtime] Client error',
-        client_id: clientId,
-        error: error.message,
-        level: 'error',
-      }));
+      logger.error('[Realtime] Client error', { client_id: clientId, error: error.message });
       this.clients.delete(clientId);
     });
 
-    this.sendToClient(clientId, {
-      event: 'connected',
-      data: {
-        type: 'connection.established' as any,
-        aggregateType: 'Client',
-        aggregateId: clientId,
-        occurredAt: new Date().toISOString(),
-        payload: { clientId, requiresAuth: true },
-      },
-    });
+    const timeout = setTimeout(() => {
+      if (!client.authenticated) {
+        logger.warn('[Realtime] Auth timeout, closing connection', { client_id: clientId });
+        ws.close(4001, 'Authentication timeout');
+        this.clearClient(clientId);
+      }
+      this.pendingAuth.delete(clientId);
+    }, this.authTimeout);
 
-    this.sendToClient(clientId, {
-      event: 'auth.required',
-      data: {
-        type: 'auth.required' as any,
-        aggregateType: 'Client',
-        aggregateId: clientId,
-        occurredAt: new Date().toISOString(),
-        payload: { error: 'Authentication required. Send {type: "auth", token: "<jwt>"} after connecting.' },
-      },
-    });
+    this.pendingAuth.set(clientId, timeout);
+    this.validateCookieAndAuthenticate(clientId);
   }
 
-  private async validateTokenAndAuthenticate(clientId: string, token: string): Promise<void> {
+  private async validateCookieAndAuthenticate(clientId: string): Promise<void> {
+    const client = this.clients.get(clientId);
+    if (!client?.sessionCookie) {
+      this.rejectAuthentication(clientId, 'Missing session cookie');
+      return;
+    }
+
     try {
       const response = await fetch(`${this.deskApiUrl}/auth/me`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Cookie: `${SESSION_COOKIE_NAME}=${encodeURIComponent(client.sessionCookie)}`,
         },
       });
 
@@ -206,12 +163,10 @@ class RealtimeServer {
         this.rejectAuthentication(clientId, `Invalid token: ${response.status}`);
       }
     } catch (error) {
-      console.error(JSON.stringify({
-        msg: '[Realtime] Auth validation failed',
+      logger.error('[Realtime] Auth validation failed', {
         client_id: clientId,
         error: error instanceof Error ? error.message : String(error),
-        level: 'error',
-      }));
+      });
       this.rejectAuthentication(clientId, 'Authentication service unavailable');
     }
   }
@@ -230,24 +185,25 @@ class RealtimeServer {
     client.authenticated = true;
     client.subscriptions.add(`user:${userId}`);
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Client authenticated',
-      client_id: clientId,
-      user_id: userId,
-      level: 'info',
-    }));
+    logger.info('[Realtime] Client authenticated', { client_id: clientId, user_id: userId });
 
-    // Start periodic token revalidation
-    if (client.token) {
-      this.startRevalidationTimer(clientId);
-    }
+    this.startRevalidationTimer(clientId);
 
-    this.setupClientHandlers(clientId);
+    this.sendToClient(clientId, {
+      event: 'connected',
+      data: {
+        type: 'connection.established',
+        aggregateType: 'Client',
+        aggregateId: clientId,
+        occurredAt: new Date().toISOString(),
+        payload: { clientId, authenticated: true },
+      },
+    });
 
     this.sendToClient(clientId, {
       event: 'auth.success',
       data: {
-        type: 'auth.success' as any,
+        type: 'auth.success',
         aggregateType: 'Client',
         aggregateId: clientId,
         occurredAt: new Date().toISOString(),
@@ -260,18 +216,12 @@ class RealtimeServer {
     const client = this.clients.get(clientId);
     if (!client) return;
 
-    console.warn(JSON.stringify({
-      msg: '[Realtime] Authentication rejected',
-      client_id: clientId,
-      reason,
-      close_code: 4003,
-      level: 'warn',
-    }));
+    logger.warn('[Realtime] Authentication rejected', { client_id: clientId, reason, close_code: 4003 });
 
     this.sendToClient(clientId, {
       event: 'auth.error',
       data: {
-        type: 'auth.error' as any,
+        type: 'auth.error',
         aggregateType: 'Client',
         aggregateId: clientId,
         occurredAt: new Date().toISOString(),
@@ -292,28 +242,19 @@ class RealtimeServer {
     });
 
     client.ws.on('close', () => {
-      console.info(JSON.stringify({
-        msg: '[Realtime] Connection closed',
-        client_id: clientId,
-        level: 'info',
-      }));
+      logger.info('[Realtime] Connection closed', { client_id: clientId });
       this.clearClient(clientId);
     });
 
     client.ws.on('error', (error) => {
-      console.error(JSON.stringify({
-        msg: '[Realtime] Client error',
-        client_id: clientId,
-        error: error.message,
-        level: 'error',
-      }));
+      logger.error('[Realtime] Client error', { client_id: clientId, error: error.message });
       this.clients.delete(clientId);
     });
 
     this.sendToClient(clientId, {
       event: 'connected',
       data: {
-        type: 'connection.established' as any,
+        type: 'connection.established',
         aggregateType: 'Client',
         aggregateId: clientId,
         occurredAt: new Date().toISOString(),
@@ -337,63 +278,40 @@ class RealtimeServer {
           this.handleUnsubscribe(clientId, message);
           break;
         case 'auth':
-          // Message-based auth: client sends token via message instead of URL
-          // Only processed if client is not already authenticated
-          if (!client.authenticated && message.token) {
-            console.info(JSON.stringify({
-              msg: '[Realtime] Message-based auth',
-              client_id: clientId,
-              auth_method: 'message-token',
-              level: 'info',
-            }));
-            client.token = message.token;
-            this.validateTokenAndAuthenticate(clientId, message.token);
-          } else if (client.authenticated) {
-            this.sendToClient(clientId, {
-              event: 'auth.error',
-              data: {
-                type: 'auth.error' as any,
-                aggregateType: 'Client',
-                aggregateId: clientId,
-                occurredAt: new Date().toISOString(),
-                payload: { error: 'Already authenticated' },
-              },
-            });
-          }
+          this.sendToClient(clientId, {
+            event: 'auth.error',
+            data: {
+              type: 'auth.error',
+              aggregateType: 'Client',
+              aggregateId: clientId,
+              occurredAt: new Date().toISOString(),
+              payload: { error: 'Message token authentication is disabled' },
+            },
+          });
           break;
         default:
-          console.info(JSON.stringify({
-            msg: '[Realtime] Unknown message type',
-            client_id: clientId,
-            message_type: message.type,
-            level: 'info',
-          }));
+          logger.info('[Realtime] Unknown message type', { client_id: clientId, message_type: message.type });
       }
     } catch (error) {
-      console.error(JSON.stringify({
-        msg: '[Realtime] Error handling message',
+      logger.error('[Realtime] Error handling message', {
         client_id: clientId,
         error: error instanceof Error ? error.message : String(error),
-        level: 'error',
-      }));
+      });
     }
   }
 
   private startRevalidationTimer(clientId: string): void {
     const client = this.clients.get(clientId);
-    if (!client || !client.token) return;
+    if (!client || !client.sessionCookie) return;
 
-    // Clear any existing timer
     if (client.revalidateTimer) {
       clearInterval(client.revalidateTimer);
     }
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Starting token revalidation timer',
+    logger.info('[Realtime] Starting token revalidation timer', {
       client_id: clientId,
       interval_ms: this.revalidateIntervalMs,
-      level: 'info',
-    }));
+    });
 
     client.revalidateTimer = setInterval(async () => {
       await this.revalidateToken(clientId);
@@ -402,8 +320,7 @@ class RealtimeServer {
 
   private async revalidateToken(clientId: string): Promise<void> {
     const client = this.clients.get(clientId);
-    if (!client || !client.token || !client.authenticated) {
-      // Client no longer needs revalidation
+    if (!client || !client.sessionCookie || !client.authenticated) {
       this.clearRevalidationTimer(clientId);
       return;
     }
@@ -411,34 +328,19 @@ class RealtimeServer {
     try {
       const response = await fetch(`${this.deskApiUrl}/auth/me`, {
         headers: {
-          'Authorization': `Bearer ${client.token}`,
+          Cookie: `${SESSION_COOKIE_NAME}=${encodeURIComponent(client.sessionCookie)}`,
         },
       });
 
       if (!response.ok) {
-        console.warn(JSON.stringify({
-          msg: '[Realtime] Token revalidation failed',
-          client_id: clientId,
-          http_status: response.status,
-          level: 'warn',
-        }));
+        logger.warn('[Realtime] Token revalidation failed', { client_id: clientId, http_status: response.status });
         this.handleRevalidationFailure(clientId, `Token revoked: ${response.status}`);
-      } else {
-        console.debug(JSON.stringify({
-          msg: '[Realtime] Token revalidated',
-          client_id: clientId,
-          level: 'debug',
-        }));
       }
     } catch (error) {
-      // Network errors don't necessarily mean token is invalid
-      // Be lenient: log but don't disconnect on network issues
-      console.error(JSON.stringify({
-        msg: '[Realtime] Token revalidation error',
+      logger.error('[Realtime] Token revalidation error', {
         client_id: clientId,
         error: error instanceof Error ? error.message : String(error),
-        level: 'error',
-      }));
+      });
     }
   }
 
@@ -446,18 +348,16 @@ class RealtimeServer {
     const client = this.clients.get(clientId);
     if (!client) return;
 
-    console.warn(JSON.stringify({
-      msg: '[Realtime] Revalidation failure — closing connection',
+    logger.warn('[Realtime] Revalidation failure — closing connection', {
       client_id: clientId,
       reason,
       close_code: 4002,
-      level: 'warn',
-    }));
+    });
 
     this.sendToClient(clientId, {
       event: 'auth.revalidate.error',
       data: {
-        type: 'auth.revalidate.error' as any,
+        type: 'auth.revalidate.error',
         aggregateType: 'Client',
         aggregateId: clientId,
         occurredAt: new Date().toISOString(),
@@ -490,7 +390,7 @@ class RealtimeServer {
       this.sendToClient(clientId, {
         event: 'error',
         data: {
-          type: 'subscribe.error' as any,
+          type: 'subscribe.error',
           aggregateType: 'Client',
           aggregateId: clientId,
           occurredAt: new Date().toISOString(),
@@ -505,7 +405,7 @@ class RealtimeServer {
       this.sendToClient(clientId, {
         event: 'error',
         data: {
-          type: 'subscribe.error' as any,
+          type: 'subscribe.error',
           aggregateType: 'Client',
           aggregateId: clientId,
           occurredAt: new Date().toISOString(),
@@ -516,17 +416,12 @@ class RealtimeServer {
     }
 
     client.subscriptions.add(channel);
-    console.info(JSON.stringify({
-      msg: '[Realtime] Client subscribed to channel',
-      client_id: clientId,
-      channel,
-      level: 'info',
-    }));
+    logger.info('[Realtime] Client subscribed to channel', { client_id: clientId, channel });
 
     this.sendToClient(clientId, {
       event: 'subscribed',
       data: {
-        type: 'subscription.success' as any,
+        type: 'subscription.success',
         aggregateType: 'Client',
         aggregateId: clientId,
         occurredAt: new Date().toISOString(),
@@ -541,12 +436,7 @@ class RealtimeServer {
 
     const channel = message.channel;
     client.subscriptions.delete(channel);
-    console.info(JSON.stringify({
-      msg: '[Realtime] Client unsubscribed from channel',
-      client_id: clientId,
-      channel,
-      level: 'info',
-    }));
+    logger.info('[Realtime] Client unsubscribed from channel', { client_id: clientId, channel });
   }
 
   private sendToClient(clientId: string, message: RealtimeMessage): void {
@@ -556,12 +446,10 @@ class RealtimeServer {
     try {
       client.ws.send(JSON.stringify(message));
     } catch (error) {
-      console.error(JSON.stringify({
-        msg: '[Realtime] Error sending to client',
+      logger.error('[Realtime] Error sending to client', {
         client_id: clientId,
         error: error instanceof Error ? error.message : String(error),
-        level: 'error',
-      }));
+      });
     }
   }
 
@@ -576,18 +464,13 @@ class RealtimeServer {
     }
 
     if (recipientCount > 0) {
-      console.info(JSON.stringify({
-        msg: '[Realtime] Broadcast to channel',
-        channel,
-        recipient_count: recipientCount,
-        level: 'info',
-      }));
+      logger.debug('[Realtime] Broadcast to channel', { channel, recipient_count: recipientCount });
     }
   }
 
   private startEventPolling(): void {
     const useDatabaseOutbox = process.env.USE_DATABASE_OUTBOX !== 'false';
-    
+
     if (useDatabaseOutbox) {
       this.startOutboxPolling();
     } else {
@@ -603,22 +486,14 @@ class RealtimeServer {
       maxRetries: 3,
     });
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Using consumer-aware outbox for event polling',
-      consumer: CONSUMER_IDS.REALTIME,
-      level: 'info',
-    }));
+    logger.info('[Realtime] Using consumer-aware outbox for event polling', { consumer: CONSUMER_IDS.REALTIME });
 
     this.pollInterval = setInterval(async () => {
       try {
         const pendingEvents = await reader.fetchPendingEvents();
 
         if (pendingEvents.length > 0) {
-          console.info(JSON.stringify({
-            msg: '[Realtime] Processing events from outbox',
-            count: pendingEvents.length,
-            level: 'info',
-          }));
+          logger.debug('[Realtime] Processing events from outbox', { count: pendingEvents.length });
 
           for (const outboxEvent of pendingEvents) {
             const event = reader.toEventEnvelope(outboxEvent);
@@ -627,30 +502,18 @@ class RealtimeServer {
             if (shouldProcess) {
               await reader.acknowledge(outboxEvent.eventId);
             } else {
-              // Evento não é projetável para realtime; ack normal evita ruído de retry/dead-letter.
-              console.debug(JSON.stringify({
-                msg: '[Realtime] Skipping non-projectable event',
-                event_type: event.event_type,
-                event_id: event.event_id,
-                level: 'debug',
-              }));
               await reader.acknowledge(outboxEvent.eventId);
             }
           }
         }
       } catch (error) {
-        console.error(JSON.stringify({
-          msg: '[Realtime] Error polling outbox',
+        logger.error('[Realtime] Error polling outbox', {
           error: error instanceof Error ? error.message : String(error),
-          level: 'error',
-        }));
+        });
       }
     }, intervalMs);
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Outbox polling started',
-      level: 'info',
-    }));
+    logger.info('[Realtime] Outbox polling started');
   }
 
   private startHttpPolling(): void {
@@ -665,26 +528,28 @@ class RealtimeServer {
         }
         url.searchParams.set('limit', '50');
 
-        const response = await fetch(url.toString());
+        const internalEventsSecret = process.env.INTERNAL_EVENTS_SECRET;
+        if (!internalEventsSecret) {
+          logger.error('[Realtime] INTERNAL_EVENTS_SECRET is not configured; event polling disabled');
+          return;
+        }
+
+        const response = await fetch(url.toString(), {
+          headers: { 'x-internal-service-key': internalEventsSecret },
+        });
 
         if (!response.ok) {
-          console.warn(JSON.stringify({
-            msg: '[Realtime] Failed to fetch events from API',
+          logger.warn('[Realtime] Failed to fetch events from API', {
             api_url: url.toString(),
             http_status: response.status,
-            level: 'warn',
-          }));
+          });
           return;
         }
 
         const data = await response.json() as { events: EventEnvelope[]; serverTime: string };
 
         if (data.events.length > 0) {
-          console.info(JSON.stringify({
-            msg: '[Realtime] Processing events from API',
-            count: data.events.length,
-            level: 'info',
-          }));
+          logger.debug('[Realtime] Processing events from API', { count: data.events.length });
           lastServerTime = data.serverTime;
 
           for (const event of data.events) {
@@ -692,19 +557,13 @@ class RealtimeServer {
           }
         }
       } catch (error) {
-        console.error(JSON.stringify({
-          msg: '[Realtime] Error polling events from API',
+        logger.error('[Realtime] Error polling events from API', {
           error: error instanceof Error ? error.message : String(error),
-          level: 'error',
-        }));
+        });
       }
     }, intervalMs);
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] HTTP polling started',
-      api_url: this.deskApiUrl,
-      level: 'info',
-    }));
+    logger.info('[Realtime] HTTP polling started', { api_url: this.deskApiUrl });
   }
 
   private processEvent(event: EventEnvelope): boolean {
@@ -732,13 +591,11 @@ class RealtimeServer {
       this.broadcast(`correlation:${event.correlation_id}`, message);
     }
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Projected event',
+    logger.debug('[Realtime] Projected event', {
       event_type: projection.type,
       aggregate_id: projection.aggregateId,
       aggregate_type: projection.aggregateType,
-      level: 'info',
-    }));
+    });
     return true;
   }
 
@@ -764,10 +621,7 @@ class RealtimeServer {
       this.wss = null;
     }
 
-    console.info(JSON.stringify({
-      msg: '[Realtime] Server stopped',
-      level: 'info',
-    }));
+    logger.info('[Realtime] Server stopped');
   }
 }
 
@@ -781,19 +635,13 @@ const shouldAutoStart =
 
 if (shouldAutoStart) {
   process.on('SIGTERM', () => {
-    console.info(JSON.stringify({
-      msg: '[Realtime] Received SIGTERM, shutting down',
-      level: 'info',
-    }));
+    logger.info('[Realtime] Received SIGTERM, shutting down');
     server.stop();
     process.exit(0);
   });
 
   process.on('SIGINT', () => {
-    console.info(JSON.stringify({
-      msg: '[Realtime] Received SIGINT, shutting down',
-      level: 'info',
-    }));
+    logger.info('[Realtime] Received SIGINT, shutting down');
     server.stop();
     process.exit(0);
   });

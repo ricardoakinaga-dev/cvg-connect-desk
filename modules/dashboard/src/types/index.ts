@@ -22,6 +22,11 @@ export interface ConversationMetrics {
 export interface ConversationVolume {
   date: string;
   count: number;
+  statusBreakdown?: {
+    open: number;
+    pending: number;
+    closed: number;
+  };
 }
 
 export interface TaskMetrics {
@@ -69,4 +74,27 @@ export interface GetConversationVolumeRequest {
   startDate: Date;
   endDate: Date;
   groupBy?: 'day' | 'week' | 'month';
+}
+
+export interface FirstResponseTimeMetric {
+  avgResponseTimeMs: number;
+  count: number;
+  period: string;
+  calculatedAt: string;
+}
+
+export interface HandoffRateMetric {
+  handoffRate: number;
+  totalConversations: number;
+  conversationsWithHandoff: number;
+  period: string;
+  calculatedAt: string;
+}
+
+export interface HandoffMetrics {
+  total: number;
+  botToHuman: number;
+  humanToBot: number;
+  period: string;
+  calculatedAt: string;
 }

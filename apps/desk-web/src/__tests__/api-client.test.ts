@@ -73,12 +73,14 @@ describe('Frontend API Client Structure', () => {
     expect(content).toContain('export const transferApi');
   });
 
-  it('handles auth token from localStorage', () => {
-    expect(content).toContain('localStorage.getItem');
-    expect(content).toContain('auth-storage');
+  it('sends cookie credentials on requests', () => {
+    expect(content).toContain("credentials: 'include'");
   });
 
-  it('uses Authorization Bearer header', () => {
-    expect(content).toContain('Bearer');
+  it('uses CSRF cookie instead of bearer token storage', () => {
+    expect(content).toContain('cvg_csrf');
+    expect(content).toContain('X-CSRF-Token');
+    expect(content).not.toContain('localStorage.getItem');
+    expect(content).not.toContain('Authorization');
   });
 });

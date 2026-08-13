@@ -1,5 +1,3 @@
-import type { User, Role, Permission, Queue, Team } from '@cvg/database';
-
 // User
 export interface UserListItem {
   id: string;

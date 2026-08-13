@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -59,7 +59,7 @@ describe('Transfers routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -126,7 +126,7 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -148,7 +148,7 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -169,7 +169,7 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -182,7 +182,7 @@ describe('Transfers routes integration', () => {
     await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -194,11 +194,11 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contacts/${testContactId}/transfers`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
-    const body = response.json() as any[];
+    const body = response.json() as unknown[];
     expect(Array.isArray(body)).toBe(true);
     expect(body.length).toBeGreaterThan(0);
   });
@@ -209,7 +209,7 @@ describe('Transfers routes integration', () => {
     const createResp = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -224,7 +224,7 @@ describe('Transfers routes integration', () => {
     const acceptResp = await app.inject({
       method: 'POST',
       url: `/transfers/${transfer.id}/accept`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(acceptResp.statusCode).toBe(200);
@@ -235,7 +235,7 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/transfers/${fakeId}/accept`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -247,7 +247,7 @@ describe('Transfers routes integration', () => {
     const createResp = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -262,7 +262,7 @@ describe('Transfers routes integration', () => {
     const rejectResp = await app.inject({
       method: 'POST',
       url: `/transfers/${transfer.id}/reject`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(rejectResp.statusCode).toBe(200);
@@ -273,7 +273,7 @@ describe('Transfers routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/transfers/${fakeId}/reject`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -284,7 +284,7 @@ describe('Transfers routes integration', () => {
     const createResp = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -299,7 +299,7 @@ describe('Transfers routes integration', () => {
     const acceptResp = await app.inject({
       method: 'POST',
       url: `/transfers/${transfer.id}/accept`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(acceptResp.statusCode).toBe(400);
@@ -310,7 +310,7 @@ describe('Transfers routes integration', () => {
     const createResp = await app.inject({
       method: 'POST',
       url: '/transfers',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         contactId: testContactId,
         toSectorId: sectorBId,
@@ -325,14 +325,14 @@ describe('Transfers routes integration', () => {
     await app.inject({
       method: 'POST',
       url: `/transfers/${transfer.id}/reject`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     // Try to reject again
     const rejectResp = await app.inject({
       method: 'POST',
       url: `/transfers/${transfer.id}/reject`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(rejectResp.statusCode).toBe(400);

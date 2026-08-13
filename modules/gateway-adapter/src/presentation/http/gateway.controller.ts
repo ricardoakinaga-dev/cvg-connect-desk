@@ -1,7 +1,27 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { handleGatewayInbound, handleGatewayReceipt, handleInstanceStatus, checkGatewayHealth } from '../../application/use-cases';
+import { getGatewayDeskHandlers } from '../../application/desk-handlers';
 import { normalizeEvolutionMessage, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
-import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
+import type { WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
+import { createGatewayAuthGuard } from './gateway-auth';
+
+function isValidOutboundSentBody(body: unknown): body is { messageId?: string } {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return false;
+  }
+
+  const entries = Object.entries(body);
+  if (entries.some(([key]) => key !== 'messageId')) {
+    return false;
+  }
+
+  const messageId = (body as { messageId?: unknown }).messageId;
+  return messageId === undefined || (
+    typeof messageId === 'string'
+    && messageId.length > 0
+    && messageId.length <= 256
+  );
+}
 
 export async function registerGatewayRoutes(app: FastifyInstance) {
 
@@ -9,15 +29,39 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // WEBHOOK: Inbound do Gateway (WA_INBOUND)
   // Aceita tanto /gateway/inbound quanto /gateway/inbound/*
   // ============================================
-  app.post('/gateway/inbound', handleInbound);
-  app.post('/gateway/inbound/*', handleInbound);
+  app.post('/gateway/inbound', {
+    preHandler: createGatewayAuthGuard('inbound'),
+    schema: {
+      description: 'Recebe eventos inbound do gateway',
+      tags: ['Gateway'],
+      body: {
+        type: 'object',
+        minProperties: 1,
+        maxProperties: 100,
+        additionalProperties: true,
+      },
+    },
+  }, handleInbound);
+  app.post('/gateway/inbound/*', {
+    preHandler: createGatewayAuthGuard('inbound'),
+    schema: {
+      description: 'Recebe eventos inbound do gateway por tipo de URL',
+      tags: ['Gateway'],
+      body: {
+        type: 'object',
+        minProperties: 1,
+        maxProperties: 100,
+        additionalProperties: true,
+      },
+    },
+  }, handleInbound);
 
-  async function handleInbound(request: any, reply: any) {
-    const event = request.body as any;
+  async function handleInbound(request: FastifyRequest, reply: FastifyReply) {
+    const event = request.body as Record<string, unknown> | undefined;
 
     // Detectar tipo de evento do Evolution API
     const path = request.url;
-    let eventType = event?.event || event?.event_type || '';
+    let eventType = typeof event?.event === 'string' ? event.event : typeof event?.event_type === 'string' ? event.event_type : '';
 
     // Se o evento veio pela URL (ex: /gateway/inbound/messages-upsert)
     if (path.includes('/gateway/inbound/') && !eventType) {
@@ -36,7 +80,11 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
         if (waEvent) {
           const result = await handleGatewayInbound(waEvent);
           if (result.isErr()) {
-            return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
+            request.log.error({ err: result.error }, '[Gateway] Falha ao processar inbound');
+            return reply.status(500).send({
+              error: 'PROCESSING_ERROR',
+              message: 'Gateway event could not be processed',
+            });
           }
           return reply.status(200).send(result.value);
         }
@@ -82,9 +130,34 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // WEBHOOK: Receipt do Gateway (WA_RECEIPT)
   // ============================================
   app.post('/gateway/receipt', {
+    preHandler: createGatewayAuthGuard('receipt'),
     schema: {
       description: 'Recebe confirmações de entrega do gateway',
       tags: ['Gateway'],
+      body: {
+        type: 'object',
+        required: ['event_type', 'event_id', 'occurred_at', 'provider', 'channel', 'payload'],
+        properties: {
+          event_type: { type: 'string', const: 'WA_RECEIPT' },
+          event_id: { type: 'string', minLength: 1, maxLength: 128 },
+          occurred_at: { type: 'string', minLength: 1, maxLength: 64 },
+          provider: { type: 'string', minLength: 1, maxLength: 64 },
+          channel: { type: 'string', const: 'whatsapp' },
+          payload: {
+            type: 'object',
+            required: ['instance', 'remoteJid', 'messageId', 'status', 'status_at'],
+            properties: {
+              instance: { type: 'string', minLength: 1, maxLength: 128 },
+              remoteJid: { type: 'string', minLength: 1, maxLength: 256 },
+              messageId: { type: 'string', minLength: 1, maxLength: 256 },
+              status: { type: 'string', enum: ['sent', 'delivered', 'read', 'failed', 'played'] },
+              status_at: { type: 'string', minLength: 1, maxLength: 64 },
+            },
+            additionalProperties: true,
+          },
+        },
+        additionalProperties: true,
+      },
     },
   }, async (request, reply) => {
     const event = request.body as WAReceiptEvent;
@@ -93,7 +166,11 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
     const result = await handleGatewayReceipt(event);
 
     if (result.isErr()) {
-      return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
+      request.log.error({ err: result.error }, '[Gateway] Falha ao processar receipt');
+      return reply.status(500).send({
+        error: 'PROCESSING_ERROR',
+        message: 'Gateway receipt could not be processed',
+      });
     }
 
     return reply.status(200).send(result.value);
@@ -103,9 +180,32 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // WEBHOOK: Instance Status (INSTANCE_STATUS)
   // ============================================
   app.post('/gateway/instance-status', {
+    preHandler: createGatewayAuthGuard('instance-status'),
     schema: {
       description: 'Recebe status de instâncias WhatsApp',
       tags: ['Gateway'],
+      body: {
+        type: 'object',
+        required: ['event_type', 'event_id', 'occurred_at', 'provider', 'channel', 'payload'],
+        properties: {
+          event_type: { type: 'string', const: 'INSTANCE_STATUS' },
+          event_id: { type: 'string', minLength: 1, maxLength: 128 },
+          occurred_at: { type: 'string', minLength: 1, maxLength: 64 },
+          provider: { type: 'string', minLength: 1, maxLength: 64 },
+          channel: { type: 'string', const: 'whatsapp' },
+          payload: {
+            type: 'object',
+            required: ['instance', 'state', 'state_at'],
+            properties: {
+              instance: { type: 'string', minLength: 1, maxLength: 128 },
+              state: { type: 'string', enum: ['online', 'offline', 'connecting', 'qr', 'logged_out', 'unknown'] },
+              state_at: { type: 'string', minLength: 1, maxLength: 64 },
+            },
+            additionalProperties: true,
+          },
+        },
+        additionalProperties: true,
+      },
     },
   }, async (request, reply) => {
     const event = request.body as InstanceStatusEvent;
@@ -114,7 +214,11 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
     const result = await handleInstanceStatus(event);
 
     if (result.isErr()) {
-      return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
+      request.log.error({ err: result.error }, '[Gateway] Falha ao processar status');
+      return reply.status(500).send({
+        error: 'PROCESSING_ERROR',
+        message: 'Gateway instance status could not be processed',
+      });
     }
 
     return reply.status(200).send(result.value);
@@ -124,11 +228,12 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // Health do Gateway
   // ============================================
   app.get('/gateway/health', {
+    preHandler: createGatewayAuthGuard('health'),
     schema: {
       description: 'Verifica conectividade com o gateway',
       tags: ['Gateway'],
     },
-  }, async (request, reply) => {
+  }, async (_request, _reply) => {
     const result = await checkGatewayHealth();
     return result.value;
   });
@@ -137,6 +242,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // OUTBOUND: Gateway busca mensagens pendentes
   // ============================================
   app.get('/gateway/outbound/pending', {
+    preHandler: createGatewayAuthGuard('outbound:read'),
     schema: {
       description: 'Gateway busca mensagens outbound pendentes para enviar via Evolution',
       tags: ['Gateway'],
@@ -144,18 +250,15 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
         type: 'object',
         properties: {
           instance: { type: 'string' },
-          limit: { type: 'integer', default: 10 },
+          limit: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
         },
       },
     },
-  }, async (request, reply) => {
-    const { instance, limit = 10 } = request.query as { instance?: string; limit?: number };
+  }, async (request, _reply) => {
+    const { limit = 10 } = request.query as { instance?: string; limit?: number };
 
-    const { messageRepository } = await import('@cvg/chat');
-    const { conversations } = await import('@cvg/database');
-
-    // Buscar mensagens outbound pendentes
-    const pendingMessages = await messageRepository.findPendingOutbound(limit);
+    const handlers = getGatewayDeskHandlers();
+    const pendingMessages = await handlers.findPendingOutbound(limit);
 
     // Mapear para formato do gateway
     const outboundEvents = pendingMessages.map(msg => ({
@@ -187,19 +290,38 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // OUTBOUND: Marcar mensagem como enviada
   // ============================================
   app.post('/gateway/outbound/:id/sent', {
+    preHandler: createGatewayAuthGuard('outbound:write'),
     schema: {
       description: 'Gateway confirma que mensagem foi enviada',
       tags: ['Gateway'],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string', minLength: 1, maxLength: 128 },
+        },
+      },
+      body: {
+        type: 'object',
+        properties: {
+          messageId: { type: 'string', minLength: 1, maxLength: 256 },
+        },
+        additionalProperties: true,
+      },
     },
-  }, async (request, reply) => {
+  }, async (request, _reply) => {
     const { id } = request.params as { id: string };
-    const { messageId } = request.body as { messageId?: string };
+    if (!isValidOutboundSentBody(request.body)) {
+      return _reply.status(400).send({
+        error: 'INVALID_PAYLOAD',
+        message: 'Invalid outbound confirmation payload',
+      });
+    }
 
-    const { messageRepository } = await import('@cvg/chat');
-    await messageRepository.update(id, {
-      status: 'sent',
-      externalMessageId: messageId,
-    });
+    const { messageId } = request.body;
+
+    const handlers = getGatewayDeskHandlers();
+    await handlers.markOutboundSent(id, messageId);
 
     return { success: true };
   });

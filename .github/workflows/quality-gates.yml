@@ -1,0 +1,80 @@
+name: Quality Gates
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  quality-gates:
+    name: Lint, Build, Types, Tests, Coverage, Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: connect_desk
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: connect_desk_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U connect_desk -d connect_desk_db"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgresql://connect_desk:root@localhost:5432/connect_desk_db
+      REQUIRE_REAL_DB: '1'
+      REDIS_URL: redis://localhost:6379
+      INTERNAL_EVENTS_SECRET: ci-internal-events-secret
+      WEBHOOK_SECRET: ci-webhook-secret
+      GATEWAY_WEBHOOK_SECRET: ci-gateway-secret
+      CORS_ORIGIN: http://localhost:5173
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality gates
+        run: pnpm run ci:gates
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-critical
+          path: |
+            apps/desk-api/coverage/
+            apps/desk-web/coverage/
+            modules/chat/coverage/
+            modules/tasks/coverage/
+            packages/auth/coverage/
+            packages/events/coverage/
+          if-no-files-found: ignore
+          retention-days: 7

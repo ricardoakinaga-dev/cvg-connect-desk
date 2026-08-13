@@ -3,17 +3,21 @@ import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { setTimeout as delay } from 'node:timers/promises';
 import { and, eq } from 'drizzle-orm';
-import { db, schema } from '@cvg/database';
+const { db, schema } = await import('../../packages/database/src/index.ts');
 
 const rootEnv = {
   ...process.env,
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: process.env.PORT || '4330',
   REALTIME_PORT: process.env.REALTIME_PORT || '4930',
-  REDIS_URL: process.env.REDIS_URL || 'redis://localhost:56379',
+  REDIS_URL: process.env.REDIS_URL || `redis://localhost:${process.env.E2E_REDIS_PORT || '56379'}`,
   VITE_API_URL: process.env.VITE_API_URL || 'http://localhost:4330',
+  DESK_API_URL: process.env.DESK_API_URL || 'http://localhost:4330',
   VITE_REALTIME_URL: process.env.VITE_REALTIME_URL || 'ws://localhost:4930',
   EVOLUTION_API_URL: process.env.EVOLUTION_API_URL || 'http://localhost:8082',
+  INTERNAL_EVENTS_SECRET: process.env.INTERNAL_EVENTS_SECRET || 'e2e-internal-events-secret',
+  SEED_ADMIN_EMAIL: process.env.SEED_ADMIN_EMAIL || 'e2e-admin@cvg.test',
+  SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD || 'E2eSmokePass!2026',
 };
 
 const children: ReturnType<typeof spawn>[] = [];
@@ -56,13 +60,21 @@ function getRequiredDatabaseUrl() {
 function spawnManaged(command: string, args: string[], label: string, extraEnv: NodeJS.ProcessEnv = {}) {
   const child = spawn(command, args, {
     cwd: process.cwd(),
-    detached: true,
+    // Keep services in the Playwright webServer process group. This makes
+    // forced test termination clean up the full stack as well.
+    detached: false,
     env: {
       ...rootEnv,
       ...extraEnv,
     },
-    stdio: 'inherit',
+    // Keep service pipes owned by the supervisor. Detached children inheriting
+    // Playwright's stdout/stderr keep the webServer pipe open after the test
+    // run and make a green suite hang during teardown.
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
+
+  child.stdout?.on('data', (chunk: Buffer) => process.stdout.write(`[${label}] ${chunk}`));
+  child.stderr?.on('data', (chunk: Buffer) => process.stderr.write(`[${label}] ${chunk}`));
 
   child.on('exit', (code, signal) => {
     if (code !== 0 && signal !== 'SIGTERM') {
@@ -85,7 +97,7 @@ function shutdown(exitCode = 0) {
   for (const child of children) {
     if (child.pid && !child.killed) {
       try {
-        process.kill(-child.pid, 'SIGTERM');
+        process.kill(child.pid, 'SIGTERM');
       } catch {
         // Ignore missing process groups during shutdown.
       }
@@ -96,7 +108,7 @@ function shutdown(exitCode = 0) {
     for (const child of children) {
       if (child.pid && !child.killed) {
         try {
-          process.kill(-child.pid, 'SIGKILL');
+          process.kill(child.pid, 'SIGKILL');
         } catch {
           // Ignore lingering process groups during forced shutdown.
         }
@@ -169,8 +181,12 @@ async function waitForTcp(host: string, port: number, timeoutMs = 120_000) {
 }
 
 async function ensureBootstrapAdmin() {
-  const adminEmail = 'admin@cvg.com';
-  const adminPasswordHash = '$2a$10$.sCUEq9veDJjD3TfRNCCjOxAeokl2WuGU0HtKmVMS3nRxNwOdfeqa';
+  const adminEmail = rootEnv.SEED_ADMIN_EMAIL;
+  if (!adminEmail || !rootEnv.SEED_ADMIN_PASSWORD) {
+    throw new Error('[e2e-stack] SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD are required');
+  }
+
+  await runChecked('pnpm', ['--filter', '@cvg/database', 'db:seed'], 'database seed');
 
   let [adminRole] = await db
     .select()
@@ -185,31 +201,14 @@ async function ensureBootstrapAdmin() {
       .returning();
   }
 
-  let [adminUser] = await db
+  const [adminUser] = await db
     .select()
     .from(schema.users)
     .where(eq(schema.users.email, adminEmail))
     .limit(1);
 
   if (!adminUser) {
-    [adminUser] = await db
-      .insert(schema.users)
-      .values({
-        name: 'Administrator',
-        email: adminEmail,
-        passwordHash: adminPasswordHash,
-        isActive: true,
-      })
-      .returning();
-  } else {
-    await db
-      .update(schema.users)
-      .set({
-        name: 'Administrator',
-        passwordHash: adminPasswordHash,
-        isActive: true,
-      })
-      .where(eq(schema.users.id, adminUser.id));
+    throw new Error(`[e2e-stack] Seed did not create admin user ${adminEmail}`);
   }
 
   const userRole = await db
@@ -296,7 +295,7 @@ async function main() {
   await waitForTcp('localhost', 4930);
 
   console.log('[e2e-stack] Starting desk-web');
-  spawnManaged('pnpm', ['--filter', '@cvg/desk-web', 'exec', 'vite', '--host', '0.0.0.0', '--port', '4173'], 'desk-web');
+  spawnManaged('pnpm', ['--filter', '@cvg/desk-web', 'exec', 'vite', '--config', 'vite.config.ts', '--host', '0.0.0.0', '--port', '4173'], 'desk-web');
   await waitForHttp('http://localhost:4173/login');
 
   console.log('[e2e-stack] E2E stack ready');

@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { and, eq } from 'drizzle-orm';
@@ -58,7 +58,7 @@ describe('Chat routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -95,9 +95,7 @@ describe('Chat routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/messages',
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(token),
       payload: {
         conversationId,
         recipient: '+5511999999000',
@@ -120,13 +118,116 @@ describe('Chat routes integration', () => {
     expect(message.recipient).toBe('+5511999999000');
   });
 
+  it('aceita mensagem com mediaType image', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/messages',
+      headers: withSessionCsrf(token),
+      payload: {
+        conversationId,
+        recipient: '+5511999999002',
+        mediaUrl: 'https://example.com/image.jpg',
+        mediaType: 'image',
+        content: 'Imagem do caso',
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+
+    const body = response.json() as { messageId: string };
+    const [message] = await db
+      .select()
+      .from(schema.messages)
+      .where(and(eq(schema.messages.id, body.messageId)));
+
+    expect(message.mediaType).toBe('image');
+    expect(message.mediaUrl).toBe('https://example.com/image.jpg');
+  });
+
+  it('aceita mensagem com mediaType document', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/messages',
+      headers: withSessionCsrf(token),
+      payload: {
+        conversationId,
+        recipient: '+5511999999003',
+        mediaUrl: 'https://example.com/recipe.pdf',
+        mediaType: 'document',
+        content: 'Laudo',
+        mediaFilename: 'recipe.pdf',
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+
+    const body = response.json() as { messageId: string };
+    const [message] = await db
+      .select()
+      .from(schema.messages)
+      .where(and(eq(schema.messages.id, body.messageId)));
+
+    expect(message.mediaType).toBe('document');
+    expect(message.mediaUrl).toBe('https://example.com/recipe.pdf');
+  });
+
+  it('aceita mensagem com mediaType audio', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/messages',
+      headers: withSessionCsrf(token),
+      payload: {
+        conversationId,
+        recipient: '+5511999999005',
+        mediaUrl: 'https://example.com/audio.mp3',
+        mediaType: 'audio',
+        content: 'Áudio para operação',
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+
+    const body = response.json() as { messageId: string };
+    const [message] = await db
+      .select()
+      .from(schema.messages)
+      .where(and(eq(schema.messages.id, body.messageId)));
+
+    expect(message.mediaType).toBe('audio');
+    expect(message.mediaUrl).toBe('https://example.com/audio.mp3');
+  });
+
+  it('aceita mensagem com mediaType location', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/messages',
+      headers: withSessionCsrf(token),
+      payload: {
+        conversationId,
+        recipient: '+5511999999004',
+        mediaType: 'location',
+        latitude: -23.55052,
+        longitude: -46.633308,
+        content: 'Praia da região',
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+
+    const body = response.json() as { messageId: string };
+    const [message] = await db
+      .select()
+      .from(schema.messages)
+      .where(and(eq(schema.messages.id, body.messageId)));
+
+    expect(message.mediaType).toBe('location');
+  });
+
   it('validation error e retornado corretamente para input invalido', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/messages',
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(token),
       payload: {
         conversationId,
         content: 'Sem recipient',
@@ -140,9 +241,7 @@ describe('Chat routes integration', () => {
     await app.inject({
       method: 'POST',
       url: '/messages',
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(token),
       payload: {
         conversationId,
         recipient: '+5511999999001',
@@ -153,9 +252,7 @@ describe('Chat routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/conversations/${conversationId}/messages?limit=10`,
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

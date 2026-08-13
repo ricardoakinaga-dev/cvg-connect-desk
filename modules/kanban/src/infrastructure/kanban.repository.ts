@@ -1,6 +1,6 @@
 import { db } from '@cvg/database';
 import { conversations, contacts, labels, conversationLabels, sectors, users, messages } from '@cvg/database';
-import { eq, and, desc, sql, isNotNull } from 'drizzle-orm';
+import { eq, and, desc, sql, inArray } from 'drizzle-orm';
 
 export class KanbanRepository {
   async getCards(filters?: { sectorId?: string; assignedUserId?: string; labelId?: string }) {
@@ -10,7 +10,7 @@ export class KanbanRepository {
     if (filters?.assignedUserId) conditions.push(eq(conversations.assignedUserId, filters.assignedUserId));
 
     // Buscar conversas com joins
-    let query = db.select({
+    const query = db.select({
       id: conversations.id,
       statusV2: conversations.statusV2,
       contactName: contacts.name,
@@ -42,20 +42,25 @@ export class KanbanRepository {
     })
       .from(conversationLabels)
       .innerJoin(labels, eq(conversationLabels.labelId, labels.id))
-      .where(sql`${conversationLabels.conversationId} = ANY(${conversationIds})`)
+      .where(inArray(conversationLabels.conversationId, conversationIds))
     : [];
 
     // Buscar última mensagem para cada conversa
-    const lastMessages = conversationIds.length > 0 ? await db.execute(sql`
-      SELECT DISTINCT ON (conversation_id) conversation_id, content
-      FROM messages
-      WHERE conversation_id = ANY(${conversationIds})
-      ORDER BY conversation_id, created_at DESC
-    `) : { rows: [] };
+    const lastMessages = conversationIds.length > 0 ? await db.select({
+      conversationId: messages.conversationId,
+      content: messages.content,
+    })
+      .from(messages)
+      .where(inArray(messages.conversationId, conversationIds))
+      .orderBy(messages.conversationId, desc(messages.createdAt))
+    : [];
 
-    const lastMessageMap = new Map<string, string>();
-    for (const row of (lastMessages as any).rows || []) {
-      lastMessageMap.set(row.conversation_id, row.content?.substring(0, 100) || null);
+    const lastMessageMap = new Map<string, string | null>();
+    const lastMessageRows = lastMessages;
+    for (const row of lastMessageRows) {
+      if (!lastMessageMap.has(row.conversationId)) {
+        lastMessageMap.set(row.conversationId, row.content?.substring(0, 100) || null);
+      }
     }
 
     const labelMap = new Map<string, { name: string; color: string }[]>();
@@ -77,6 +82,7 @@ export class KanbanRepository {
 
       return {
         id: r.id,
+        statusV2: r.statusV2,
         contactName: r.contactName,
         contactPhone: r.contactPhone,
         patientName: null,

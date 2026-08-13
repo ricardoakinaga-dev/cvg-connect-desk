@@ -2,6 +2,7 @@
   "name": "cvg-connect-desk-monorepo",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "pretest": "pnpm --filter @cvg/database db:types",
@@ -10,29 +11,41 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "test:postgres-real": "pnpm --filter @cvg/database db:types && pnpm --filter @cvg/database db:migrate && pnpm --filter @cvg/events test:real-db && pnpm --filter @cvg/chat exec vitest run src/__tests__/receive-inbound-idempotency.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/auth-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/chat-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/webhook-inbound.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/events-polling.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/kanban-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/dead-letter-routes.integration.test.ts",
-    "test:e2e": "playwright test",
-    "test:e2e:smoke": "DATABASE_URL=postgresql://connect_desk:root@localhost:55432/connect_desk_db playwright test",
+  "test:postgres-real": "REQUIRE_REAL_DB=1 pnpm --filter @cvg/database db:types && REQUIRE_REAL_DB=1 pnpm --filter @cvg/database db:migrate && REQUIRE_REAL_DB=1 pnpm --filter @cvg/events test:real-db && REQUIRE_REAL_DB=1 pnpm --filter @cvg/chat exec vitest run src/__tests__/receive-inbound-idempotency.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/chat exec vitest run src/__tests__/secretary-handoff.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/auth-routes.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/chat-routes.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/webhook-inbound.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/events-polling.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/kanban-routes.integration.test.ts && REQUIRE_REAL_DB=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/dead-letter-routes.integration.test.ts",
+    "test:e2e": "playwright test --config=playwright.config.ts",
+    "test:e2e:smoke": "DATABASE_URL=postgresql://connect_desk:root@localhost:55432/connect_desk_db playwright test --config=playwright.config.ts",
     "test:e2e:ui": "playwright test --ui",
+  "test:coverage:critical": "node scripts/run-critical-coverage.mjs",
+  "verify:scorecard": "node scripts/verify-scorecard.mjs",
+  "check:security:session": "node scripts/check-no-session-token-regression.mjs",
+  "ci:gates": "pnpm run check:security:session && pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test && pnpm run test:postgres-real && pnpm run test:coverage:critical && pnpm audit --audit-level moderate && pnpm run verify:scorecard",
+    "test:stress": "bash stress-test/run-k6-stress.sh",
+    "qa:full-cycle": "bash scripts/run-full-cycle.sh",
+    "qa:full-cycle:archive": "bash scripts/run-full-cycle-archive.sh",
     "e2e:stack:up": "docker compose -f docker-compose.smoke.yml up -d postgres redis",
     "e2e:stack:down": "fuser -k 4330/tcp 4930/tcp 4173/tcp 8082/tcp 2>/dev/null; docker compose -f docker-compose.smoke.yml down -v",
     "e2e:stack:logs": "docker compose -f docker-compose.smoke.yml logs -f postgres redis",
     "pretypecheck": "pnpm --filter @cvg/database db:types",
     "typecheck": "turbo run typecheck",
-    "db:migrate": "echo 'not implemented yet'",
-    "db:seed": "echo 'not implemented yet'"
+    "db:migrate": "pnpm --filter @cvg/database db:migrate",
+    "db:seed": "pnpm --filter @cvg/database db:seed"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@cvg/database": "workspace:*",
+    "@eslint/js": "9.39.4",
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "^3.2.6",
+    "dotenv": "^17.3.1",
+    "esbuild": "0.28.1",
     "eslint": "^9.0.0",
     "globals": "^17.4.0",
     "tsx": "4.21.0",
-    "turbo": "latest",
+    "turbo": "^2.9.14",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.57.2",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6",
+    "ws": "^8.21.0"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -41,5 +54,29 @@
   "dependencies": {
     "drizzle-orm": "0.45.2",
     "pg": "8.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/core": ">=7.29.6",
+      "@fastify/static": ">=10.1.2",
+      "@grpc/grpc-js": ">=1.14.4",
+      "@opentelemetry/core": ">=2.8.0",
+      "@opentelemetry/propagator-jaeger": ">=2.9.0",
+      "@remix-run/router": ">=1.23.3",
+      "brace-expansion@^1.1.7": "1.1.18",
+      "brace-expansion@^2.0.0": "2.1.4",
+      "brace-expansion@^5.0.0": "5.0.9",
+      "esbuild": ">=0.28.1",
+      "fast-uri": ">=3.1.5",
+      "follow-redirects": ">=1.16.0",
+      "find-my-way": ">=9.7.0",
+      "form-data": ">=4.0.6",
+      "js-yaml": ">=4.3.1",
+      "nanoid": ">=3.3.17",
+      "postcss": ">=8.5.23",
+      "protobufjs": ">=7.6.5",
+      "vite": "7.3.5",
+      "ws": ">=8.21.0"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getErrorMessage } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import './Login.css';
 
@@ -18,8 +19,8 @@ export function Login() {
     try {
       await login(email, password);
       navigate('/inbox');
-    } catch (err: any) {
-      setError(err.message || 'Erro ao fazer login');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Erro ao fazer login'));
     } finally {
       setLoading(false);
     }
@@ -28,14 +29,12 @@ export function Login() {
   return (
     <div className="login-page">
       <div className="login-bg">
-        <div className="bg-circle c1" />
-        <div className="bg-circle c2" />
-        <div className="bg-circle c3" />
+        <div className="bg-grid" />
       </div>
 
       <div className="login-card">
         <div className="login-header">
-          <div className="login-logo">🐾</div>
+          <div className="login-logo">CVG</div>
           <h1>CVG Connect Desk</h1>
           <p>Sistema de Atendimento Digital</p>
         </div>
@@ -44,12 +43,12 @@ export function Login() {
           {error && <div className="login-error">{error}</div>}
 
           <div className="input-group">
-            <span className="input-icon">📧</span>
+            <span className="input-icon">@</span>
             <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus />
           </div>
 
           <div className="input-group">
-            <span className="input-icon">🔒</span>
+            <span className="input-icon">#</span>
             <input type="password" placeholder="Senha" value={password} onChange={e => setPassword(e.target.value)} required />
           </div>
 

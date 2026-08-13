@@ -15,15 +15,21 @@
  */
 
 import { test, expect, type Page } from '@playwright/test';
-import { loginAsAdmin, ensureE2EConversation } from './support';
+import { loginAsAdmin, ensureE2EConversation } from './support.ts';
 
 test.describe('Send Message Flow', () => {
   let conversationId: string;
 
   async function openFixtureConversation(page: Page) {
-    // Navigate directly to the fixture conversation via URL param
-    await page.goto(`/inbox?conversation=${conversationId}`);
-    await expect(page.locator('.composer-v2')).toBeVisible({ timeout: 10_000 });
+    // Wait for the real conversation list before selecting the fixture. The
+    // inbox loads conversations asynchronously, so selecting by URL alone can
+    // race the first query and leave the composer in its empty state.
+    await page.goto('/inbox');
+    await expect(page.locator('.conv-list-v2')).toBeVisible({ timeout: 15_000 });
+    const fixtureContact = page.getByText('E2E Smoke Contact', { exact: true }).first();
+    await expect(fixtureContact).toBeVisible({ timeout: 15_000 });
+    await fixtureContact.click();
+    await expect(page.locator('.composer-v2')).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('.header-name')).toBeVisible({ timeout: 5_000 });
   }
 
@@ -50,14 +56,15 @@ test.describe('Send Message Flow', () => {
     // Verify the input has the text before sending
     await expect(composerInput).toHaveValue(testMessage);
 
-    const sendRequest = page.waitForRequest(request => {
-      return request.method() === 'POST'
-        && request.url().endsWith('/messages');
+    const sendResponse = page.waitForResponse(response => {
+      return response.request().method() === 'POST'
+        && response.url().endsWith('/messages')
+        && response.status() === 201;
     });
 
     // Send the message (submit the composer form)
     await page.locator('.composer-send').click();
-    await sendRequest;
+    await sendResponse;
 
     // Wait for the message to appear in the chat
     // The message should appear in the chat area with the text we sent
@@ -93,16 +100,16 @@ test.describe('Send Message Flow', () => {
     const composerInput = page.locator('.composer-input-v2');
     const sendButton = page.locator('.composer-send');
 
-    // Initially empty — send button shows 🎤 (voice mode)
+    // Initially empty — send button shows REC (voice mode)
     await expect(composerInput).toHaveValue('');
-    await expect(sendButton).toContainText('🎤');
+    await expect(sendButton).toContainText('REC');
 
     // Type something — send button changes to ➤
     await composerInput.fill('Hello');
     await expect(sendButton).toContainText('➤');
 
-    // Clear — back to 🎤
+    // Clear — back to REC
     await composerInput.clear();
-    await expect(sendButton).toContainText('🎤');
+    await expect(sendButton).toContainText('REC');
   });
 });

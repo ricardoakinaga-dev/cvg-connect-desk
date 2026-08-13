@@ -8,7 +8,8 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
-    "lint": "echo lint",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -21,6 +22,6 @@
   "devDependencies": {
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

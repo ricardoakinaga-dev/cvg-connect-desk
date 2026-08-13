@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -57,7 +57,7 @@ describe('Contact Groups routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -101,7 +101,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/contact-groups',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -115,7 +115,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/contact-groups',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         name: groupName,
         description: 'Grupo de teste',
@@ -138,7 +138,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/contact-groups/${testGroupId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Grupo Atualizado', description: 'Nova descricao' },
     });
 
@@ -152,7 +152,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/contact-groups/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Grupo Inexistente' },
     });
 
@@ -171,7 +171,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/contact-groups/${groupToDelete}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -182,7 +182,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/contact-groups/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -193,7 +193,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contact-groups/${testGroupId}/members`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -205,7 +205,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contact-groups/${fakeId}/members`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -216,7 +216,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/contact-groups/${testGroupId}/members`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { contactId: testContactId },
     });
 
@@ -230,7 +230,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/contact-groups/${fakeGroupId}/members`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { contactId: testContactId },
     });
 
@@ -249,7 +249,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/contact-groups/${testGroupId}/members/${testContactId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -260,7 +260,7 @@ describe('Contact Groups routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contacts/${testContactId}/groups`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

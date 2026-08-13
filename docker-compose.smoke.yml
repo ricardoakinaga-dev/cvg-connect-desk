@@ -1,5 +1,4 @@
 # docker-compose.smoke.yml — Stack mínima dedicada ao smoke E2E
-version: '3.8'
 
 services:
   postgres:
@@ -10,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
       POSTGRES_DB: ${POSTGRES_DB:-connect_desk_db}
     ports:
-      - "127.0.0.1:55432:5432"
+      - "127.0.0.1:${E2E_POSTGRES_PORT:-55432}:5432"
     volumes:
       - smoke_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -25,7 +24,7 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     ports:
-      - "127.0.0.1:56379:6379"
+      - "127.0.0.1:${E2E_REDIS_PORT:-56379}:6379"
     volumes:
       - smoke_redisdata:/data
     healthcheck:

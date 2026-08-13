@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAdmin } from './support';
+import { loginAsAdmin } from './support.ts';
 
 test.beforeEach(async ({ page }) => {
   await loginAsAdmin(page);
@@ -45,10 +45,10 @@ test.describe('Create Task Flow', () => {
     await page.getByRole('button', { name: /Nova Tarefa/ }).click();
     await expect(page.locator('select')).toBeVisible();
     await expect(page.locator('select option')).toHaveText([
-      '🟢 Baixa',
-      '🟡 Média',
-      '🟠 Alta',
-      '🔴 Urgente',
+      'Baixa',
+      'Média',
+      'Alta',
+      'Urgente',
     ]);
   });
 });

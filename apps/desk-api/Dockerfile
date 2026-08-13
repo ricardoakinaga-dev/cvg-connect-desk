@@ -16,7 +16,10 @@ RUN pnpm install -r --no-lockfile
 COPY apps/desk-api/ apps/desk-api/
 COPY tsconfig*.json ./
 
-RUN pnpm --filter @cvg/desk-api exec tsc --noEmit || true
+RUN mkdir -p apps/desk-api/dist \
+  && pnpm exec esbuild apps/desk-api/src/index.ts \
+    --bundle --platform=node --format=esm --packages=bundle \
+    --sourcemap=external --outfile=apps/desk-api/dist/index.js
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
@@ -26,17 +29,7 @@ ENV NODE_ENV=production
 RUN apk add --no-cache tini curl
 RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001 -G appgroup
 
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
-COPY --from=builder /app/pnpm-workspace.yaml ./
-COPY --from=builder /app/apps/desk-api/package.json apps/desk-api/
-COPY --from=builder /app/packages/ packages/
-COPY --from=builder /app/modules/ modules/
-COPY --from=builder /app/apps/desk-api/ apps/desk-api/
-COPY --from=builder /app/tsconfig*.json ./
-
-RUN corepack enable && corepack prepare pnpm@10.33.0 --activate \
-  && pnpm install -r --no-lockfile --prod \
-  && rm -rf /root/.pnpm-store
+COPY --from=builder /app/apps/desk-api/dist/ ./dist/
 
 USER appuser
 EXPOSE 3000
@@ -45,4 +38,4 @@ HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["sh", "-c", "pnpm --filter @cvg/desk-api exec tsx src/index.ts"]
+CMD ["node", "dist/index.js"]

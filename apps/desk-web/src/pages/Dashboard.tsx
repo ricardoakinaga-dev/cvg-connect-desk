@@ -14,28 +14,28 @@ export function Dashboard() {
   }, []);
 
   if (loading) return <div className="dashboard-page"><div className="loading-state"><div className="spinner" /> Carregando dashboard...</div></div>;
-  if (!summary) return <div className="dashboard-page"><div className="empty-state"><span className="empty-icon">📊</span><p>Erro ao carregar dashboard</p></div></div>;
+  if (!summary) return <div className="dashboard-page"><div className="empty-state"><span className="empty-icon">DB</span><p>Erro ao carregar dashboard</p></div></div>;
 
   const cards = [
-    { label: 'Conversas Abertas', value: summary.conversations.open, icon: '💬', color: '#3b82f6', bg: '#eff6ff' },
-    { label: 'Conversas Pendentes', value: summary.conversations.pending, icon: '⏳', color: '#eab308', bg: '#fefce8' },
-    { label: 'Total de Conversas', value: summary.conversations.total, icon: '📥', color: '#6366f1', bg: '#eef2ff' },
-    { label: 'Tarefas Pendentes', value: summary.tasks.pending, icon: '📋', color: '#f59e0b', bg: '#fffbeb' },
-    { label: 'Tarefas Vencidas', value: summary.tasks.overdue, icon: '⚠️', color: '#ef4444', bg: '#fef2f2' },
-    { label: 'Tarefas Concluídas', value: summary.tasks.completed, icon: '✅', color: '#22c55e', bg: '#f0fdf4' },
-    { label: 'Alertas Ativos', value: summary.alerts.active, icon: '🔔', color: '#ef4444', bg: '#fef2f2' },
-    { label: 'Alertas Críticos', value: summary.alerts.bySeverity.critical, icon: '🔴', color: '#dc2626', bg: '#fef2f2' },
+    { label: 'Conversas Abertas', value: summary.conversations.open, icon: 'CA', color: '#2563eb', bg: '#eff6ff' },
+    { label: 'Conversas Pendentes', value: summary.conversations.pending, icon: 'CP', color: '#b45309', bg: '#fffbeb' },
+    { label: 'Total de Conversas', value: summary.conversations.total, icon: 'TC', color: '#1d4ed8', bg: '#eff6ff' },
+    { label: 'Tarefas Pendentes', value: summary.tasks.pending, icon: 'TP', color: '#b45309', bg: '#fffbeb' },
+    { label: 'Tarefas Vencidas', value: summary.tasks.overdue, icon: 'TV', color: '#dc2626', bg: '#fef2f2' },
+    { label: 'Tarefas Concluídas', value: summary.tasks.completed, icon: 'OK', color: '#15803d', bg: '#f0fdf4' },
+    { label: 'Alertas Ativos', value: summary.alerts.active, icon: 'AL', color: '#dc2626', bg: '#fef2f2' },
+    { label: 'Alertas Críticos', value: summary.alerts.bySeverity.critical, icon: 'CR', color: '#b91c1c', bg: '#fef2f2' },
   ];
 
   return (
     <div className="dashboard-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>📊 Dashboard</h2>
+          <h2>Dashboard</h2>
           <p>Visão geral da operação em tempo real</p>
         </div>
         <div className="hero-right">
-          <span className="update-badge">🔄 Atualizado agora</span>
+          <span className="update-badge">Atualizado agora</span>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export function Dashboard() {
 
       <div className="dashboard-sections">
         <div className="section-card">
-          <h3>💬 Conversas</h3>
+          <h3>Conversas</h3>
           <div className="bar-group">
             {[
               { label: 'Abertas', value: summary.conversations.open, color: '#22c55e', total: summary.conversations.total },
@@ -72,7 +72,7 @@ export function Dashboard() {
         </div>
 
         <div className="section-card">
-          <h3>📋 Tarefas</h3>
+          <h3>Tarefas</h3>
           <div className="bar-group">
             {[
               { label: 'Pendentes', value: summary.tasks.pending, color: '#eab308', total: summary.tasks.total },
@@ -91,13 +91,13 @@ export function Dashboard() {
         </div>
 
         <div className="section-card">
-          <h3>🔔 Alertas por Severidade</h3>
+          <h3>Alertas por Severidade</h3>
           <div className="severity-grid">
             {[
-              { label: 'Crítico', value: summary.alerts.bySeverity.critical, icon: '🔴', color: '#dc2626' },
-              { label: 'Erro', value: summary.alerts.bySeverity.error, icon: '🟠', color: '#ea580c' },
-              { label: 'Aviso', value: summary.alerts.bySeverity.warning, icon: '🟡', color: '#ca8a04' },
-              { label: 'Info', value: summary.alerts.bySeverity.info, icon: '🔵', color: '#2563eb' },
+              { label: 'Crítico', value: summary.alerts.bySeverity.critical, icon: 'CR', color: '#dc2626' },
+              { label: 'Erro', value: summary.alerts.bySeverity.error, icon: 'ER', color: '#ea580c' },
+              { label: 'Aviso', value: summary.alerts.bySeverity.warning, icon: 'AV', color: '#ca8a04' },
+              { label: 'Info', value: summary.alerts.bySeverity.info, icon: 'IN', color: '#2563eb' },
             ].map((s, i) => (
               <div key={i} className="severity-item">
                 <span className="sev-icon">{s.icon}</span>

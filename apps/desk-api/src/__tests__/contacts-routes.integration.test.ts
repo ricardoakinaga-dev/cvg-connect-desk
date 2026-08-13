@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -16,7 +16,8 @@ describe('Contacts routes integration', () => {
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
   let token = '';
 
-  const makePhone = () => `55199${Date.now().toString().slice(-8)}${randomUUID().replace(/-/g, '').slice(0, 4)}`.slice(0, 15);
+  const makePhone = () =>
+    `55199${Date.now().toString().slice(-8)}${randomUUID().replace(/\D/g, '').slice(0, 4).padEnd(4, '0')}`.slice(0, 15);
 
   beforeAll(async () => {
     app = await buildDeskApiApp();
@@ -58,7 +59,7 @@ describe('Contacts routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -113,7 +114,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/contacts',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -124,7 +125,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/contacts?search=Test',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -136,7 +137,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contacts/${testContactId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -149,7 +150,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/contacts/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -161,7 +162,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/contacts',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         name: 'Novo Contato',
         phone,
@@ -186,7 +187,7 @@ describe('Contacts routes integration', () => {
     await app.inject({
       method: 'POST',
       url: '/contacts',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Primeiro', phone },
     });
 
@@ -194,7 +195,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/contacts',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Segundo', phone },
     });
 
@@ -206,7 +207,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/contacts/${testContactId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Contato Atualizado', notes: 'Novas notas' },
     });
 
@@ -220,7 +221,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/contacts/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Contato Inexistente' },
     });
 
@@ -240,7 +241,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/contacts/${contactToDelete}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -251,7 +252,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/contacts/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -262,7 +263,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/contacts/${testContactId}/start-conversation`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {},
     });
 
@@ -289,7 +290,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/contacts/${fakeId}/start-conversation`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {},
     });
 
@@ -301,7 +302,7 @@ describe('Contacts routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/contacts/stats/overview',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

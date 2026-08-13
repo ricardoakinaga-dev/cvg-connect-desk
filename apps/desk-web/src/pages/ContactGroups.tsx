@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './ContactGroups.css';
 
 interface ContactGroup {
@@ -25,7 +25,7 @@ export function ContactGroups() {
   const [showCreate, setShowCreate] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [members, setMembers] = useState<GroupMember[]>([]);
-  const [newGroup, setNewGroup] = useState({ name: '', description: '', groupType: 'custom', color: '#6b7280', icon: '👥' });
+  const [newGroup, setNewGroup] = useState({ name: '', description: '', groupType: 'custom', color: '#64748b', icon: 'GP' });
 
   const fetchGroups = async () => {
     try {
@@ -55,11 +55,11 @@ export function ContactGroups() {
     if (!newGroup.name.trim()) return;
     try {
       await api.post('/contact-groups', newGroup);
-      setNewGroup({ name: '', description: '', groupType: 'custom', color: '#6b7280', icon: '👥' });
+      setNewGroup({ name: '', description: '', groupType: 'custom', color: '#64748b', icon: 'GP' });
       setShowCreate(false);
       fetchGroups();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err: unknown) {
+      alert(getErrorMessage(err));
     }
   };
 
@@ -69,8 +69,8 @@ export function ContactGroups() {
       await api.delete(`/contact-groups/${id}`);
       if (selectedGroup === id) setSelectedGroup(null);
       fetchGroups();
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err: unknown) {
+      alert(getErrorMessage(err));
     }
   };
 
@@ -79,12 +79,13 @@ export function ContactGroups() {
     return map[type] || type;
   };
 
-  const iconOptions = ['👥', '👤', '🐕', '🐈', '🏥', '💼', '⭐', '🔑'];
+  const iconOptions = ['GP', 'CT', 'VIP', 'EXT', 'CL', 'AD', 'PR', 'AC'];
+  const groupMark = (group: ContactGroup) => (/^[A-Z0-9]{2,4}$/.test(group.icon) ? group.icon : group.name.slice(0, 2).toUpperCase());
 
   return (
     <div className="contact-groups-page">
       <div className="page-header">
-        <h2>👥 Grupos de Contatos</h2>
+        <h2>Grupos de Contatos</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
           {showCreate ? '✕ Cancelar' : '+ Novo Grupo'}
         </button>
@@ -122,7 +123,7 @@ export function ContactGroups() {
                 onClick={() => setSelectedGroup(group.id)}
                 style={{ borderLeftColor: group.color }}
               >
-                <div className="group-icon">{group.icon}</div>
+                <div className="group-icon">{groupMark(group)}</div>
                 <div className="group-info">
                   <div className="group-name">{group.name}</div>
                   <div className="group-meta">
@@ -130,7 +131,7 @@ export function ContactGroups() {
                     <span className="group-count">{group.memberCount} membros</span>
                   </div>
                 </div>
-                <button className="btn-delete-sm" onClick={(e) => { e.stopPropagation(); handleDelete(group.id); }}>🗑️</button>
+                <button className="btn-delete-sm" onClick={(e) => { e.stopPropagation(); handleDelete(group.id); }}>DEL</button>
               </div>
             ))}
 

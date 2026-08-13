@@ -1,5 +1,5 @@
 import type { EventEnvelope, DeadLetterEntry, DeadLetterFailureContext } from '@cvg/events';
-import { deadLetterStore } from '@cvg/events';
+import { getRuntimeDeadLetterStore } from '@cvg/events';
 
 function buildFailureContext(params: {
   event: EventEnvelope;
@@ -22,13 +22,13 @@ function buildFailureContext(params: {
   };
 }
 
-export function recordWorkerDeadLetter(params: {
+export async function recordWorkerDeadLetter(params: {
   event: EventEnvelope;
   error: string;
   retryCount: number;
   handlerName: string;
-}): DeadLetterEntry {
-  return deadLetterStore.add({
+}): Promise<DeadLetterEntry> {
+  return getRuntimeDeadLetterStore().add({
     eventType: params.event.event_type,
     eventId: params.event.event_id,
     payload: params.event.payload,

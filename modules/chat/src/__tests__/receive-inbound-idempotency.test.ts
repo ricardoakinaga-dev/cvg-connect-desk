@@ -7,10 +7,11 @@
  * using the real PostgreSQL database.
  *
  * NOTE: These tests require a running PostgreSQL database with the full schema
- * migrated. If the database is not available, tests are skipped.
+ * migrated. Local exploratory runs may skip when REQUIRE_REAL_DB is unset;
+ * CI and the real-PostgreSQL gate fail fast instead of producing a false pass.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 
 vi.mock('@cvg/audit', () => ({
   createAuditLog: vi.fn().mockResolvedValue(undefined),
@@ -22,20 +23,20 @@ vi.mock('@cvg/secretary-adapter', () => ({
     isOk: () => false,
   }),
 }));
-vi.mock('../events/chat-publisher', () => ({
+vi.mock('../application/events/chat-publisher', () => ({
   publishMessagePersisted: vi.fn().mockResolvedValue(undefined),
   publishConversationCreated: vi.fn().mockResolvedValue(undefined),
 }));
 
 import { receiveInboundMessage } from '../application/use-cases/receive-inbound-message.use-case';
-import { messageRepository } from '../infrastructure/repositories/message.repository';
 import { conversationRepository } from '../infrastructure/repositories/conversation.repository';
-import { db, schema } from '@cvg/database';
+import { schema } from '@cvg/database';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { eq } from 'drizzle-orm';
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://connect_desk:root@localhost:5432/connect_desk_db';
+const requiresRealDatabase = process.env.REQUIRE_REAL_DB === '1' || process.env.CI === 'true';
 
 let realDbAvailable = false;
 let dbInitError = '';
@@ -71,6 +72,12 @@ const probeResult = await probeRealDatabase();
 realDbAvailable = probeResult;
 
 if (!realDbAvailable) {
+  if (requiresRealDatabase) {
+    throw new Error(
+      `[chat/idempotency] PostgreSQL is required but unavailable: ${dbInitError}. ` +
+        'Start PostgreSQL and run migrations before executing this gate.',
+    );
+  }
   console.warn(`[chat/idempotency] skipping behavioral tests: database not available - ${dbInitError}`);
 }
 

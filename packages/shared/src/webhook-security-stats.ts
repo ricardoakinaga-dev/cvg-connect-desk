@@ -50,8 +50,16 @@ function createInitialStats(): WebhookSecurityStats {
 }
 
 let stats = createInitialStats();
+export type WebhookSecurityDecisionSink = (decision: WebhookSecurityDecision) => void | Promise<void>;
+let decisionSink: WebhookSecurityDecisionSink | null = null;
 
-export function recordWebhookSecurityDecision(decision: Omit<WebhookSecurityDecision, 'timestamp'> & { timestamp?: string }): void {
+export function configureWebhookSecurityDecisionSink(sink: WebhookSecurityDecisionSink | null): void {
+  decisionSink = sink;
+}
+
+function recordLocalWebhookSecurityDecision(
+  decision: Omit<WebhookSecurityDecision, 'timestamp'> & { timestamp?: string },
+): WebhookSecurityDecision {
   const recorded: WebhookSecurityDecision = {
     ...decision,
     timestamp: decision.timestamp || new Date().toISOString(),
@@ -67,6 +75,34 @@ export function recordWebhookSecurityDecision(decision: Omit<WebhookSecurityDeci
   stats.byReason[recorded.reason] += 1;
   stats.lastDecisionAt = recorded.timestamp;
   stats.lastDecision = recorded;
+
+  return recorded;
+}
+
+export function recordWebhookSecurityDecision(
+  decision: Omit<WebhookSecurityDecision, 'timestamp'> & { timestamp?: string },
+): void {
+  const recorded = recordLocalWebhookSecurityDecision(decision);
+  if (decisionSink) {
+    void Promise.resolve(decisionSink(recorded)).catch(() => {
+      // Metrics persistence must never change the webhook authorization result.
+    });
+  }
+}
+
+export async function recordWebhookSecurityDecisionAndPersist(
+  decision: Omit<WebhookSecurityDecision, 'timestamp'> & { timestamp?: string },
+): Promise<void> {
+  const recorded = recordLocalWebhookSecurityDecision(decision);
+  if (!decisionSink) {
+    return;
+  }
+
+  try {
+    await decisionSink(recorded);
+  } catch {
+    // Metrics persistence must never change the webhook authorization result.
+  }
 }
 
 export function getWebhookSecurityStats(): WebhookSecurityStats {

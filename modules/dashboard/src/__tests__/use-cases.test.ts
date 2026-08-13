@@ -9,6 +9,8 @@ const mocks = vi.hoisted(() => ({
   getTasksOverdue: vi.fn(),
   getAlertMetrics: vi.fn(),
   getAlertsActive: vi.fn(),
+  getFirstResponseTimeMetric: vi.fn(),
+  getHandoffRateMetric: vi.fn(),
 }));
 
 vi.mock('../infrastructure', () => ({
@@ -72,6 +74,48 @@ describe('dashboard use cases', () => {
     expect(mocks.getAlertsActive).toHaveBeenCalledWith(['active']);
     if (result.isOk()) {
       expect(result.value).toBe(5);
+    }
+  });
+
+  // D1: First Response Time Metric
+  it('calculates first response time metric for given period', async () => {
+    const startDate = new Date('2026-04-01T00:00:00.000Z');
+    const endDate = new Date('2026-04-30T23:59:59.999Z');
+    mocks.getFirstResponseTimeMetric.mockResolvedValue({
+      avgResponseTimeMs: 12500,
+      count: 10,
+      period: '2026-04-01 - 2026-04-30',
+      calculatedAt: '2026-04-24T12:00:00.000Z',
+    });
+
+    const result = await useCases.getFirstResponseTimeMetric(startDate, endDate);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value.avgResponseTimeMs).toBe(12500);
+      expect(result.value.count).toBe(10);
+    }
+  });
+
+  // D2: Handoff Rate Metric
+  it('calculates handoff rate for given period', async () => {
+    const startDate = new Date('2026-04-01T00:00:00.000Z');
+    const endDate = new Date('2026-04-30T23:59:59.999Z');
+    mocks.getHandoffRateMetric.mockResolvedValue({
+      handoffRate: 45.5,
+      totalConversations: 100,
+      conversationsWithHandoff: 45,
+      period: '2026-04-01 - 2026-04-30',
+      calculatedAt: '2026-04-24T12:00:00.000Z',
+    });
+
+    const result = await useCases.getHandoffRateMetric(startDate, endDate);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value.handoffRate).toBe(45.5);
+      expect(result.value.totalConversations).toBe(100);
+      expect(result.value.conversationsWithHandoff).toBe(45);
     }
   });
 });

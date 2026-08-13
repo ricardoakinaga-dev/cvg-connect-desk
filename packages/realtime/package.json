@@ -6,7 +6,8 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "echo lint",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
@@ -15,6 +16,6 @@
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

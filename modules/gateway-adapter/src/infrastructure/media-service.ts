@@ -4,6 +4,10 @@ const EVOLUTION_URL = process.env.EVOLUTION_API_URL || 'http://localhost:8082';
 const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY || 'evolution_cvg_2026';
 const INSTANCE_NAME = process.env.EVOLUTION_INSTANCE || 'cvg-desk';
 
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 /**
  * Serviço de mídia para Evolution API.
  * Envia imagens, áudios e documentos via WhatsApp.
@@ -27,9 +31,10 @@ export const mediaService = {
         }
       );
       return { success: true, messageId: response.data?.key?.id };
-    } catch (error: any) {
-      console.error('[mediaService] Erro ao enviar texto:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[mediaService] Erro ao enviar texto:', message);
+      return { success: false, error: message };
     }
   },
 
@@ -44,7 +49,7 @@ export const mediaService = {
       const jid = `${phone}@s.whatsapp.net`;
 
       // Se for base64, converter para formato correto
-      let medias: any;
+      let medias: { medias: Array<{ mediatype: 'image'; media: string; caption: string }> };
       if (imageUrl.startsWith('data:')) {
         medias = {
           medias: [
@@ -79,9 +84,10 @@ export const mediaService = {
         }
       );
       return { success: true, messageId: response.data?.key?.id };
-    } catch (error: any) {
-      console.error('[mediaService] Erro ao enviar imagem:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[mediaService] Erro ao enviar imagem:', message);
+      return { success: false, error: message };
     }
   },
 
@@ -107,9 +113,10 @@ export const mediaService = {
         }
       );
       return { success: true, messageId: response.data?.key?.id };
-    } catch (error: any) {
-      console.error('[mediaService] Erro ao enviar áudio:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[mediaService] Erro ao enviar áudio:', message);
+      return { success: false, error: message };
     }
   },
 
@@ -134,9 +141,10 @@ export const mediaService = {
         }
       );
       return { success: true, messageId: response.data?.key?.id };
-    } catch (error: any) {
-      console.error('[mediaService] Erro ao enviar documento:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[mediaService] Erro ao enviar documento:', message);
+      return { success: false, error: message };
     }
   },
 
@@ -164,9 +172,10 @@ export const mediaService = {
         base64: response.data?.base64,
         mimetype: response.data?.mimetype,
       };
-    } catch (error: any) {
-      console.error('[mediaService] Erro ao baixar mídia:', error.message);
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      const message = errorMessage(error);
+      console.error('[mediaService] Erro ao baixar mídia:', message);
+      return { success: false, error: message };
     }
   },
 };

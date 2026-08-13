@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAdmin, ADMIN_EMAIL } from './support';
+import { loginAsAdmin, ADMIN_EMAIL } from './support.ts';
 
 test.describe('Login Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -21,21 +21,23 @@ test.describe('Login Flow', () => {
   });
 
   test('successful login redirects to inbox', async ({ page }) => {
-    const authStorage = await loginAsAdmin(page);
-    expect(authStorage).toContain(ADMIN_EMAIL);
-    await page.goto('/inbox');
+    await loginAsAdmin(page);
     await expect(page.locator('.layout')).toBeVisible();
     await expect(page.getByText('Inbox')).toBeVisible();
     await expect(page.getByRole('heading', { name: /Conversas/ })).toBeVisible();
   });
 
-  test('login stores auth token in localStorage', async ({ page }) => {
+  test('login keeps the session out of localStorage and uses an HttpOnly cookie', async ({ page }) => {
     await loginAsAdmin(page);
-    await page.goto('/inbox');
     const authStorage = await page.evaluate(() => localStorage.getItem('auth-storage'));
     expect(authStorage).not.toBeNull();
     const parsed = JSON.parse(authStorage!);
-    expect(parsed.state.token).toBeTruthy();
+    expect(parsed.state.token).toBeUndefined();
     expect(parsed.state.isAuthenticated).toBe(true);
+
+    const sessionCookie = (await page.context().cookies()).find(cookie => cookie.name === 'cvg_session');
+    expect(sessionCookie?.httpOnly).toBe(true);
+    expect(sessionCookie?.value).toBeTruthy();
+    expect(ADMIN_EMAIL).toContain('@');
   });
 });

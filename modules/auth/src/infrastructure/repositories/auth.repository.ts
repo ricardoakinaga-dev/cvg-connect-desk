@@ -1,7 +1,7 @@
 import { db, schema } from '@cvg/database';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { v4 as uuid } from 'uuid';
+import { hashSessionToken } from '../../session-token';
 
 export interface LoginResult {
   user: {
@@ -10,7 +10,6 @@ export interface LoginResult {
     name: string;
     roles: string[];
   };
-  token: string;
 }
 
 export const authRepository = {
@@ -27,16 +26,23 @@ export const authRepository = {
   },
 
   async createSession(userId: string, expiresAt?: Date): Promise<string> {
-    const token = uuid();
-    const [session] = await db
+    const token = crypto.randomUUID();
+    await db
       .insert(schema.sessions)
       .values({
         userId,
-        token,
+        tokenHash: hashSessionToken(token),
         expiresAt: expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      })
-      .returning();
-    return session.token;
+      });
+    return token;
+  },
+
+  async findSessionByToken(token: string) {
+    const [session] = await db
+      .select()
+      .from(schema.sessions)
+      .where(eq(schema.sessions.tokenHash, hashSessionToken(token)));
+    return session || null;
   },
 
   async getUserRoles(userId: string): Promise<string[]> {
@@ -53,11 +59,7 @@ export const authRepository = {
     const roles = await db
       .select()
       .from(schema.roles)
-      .where(
-        roleIds.length > 0 
-          ? undefined 
-          : eq(schema.roles.id, '00000000-0000-0000-0000-000000000000' as any)
-      );
+      .where(inArray(schema.roles.id, roleIds));
 
     return roles
       .filter(r => roleIds.includes(r.id))
@@ -67,7 +69,7 @@ export const authRepository = {
   async invalidateSession(token: string): Promise<void> {
     await db
       .delete(schema.sessions)
-      .where(eq(schema.sessions.token, token));
+      .where(eq(schema.sessions.tokenHash, hashSessionToken(token)));
   },
 
   async invalidateAllUserSessions(userId: string): Promise<void> {

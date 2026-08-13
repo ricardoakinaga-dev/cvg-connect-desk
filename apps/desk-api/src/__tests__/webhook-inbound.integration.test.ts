@@ -14,6 +14,7 @@ describe('Webhook inbound integration', () => {
   beforeEach(async () => {
     process.env.DESK_ENV = 'production';
     process.env.WEBHOOK_SECRET = secret;
+    process.env.CORS_ORIGIN = 'http://localhost:5173';
     app = await buildDeskApiApp();
     await app.ready();
   });
@@ -28,6 +29,7 @@ describe('Webhook inbound integration', () => {
 
     process.env.DESK_ENV = '';
     process.env.WEBHOOK_SECRET = '';
+    process.env.CORS_ORIGIN = '';
     process.env.NODE_ENV = 'test';
   });
 
@@ -147,6 +149,7 @@ describe('Webhook inbound integration', () => {
     process.env.NODE_ENV = 'production';
     process.env.DESK_ENV = 'production';
     process.env.WEBHOOK_SECRET = '';
+    process.env.CORS_ORIGIN = 'http://localhost:5173';
 
     app = await buildDeskApiApp();
     await app.ready();

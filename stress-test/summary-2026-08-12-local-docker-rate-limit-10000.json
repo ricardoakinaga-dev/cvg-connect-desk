@@ -1,0 +1,27 @@
+{
+  "scenario_thresholds": {
+    "duration_p95_ms": {
+      "threshold": 1500,
+      "actual": 1155.4442181999989,
+      "passed": true
+    },
+    "error_rate_5xx_percent": {
+      "threshold": "1%",
+      "actual": 0,
+      "passed": true
+    },
+    "checks_rate": {
+      "threshold": "99%",
+      "actual": 1,
+      "passed": true
+    },
+    "scenario_passed": true
+  },
+  "summary": {
+    "total_requests": 20389,
+    "failed_5xx_requests": 0,
+    "error_rate_5xx_percent": 0,
+    "checks_rate": 1,
+    "scenario_passed": true
+  }
+}

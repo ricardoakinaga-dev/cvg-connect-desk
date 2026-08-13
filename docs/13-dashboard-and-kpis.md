@@ -124,7 +124,7 @@ count(*) where current_status in ('open', 'pending')
 
 ### 5.2 Tempo Médio de Primeira Resposta
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **IMPLEMENTED** — Endpoint `/metrics/first-response-time`
 
 **Definição**
 
@@ -158,7 +158,7 @@ avg(first_human_outbound_at - first_inbound_at)
 
 ### 5.3 Tempo Médio de Resposta
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **IMPLEMENTED** — Endpoint `/metrics/conversations/volume`
 
 **Definição**
 
@@ -207,7 +207,7 @@ count(*) por janela temporal
 
 ### 5.5 Taxa de Handoff
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **IMPLEMENTED** — Endpoint `/metrics/handoff-rate`
 
 **Definição**
 

@@ -1,8 +1,11 @@
 import { db, schema } from '@cvg/database';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 
 export type Alert = typeof schema.alerts.$inferSelect;
 export type NewAlert = typeof schema.alerts.$inferInsert;
+type AlertStatus = typeof schema.alerts.status.enumValues[number];
+type AlertSeverity = typeof schema.alerts.severity.enumValues[number];
+type AlertType = typeof schema.alerts.type.enumValues[number];
 
 export const alertRepository = {
   async create(data: NewAlert) {
@@ -35,13 +38,13 @@ export const alertRepository = {
     let query = db.select().from(schema.alerts).$dynamic();
 
     if (filters?.status) {
-      query = query.where(eq(schema.alerts.status, filters.status as any));
+      query = query.where(eq(schema.alerts.status, filters.status as AlertStatus));
     }
     if (filters?.severity) {
-      query = query.where(eq(schema.alerts.severity, filters.severity as any));
+      query = query.where(eq(schema.alerts.severity, filters.severity as AlertSeverity));
     }
     if (filters?.type) {
-      query = query.where(eq(schema.alerts.type, filters.type as any));
+      query = query.where(eq(schema.alerts.type, filters.type as AlertType));
     }
 
     return query.orderBy(desc(schema.alerts.createdAt));

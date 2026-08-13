@@ -16,7 +16,7 @@
 }
 
 .btn-primary {
-  background: #4361ee;
+  background: #1d4ed8;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -28,7 +28,7 @@
 }
 
 .btn-primary:hover {
-  background: #3a56d4;
+  background: #1e40af;
 }
 
 .audit-filters {
@@ -59,7 +59,7 @@
   gap: 14px;
   background: #fff;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 14px 16px;
   transition: box-shadow 0.2s;
 }
@@ -97,7 +97,7 @@
 .audit-entity {
   background: #f0f0f0;
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 0.75rem;
   color: #666;
 }

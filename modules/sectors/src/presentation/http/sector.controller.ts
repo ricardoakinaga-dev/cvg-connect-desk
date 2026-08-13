@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
+import type { CreateSectorInput, UpdateSectorInput } from '../../types';
 
 export async function registerSectorRoutes(app: FastifyInstance) {
   // Listar setores
@@ -45,7 +46,7 @@ export async function registerSectorRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const result = await useCases.createSector(request.body as any);
+    const result = await useCases.createSector(request.body as CreateSectorInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -64,7 +65,7 @@ export async function registerSectorRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const result = await useCases.updateSector(id, request.body as any);
+    const result = await useCases.updateSector(id, request.body as UpdateSectorInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });

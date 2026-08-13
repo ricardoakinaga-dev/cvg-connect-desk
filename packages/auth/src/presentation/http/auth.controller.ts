@@ -2,6 +2,11 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { authRepository } from '../../infrastructure/repositories/auth.repository';
+import {
+  clearSessionCookies,
+  getRequestSessionToken,
+  setSessionCookies,
+} from '../../session-cookies';
 
 interface LoginBody {
   email: string;
@@ -65,6 +70,8 @@ export async function registerAuthRoutes(app: FastifyInstance) {
           action: 'login',
         }, 'User logged in');
 
+        setSessionCookies(reply, token);
+
         return reply.status(200).send({
           user: {
             id: user.id,
@@ -72,7 +79,6 @@ export async function registerAuthRoutes(app: FastifyInstance) {
             name: user.name,
             roles,
           },
-          token,
         });
       } catch (error) {
         request.log.error(error, 'Login failed');
@@ -88,20 +94,19 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     '/auth/logout',
     async (request: FastifyRequest<{ Body: LogoutBody }>, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = getRequestSessionToken(request);
+
+        if (!token) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Missing token',
           });
         }
 
-        const token = authHeader.substring(7);
-        
         await authRepository.invalidateSession(token);
+        clearSessionCookies(reply);
 
-        request.log.info({ token: token.substring(0, 8) + '...' }, 'User logged out');
+        request.log.info({ action: 'logout' }, 'User logged out');
 
         return reply.status(200).send({
           message: 'Logged out successfully',
@@ -120,21 +125,16 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     '/auth/me',
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = getRequestSessionToken(request);
+
+        if (!token) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Missing token',
           });
         }
 
-        const token = authHeader.substring(7);
-        
-        const [session] = await db
-          .select()
-          .from(schema.sessions)
-          .where(eq(schema.sessions.token, token));
+        const session = await authRepository.findSessionByToken(token);
 
         if (!session) {
           return reply.status(401).send({

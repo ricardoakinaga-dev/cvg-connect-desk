@@ -2,6 +2,7 @@ import { alertRepository } from '../../infrastructure/repositories/alert.reposit
 import { ok, err, type Result } from '@cvg/shared';
 import { BadRequestError } from '@cvg/shared';
 import { createAuditLog } from '@cvg/audit';
+import { databaseEventPublisher, createAlertCreatedEvent } from '@cvg/events';
 
 export interface CreateAlertInput {
   conversationId?: string;
@@ -43,6 +44,18 @@ export async function createAlert(input: CreateAlertInput): Promise<Result<Creat
     });
 
     await alertRepository.addEvent(alert.id, 'created', undefined, 'active', input.triggeredBy);
+
+    // Publish alert.created event to outbox
+    const alertEvent = createAlertCreatedEvent({
+      alertId: alert.id,
+      conversationId: input.conversationId,
+      taskId: input.taskId,
+      type: alert.type,
+      title: alert.title,
+      severity: alert.severity,
+      triggeredBy: input.triggeredBy,
+    });
+    await databaseEventPublisher.publish(alertEvent);
 
     // Audit: registrar criação de alerta
     if (input.userId) {

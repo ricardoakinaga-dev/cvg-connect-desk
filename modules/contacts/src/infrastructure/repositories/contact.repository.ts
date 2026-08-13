@@ -1,7 +1,9 @@
 import { db } from '@cvg/database';
 import { contacts, conversations, internalNotes, tasks, contactLabels, labels, contactGroupMembers, contactGroups } from '@cvg/database';
 import { eq, desc, ilike, or, count, and, sql } from 'drizzle-orm';
-import type { CreateContactInput, UpdateContactInput } from '../types';
+import type { CreateContactInput, UpdateContactInput } from '../../types';
+
+type NewContact = typeof contacts.$inferInsert;
 
 export class ContactRepository {
   async findAll(search?: string) {
@@ -42,7 +44,7 @@ export class ContactRepository {
   }
 
   async update(id: string, input: UpdateContactInput) {
-    const updateData: any = { updatedAt: new Date() };
+    const updateData: Partial<NewContact> = { updatedAt: new Date() };
     if (input.name) updateData.name = input.name;
     if (input.phone) updateData.phone = input.phone.replace(/\D/g, '');
     if (input.email !== undefined) updateData.email = input.email;
@@ -80,14 +82,14 @@ export class ContactRepository {
 
     // Buscar última mensagem de cada conversa
     const convosWithLastMsg = await Promise.all(convos.map(async (c) => {
-      const [lastMsg] = await db.execute(sql`
+      const lastMsgResult = await db.execute(sql`
         SELECT content FROM messages 
         WHERE conversation_id = ${c.id} 
         ORDER BY created_at DESC LIMIT 1
       `);
       return {
         ...c,
-        lastMessage: (lastMsg as any)?.rows?.[0]?.content || null,
+        lastMessage: (lastMsgResult as unknown as { rows?: Array<{ content?: string }> }).rows?.[0]?.content || null,
       };
     }));
 

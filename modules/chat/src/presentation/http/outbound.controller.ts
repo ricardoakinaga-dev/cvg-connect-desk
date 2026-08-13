@@ -1,18 +1,22 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { sendOutboundMessage } from '../../application/use-cases/send-outbound-message.use-case';
-import { conversationRepository, Conversation } from '../../infrastructure/repositories/conversation.repository';
+import { conversationRepository } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { inArray } from 'drizzle-orm';
+import { withSpan, setSpanAttribute } from '@cvg/shared';
 
 interface SendMessageBody {
   conversationId: string;
   content?: string;
   recipient: string;
   sender?: string;
+  senderType?: 'human' | 'bot' | 'system';
   mediaUrl?: string;
   mediaType?: string;
+  latitude?: number;
+  longitude?: number;
   mediaMimetype?: string;
   mediaFilename?: string;
 }
@@ -30,8 +34,11 @@ export async function registerOutboundController(app: FastifyInstance) {
             content: { type: 'string' },
             recipient: { type: 'string', minLength: 1 },
             sender: { type: 'string' },
+            senderType: { type: 'string', enum: ['human', 'bot', 'system'] },
             mediaUrl: { type: 'string' },
-            mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document'] },
+            mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document', 'location'] },
+            latitude: { type: 'number' },
+            longitude: { type: 'number' },
             mediaMimetype: { type: 'string' },
             mediaFilename: { type: 'string' },
           },
@@ -40,48 +47,78 @@ export async function registerOutboundController(app: FastifyInstance) {
       },
     },
     async (request: FastifyRequest<{ Body: SendMessageBody }>, reply: FastifyReply) => {
-      try {
-        const { conversationId, content, recipient, sender, mediaUrl, mediaType, mediaMimetype, mediaFilename } = request.body;
-        const userId = request.user?.id;
+      const userId = request.user?.id;
+      setSpanAttribute('user.id', userId || 'unknown');
+      setSpanAttribute('chat.outbound', true);
+      setSpanAttribute('conversation.id', request.body.conversationId);
 
-        const result = await sendOutboundMessage({
-          conversationId,
-          content: content || '',
-          recipient,
-          sender,
-          mediaUrl,
-          mediaType,
-          mediaMimetype,
-          mediaFilename,
-          userId,
-        });
+      return withSpan('chat.outbound', async (_span) => {
+        try {
+          const {
+            conversationId,
+            content,
+            recipient,
+            sender,
+            senderType,
+            mediaUrl,
+            mediaType,
+            latitude,
+            longitude,
+            mediaMimetype,
+            mediaFilename,
+          } = request.body;
+          setSpanAttribute('recipient', recipient);
+          if (mediaType) setSpanAttribute('media.type', mediaType);
 
-        if (result.isErr()) {
-          const error = result.error;
-          if (error instanceof AppError) {
-            return reply.status(error.statusCode).send({
-              error: error.code,
-              message: error.message,
+            const result = await sendOutboundMessage({
+            conversationId,
+            content: content || '',
+            recipient,
+            sender,
+            senderType,
+            mediaUrl,
+            mediaType,
+            latitude,
+            longitude,
+            mediaMimetype,
+            mediaFilename,
+            userId,
+          });
+
+          if (result.isErr()) {
+            const error = result.error;
+            if (error instanceof AppError) {
+              setSpanAttribute('error', true);
+              setSpanAttribute('error.code', error.code);
+              return reply.status(error.statusCode).send({
+                error: error.code,
+                message: error.message,
+              });
+            }
+            return reply.status(500).send({
+              error: 'INTERNAL_ERROR',
+              message: 'Failed to send message',
             });
           }
+
+          setSpanAttribute('message.sent', true);
+          setSpanAttribute('message.result_id', result.value.messageId);
+
+          return reply.status(201).send({
+            messageId: result.value.messageId,
+            conversationId: result.value.conversationId,
+            status: result.value.status,
+          });
+        } catch (error) {
+          request.log.error(error);
+          setSpanAttribute('error', true);
+          setSpanAttribute('error.message', error instanceof Error ? error.message : String(error));
           return reply.status(500).send({
             error: 'INTERNAL_ERROR',
             message: 'Failed to send message',
           });
         }
-
-        return reply.status(201).send({
-          messageId: result.value.messageId,
-          conversationId: result.value.conversationId,
-          status: result.value.status,
-        });
-      } catch (error) {
-        request.log.error(error);
-        return reply.status(500).send({
-          error: 'INTERNAL_ERROR',
-          message: 'Failed to send message',
-        });
-      }
+      });
     }
   );
 
@@ -143,7 +180,7 @@ export async function registerOutboundController(app: FastifyInstance) {
     async (request: FastifyRequest<{ Querystring: { status?: string; queueId?: string; teamId?: string; sectorId?: string } }>, reply: FastifyReply) => {
       try {
         const { status, queueId, teamId, sectorId } = request.query;
-        const userId = (request.user as any)?.id;
+        const userId = request.user?.id;
         const conversations = await conversationRepository.findAll({ status, queueId, teamId, sectorId, userId });
         
         // Buscar contatos para resolver nomes

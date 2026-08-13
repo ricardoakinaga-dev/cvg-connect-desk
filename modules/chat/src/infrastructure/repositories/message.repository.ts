@@ -3,6 +3,7 @@ import { eq, desc, and } from 'drizzle-orm';
 
 export type Message = typeof schema.messages.$inferSelect;
 export type NewMessage = typeof schema.messages.$inferInsert;
+type MessageStatus = typeof schema.messages.status.enumValues[number];
 
 export const messageRepository = {
   async create(data: NewMessage) {
@@ -43,7 +44,7 @@ export const messageRepository = {
   async updateStatus(id: string, status: string) {
     const [message] = await db
       .update(schema.messages)
-      .set({ status: status as any })
+      .set({ status: status as MessageStatus })
       .where(eq(schema.messages.id, id))
       .returning();
     return message;

@@ -170,7 +170,7 @@ export async function receiveInboundMessage(
                 oldValue: { handler: 'bot' },
                 newValue: { handler: 'human' },
                 metadata: {
-                  reason: secretaryOutput.classification?.handoffReason || 'Secretary requested handoff',
+                  reason: secretaryOutput.handoffReason || 'Secretary requested handoff',
                   classification: secretaryOutput.classification,
                   messageId: message.id,
                 },
@@ -190,6 +190,9 @@ export async function receiveInboundMessage(
       isNewConversation,
     });
   } catch (error) {
-    return err(error as Error);
+    console.error('[receiveInboundMessage] Infrastructure failure', {
+      error_type: error instanceof Error ? error.name : typeof error,
+    });
+    return err(new BadRequestError('Failed to receive inbound message', 'INBOUND_PROCESSING_ERROR'));
   }
 }

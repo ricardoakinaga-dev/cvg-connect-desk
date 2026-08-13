@@ -21,3 +21,13 @@ export async function getOpenConversationsCount(): Promise<Result<number, Error>
   const count = await dashboardRepository.getConversationsByStatus(['open', 'pending']);
   return ok(count);
 }
+
+export async function getConversationVolumeByStatus(
+  startDate: Date,
+  endDate: Date,
+  groupBy: 'day' | 'week' | 'month' = 'day'
+): Promise<Result<ConversationVolume[], Error>> {
+  const timeRange: TimeRange = { start: startDate, end: endDate };
+  const volume = await dashboardRepository.getConversationVolume(timeRange, groupBy);
+  return ok(volume);
+}

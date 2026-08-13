@@ -39,7 +39,7 @@
 .settings-section {
   background: #fff;
   border: 1px solid #e8e8e8;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 20px;
   margin-bottom: 16px;
 }
@@ -63,7 +63,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4361ee, #7c3aed);
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
   color: #fff;
   display: flex;
   align-items: center;
@@ -98,7 +98,7 @@
 
 .badge {
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -128,7 +128,7 @@
   background: #e8f0fe;
   color: #1967d2;
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -163,8 +163,8 @@
 
 .btn-toggle {
   background: transparent;
-  border: 1px solid #4361ee;
-  color: #4361ee;
+  border: 1px solid #1d4ed8;
+  color: #1d4ed8;
   padding: 6px 14px;
   border-radius: 6px;
   cursor: pointer;
@@ -174,12 +174,12 @@
 }
 
 .btn-toggle:hover {
-  background: #4361ee;
+  background: #1d4ed8;
   color: #fff;
 }
 
 .btn-primary {
-  background: #4361ee;
+  background: #1d4ed8;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -191,7 +191,7 @@
 }
 
 .btn-primary:hover {
-  background: #3a56d4;
+  background: #1e40af;
 }
 
 .password-form {

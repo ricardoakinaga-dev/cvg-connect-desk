@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../lib/api';
+import { api, getErrorMessage } from '../lib/api';
 import './Notes.css';
 
 interface Note {
@@ -12,10 +12,10 @@ interface Note {
 }
 
 const refConfig: Record<string, { label: string; icon: string; color: string; bg: string }> = {
-  conversation: { label: 'Conversa', icon: '💬', color: '#2563eb', bg: '#eff6ff' },
-  task: { label: 'Tarefa', icon: '✓', color: '#16a34a', bg: '#f0fdf4' },
-  tutor: { label: 'Tutor', icon: '👤', color: '#9333ea', bg: '#faf5ff' },
-  patient: { label: 'Paciente', icon: '🐾', color: '#ea580c', bg: '#fff7ed' },
+  conversation: { label: 'Conversa', icon: 'CV', color: '#2563eb', bg: '#eff6ff' },
+  task: { label: 'Tarefa', icon: 'TK', color: '#16a34a', bg: '#f0fdf4' },
+  tutor: { label: 'Tutor', icon: 'TU', color: '#475569', bg: '#f8fafc' },
+  patient: { label: 'Paciente', icon: 'PC', color: '#1d4ed8', bg: '#eff6ff' },
 };
 
 export function Notes() {
@@ -43,7 +43,7 @@ export function Notes() {
       setNewNote({ content: '', referenceType: 'conversation', referenceId: '' });
       setShowCreate(false);
       fetchNotes();
-    } catch (err: any) { alert(err.message); }
+    } catch (err: unknown) { alert(getErrorMessage(err)); }
   };
 
   const formatDate = (d: string) => {
@@ -62,7 +62,7 @@ export function Notes() {
     <div className="notes-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>📝 Notas Internas</h2>
+          <h2>Notas Internas</h2>
           <p>Registre observações sobre conversas, tarefas e contatos</p>
         </div>
         <button className="btn-create" onClick={() => setShowCreate(!showCreate)}>
@@ -99,7 +99,7 @@ export function Notes() {
       {loading ? (
         <div className="loading-state"><div className="spinner" /> Carregando...</div>
       ) : filtered.length === 0 ? (
-        <div className="empty-state"><span className="empty-icon">📝</span><p>Nenhuma nota encontrada</p></div>
+        <div className="empty-state"><span className="empty-icon">NT</span><p>Nenhuma nota encontrada</p></div>
       ) : (
         <div className="notes-timeline">
           {filtered.map(note => {

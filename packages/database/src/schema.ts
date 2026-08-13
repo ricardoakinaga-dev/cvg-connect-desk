@@ -271,14 +271,14 @@ export const userRoles = pgTable('user_roles', {
 export const sessions = pgTable('sessions', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').references(() => users.id).notNull(),
-  token: text('token').notNull().unique(),
+  tokenHash: text('token_hash').notNull().unique(),
   expiresAt: timestamp('expires_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   ipAddress: text('ip_address'),
   userAgent: text('user_agent'),
 }, (t) => ({
   userIdx: index('idx_sessions_user').on(t.userId),
-  tokenIdx: uniqueIndex('idx_sessions_token').on(t.token),
+  tokenHashIdx: uniqueIndex('idx_sessions_token_hash').on(t.tokenHash),
 }));
 
 export const auditLogs = pgTable('audit_logs', {
@@ -492,4 +492,63 @@ export const outboxConsumerAcks = pgTable('outbox_consumer_acks', {
 }, (t) => ({
   pk: { columns: [t.eventId, t.consumerId] },
   consumerIdx: index('idx_acks_consumer').on(t.consumerId),
+}));
+
+// ============================================
+// Dead-letter queue persistente e auditável
+// ============================================
+
+export const deadLetterEvents = pgTable('dead_letter_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  eventType: text('event_type').notNull(),
+  eventId: text('event_id').notNull(),
+  payload: text('payload').notNull(),
+  error: text('error').notNull(),
+  failedAt: timestamp('failed_at').defaultNow().notNull(),
+  retryCount: integer('retry_count').notNull().default(0),
+  handlerName: text('handler_name').notNull(),
+  sourceEvent: text('source_event'),
+  failureContext: text('failure_context'),
+  resolved: boolean('resolved').notNull().default(false),
+  resolvedAt: timestamp('resolved_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  eventIdx: index('idx_dead_letter_event').on(t.eventId),
+  unresolvedIdx: index('idx_dead_letter_unresolved').on(t.resolved, t.failedAt),
+  handlerIdx: index('idx_dead_letter_handler').on(t.handlerName),
+}));
+
+// ============================================
+// Métricas de segurança de webhook
+// Persistidas para que o painel operacional seja consistente entre réplicas.
+// ============================================
+
+export const webhookSecurityEvents = pgTable('webhook_security_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  reason: text('reason').notNull(),
+  allowed: boolean('allowed').notNull(),
+  webhookMode: text('webhook_mode').notNull(),
+  hasSecret: boolean('has_secret').notNull(),
+  signaturePresent: boolean('signature_present'),
+  statusCode: integer('status_code'),
+  occurredAt: timestamp('occurred_at').defaultNow().notNull(),
+}, (t) => ({
+  reasonIdx: index('idx_webhook_security_reason').on(t.reason),
+  occurredAtIdx: index('idx_webhook_security_occurred').on(t.occurredAt),
+}));
+
+// ============================================
+// Nonces do gateway
+// A unicidade no banco impede replay entre processos/réplicas.
+// ============================================
+
+export const gatewayRequestNonces = pgTable('gateway_request_nonces', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  scope: text('scope').notNull(),
+  nonce: text('nonce').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  scopeNonceIdx: uniqueIndex('idx_gateway_nonce_scope_nonce').on(t.scope, t.nonce),
+  expiresAtIdx: index('idx_gateway_nonce_expires').on(t.expiresAt),
 }));

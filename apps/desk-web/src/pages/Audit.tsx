@@ -40,23 +40,23 @@ export function Audit() {
   const formatDate = (d: string) => new Date(d).toLocaleString('pt-BR');
 
   const actionIcon = (action: string) => {
-    if (action.includes('created')) return '➕';
-    if (action.includes('sent') || action.includes('outbound')) return '📤';
-    if (action.includes('received') || action.includes('inbound')) return '📥';
-    if (action.includes('changed') || action.includes('updated')) return '✏️';
-    if (action.includes('acknowledged')) return '👁️';
-    if (action.includes('resolved')) return '✅';
-    if (action.includes('deleted')) return '🗑️';
-    if (action.includes('handoff')) return '🔄';
-    return '📝';
+    if (action.includes('created')) return 'NEW';
+    if (action.includes('sent') || action.includes('outbound')) return 'OUT';
+    if (action.includes('received') || action.includes('inbound')) return 'IN';
+    if (action.includes('changed') || action.includes('updated')) return 'EDT';
+    if (action.includes('acknowledged')) return 'ACK';
+    if (action.includes('resolved')) return 'OK';
+    if (action.includes('deleted')) return 'DEL';
+    if (action.includes('handoff')) return 'TRF';
+    return 'LOG';
   };
 
   const entityIcon = (type: string) => {
     const map: Record<string, string> = {
-      conversation: '💬', message: '✉️', task: '✓', note: '📝',
-      alert: '🔔', user: '👤', session: '🔐', handoff: '🔄',
+      conversation: 'CV', message: 'MSG', task: 'TK', note: 'NT',
+      alert: 'AL', user: 'US', session: 'SS', handoff: 'TRF',
     };
-    return map[type] || '📄';
+    return map[type] || 'DOC';
   };
 
   const parseContext = (json: string | null) => {
@@ -72,7 +72,7 @@ export function Audit() {
   return (
     <div className="audit-page">
       <div className="page-header">
-        <h2>🔍 Auditoria</h2>
+        <h2>Auditoria</h2>
       </div>
 
       <div className="audit-filters">

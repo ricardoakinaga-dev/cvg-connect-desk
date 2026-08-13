@@ -1,9 +1,11 @@
 import { db, schema } from './index';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+import { resolveSeedAdminCredentials } from './seed-config';
 
 async function seed() {
   console.log('Starting seed...');
+  const { email: adminEmail, password: adminPassword } = resolveSeedAdminCredentials();
 
   // 1. Criar roles
   const roles = ['Admin', 'Receptionist', 'Veterinarian', 'Manager'];
@@ -16,10 +18,9 @@ async function seed() {
       .limit(1);
     
     if (existingRole.length === 0) {
-      const [role] = await db
+      await db
         .insert(schema.roles)
-        .values({ name: roleName })
-        .returning();
+        .values({ name: roleName });
       console.log(`Created role: ${roleName}`);
     } else {
       console.log(`Role already exists: ${roleName}`);
@@ -75,7 +76,10 @@ async function seed() {
         .select()
         .from(schema.rolePermissions)
         .where(
-          eq(schema.rolePermissions.roleId, adminRole.id) && eq(schema.rolePermissions.permissionId, perm.id)
+          and(
+            eq(schema.rolePermissions.roleId, adminRole.id),
+            eq(schema.rolePermissions.permissionId, perm.id),
+          )
         )
         .limit(1);
       
@@ -89,7 +93,6 @@ async function seed() {
   }
 
   // 4. Criar admin user
-  const adminEmail = 'admin@cvg.com';
   const existingUser = await db
     .select()
     .from(schema.users)
@@ -97,7 +100,7 @@ async function seed() {
     .limit(1);
 
   if (existingUser.length === 0) {
-    const passwordHash = await bcrypt.hash('admin123', 10);
+    const passwordHash = await bcrypt.hash(adminPassword, 12);
     const [user] = await db
       .insert(schema.users)
       .values({
@@ -125,4 +128,7 @@ async function seed() {
   console.log('Seed completed!');
 }
 
-seed().catch(console.error);
+seed().catch((error) => {
+  console.error('Seed failed:', error);
+  process.exitCode = 1;
+});

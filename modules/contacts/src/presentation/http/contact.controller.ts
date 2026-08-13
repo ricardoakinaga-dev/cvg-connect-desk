@@ -1,7 +1,14 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, type FastifyRequest } from 'fastify';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
+import type { CreateContactInput, UpdateContactInput } from '../../types';
+
+type AuthenticatedRequest = FastifyRequest & { user?: { id?: string } };
+
+function getUserId(request: FastifyRequest): string | undefined {
+  return (request as AuthenticatedRequest).user?.id;
+}
 
 export async function registerContactRoutes(app: FastifyInstance) {
   // Listar contatos
@@ -61,7 +68,7 @@ export async function registerContactRoutes(app: FastifyInstance) {
       },
     },
   }, async (request, reply) => {
-    const result = await useCases.createContact(request.body as any);
+    const result = await useCases.createContact(request.body as CreateContactInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -80,7 +87,7 @@ export async function registerContactRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const result = await useCases.updateContact(id, request.body as any);
+    const result = await useCases.updateContact(id, request.body as UpdateContactInput);
     if (result.isErr()) {
       const e = result.error;
       if (e instanceof AppError) return reply.status(e.statusCode).send({ error: e.code, message: e.message });
@@ -125,7 +132,7 @@ export async function registerContactRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const { sectorId } = request.body as { sectorId?: string };
-    const userId = (request.user as any)?.id;
+    const userId = getUserId(request);
     const result = await useCases.startConversation(id, sectorId, userId);
     if (result.isErr()) {
       const e = result.error;

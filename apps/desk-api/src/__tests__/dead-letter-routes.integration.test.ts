@@ -1,7 +1,7 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { buildDeskApiApp } from '../app.ts';
 import { deadLetterStore } from '@cvg/events';
@@ -64,7 +64,7 @@ describe('Dead-letter routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -122,7 +122,7 @@ describe('Dead-letter routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/admin/dead-letters?limit=10',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -144,7 +144,7 @@ describe('Dead-letter routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/admin/dead-letters/stats',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -183,7 +183,7 @@ describe('Dead-letter routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/admin/dead-letters/${replayableEntryId}/retry`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -211,7 +211,7 @@ describe('Dead-letter routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/admin/dead-letters/${manualEntryId}/resolve`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

@@ -1,26 +1,25 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import {
-  createUser, updateUser, deleteUser, assignRolesToUser,
+  createUser, updateUser, deleteUser,
   createRole, updateRole, deleteRole,
-  createPermission, deletePermission,
   createQueue, updateQueue, deleteQueue,
   createTeam, updateTeam, deleteTeam,
 } from '../../application/use-cases';
 import { adminRepository } from '../../infrastructure/repositories/admin.repository.ts';
-import { AppError } from '@cvg/shared';
+import { AppError, getWebhookSecurityStats } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
-import { deadLetterStore, publishToOutbox } from '@cvg/events';
-import { getWebhookSecurityStats } from '@cvg/shared';
+import { getRuntimeDeadLetterStore, publishToOutbox } from '@cvg/events';
+import { getPersistentOperationalMetrics, getPersistentWebhookSecurityStats } from '@cvg/database';
 import type {
   CreateUserInput, UpdateUserInput,
   CreateRoleInput, UpdateRoleInput,
-  CreatePermissionInput,
   CreateQueueInput, UpdateQueueInput,
   CreateTeamInput, UpdateTeamInput,
-} from '../types';
+} from '../../types';
 
 // User routes
 export async function registerAdminRoutes(app: FastifyInstance) {
+  const deadLetterStore = getRuntimeDeadLetterStore();
   // Users
   app.get('/admin/users', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -323,8 +322,8 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const query = request.query as { resolved?: boolean; limit?: number };
-    const entries = deadLetterStore.getAll({ resolved: query.resolved, limit: query.limit || 50 });
-    const stats = deadLetterStore.getStats();
+    const entries = await deadLetterStore.getAll({ resolved: query.resolved, limit: query.limit || 50 });
+    const stats = await deadLetterStore.getStats();
     return reply.status(200).send({ data: entries, stats });
   });
 
@@ -336,7 +335,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
       security: [{ bearerAuth: [] }],
     },
   }, async (_request, reply) => {
-    return reply.status(200).send(deadLetterStore.getOperationalStats());
+    return reply.status(200).send(await deadLetterStore.getOperationalStats());
   });
 
   app.post('/admin/dead-letters/:id/retry', {
@@ -348,7 +347,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const entry = deadLetterStore.getById(id);
+    const entry = await deadLetterStore.getById(id);
 
     if (!entry) {
       return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
@@ -367,11 +366,11 @@ export async function registerAdminRoutes(app: FastifyInstance) {
 
     try {
       await publishToOutbox(entry.sourceEvent);
-      deadLetterStore.resolve(id);
+      await deadLetterStore.resolve(id);
       return reply.status(200).send({
         success: true,
         replayed: true,
-        entry: deadLetterStore.getById(id),
+        entry: await deadLetterStore.getById(id),
       });
     } catch (error) {
       request.log.error({ err: error, id }, 'Failed to retry dead-letter entry');
@@ -391,17 +390,17 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     },
   }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    const entry = deadLetterStore.getById(id);
+    const entry = await deadLetterStore.getById(id);
 
     if (!entry) {
       return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
     }
 
-    deadLetterStore.resolve(id);
+    await deadLetterStore.resolve(id);
     return reply.status(200).send({
       success: true,
       replayed: false,
-      entry: deadLetterStore.getById(id),
+      entry: await deadLetterStore.getById(id),
     });
   });
 
@@ -412,8 +411,35 @@ export async function registerAdminRoutes(app: FastifyInstance) {
       tags: ['Admin'],
       security: [{ bearerAuth: [] }],
     },
-  }, async (_request, reply) => {
-    return reply.status(200).send(getWebhookSecurityStats());
+  }, async (request, reply) => {
+    try {
+      return reply.status(200).send(await getPersistentWebhookSecurityStats());
+    } catch (error) {
+      request.log.error({ err: error }, 'Failed to load persistent webhook security stats');
+      // Keep the endpoint available during a migration window, while exposing
+      // only the process-local counters as a degraded fallback.
+      return reply.status(200).send(getWebhookSecurityStats());
+    }
+  });
+
+  app.get('/admin/operational/metrics', {
+    preHandler: [authenticate, requirePermission('admin:read')],
+    schema: {
+      description: 'Métricas operacionais compartilhadas de outbox e dead-letter',
+      tags: ['Admin'],
+      security: [{ bearerAuth: [] }],
+    },
+  }, async (request, reply) => {
+    try {
+      const metrics = await getPersistentOperationalMetrics();
+      return reply.status(200).send(metrics);
+    } catch (error) {
+      request.log.error({ err: error }, 'Failed to load persistent operational metrics');
+      return reply.status(503).send({
+        error: 'OPERATIONAL_METRICS_UNAVAILABLE',
+        message: 'Operational metrics are temporarily unavailable',
+      });
+    }
   });
 
   // ============================================

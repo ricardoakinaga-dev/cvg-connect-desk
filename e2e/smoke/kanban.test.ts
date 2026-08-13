@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAdmin } from './support';
+import { loginAsAdmin } from './support.ts';
 
 test.describe('Kanban Smoke', () => {
   test('kanban opens and renders the board shell', async ({ page }) => {
@@ -10,6 +10,6 @@ test.describe('Kanban Smoke', () => {
     await expect(page.locator('.kanban-header')).toBeVisible();
     await expect(page.locator('.kanban-board')).toBeVisible();
     await expect(page.locator('select')).toBeVisible();
-    await expect(page.getByRole('button', { name: '🔄' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Atualizar Kanban' })).toBeVisible();
   });
 });

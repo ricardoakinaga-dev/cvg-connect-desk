@@ -3,7 +3,7 @@ import { ok, err, NotFoundError, BadRequestError } from '@cvg/shared';
 
 const repo = new TransferRepository();
 
-export async function createTransfer(input: {
+export interface CreateTransferInput {
   contactId: string;
   conversationId?: string;
   toSectorId: string;
@@ -12,10 +12,12 @@ export async function createTransfer(input: {
   toUserId?: string;
   reason?: string;
   autoAccept?: boolean;
-}) {
+}
+
+export async function createTransfer(input: CreateTransferInput) {
   // Se autoAccept, transferir imediatamente
   if (input.autoAccept) {
-    const transfer = await repo.create({ ...input, status: 'accepted' as any });
+    const transfer = await repo.create({ ...input, status: 'accepted' });
 
     if (input.conversationId && input.fromSectorId) {
       await repo.updateConversationSector(input.conversationId, input.toSectorId);
@@ -45,7 +47,7 @@ export async function getContactTransfers(contactId: string) {
   return ok(transfers);
 }
 
-export async function acceptTransfer(id: string, userId?: string) {
+export async function acceptTransfer(id: string, _userId?: string) {
   const transfer = await repo.findById(id);
   if (!transfer) return err(new NotFoundError('Transferência'));
   if (transfer.status !== 'pending') return err(new BadRequestError('Transferência já processada'));

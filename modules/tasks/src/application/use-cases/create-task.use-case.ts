@@ -26,7 +26,7 @@ export interface CreateTaskOutput {
 
 export async function createTask(input: CreateTaskInput): Promise<Result<CreateTaskOutput>> {
   try {
-    if (!input.title) {
+    if (!input.title?.trim()) {
       return err(new BadRequestError('Title is required'));
     }
 

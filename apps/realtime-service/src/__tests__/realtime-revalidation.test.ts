@@ -1,5 +1,5 @@
 /**
- * Realtime Periodic Token Revalidation - Behavioral Tests
+ * Realtime Periodic Session Revalidation - Behavioral Tests
  *
  * Tests for G-02: periodic token revalidation and G-03: message-based auth.
  *
@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-describe('Realtime Token Revalidation Implementation', () => {
+describe('Realtime Session Revalidation Implementation', () => {
   const realtimePath = resolve(__dirname, '../index.ts');
   const content = readFileSync(realtimePath, 'utf-8');
 
@@ -55,14 +55,14 @@ describe('Realtime Token Revalidation Implementation', () => {
       expect(content).toContain('setInterval');
     });
 
-    it('stores token on client for later revalidation', () => {
-      expect(content).toContain('client.token');
+    it('stores session cookie on client for later revalidation', () => {
+      expect(content).toContain('client.sessionCookie');
     });
 
-    it('Client interface includes token field', () => {
+    it('Client interface includes sessionCookie field', () => {
       const clientMatch = content.match(/interface Client \{[\s\S]*?\}/);
       expect(clientMatch).toBeTruthy();
-      expect(clientMatch![0]).toContain('token');
+      expect(clientMatch![0]).toContain('sessionCookie');
     });
 
     it('Client interface includes revalidateTimer field', () => {
@@ -90,25 +90,22 @@ describe('Realtime Token Revalidation Implementation', () => {
     });
   });
 
-  describe('G-03: Message-Based Auth (Token URL Hardening)', () => {
-    it('handles auth message type in handleMessage', () => {
+  describe('G-03: Cookie Auth (Token URL Hardening)', () => {
+    it('rejects auth message type in handleMessage', () => {
       expect(content).toContain("case 'auth':");
+      expect(content).toContain('Message token authentication is disabled');
     });
 
-    it('extracts token from message.token for auth', () => {
-      expect(content).toContain('message.token');
+    it('does not extract token from message.token for auth', () => {
+      expect(content).not.toContain('message.token');
     });
 
-    it('calls validateTokenAndAuthenticate for message-based auth', () => {
-      expect(content).toContain('validateTokenAndAuthenticate(clientId, message.token)');
+    it('calls validateCookieAndAuthenticate for cookie auth', () => {
+      expect(content).toContain('validateCookieAndAuthenticate(clientId)');
     });
 
-    it('rejects already authenticated client with error', () => {
-      expect(content).toContain('Already authenticated');
-    });
-
-    it('logs message-based auth attempt', () => {
-      expect(content).toContain('Message-based auth');
+    it('logs cookie authenticated connections', () => {
+      expect(content).toContain('New cookie-authenticated connection');
     });
   });
 
@@ -143,15 +140,10 @@ describe('Realtime Token Revalidation Implementation', () => {
   });
 
   describe('Backward Compatibility', () => {
-    it('URL token extraction still works (legacy mode)', () => {
+    it('URL token extraction is present only to reject legacy mode', () => {
       expect(content).toContain('extractTokenFromUrl');
       expect(content).toContain('searchParams.get');
-    });
-
-    it('token stored on client when connecting with URL token', () => {
-      const handleConnSection = content.match(/handleConnectionWithAuth[\s\S]*?this\.validateTokenAndAuthenticate/);
-      expect(handleConnSection).toBeTruthy();
-      expect(handleConnSection![0]).toContain('token');
+      expect(content).toContain('URL token authentication is disabled');
     });
   });
 
@@ -162,8 +154,8 @@ describe('Realtime Token Revalidation Implementation', () => {
       expect(completeAuthSection![0]).toContain('startRevalidationTimer');
     });
 
-    it('revalidation timer only starts if client has token', () => {
-      const timerSection = content.match(/if \(client\.token\)[\s\S]*?startRevalidationTimer/);
+    it('revalidation timer only starts if client has session cookie', () => {
+      const timerSection = content.match(/if \(!client \|\| !client\.sessionCookie\) return/);
       expect(timerSection).toBeTruthy();
     });
 
@@ -182,7 +174,7 @@ describe('Realtime Token Revalidation Implementation', () => {
       if (revalidateSection) {
         const section = revalidateSection[0];
         const hasNetworkErrorHandling = section.includes('Token revalidation error');
-        const doesNotCallFailureOnNetworkError = !section.match(/catch.*\{[\s\S]*?handleRevalidationFailure/);
+        const _doesNotCallFailureOnNetworkError = !section.match(/catch.*\{[\s\S]*?handleRevalidationFailure/);
         expect(hasNetworkErrorHandling).toBe(true);
       }
     });

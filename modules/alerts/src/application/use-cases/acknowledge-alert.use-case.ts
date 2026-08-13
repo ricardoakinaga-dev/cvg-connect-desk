@@ -2,6 +2,7 @@ import { alertRepository } from '../../infrastructure/repositories/alert.reposit
 import { ok, err, type Result } from '@cvg/shared';
 import { NotFoundError, BadRequestError } from '@cvg/shared';
 import { createAuditLog } from '@cvg/audit';
+import { databaseEventPublisher, createAlertAcknowledgedEvent } from '@cvg/events';
 
 export interface AcknowledgeAlertInput {
   alertId: string;
@@ -34,6 +35,13 @@ export async function acknowledgeAlert(input: AcknowledgeAlertInput): Promise<Re
     const alert = await alertRepository.acknowledge(input.alertId, input.acknowledgedBy);
 
     await alertRepository.addEvent(alert.id, 'acknowledged', 'active', 'acknowledged', input.acknowledgedBy);
+
+    // Publish alert.acknowledged event to outbox
+    const alertEvent = createAlertAcknowledgedEvent({
+      alertId: alert.id,
+      acknowledgedBy: input.acknowledgedBy,
+    });
+    await databaseEventPublisher.publish(alertEvent);
 
     // Audit: registrar acknowledge do alerta
     const auditorUserId = input.userId || input.acknowledgedBy;

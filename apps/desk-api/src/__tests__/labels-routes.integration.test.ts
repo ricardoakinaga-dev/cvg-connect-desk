@@ -1,4 +1,4 @@
-import './integration-mocks';
+import { getSessionCookie, withSessionCsrf } from './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
@@ -57,7 +57,7 @@ describe('Labels routes integration', () => {
     });
 
     expect(login.statusCode).toBe(200);
-    token = (login.json() as { token: string }).token;
+    token = getSessionCookie(login);
   });
 
   beforeEach(async () => {
@@ -92,6 +92,7 @@ describe('Labels routes integration', () => {
     await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
     await db.delete(schema.users).where(eq(schema.users.id, userId));
     if (createdAdminRole) {
+      await db.delete(schema.userRoles).where(eq(schema.userRoles.roleId, adminRoleId));
       await db.delete(schema.roles).where(eq(schema.roles.id, adminRoleId));
     }
     await app.close();
@@ -102,7 +103,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: '/labels',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -116,7 +117,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/labels',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: {
         name: labelName,
         color: '#00FF00',
@@ -141,7 +142,7 @@ describe('Labels routes integration', () => {
     await app.inject({
       method: 'POST',
       url: '/labels',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: labelName, color: '#0000FF' },
     });
 
@@ -149,7 +150,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/labels',
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: labelName, color: '#FF00FF' },
     });
 
@@ -163,7 +164,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/labels/${testLabelId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Label Atualizada', color: '#FFFF00' },
     });
 
@@ -177,7 +178,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'PUT',
       url: `/labels/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { name: 'Label Inexistente' },
     });
 
@@ -196,7 +197,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/labels/${labelToDelete}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -207,7 +208,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/labels/${fakeId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(404);
@@ -218,7 +219,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'GET',
       url: `/conversations/${testConversationId}/labels`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);
@@ -230,7 +231,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/conversations/${testConversationId}/labels`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { labelId: testLabelId },
     });
 
@@ -244,7 +245,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'POST',
       url: `/conversations/${testConversationId}/labels`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
       payload: { labelId: fakeLabelId },
     });
 
@@ -263,7 +264,7 @@ describe('Labels routes integration', () => {
     const response = await app.inject({
       method: 'DELETE',
       url: `/conversations/${testConversationId}/labels/${testLabelId}`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: withSessionCsrf(token),
     });
 
     expect(response.statusCode).toBe(200);

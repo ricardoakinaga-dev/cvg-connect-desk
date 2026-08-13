@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { getWebhookSecurityStats, resetWebhookSecurityStats } from '../webhook-security-stats';
 
 const mockReply = {
@@ -40,7 +41,7 @@ describe('WebhookGuard', () => {
     const request = { ...mockRequest, log: { ...mockRequest.log, error: vi.fn() } };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(reply.status).toHaveBeenCalledWith(500);
     expect(reply.send).toHaveBeenCalledWith({
@@ -63,7 +64,7 @@ describe('WebhookGuard', () => {
     const request = { ...mockRequest, log: { ...mockRequest.log, warn: vi.fn() } };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(request.log.warn).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -90,7 +91,7 @@ describe('WebhookGuard', () => {
     const request = { ...mockRequest, log: { ...mockRequest.log, warn: vi.fn() } };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith({
@@ -118,7 +119,7 @@ describe('WebhookGuard', () => {
     };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith({
@@ -147,7 +148,7 @@ describe('WebhookGuard', () => {
     };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith({
@@ -181,7 +182,7 @@ describe('WebhookGuard', () => {
     };
     const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
 
-    await guard(request as any, reply as any);
+    await guard(request as unknown as FastifyRequest, reply as unknown as FastifyReply);
 
     expect(request.log.info).toHaveBeenCalledWith(
       expect.objectContaining({

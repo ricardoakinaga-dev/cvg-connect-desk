@@ -2,6 +2,7 @@ import { noteRepository } from '../../infrastructure/repositories/note.repositor
 import { ok, err, type Result } from '@cvg/shared';
 import { BadRequestError } from '@cvg/shared';
 import { createAuditLog } from '@cvg/audit';
+import type { NewInternalNote } from '../../infrastructure/repositories/note.repository';
 
 export interface CreateNoteInput {
   conversationId?: string; // Para compatibilidade retroativa
@@ -16,7 +17,7 @@ export interface CreateNoteInput {
 
 export interface CreateNoteOutput {
   id: string;
-  conversationId: string;
+  conversationId?: string;
   createdAt: Date;
 }
 
@@ -29,8 +30,8 @@ export async function createNote(input: CreateNoteInput): Promise<Result<CreateN
     // Determinar referenceType e referenceId
     let referenceType = input.referenceType;
     let referenceId = input.referenceId;
-    let conversationId = input.conversationId;
-    let taskId = input.taskId;
+    const conversationId = input.conversationId;
+    const taskId = input.taskId;
 
     if (conversationId && !referenceType) {
       referenceType = 'conversation';
@@ -50,7 +51,7 @@ export async function createNote(input: CreateNoteInput): Promise<Result<CreateN
       taskId: referenceType === 'task' ? referenceId : undefined,
       authorId: input.authorId,
       content: input.content,
-      referenceType: referenceType as any,
+      referenceType: referenceType as NewInternalNote['referenceType'],
       referenceId: referenceId,
       metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
     });

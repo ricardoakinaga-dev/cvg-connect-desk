@@ -9,15 +9,15 @@ vi.mock('@cvg/integrations', () => ({
   initializeSecretaryClient: vi.fn(),
 }));
 
-import { getSecretaryClient } from '@cvg/integrations';
+import { getSecretaryClient, type SecretaryClient } from '@cvg/integrations';
 import { conversationRepository } from '../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../infrastructure/repositories/message.repository';
 import { processMessageWithSecretary } from '../application/use-cases/process-message-with-secretary.use-case';
 import { receiveInboundMessage } from '../application/use-cases/receive-inbound-message.use-case';
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://connect_desk:root@localhost:5432/connect_desk_db';
+const requiresRealDatabase = process.env.REQUIRE_REAL_DB === '1' || process.env.CI === 'true';
 
-let realDbAvailable = false;
 let dbInitError = '';
 
 async function probeRealDatabase(): Promise<boolean> {
@@ -70,24 +70,33 @@ function parsePayload<T extends { status?: string; completedAt?: string; reason?
 }
 
 function setSecretarySuccessResponse(response: unknown) {
-  const client = {
+  const client: Pick<SecretaryClient, 'invoke' | 'checkHealth'> = {
     invoke: vi.fn().mockResolvedValue(ok(response)),
     checkHealth: vi.fn().mockResolvedValue(ok(true)),
   };
-  vi.mocked(getSecretaryClient).mockReturnValue(client as any);
+  vi.mocked(getSecretaryClient).mockReturnValue(client as unknown as SecretaryClient);
   return client;
 }
 
 function setSecretaryFailureResponse(message: string) {
-  const client = {
+  const client: Pick<SecretaryClient, 'invoke' | 'checkHealth'> = {
     invoke: vi.fn().mockResolvedValue(err(new Error(message))),
     checkHealth: vi.fn().mockResolvedValue(ok(false)),
   };
-  vi.mocked(getSecretaryClient).mockReturnValue(client as any);
+  vi.mocked(getSecretaryClient).mockReturnValue(client as unknown as SecretaryClient);
   return client;
 }
 
-if (await probeRealDatabase()) {
+const realDbAvailable = await probeRealDatabase();
+
+if (!realDbAvailable && requiresRealDatabase) {
+  throw new Error(
+    `[chat/secretary-handoff] PostgreSQL is required but unavailable: ${dbInitError}. ` +
+      'Start PostgreSQL and run migrations before executing this gate.',
+  );
+}
+
+if (realDbAvailable) {
   describe('Secretary + handoff integration', () => {
     beforeEach(() => {
       vi.clearAllMocks();
@@ -390,7 +399,7 @@ if (await probeRealDatabase()) {
         const handoffAudit = auditLogs.find((entry) => entry.action === 'conversation.handoff');
         expect(handoffAudit).toBeDefined();
         expect(handoffAudit?.userId).toBe(userId);
-        expect(handoffAudit?.metadata).toContain('Secretary requested handoff');
+        expect(handoffAudit?.metadata).toContain('Handoff bot -> humano confirmado');
 
         const events = await db
           .select()

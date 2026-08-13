@@ -2,6 +2,7 @@ import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../
 import { normalizeGatewayInbound } from '../../infrastructure/gateway-normalizer';
 import { gatewayService } from '../../infrastructure/gateway-service';
 import { ok, err } from '@cvg/shared';
+import { getGatewayDeskHandlers } from '../desk-handlers';
 
 /**
  * Processa evento WA_INBOUND do gateway.
@@ -26,9 +27,8 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
       return ok({ skipped: true, reason: 'fromMe' });
     }
 
-    // Chamar o use case de inbound do módulo chat
-    const { receiveInboundMessage } = await import('@cvg/chat');
-    const result = await receiveInboundMessage({
+    const handlers = getGatewayDeskHandlers();
+    const result = await handlers.receiveInboundMessage({
       externalMessageId: normalized.externalMessageId,
       externalConversationId: normalized.externalConversationId,
       content: normalized.content,
@@ -52,15 +52,11 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
       },
     });
 
-    if (result.isErr()) {
-      return err(result.error);
-    }
-
     return ok({
       processed: true,
-      messageId: result.value.messageId,
-      conversationId: result.value.conversationId,
-      isNewConversation: result.value.isNewConversation,
+      messageId: result.messageId,
+      conversationId: result.conversationId,
+      isNewConversation: result.isNewConversation,
     });
   } catch (error) {
     console.error('[handleGatewayInbound] Erro:', error);
@@ -78,13 +74,6 @@ export async function handleGatewayReceipt(event: WAReceiptEvent) {
       return err(new Error(`Invalid event_type: ${event.event_type}`));
     }
 
-    const { messageRepository } = await import('@cvg/chat');
-    const message = await messageRepository.findByExternalId(event.payload.messageId);
-
-    if (!message) {
-      return ok({ skipped: true, reason: 'message_not_found' });
-    }
-
     // Mapear status do gateway para status interno
     const statusMap: Record<string, string> = {
       sent: 'sent',
@@ -95,14 +84,14 @@ export async function handleGatewayReceipt(event: WAReceiptEvent) {
     };
 
     const internalStatus = statusMap[event.payload.status] || 'sent';
+    const handlers = getGatewayDeskHandlers();
+    const result = await handlers.updateReceipt(
+      event.payload.messageId,
+      internalStatus,
+      event.payload.status === 'delivered' ? new Date(event.payload.status_at) : undefined,
+    );
 
-    // Atualizar status da mensagem
-    await messageRepository.update(message.id, {
-      status: internalStatus as any,
-      deliveredAt: event.payload.status === 'delivered' ? new Date(event.payload.status_at) : undefined,
-    });
-
-    return ok({ updated: true, messageId: message.id, status: internalStatus });
+    return ok(result);
   } catch (error) {
     console.error('[handleGatewayReceipt] Erro:', error);
     return err(error as Error);

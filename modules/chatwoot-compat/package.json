@@ -4,12 +4,13 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "build": "echo build",
-    "lint": "echo lint",
+    "build": "node ../../scripts/verify-package-source.mjs",
+    "lint": "node ../../scripts/verify-package-source.mjs",
     "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "node ../../scripts/typecheck-package.mjs"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   }
 }

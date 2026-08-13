@@ -1,5 +1,5 @@
-import { ok, err, type Result } from '@cvg/shared';
-import { AppError, NotFoundError } from '@cvg/shared';
+import { ok, err, type Result, withSpan, setSpanAttribute } from '@cvg/shared';
+import { AppError } from '@cvg/shared';
 import { publishHandoffRequested, publishHandoffCompleted } from './secretary-publisher';
 
 export interface TriggerHandoffInput {
@@ -21,41 +21,55 @@ export interface TriggerHandoffOutput {
 }
 
 export async function triggerHandoff(input: TriggerHandoffInput): Promise<Result<TriggerHandoffOutput, Error>> {
-  try {
-    if (!input.conversationId) {
-      return err(new AppError('Conversation ID is required', 400, 'INVALID_INPUT'));
+  return withSpan('handoff.trigger', async (_span) => {
+    try {
+      setSpanAttribute('conversation.id', input.conversationId);
+      setSpanAttribute('handoff.previous_handler', input.previousHandler);
+      setSpanAttribute('handoff.new_handler', input.newHandler);
+      setSpanAttribute('handoff.reason', input.reason);
+      if (input.triggeredBy) setSpanAttribute('handoff.triggered_by', input.triggeredBy);
+
+      if (!input.conversationId) {
+        setSpanAttribute('error', true);
+        return err(new AppError('Conversation ID is required', 400, 'INVALID_INPUT'));
+      }
+
+      if (input.previousHandler === input.newHandler) {
+        setSpanAttribute('error', true);
+        return err(new AppError('Previous and new handler must be different', 400, 'INVALID_INPUT'));
+      }
+
+      await publishHandoffRequested({
+        conversationId: input.conversationId,
+        previousHandler: input.previousHandler,
+        newHandler: input.newHandler,
+        reason: input.reason,
+        triggeredBy: input.triggeredBy,
+        metadata: input.metadata,
+      });
+
+      await publishHandoffCompleted({
+        conversationId: input.conversationId,
+        previousHandler: input.previousHandler,
+        newHandler: input.newHandler,
+        reason: input.reason,
+        triggeredBy: input.triggeredBy,
+      });
+
+      setSpanAttribute('handoff.completed', true);
+
+      return ok({
+        conversationId: input.conversationId,
+        previousHandler: input.previousHandler,
+        newHandler: input.newHandler,
+        reason: input.reason,
+        triggeredBy: input.triggeredBy,
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      setSpanAttribute('error', true);
+      setSpanAttribute('error.message', error instanceof Error ? error.message : String(error));
+      return err(error as Error);
     }
-
-    if (input.previousHandler === input.newHandler) {
-      return err(new AppError('Previous and new handler must be different', 400, 'INVALID_INPUT'));
-    }
-
-    await publishHandoffRequested({
-      conversationId: input.conversationId,
-      previousHandler: input.previousHandler,
-      newHandler: input.newHandler,
-      reason: input.reason,
-      triggeredBy: input.triggeredBy,
-      metadata: input.metadata,
-    });
-
-    await publishHandoffCompleted({
-      conversationId: input.conversationId,
-      previousHandler: input.previousHandler,
-      newHandler: input.newHandler,
-      reason: input.reason,
-      triggeredBy: input.triggeredBy,
-    });
-
-    return ok({
-      conversationId: input.conversationId,
-      previousHandler: input.previousHandler,
-      newHandler: input.newHandler,
-      reason: input.reason,
-      triggeredBy: input.triggeredBy,
-      timestamp: new Date(),
-    });
-  } catch (error) {
-    return err(error as Error);
-  }
+  });
 }
