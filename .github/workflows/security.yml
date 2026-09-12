@@ -53,6 +53,9 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
+          # Policy explícita (Final-6): HIGH/CRITICAL quebram o job.
+          exit-code: '1'
+          ignore-unfixed: true
       - uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
