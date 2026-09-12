@@ -194,6 +194,43 @@ describe('Outbound idempotency integration', () => {
     expect(response.statusCode).toBe(400);
   });
 
+  it('pipeline opt-in bloqueia bytes infectados embarcados', async () => {
+    process.env.MEDIA_PIPELINE_ENABLED = 'true';
+    process.env.MALWARE_SCANNER = 'fake';
+    process.env.MEDIA_STORAGE_DRIVER = 'memory';
+    try {
+      const eicar = 'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
+      const dataUrl = `data:image/jpeg;base64,${Buffer.from(eicar).toString('base64')}`;
+      const response = await sendMessage({
+        content: 'Anexo?',
+        mediaUrl: dataUrl,
+        mediaType: 'image',
+        mediaMimetype: 'image/jpeg',
+      });
+      expect(response.statusCode).toBe(400);
+
+      // Nenhuma mensagem persistida para o envio bloqueado.
+      const rows = await db
+        .select()
+        .from(schema.messages)
+        .where(
+          and(
+            eq(schema.messages.conversationId, conversationId),
+            eq(schema.messages.direction, 'outbound')
+          )
+        );
+      expect(rows).toHaveLength(0);
+    } finally {
+      delete process.env.MEDIA_PIPELINE_ENABLED;
+      delete process.env.MALWARE_SCANNER;
+      delete process.env.MEDIA_STORAGE_DRIVER;
+      const { createHash } = await import('crypto');
+      const eicar = 'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
+      const sha = createHash('sha256').update(eicar).digest('hex');
+      await db.delete(schema.mediaAssets).where(eq(schema.mediaAssets.sha256, sha));
+    }
+  });
+
   it('reconcilia status apos envio ao provider (mock)', async () => {
     const key = `idem-${conversationId}-reconcile`;
     const response = await sendMessage({ content: 'Reconciliar' }, key);

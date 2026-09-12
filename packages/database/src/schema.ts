@@ -563,3 +563,33 @@ export const deadLetterEvents = pgTable('dead_letter_events', {
   eventTypeIdx: index('idx_dlq_event_type').on(t.eventType),
   createdIdx: index('idx_dlq_created').on(t.createdAt),
 }));
+
+// ============================================
+// Media Assets — metadados de mídia (Final-3/4)
+// Storage durável + scan/quarentena. Migration 0016.
+// ============================================
+
+export const mediaScanStatusEnum = pgEnum('media_scan_status', ['PENDING_SCAN', 'CLEAN', 'INFECTED', 'SCAN_FAILED']);
+export const mediaStorageStatusEnum = pgEnum('media_storage_status', ['EXTERNAL', 'QUARANTINED', 'STORED', 'DELETED']);
+
+export const mediaAssets = pgTable('media_assets', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  messageId: uuid('message_id').references(() => messages.id),
+  storageDriver: text('storage_driver').notNull().default('external'),
+  storageBucket: text('storage_bucket'),
+  storageKey: text('storage_key'),
+  sha256: text('sha256'),
+  mimeType: text('mime_type'),
+  sizeBytes: integer('size_bytes'),
+  filename: text('filename'),
+  scanStatus: mediaScanStatusEnum('scan_status').notNull().default('PENDING_SCAN'),
+  storageStatus: mediaStorageStatusEnum('storage_status').notNull().default('EXTERNAL'),
+  retentionUntil: timestamp('retention_until'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  keyIdx: uniqueIndex('idx_media_assets_key').on(t.storageKey),
+  messageIdx: index('idx_media_assets_message').on(t.messageId),
+  shaIdx: index('idx_media_assets_sha').on(t.sha256),
+  scanIdx: index('idx_media_assets_scan').on(t.scanStatus),
+}));

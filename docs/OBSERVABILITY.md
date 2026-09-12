@@ -13,10 +13,17 @@
 `auth_failures_total{reason}`, `authz_denials_total{reason}`, `rate_limit_hits_total`.
 Protegido por `METRICS_TOKEN` quando configurado (aviso em prod aberta).
 
-## Tracing
+## Tracing (OpenTelemetry — Final-2)
 
-Propagação de `correlationId`/`causationId`/`eventId` no outbox + `conversationId`/`messageId` nos logs.
-**Lacuna honesta**: sem OpenTelemetry SDK (decisão: zero deps; ver `TRIPLE_AAA_CERTIFICATION.md`).
+SDK oficial (`@cvg/tracing`): `initTracing()` por runtime (api/worker/realtime),
+OTLP via `OTEL_EXPORTER_OTLP_ENDPOINT` (+ headers/attributes), noop quando
+`OTEL_ENABLED != true`. Propagação W3C (`traceparent`/`tracestate`) no Secretary
+(fetch) e gateway (axios) + continuação no webhook inbound.
+
+Spans: `webhook.receive`, `secretary.invoke`, `gateway.send`, `worker.process`,
+`realtime.publish` — com `correlation_id`/`event_id`/`message_id`/`conversation_id`
+e sem segredos (`safeAttributes`). Outbox carrega correlation IDs (ponte entre
+HTTP e worker). Testes: `packages/tracing/src/__tests__/tracing.test.ts` (7).
 
 ## Health
 

@@ -16,6 +16,7 @@
     "@cvg/events": "workspace:*",
     "@cvg/gateway-adapter": "workspace:*",
     "@cvg/integrations": "workspace:*",
+    "@cvg/media": "workspace:*",
     "@cvg/secretary-adapter": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*"

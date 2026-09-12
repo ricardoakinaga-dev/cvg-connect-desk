@@ -54,6 +54,24 @@ export async function sendOutboundMessage(
       if (input.mediaFilename) {
         input.mediaFilename = safeFilename(input.mediaFilename);
       }
+
+      // Pipeline profundo (Final-3/4, opt-in): escaneia bytes embarcados
+      // (data-URLs do composer) antes de encaminhar ao provider.
+      if (
+        input.mediaUrl?.startsWith('data:') &&
+        (process.env.MEDIA_PIPELINE_ENABLED || '').toLowerCase() === 'true'
+      ) {
+        const { processInboundMedia } = await import('@cvg/media');
+        const scanned = await processInboundMedia({
+          mediaType: input.mediaType,
+          mimetype: input.mediaMimetype,
+          filename: input.mediaFilename,
+          url: input.mediaUrl,
+        });
+        if (scanned.blocked) {
+          return err(new BadRequestError(scanned.reason || 'Media blocked by security pipeline'));
+        }
+      }
     }
 
     const conversation = await conversationRepository.findById(input.conversationId);
