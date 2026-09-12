@@ -11,7 +11,7 @@ COPY packages/ packages/
 COPY modules/ modules/
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
-RUN pnpm install -r --no-lockfile
+RUN pnpm install --frozen-lockfile --filter @cvg/desk-api...
 
 COPY apps/desk-api/ apps/desk-api/
 COPY tsconfig*.json ./
@@ -23,7 +23,7 @@ FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN apk add --no-cache tini curl
+RUN apk upgrade --no-cache && apk add --no-cache tini curl
 RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001 -G appgroup
 
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
@@ -35,7 +35,7 @@ COPY --from=builder /app/apps/desk-api/ apps/desk-api/
 COPY --from=builder /app/tsconfig*.json ./
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate \
-  && pnpm install -r --no-lockfile --prod \
+  && pnpm install --frozen-lockfile --prod --filter @cvg/desk-api... \
   && rm -rf /root/.pnpm-store
 
 USER appuser

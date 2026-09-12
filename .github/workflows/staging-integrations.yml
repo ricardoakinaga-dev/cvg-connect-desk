@@ -97,9 +97,9 @@ jobs:
       - name: Real MinIO + Real ClamAV integration tests
         run: pnpm --filter @cvg/media exec vitest run src/__tests__/minio-real.test.ts src/__tests__/clamav-real.test.ts
       - name: Staging smoke (MinIO put/get/signed + ClamAV clean/EICAR + Collector reachable)
-        run: node scripts/staging-smoke.mjs
+        run: pnpm exec tsx scripts/staging-smoke.mjs
       - name: OTel Collector end-to-end spans
-        run: node scripts/otel-e2e-check.mjs
+        run: pnpm exec tsx scripts/otel-e2e-check.mjs
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

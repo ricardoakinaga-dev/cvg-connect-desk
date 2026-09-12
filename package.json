@@ -22,7 +22,7 @@
     "db:migrate": "pnpm --filter @cvg/database db:migrate",
     "db:seed": "pnpm --filter @cvg/database db:seed",
     "triple-aaa:verify": "node scripts/triple-aaa-verify.mjs",
-    "staging:smoke": "node scripts/staging-smoke.mjs",
+    "staging:smoke": "tsx scripts/staging-smoke.mjs",
     "production-readiness": "node scripts/production-readiness.mjs"
   },
   "devDependencies": {

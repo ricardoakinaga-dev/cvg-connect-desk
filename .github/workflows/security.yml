@@ -52,9 +52,17 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
-          # Policy explícita (Final-6): HIGH/CRITICAL quebram o job.
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
+      - name: Enforce HIGH/CRITICAL vulnerability policy
+        shell: bash
+        run: |
+          findings=$(jq '[.runs[]?.results[]?] | length' trivy-results.sarif)
+          jq -r '.runs[]?.results[]? | "::error title=Trivy \(.ruleId // "vulnerability")::\(.message.text // "HIGH/CRITICAL vulnerability")"' trivy-results.sarif
+          if [ "$findings" -gt 0 ]; then
+            echo "Trivy found $findings HIGH/CRITICAL vulnerabilities"
+            exit 1
+          fi
       - uses: github/codeql-action/upload-sarif@c29f4eedf1fb43be1c9b9611f2e861ca03ad0008
         if: always()
         with:
