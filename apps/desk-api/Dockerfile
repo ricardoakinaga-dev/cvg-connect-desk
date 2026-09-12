@@ -26,17 +26,17 @@ ENV NODE_ENV=production
 RUN apk upgrade --no-cache && apk add --no-cache tini curl
 RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001 -G appgroup
 
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml* ./
-COPY --from=builder /app/pnpm-workspace.yaml ./
-COPY --from=builder /app/apps/desk-api/package.json apps/desk-api/
-COPY --from=builder /app/packages/ packages/
-COPY --from=builder /app/modules/ modules/
-COPY --from=builder /app/apps/desk-api/ apps/desk-api/
-COPY --from=builder /app/tsconfig*.json ./
+COPY package.json pnpm-lock.yaml* ./
+COPY pnpm-workspace.yaml ./
+COPY apps/desk-api/ apps/desk-api/
+COPY packages/ packages/
+COPY modules/ modules/
+COPY tsconfig*.json ./
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate \
   && pnpm install --frozen-lockfile --prod --filter @cvg/desk-api... \
-  && rm -rf /root/.pnpm-store
+  && corepack cache clean \
+  && rm -rf /root/.cache/node/corepack /root/.local/share/pnpm/store /root/.pnpm-store
 
 USER appuser
 EXPOSE 3000
@@ -45,4 +45,4 @@ HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["sh", "-c", "pnpm --filter @cvg/desk-api exec tsx src/index.ts"]
+CMD ["apps/desk-api/node_modules/.bin/tsx", "apps/desk-api/src/index.ts"]

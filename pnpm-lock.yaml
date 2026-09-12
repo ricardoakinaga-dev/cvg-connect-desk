@@ -151,8 +151,8 @@ importers:
         specifier: ^13.0.0
         version: 13.1.3
       tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
+        specifier: ^4.23.13
+        version: 4.23.13
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -162,7 +162,7 @@ importers:
         version: 5.1.0
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   apps/desk-web:
     dependencies:
@@ -205,7 +205,7 @@ importers:
         version: 5.4.21(@types/node@25.5.0)
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   apps/message-worker:
     dependencies:
@@ -307,7 +307,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/alerts:
     dependencies:
@@ -329,7 +329,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/audit:
     dependencies:
@@ -345,7 +345,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/auth:
     dependencies:
@@ -373,7 +373,7 @@ importers:
         version: 10.0.0
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/chat:
     dependencies:
@@ -407,13 +407,13 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/chatwoot-compat:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/contact-groups:
     dependencies:
@@ -429,7 +429,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/contacts:
     dependencies:
@@ -448,7 +448,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/dashboard:
     dependencies:
@@ -473,7 +473,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@20.19.37)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@20.19.37)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/gateway-adapter:
     dependencies:
@@ -504,10 +504,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/kanban:
     dependencies:
@@ -526,7 +526,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/labels:
     dependencies:
@@ -542,7 +542,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/notes:
     dependencies:
@@ -555,7 +555,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/patients:
     dependencies:
@@ -580,7 +580,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/privacy:
     dependencies:
@@ -599,10 +599,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/secretary-adapter:
     dependencies:
@@ -621,10 +621,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/sectors:
     dependencies:
@@ -640,7 +640,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/tasks:
     dependencies:
@@ -653,7 +653,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/transfers:
     dependencies:
@@ -669,7 +669,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   modules/tutors:
     dependencies:
@@ -694,7 +694,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/auth:
     dependencies:
@@ -725,10 +725,10 @@ importers:
         version: 10.0.0
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/database:
     dependencies:
@@ -775,7 +775,7 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
 
   packages/integrations:
     dependencies:
@@ -788,7 +788,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/media:
     dependencies:
@@ -807,10 +807,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/messaging-contracts:
     dependencies:
@@ -820,10 +820,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/realtime:
     dependencies:
@@ -836,7 +836,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/shared:
     dependencies:
@@ -855,10 +855,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
   packages/tracing:
     dependencies:
@@ -883,10 +883,10 @@ importers:
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
-        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1))
+        version: 3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))
       vitest:
         specifier: ^3.2.7
-        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
 
 packages:
 
@@ -4159,6 +4159,11 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  tsx@4.23.13:
+    resolution: {integrity: sha512-BL5MGkRln6aDYhb0xbQlEAGw743BaZYWdbWtdJOBriYJboKgUUYCadFp2/FpBBZquBC/ezNBn7wMMPx7FDZUDw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   turbo@2.8.21:
     resolution: {integrity: sha512-FlJ8OD5Qcp0jTAM7E4a/RhUzRNds2GzKlyxHKA6N247VLy628rrxAGlMpIXSz6VB430+TiQDJ/SMl6PL1lu6wQ==}
     hasBin: true
@@ -5875,6 +5880,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vitest/coverage-v8@3.2.7(vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1))':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@bcoe/v8-coverage': 1.0.2
+      ast-v8-to-istanbul: 0.3.12
+      debug: 4.4.3
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.2.0
+      magic-string: 0.30.21
+      magicast: 0.3.5
+      std-env: 3.10.0
+      test-exclude: 7.0.2
+      tinyrainbow: 2.0.0
+      vitest: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitest/expect@3.2.7':
     dependencies:
       '@types/chai': 5.2.3
@@ -5883,6 +5907,14 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
+  '@vitest/mocker@3.2.7(vite@7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1))':
+    dependencies:
+      '@vitest/spy': 3.2.7
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      vite: 7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1)
+
   '@vitest/mocker@3.2.7(vite@7.3.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1))':
     dependencies:
       '@vitest/spy': 3.2.7
@@ -5890,6 +5922,14 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 7.3.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1)
+
+  '@vitest/mocker@3.2.7(vite@7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1))':
+    dependencies:
+      '@vitest/spy': 3.2.7
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      vite: 7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1)
 
   '@vitest/pretty-format@3.2.7':
     dependencies:
@@ -7550,6 +7590,12 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
+  tsx@4.23.13:
+    dependencies:
+      esbuild: 0.28.2
+    optionalDependencies:
+      fsevents: 2.3.3
+
   turbo@2.8.21:
     optionalDependencies:
       '@turbo/darwin-64': 2.8.21
@@ -7605,13 +7651,13 @@ snapshots:
 
   uuid@9.0.1: {}
 
-  vite-node@3.2.4(@types/node@20.19.37)(tsx@4.21.0)(yaml@2.9.1):
+  vite-node@3.2.4(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 7.3.6(@types/node@20.19.37)(tsx@4.21.0)(yaml@2.9.1)
+      vite: 7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -7647,6 +7693,27 @@ snapshots:
       - tsx
       - yaml
 
+  vite-node@3.2.4(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1):
+    dependencies:
+      cac: 6.7.14
+      debug: 4.4.3
+      es-module-lexer: 1.7.0
+      pathe: 2.0.3
+      vite: 7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
   vite@5.4.21(@types/node@25.5.0):
     dependencies:
       esbuild: 0.21.5
@@ -7656,7 +7723,7 @@ snapshots:
       '@types/node': 25.5.0
       fsevents: 2.3.3
 
-  vite@7.3.6(@types/node@20.19.37)(tsx@4.21.0)(yaml@2.9.1):
+  vite@7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1):
     dependencies:
       esbuild: 0.28.2
       fdir: 6.5.0(picomatch@4.0.7)
@@ -7667,7 +7734,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.37
       fsevents: 2.3.3
-      tsx: 4.21.0
+      tsx: 4.23.13
       yaml: 2.9.1
 
   vite@7.3.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1):
@@ -7684,11 +7751,25 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.9.1
 
-  vitest@3.2.7(@types/node@20.19.37)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1):
+  vite@7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1):
+    dependencies:
+      esbuild: 0.28.2
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
+      postcss: 8.5.28
+      rollup: 4.63.1
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 25.5.0
+      fsevents: 2.3.3
+      tsx: 4.23.13
+      yaml: 2.9.1
+
+  vitest@3.2.7(@types/node@20.19.37)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.7
-      '@vitest/mocker': 3.2.7(vite@7.3.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1))
+      '@vitest/mocker': 3.2.7(vite@7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1))
       '@vitest/pretty-format': 3.2.7
       '@vitest/runner': 3.2.7
       '@vitest/snapshot': 3.2.7
@@ -7706,8 +7787,8 @@ snapshots:
       tinyglobby: 0.2.17
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
-      vite: 7.3.6(@types/node@20.19.37)(tsx@4.21.0)(yaml@2.9.1)
-      vite-node: 3.2.4(@types/node@20.19.37)(tsx@4.21.0)(yaml@2.9.1)
+      vite: 7.3.6(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1)
+      vite-node: 3.2.4(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.37
@@ -7750,6 +7831,48 @@ snapshots:
       tinyrainbow: 2.0.0
       vite: 7.3.6(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1)
       vite-node: 3.2.4(@types/node@25.5.0)(tsx@4.21.0)(yaml@2.9.1)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 25.5.0
+      jsdom: 24.1.3
+    transitivePeerDependencies:
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
+  vitest@3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.23.13)(yaml@2.9.1):
+    dependencies:
+      '@types/chai': 5.2.3
+      '@vitest/expect': 3.2.7
+      '@vitest/mocker': 3.2.7(vite@7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1))
+      '@vitest/pretty-format': 3.2.7
+      '@vitest/runner': 3.2.7
+      '@vitest/snapshot': 3.2.7
+      '@vitest/spy': 3.2.7
+      '@vitest/utils': 3.2.7
+      chai: 5.3.3
+      debug: 4.4.3
+      expect-type: 1.4.0
+      magic-string: 0.30.21
+      pathe: 2.0.3
+      picomatch: 4.0.7
+      std-env: 3.10.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.2
+      tinyglobby: 0.2.17
+      tinypool: 1.1.1
+      tinyrainbow: 2.0.0
+      vite: 7.3.6(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1)
+      vite-node: 3.2.4(@types/node@25.5.0)(tsx@4.23.13)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.5.0
