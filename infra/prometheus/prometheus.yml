@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: desk-api
+    static_configs:
+      - targets: ["desk-api:3000"]
+  - job_name: realtime
+    static_configs:
+      - targets: ["realtime-service:8080"]

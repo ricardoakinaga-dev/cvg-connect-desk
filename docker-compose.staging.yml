@@ -1,0 +1,229 @@
+# Staging reproduzível (§6) — integrações externas REAIS.
+# Postgres, Redis, MinIO, ClamAV, OTel Collector, API, Worker, Realtime, Web.
+# + Prometheus/Grafana/Tempo (observability stack).
+#
+# Uso: docker compose -f docker-compose.staging.yml up -d --build
+# Depois: pnpm staging:smoke (valida MinIO real + ClamAV real + Collector real)
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: connect_desk
+      POSTGRES_PASSWORD: staging_dev_only
+      POSTGRES_DB: connect_desk_db
+    ports:
+      - "127.0.0.1:55433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U connect_desk -d connect_desk_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:56380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "127.0.0.1:9100:9000"
+      - "127.0.0.1:9101:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9310:3310"
+    healthcheck:
+      test: ["CMD-SHELL", "test -S /run/clamav/clamd.ctl || true"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol/otelcol-config.yaml"]
+    volumes:
+      - ./infra/otel/otelcol-config.yaml:/etc/otelcol/otelcol-config.yaml:ro
+    ports:
+      - "127.0.0.1:4318:4318"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:13133/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+    ports:
+      - "127.0.0.1:3001:3000"
+    volumes:
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+  tempo:
+    image: grafana/tempo:latest
+    restart: unless-stopped
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./infra/tempo/tempo.yaml:/etc/tempo.yaml:ro
+    ports:
+      - "127.0.0.1:3200:3200"
+    depends_on:
+      - otel-collector
+
+  db-init:
+    build:
+      context: .
+      dockerfile: services/db-init/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
+      ADMIN_BOOTSTRAP_EMAIL: admin@cvg.test
+      ADMIN_BOOTSTRAP_PASSWORD: adminbootstrap-strong-2026
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  desk-api:
+    build:
+      context: .
+      dockerfile: apps/desk-api/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
+      REDIS_URL: redis://redis:6379
+      PORT: 3000
+      JWT_SECRET: staging-jwt-only-not-secret
+      WEBHOOK_SECRET: staging-webhook-only-not-secret
+      CORS_ORIGIN: http://localhost:3001
+      METRICS_TOKEN: staging-metrics-token
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: desk-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+      MEDIA_STORAGE_DRIVER: s3
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: cvg-media
+      S3_ACCESS_KEY_ID: minioadmin
+      S3_SECRET_ACCESS_KEY: minioadmin
+      S3_FORCE_PATH_STYLE: "true"
+      MALWARE_SCANNER: clamav
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: "3310"
+      MEDIA_PIPELINE_ENABLED: "true"
+      MEDIA_REQUIRE_SCAN: all
+    ports:
+      - "127.0.0.1:4331:3000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      minio:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
+      otel-collector:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  message-worker:
+    build:
+      context: .
+      dockerfile: apps/message-worker/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
+      REDIS_URL: redis://redis:6379
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: message-worker
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      otel-collector:
+        condition: service_healthy
+    restart: unless-stopped
+
+  realtime-service:
+    build:
+      context: .
+      dockerfile: apps/realtime-service/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
+      REDIS_URL: redis://redis:6379
+      DESK_API_URL: http://desk-api:3000
+      REALTIME_PORT: 8080
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: realtime-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+    ports:
+      - "127.0.0.1:4332:8080"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      otel-collector:
+        condition: service_healthy
+    restart: unless-stopped
+
+  desk-web:
+    build:
+      context: .
+      dockerfile: apps/desk-web/Dockerfile
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "4174:80"
+    depends_on:
+      - desk-api
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  miniodata:
+
+networks:
+  default:
+    driver: bridge
