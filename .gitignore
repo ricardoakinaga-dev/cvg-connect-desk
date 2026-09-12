@@ -131,3 +131,8 @@ redis-data/
 .pnpm-store/
 .codex/
 .opencode/
+
+# Gerados por db:types (pretest/prebuild) — nunca commitar
+packages/database/src/*.d.ts
+packages/database/src/*.d.ts.map
+artifacts/
