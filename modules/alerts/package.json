@@ -15,7 +15,7 @@
     "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "fastify": "^5.0.0"
+    "fastify": "^5.12.4"
   },
   "devDependencies": {
     "vitest": "^3.2.7"

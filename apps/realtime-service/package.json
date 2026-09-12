@@ -19,7 +19,7 @@
     "@cvg/realtime": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*",
-    "ws": "^8.16.0"
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "@types/ws": "^8.5.10",
