@@ -9,7 +9,7 @@ test.describe('Inbox Authenticated Smoke', () => {
     await expect(page.getByRole('heading', { name: /Conversas/ })).toBeVisible();
     await expect(page.locator('.inbox-sidebar')).toBeVisible();
     await expect(page.locator('.conv-list-v2')).toBeVisible();
-    await expect(page.getByPlaceholder('🔍 Pesquisar conversas...')).toBeVisible();
+    await expect(page.getByPlaceholder('Pesquisar conversas...')).toBeVisible();
     await expect(page.locator('.inbox-main')).toBeVisible();
     await expect(page.getByText('CVG Connect Desk')).toBeVisible();
   });

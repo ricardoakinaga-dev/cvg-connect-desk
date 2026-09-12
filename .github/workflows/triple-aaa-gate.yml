@@ -57,6 +57,8 @@ jobs:
         run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
       - name: Typecheck
         run: pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json
+      - name: Apply database migrations
+        run: pnpm --filter @cvg/database db:migrate
       - name: Unit + integration (turbo)
         run: pnpm exec turbo run test --force
       - name: Postgres real chain

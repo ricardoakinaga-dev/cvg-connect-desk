@@ -93,16 +93,16 @@ test.describe('Send Message Flow', () => {
     const composerInput = page.locator('.composer-input-v2');
     const sendButton = page.locator('.composer-send');
 
-    // Initially empty — send button shows 🎤 (voice mode)
+    // Empty messages are blocked at the control boundary.
     await expect(composerInput).toHaveValue('');
-    await expect(sendButton).toContainText('🎤');
+    await expect(sendButton).toBeDisabled();
 
-    // Type something — send button changes to ➤
+    // Typing enables the send action.
     await composerInput.fill('Hello');
-    await expect(sendButton).toContainText('➤');
+    await expect(sendButton).toBeEnabled();
 
-    // Clear — back to 🎤
+    // Clearing restores the guarded state.
     await composerInput.clear();
-    await expect(sendButton).toContainText('🎤');
+    await expect(sendButton).toBeDisabled();
   });
 });

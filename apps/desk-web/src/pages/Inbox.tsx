@@ -442,7 +442,7 @@ export function Inbox() {
                 <input ref={fileInputRef} type="file" accept="image/*,audio/*,.pdf,.doc,.docx" onChange={e => { const f = e.target.files?.[0]; if (f && f.size <= 16 * 1024 * 1024) setSelectedFile(f); e.target.value = ''; }} style={{ display: 'none' }} />
                 <button type="button" className="composer-btn" aria-label="Anexar arquivo" onClick={() => fileInputRef.current?.click()}><Icon name="attachment" /></button>
                 <label className="sr-only" htmlFor="message-composer">Mensagem</label><input id="message-composer" className="composer-input-v2" placeholder={selectedFile ? 'Legenda (opcional)...' : 'Mensagem'} value={newMessage} onChange={e => setNewMessage(e.target.value)} autoFocus />
-                <button type="submit" className="composer-send" aria-label="Enviar mensagem"><Icon name="send" /></button>
+                <button type="submit" className="composer-send" aria-label="Enviar mensagem" disabled={!newMessage.trim() && !selectedFile}><Icon name="send" /></button>
               </form>
             </div>
           </>

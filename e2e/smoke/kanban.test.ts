@@ -10,6 +10,6 @@ test.describe('Kanban Smoke', () => {
     await expect(page.locator('.kanban-header')).toBeVisible();
     await expect(page.locator('.kanban-board')).toBeVisible();
     await expect(page.locator('select')).toBeVisible();
-    await expect(page.getByRole('button', { name: '🔄' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Atualizar Kanban' })).toBeVisible();
   });
 });

@@ -15,7 +15,7 @@ test.describe('Create Task Flow', () => {
 
   test('opens create task form', async ({ page }) => {
     await page.goto('/tasks');
-    await page.getByRole('button', { name: /Nova Tarefa/ }).click();
+    await page.getByRole('button', { name: /Nova tarefa/i }).click();
     await expect(page.getByPlaceholder('Título da tarefa')).toBeVisible();
     await expect(page.getByPlaceholder('Descrição (opcional)')).toBeVisible();
     await expect(page.locator('select')).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('Create Task Flow', () => {
 
   test('creates a new task with valid data', async ({ page }) => {
     await page.goto('/tasks');
-    await page.getByRole('button', { name: /Nova Tarefa/ }).click();
+    await page.getByRole('button', { name: /Nova tarefa/i }).click();
 
     const testTaskTitle = `Smoke Test Task ${Date.now()}`;
     await page.getByPlaceholder('Título da tarefa').fill(testTaskTitle);
@@ -42,13 +42,13 @@ test.describe('Create Task Flow', () => {
 
   test('create task form has priority selector', async ({ page }) => {
     await page.goto('/tasks');
-    await page.getByRole('button', { name: /Nova Tarefa/ }).click();
+    await page.getByRole('button', { name: /Nova tarefa/i }).click();
     await expect(page.locator('select')).toBeVisible();
-    await expect(page.locator('select option')).toHaveText([
-      '🟢 Baixa',
-      '🟡 Média',
-      '🟠 Alta',
-      '🔴 Urgente',
+    await expect(page.getByLabel('Prioridade da tarefa').locator('option')).toHaveText([
+      'Baixa',
+      'Média',
+      'Alta',
+      'Urgente',
     ]);
   });
 });

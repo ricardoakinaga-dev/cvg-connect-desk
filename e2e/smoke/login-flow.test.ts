@@ -7,7 +7,8 @@ test.describe('Login Flow', () => {
   });
 
   test('login page loads with correct elements', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('CVG Connect Desk');
+    await expect(page.getByRole('heading', { name: 'Bem-vindo ao plantão.' })).toBeVisible();
+    await expect(page.getByLabel('CVG Connect Desk')).toBeVisible();
     await expect(page.getByPlaceholder('Email')).toBeVisible();
     await expect(page.getByPlaceholder('Senha')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Entrar' })).toBeVisible();
