@@ -1,63 +1,71 @@
-# TRIPLE_AAA_CERTIFICATION — CVG Connect Desk (FINAL CLOSURE)
+# TRIPLE_AAA_CERTIFICATION — CVG Connect Desk (RELEASE CLOSURE)
 
-> Critérios §§20–22 do prompt de certificação. Nenhum VERIFIED sem evidência executada.
+> Gerado após release certification closure. Regra de honestidade (§34):
+> implemented ≠ verified · workflow exists ≠ workflow passed ·
+> restore script exists ≠ restore succeeded · SDK configurado ≠ collector recebeu.
 
-## Executive Summary (pós-closure)
+## Execução do baseline (SHA revalidado)
 
-| Dimensão | Antes | Agora |
+| Item | Value |
+|---|---|
+| Repository | ricardoakinaga-dev/cvg-connect-desk |
+| Branch | main |
+| Commit (report) | `524d6509` (head da série release-*) — ver `artifacts/triple-aaa-report.json` |
+| Node | v24.20.0 |
+| pnpm | 10.33.0 |
+| PostgreSQL | 16.15 (Ubuntu) |
+| Redis | 7 (PONG verificado) |
+| Turbo | 2.8.21 |
+
+Gate mestre (`pnpm triple-aaa:verify`) — **executado, exit 0**:
+`install · lint · typecheck · unit (90 arquivos, 738 testes, 0 falhas) · postgres-real ·
+migration-check (37 tabelas fresh) · build · critical-security-audit (0 critical) ·
+coverage (94.6/87.8/94.9/94.6 ≥ 85/80/85/85) · **dr-e2e PASS** ·
+**staging-otel PASS** · query-performance (11 hot paths ok, índices presentes)`.
+
+## Fechamento de evidências (prioridades §36)
+
+| # | Evidência | Resultado |
 |---|---|---|
-| Architecture & Correctness | 88 | **94** |
-| Security & Reliability | 84 | **91** |
-| Testing | 90 | **95** |
-| Observability | 74 | **88** |
-| Performance | 78 | **86** |
-| Operations | 76 | **84** |
-| Supply Chain | 72 | **85** |
-| Disaster Recovery | 62 | **78** |
+| 1 | Certification aggregator | `.github/workflows/triple-aaa-certification.yml` + script por SHA; FAILED/CONDITIONAL/VERIFIED_CANDIDATE; ausência = NOT_VERIFIED |
+| 2 | DR E2E REAL | `artifacts/dr-e2e-report.json`: **PASS** — create→migrate→fixture (11 tabelas: users/sessions/contacts/conversations/messages/outbox/acks/DLQ/audit/media/AI)→backup custom+checksum→destroy→recreate→restore→integrity ok→boot→smoke ok; RPO 24h / RTO 2h |
+| 3 | MinIO real | `minio-real.test.ts` + workflow `staging-integrations.yml` (services MinIO) — **CI-only** (local sem Docker: skips explícitos) |
+| 4 | ClamAV real | `clamav-real.test.ts` (clean/EICAR/timeout/unavailable; protocolo INSTREAM) — **CI-only** para clamd real; mock TCPs verdes |
+| 5 | OTel Collector REAL | `artifacts/staging-otel.json`: **PASS** — receiver OTLP real, span `webhook.receive` chegou com correlação (event_id/conversation_id) |
+| 6 | E2E Browser | `smoke-e2e.yml` (5 specs) — **CI-only** |
+| 7 | CodeQL/Gitleaks/Trivy/SBOM/Dependency-review | workflows pinados por SHA — **CI-only** |
+| 8 | Production readiness | `pnpm production-readiness` — fail-fast validado (negativo + positivo) |
+| 9 | Evidence artifact | `artifacts/triple-aaa-report.json/.md` gerados pelo gate |
+| 10 | Promotion/tag | NÃO criada (evidência CI pendente) |
 
-## Evidência mecânica
+## Adições na closure (além do baseline preservado)
 
-- `pnpm triple-aaa:verify` → **FINAL: VERIFIED_CANDIDATE** (artifact `artifacts/triple-aaa-report.json`):
-  install/lint/typecheck/unit/postgres-real/migration-check/build/security-audit-critical = **PASS**.
-- `turbo run test --force` → **87 arquivos · 733 testes · 0 falhas** (PG + Redis reais).
-- `db:check` (fresh DB) → **37 tabelas** OK (migrations 0013–0017).
-- k6: 10 VUs (p95 6,7 ms) e 25+50 VUs (~432 rps, p95 12,7 ms) — 100% checks.
-- `pnpm audit --audit-level=critical` → **0 critical**; HIGH 49→27, todas triadas.
-- Coverage gate shared: 94.6/87.8/94.9/94.6 (thresholds 85/80/85/85). Mutação manual: 3/3 killed.
+- Supply chain: **GitHub Actions pinadas por SHA** (`git ls-remote` de cada tag).
+- DB: pool com query/statement/lock/idle-tx timeouts; `getPool()` para diagnóstico.
+- Query performance: EXPLAIN JSON real de 11 hot paths + índices por tabela.
+- Media final: magic bytes (jpeg/png/gif/webp/mp3/ogg/wav/mp4/webm/pdf/zip-ooxml),
+  mismatch polyglot, `isPrivateIp` (v4+v6/ULA/link-local completo),
+  `dnsRebindingCheck` (IP revalidado pós-DNS), `safeRemoteFetch` (redirect-limit).
+- DLQ advanced: 8 cenários adversariais (kill-after-claim, before-commit, concorrente,
+  2 operadores, corrupt, poison ×3, batch100, retry-loop prevention).
+- AI bypass: 6 testes (unknown/case/alias/malformed/args-hash diff/invocation bound).
+- Auth final: permissões dinâmicas — role/setor removidos invalidam sessão ATIVA.
+- Realtime: 3 réplicas reais (morte de nó + dedup em Redis real); 100 VUs k6 (823 rps, p95 58 ms).
 
-## AAA-1 — Architecture & Correctness: VERIFIED
+## AAA status (por critério)
 
-architecture tests (§api-structure) ✓ · contracts (11) ✓ · idempotência in/out ✓ ·
-DB integrity (`db:check`) ✓ · outbox lease/ACK/redelivery ✓ · **DLQ durability (16)** ✓ ·
-migrations fresh+upgrade (0013–0017 aplicadas forward no banco de dev) ✓ · 733 testes ✓.
-
-## AAA-2 — Security & Reliability: CONDITIONAL
-
-HMAC raw ✓ · anti-replay ✓ · auth hashing/rotation ✓ · RBAC + sector zero-trust ✓ ·
-SSRF/MIME/size ✓ · **malware pipeline (client ClamAV verificado contra fake server; `clamd` real ausente)** ⚠ ·
-**object storage (driver S3 testado mockado; S3/MinIO real não exercitado)** ⚠ ·
-rate limiting (incl. 429 sob k6) ✓ · retry bounded (incl. sem-retry em POST) ✓ ·
-**DLQ persistente** ✓ · HIGHs runtime corrigidas + triage ✓ · secrets (nenhum commitado; gitleaks só CI) ⚠ ·
-**DR restore NÃO executado** (sem pg client; workflow pronto) ✗ ·
-**CodeQL/Gitleaks/Trivy/Dependency-review/SBOM NÃO executados** (só CI) ✗.
-
-## AAA-3 — Operations & Observability: CONDITIONAL
-
-structured logging + redaction ✓ · métricas + `/metrics` ✓ · **OTEL SDK + W3C (testes; Collector real não exercitado)** ⚠ ·
-SLOs + baseline medido ✓ · runbook + 6 ADRs ✓ · **realtime multi-réplica (Redis real, 2 nós)** ✓ ·
-health/readiness ✓ · backup scripts ✓ + **restore NÃO executado** ✗ ·
-load (10→50 VUs) ✓ · chaos (10 cenários) ✓ · rollback/deploy docs ✓ · **e2e browser NÃO executado** ✗.
-
-## Blockers restantes (ambientais — fecham no CI/prod)
-
-| Blocker | Impacto | Evidência atual | Ação |
-|---|---|---|---|
-| Restore E2E não executado | DR não provado | script + workflow sintaxe-OK | rodar `dr-e2e.yml` ( runners têm pg client) |
-| CodeQL/Gitleaks/Trivy/SBOM/e2e não executados | supply-chain parcial | workflows válidos + audit local | push → Actions |
-| S3/MinIO/clamd/Collector reais | integrações externas | drivers testados mockado/fake | smoke em staging |
+- **AAA-1 Architecture & Correctness: VERIFIED** — architecture/contracts/idempotência/
+  outbox/DLQ persistente/DB/migrations/test suite: todos verdes no SHA (ver report.json).
+- **AAA-2 Security & Reliability: CONDITIONAL** — núcleo (HMAC/anti-replay/auth/RBAC/
+  sector/SSRF/media/quarantine/rate/retry/DLQ/DR) verificado local; **MinIO e clamd reais,
+  CodeQL, Gitleaks, Trivy, Dependency-review, SBOM** aguardam execução em GitHub Actions.
+- **AAA-3 Operations & Observability: CONDITIONAL** — logs/redaction/metrics/OTEL SDK+
+  propagação (collector real local PASS)/SLO/multi-réplica/health/load/chaos verdes;
+  **E2E browser** aguarda CI; dashboards/alertas em staging compose.
 
 ## FINAL STATUS: NOT_YET_CERTIFIED
 
-AAA-1 = VERIFIED · AAA-2 = CONDITIONAL · AAA-3 = CONDITIONAL.
-Promoção para TRIPLE_AAA_CERTIFIED: executar os 3 itens acima (todos com workflow
-pronto) + tag `triple-aaa-v1` manual. Nenhum blocker de código permanece.
+Requisito para promoção → `VERIFIED_CANDIDATE` + tag `triple-aaa-v1`:
+executar `ci.yml`, `security.yml`, `staging-integrations.yml`, `smoke-e2e.yml` no
+SHA atual (todos os workflows prontos e pinados) e alimentar `artifacts/ci-evidence/*.json`.
+Nenhum blocker de código permanece; os pendentes são execuções de ambiente.

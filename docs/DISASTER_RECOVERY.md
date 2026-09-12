@@ -9,13 +9,17 @@
 | Object storage de mídia | herda backup do bucket (versionamento S3) | ≤ 4h | replicação/versionamento do provider |
 | Segredos (.env) | n/a | manual | rotação via variáveis de ambiente + redeploy |
 
-## Prova ponta-a-ponta (Final-5)
+## Prova ponta-a-ponta (Release closure — EXECUTADA)
 
-`infra/scripts/dr-e2e.sh` (workflow `.github/workflows/dr-e2e.yml`, semanal + manual):
-backup → checksum → destroy → restore → estrutura (8 tabelas incl. DLQ) →
-integrity queries → boot da app → smoke (`/health` + `/readiness.ready=true`) →
-comparação de fixture (message/outbox/DLQ). Falha o CI se qualquer etapa falhar;
-duração registrada no log. Evidência de execução: artifacts do workflow.
+`infra/scripts/dr-e2e-node.mjs` (backup/restore via COPY nativo, sem depender de
+pg_dump no host) — executado local no SHA da release:
+**result PASS** (`artifacts/dr-e2e-report.json`): create → migrate → fixture
+(11 tabelas: users, sessions, contacts, conversations, messages, outbox, acks,
+DLQ, audit, media, AI approvals) → backup + SHA-256 → destroy → recreate →
+restore → integridade ok → boot app + smoke → comparação fixture.
+RPO 24h (delta de retenção de backup diário) · RTO 2h (meta).
+Workflow `dr-e2e.yml` (scheduled semanal) espelha o fluxo e falha o CI;
+`pg-backup.sh`/`pg-restore.sh` cobrem backup custom do cliente padrão.
 
 ## Restore
 

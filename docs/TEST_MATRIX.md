@@ -39,5 +39,6 @@ Estados: `VERIFIED` (teste/gate executado com evidência) · `PARTIAL` (parcial/
 | E2E browser | smoke | playwright `smoke-e2e.yml` | CI | PARTIAL |
 | DR E2E | backup→restore→smoke | `dr-e2e.sh` + workflow | CI (sintaxe OK) | PARTIAL |
 
-Totais finais (`turbo run test --force`, PG+Redis reais): **87 arquivos · 733 testes · 0 falhas**.
-ESLint web: 0 errors. `tsc`: pass. Build: pass. Master gate: `pnpm triple-aaa:verify` → VERIFIED_CANDIDATE.
+Totais finais (release closure, `turbo run test --force`, PG+Redis reais): **90 arquivos · 738 testes · 0 falhas**.
+ESLint web: 0 errors. `tsc`: pass. Build: pass. Master gate: `pnpm triple-aaa:verify` → CONDITIONAL (externa à espera do CI).
+Evidências de release: `artifacts/dr-e2e-report.json` (PASS), `artifacts/staging-otel.json` (PASS), `artifacts/query-performance.json` (ok), `artifacts/triple-aaa-report.json`.

@@ -20,13 +20,17 @@
 
 Burn-rate sobre janelas 1h/6h.
 
-## Baseline medido (Final-11, k6 local contra API real + PG real)
+## Baseline medido (Release closure, k6 local contra API real + PG real)
 
-- 10 VUs + burst (30s): 100% checks, p95 6,7 ms, 0 falhas por kind.
-- 25 + 50 VUs (45s, ~432 rps): 100% checks (19.654), p50 ~5,3 ms, p95 12,7 ms, 0 falhas.
-- N+1 da listagem eliminado (`findLatestByConversationIds`, 1 query; teste `sem N+1`).
-- Rate-limit validado sob carga (429 correto com limites baixos; sem 5xx).
+- 10 VUs + burst: 100% checks, p95 6,7 ms.
+- 25 + 50 VUs (~432 rps): p95 12,7 ms, 0 falhas.
+- **50 + 100 VUs (822,9 rps): 100% checks (37.446 reqs), p50 6,56 ms, p90 39,1 ms, p95 58,5 ms** — stress local, sem threshold de produção.
+- N+1 da listagem eliminado (1 query); 11 hot paths EXPLAIN-verificados.
 
+## Error budget (adotado)
+
+Disponibilidade alvo 99,9% → budget mensal ≈ 43 min 50 s (28.800 s window × 0,001).
+Webhook crítico 99,95% → ≈ 13 min/mês. Queima 1h = página; 6h = ticket.
 Metas de produção exigem baseline em ambiente real antes de apertar thresholds.
 
 ## Não-SLO (documentado)

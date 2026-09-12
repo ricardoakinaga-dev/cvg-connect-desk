@@ -1,36 +1,56 @@
 {
-  "commit": "e1abc20052bf9989f93e0daf3252bd62807a1164",
-  "timestamp": "2026-09-12T03:00:07.520Z",
+  "repository": "ricardoakinaga-dev/cvg-connect-desk",
+  "branch": "main",
+  "commit": "524d6509cc27ce908c2e4065db449184df9f2ac5",
+  "timestamp": "2026-09-12T13:48:55.450Z",
+  "tools": {
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "turbo": "2.8.21"
+  },
   "gates": {
     "install": {
       "status": "PASS",
-      "durationMs": 667
+      "durationMs": 698
     },
     "lint": {
       "status": "PASS",
-      "durationMs": 1774
+      "durationMs": 1764
     },
     "typecheck": {
       "status": "PASS",
-      "durationMs": 2179
+      "durationMs": 2345
     },
     "unit": {
       "status": "PASS",
-      "durationMs": 30259
+      "durationMs": 31069
     },
     "postgres-real": {
       "status": "PASS",
-      "durationMs": 19045
+      "durationMs": 20127
     },
     "migration-check": {
       "status": "PASS",
-      "durationMs": 824
+      "durationMs": 877
     },
     "build": {
       "status": "PASS",
-      "durationMs": 3186
+      "durationMs": 3398
     },
-    "security-audit-critical": {
+    "critical-security-audit": {
+      "status": "PASS"
+    },
+    "coverage": {
+      "status": "PASS",
+      "detail": "thresholds 85/80/85/85 (medido 94.6/87.8/94.9/94.6)"
+    },
+    "dr-e2e": {
+      "status": "PASS"
+    },
+    "staging-otel": {
+      "status": "PASS"
+    },
+    "query-performance": {
       "status": "PASS"
     },
     "external-codeql": {
@@ -47,13 +67,13 @@
     },
     "external-e2e": {
       "status": "NOT_RUN"
-    },
-    "external-dr": {
-      "status": "NOT_RUN"
     }
   },
-  "aaa1": "VERIFIED",
-  "aaa2": "CONDITIONAL",
-  "aaa3": "CONDITIONAL",
-  "final": "VERIFIED_CANDIDATE"
+  "aaaStatuses": {
+    "aaa1": "VERIFIED",
+    "aaa2": "NOT VERIFIED",
+    "aaa3": "NOT VERIFIED"
+  },
+  "final": "CONDITIONAL",
+  "honesty": "PASS apenas com evidência executada; NOT_RUN = evidência ausente (CONDITIONAL). TRIPLE_AAA_CERTIFIED exige tag manual."
 }

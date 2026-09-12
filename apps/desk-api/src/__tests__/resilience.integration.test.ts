@@ -115,7 +115,7 @@ describe('Resilience integration', () => {
     });
 
     try {
-      const reader = new ConsumerAwareOutboxReader({ consumerId, batchSize: 50, maxRetries: 3 });
+      const reader = new ConsumerAwareOutboxReader({ consumerId, batchSize: 500, maxRetries: 3 });
 
       // Worker lê e "morre" antes do ACK...
       const first = await reader.fetchPendingEvents();
@@ -136,7 +136,7 @@ describe('Resilience integration', () => {
 
   it('payload malformado no outbox não derruba o reader', async () => {
     const eventId = `resilience.malformed.${Date.now()}`;
-    const reader = new ConsumerAwareOutboxReader({ consumerId: CONSUMER_IDS.WORKER, batchSize: 50, maxRetries: 3 });
+    const reader = new ConsumerAwareOutboxReader({ consumerId: CONSUMER_IDS.WORKER, batchSize: 500, maxRetries: 3 });
 
     await db.insert(schema.outboxEvents).values({
       eventId,
@@ -160,7 +160,7 @@ describe('Resilience integration', () => {
 
   it('falha com retry esgotado permanece visível para DLQ (não some)', async () => {
     const eventId = `resilience.exhaust.${Date.now()}`;
-    const reader = new ConsumerAwareOutboxReader({ consumerId: CONSUMER_IDS.WORKER, batchSize: 50, maxRetries: 1 });
+    const reader = new ConsumerAwareOutboxReader({ consumerId: CONSUMER_IDS.WORKER, batchSize: 500, maxRetries: 1 });
 
     await db.insert(schema.outboxEvents).values({
       eventId,
