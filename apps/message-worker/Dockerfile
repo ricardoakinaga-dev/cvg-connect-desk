@@ -38,8 +38,8 @@ RUN corepack enable && corepack prepare pnpm@10.33.0 --activate \
 
 USER appuser
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD node -e "process.exit(0)"
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD pnpm --filter @cvg/message-worker exec tsx src/healthcheck.ts
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["sh", "-c", "pnpm --filter @cvg/message-worker exec tsx src/index.ts"]

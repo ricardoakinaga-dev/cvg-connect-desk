@@ -1,0 +1,110 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  install:
+    name: Install (frozen lockfile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+      - run: pnpm install --frozen-lockfile
+
+  lint-typecheck:
+    name: Lint + Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
+      - run: pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json
+
+  unit:
+    name: Unit tests (no DB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: install
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @cvg/shared test
+      - run: pnpm --filter @cvg/messaging-contracts test
+      - run: pnpm --filter @cvg/auth test
+      - run: pnpm --filter @cvg/gateway-adapter test
+      - run: pnpm --filter @cvg/secretary-adapter exec vitest run src/__tests__/ai-policy.test.ts
+
+  migration-check:
+    name: Migration check (fresh DB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: install
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres pnpm --filter @cvg/database db:check
+
+  build:
+    name: Build desk-web
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint-typecheck, unit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @cvg/desk-web build
+
+  docker:
+    name: Docker build (api + worker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [migration-check, build]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f apps/desk-api/Dockerfile -t cvg-desk-api:ci .
+      - run: docker build -f apps/message-worker/Dockerfile -t cvg-message-worker:ci .

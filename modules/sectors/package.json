@@ -11,11 +11,11 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
-    "@cvg/shared": "workspace:*",
-    "@cvg/auth": "workspace:*"
+    "@cvg/shared": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }

@@ -11,15 +11,15 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@cvg/audit": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
-    "@cvg/audit": "workspace:*",
-    "@cvg/shared": "workspace:*",
-    "@cvg/secretary-adapter": "workspace:*",
+    "@cvg/gateway-adapter": "workspace:*",
     "@cvg/integrations": "workspace:*",
-    "@cvg/gateway-adapter": "workspace:*"
+    "@cvg/secretary-adapter": "workspace:*",
+    "@cvg/shared": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }

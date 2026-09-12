@@ -11,14 +11,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@cvg/audit": "workspace:*",
+    "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "@cvg/auth": "workspace:*",
-    "@cvg/audit": "workspace:*",
     "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }

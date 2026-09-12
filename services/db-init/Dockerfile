@@ -17,9 +17,8 @@ COPY modules/ ./modules/
 # Instalar dependências do workspace (todas, incluindo dos pacotes)
 RUN pnpm install -r --no-lockfile
 
-# Healthcheck mínimo: só verifica se o container está rodando
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "process.exit(0)"
+# One-shot: sem healthcheck (HEALTHCHECK NONE) — o compose usa `completed-successfully`.
+HEALTHCHECK NONE
 
 # Comando padrão: rodar migrations e seed usando pnpm exec (respeita workspaces)
 CMD ["sh", "-c", "pnpm --filter @cvg/database exec tsx src/migrate.ts && pnpm --filter @cvg/database exec tsx src/seed.ts"]

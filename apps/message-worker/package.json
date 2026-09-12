@@ -13,14 +13,15 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@cvg/events": "workspace:*",
+    "@cvg/alerts": "workspace:*",
     "@cvg/database": "workspace:*",
+    "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "@cvg/alerts": "workspace:*"
+    "pg": "^8.20.0"
   },
   "devDependencies": {
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }

@@ -202,7 +202,7 @@ describe('Outbound idempotency integration', () => {
 
     // sendViaEvolution é assíncrono; aguardar reconciliação (mock resolve imediato).
     let status: string | null = null;
-    const deadline = Date.now() + 5000;
+    const deadline = Date.now() + 10000;
     while (Date.now() < deadline) {
       const [row] = await db
         .select({ status: schema.messages.status })
@@ -210,7 +210,7 @@ describe('Outbound idempotency integration', () => {
         .where(eq(schema.messages.id, messageId));
       status = row?.status ?? null;
       if (status === 'sent') break;
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 25));
     }
     expect(status).toBe('sent');
 

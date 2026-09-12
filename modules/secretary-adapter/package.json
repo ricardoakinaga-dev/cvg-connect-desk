@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "@cvg/database": "workspace:*",
-    "@cvg/shared": "workspace:*",
     "@cvg/events": "workspace:*",
-    "@cvg/integrations": "workspace:*"
+    "@cvg/integrations": "workspace:*",
+    "@cvg/shared": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }

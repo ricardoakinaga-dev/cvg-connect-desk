@@ -11,15 +11,15 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@cvg/database": "workspace:*",
-    "@cvg/shared": "workspace:*",
-    "@cvg/messaging-contracts": "workspace:*",
-    "@cvg/chat": "workspace:*",
     "@cvg/alerts": "workspace:*",
+    "@cvg/chat": "workspace:*",
+    "@cvg/database": "workspace:*",
+    "@cvg/messaging-contracts": "workspace:*",
+    "@cvg/shared": "workspace:*",
     "axios": "^1.6.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.7"
   }
 }
