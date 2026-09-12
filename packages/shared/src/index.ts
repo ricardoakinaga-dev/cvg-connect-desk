@@ -7,3 +7,4 @@ export * from './webhook-anti-replay';
 export * from './retry-policy';
 export * from './redact';
 export * from './metrics';
+export * from './media-policy';

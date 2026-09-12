@@ -174,6 +174,26 @@ describe('Outbound idempotency integration', () => {
     );
   });
 
+  it('rejeita MIME nao permitido (media policy)', async () => {
+    const response = await sendMessage({
+      content: 'Malware?',
+      mediaUrl: 'https://example.com/evil.sh',
+      mediaType: 'image',
+      mediaMimetype: 'application/x-sh',
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
+  it('rejeita URL interna SSRF (media policy)', async () => {
+    const response = await sendMessage({
+      content: 'SSRF?',
+      mediaUrl: 'http://169.254.169.254/latest/meta-data/',
+      mediaType: 'document',
+      mediaMimetype: 'application/pdf',
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
   it('reconcilia status apos envio ao provider (mock)', async () => {
     const key = `idem-${conversationId}-reconcile`;
     const response = await sendMessage({ content: 'Reconciliar' }, key);

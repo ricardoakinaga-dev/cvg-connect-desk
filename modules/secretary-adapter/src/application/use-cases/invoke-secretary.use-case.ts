@@ -2,6 +2,7 @@ import { ok, err, type Result } from '@cvg/shared';
 import { AppError } from '@cvg/shared';
 import { getSecretaryClient, type SecretaryResponse } from '@cvg/integrations';
 import { buildSecretaryRequest, handleSecretaryResponse, validateSecretaryResponse } from '../../infrastructure';
+import { evaluateAIPolicy, recordAIDecision, sanitizeAIArgs } from '../ai-policy';
 import { publishSecretaryInvocation } from './secretary-publisher';
 
 export interface InvokeSecretaryInput {
@@ -39,6 +40,38 @@ export async function invokeSecretary(input: InvokeSecretaryInput): Promise<Resu
   }
 
   const invocationId = `${INVOCATION_ID_PREFIX}${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+  // AI Safety policy gate (§8): antes de qualquer chamada externa.
+  const policy = evaluateAIPolicy({
+    invocationId,
+    action: input.action,
+    conversationId: input.conversationId,
+    messageId: input.messageId,
+    contentChars: input.content?.length ?? 0,
+    historyItems: input.conversationHistory?.length ?? 0,
+    priorInvocations: 0,
+  });
+  recordAIDecision({
+    invocationId,
+    action: input.action,
+    classification: policy.classification,
+    decision: policy.decision,
+    reason: policy.reason,
+    conversationId: input.conversationId,
+    messageId: input.messageId,
+  });
+  if (policy.decision === 'deny') {
+    await publishSecretaryInvocation({
+      conversationId: input.conversationId,
+      messageId: input.messageId,
+      invocationId,
+      action: input.action,
+      status: 'failed',
+      errorMessage: `AI policy denied: ${policy.reason}`,
+      metadata: { policyDenied: true, args: sanitizeAIArgs({ action: input.action }) },
+    });
+    return err(new AppError(`AI policy denied: ${policy.reason}`, 403, 'AI_POLICY_DENIED'));
+  }
 
   await publishSecretaryInvocation({
     conversationId: input.conversationId,

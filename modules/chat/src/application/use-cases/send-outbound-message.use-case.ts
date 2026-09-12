@@ -2,7 +2,7 @@ import { conversationRepository } from '../../infrastructure/repositories/conver
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { outboundDeliveryRepository } from '../../infrastructure/repositories/outbound-delivery.repository';
 import { ok, err, type Result } from '@cvg/shared';
-import { NotFoundError, BadRequestError } from '@cvg/shared';
+import { NotFoundError, BadRequestError, validateMedia, safeFilename } from '@cvg/shared';
 import { publishMessagePersisted } from '../events/chat-publisher';
 import { createAuditLog } from '@cvg/audit';
 
@@ -40,6 +40,20 @@ export async function sendOutboundMessage(
     // Texto ou mídia é obrigatório
     if (!input.content && !input.mediaUrl) {
       return err(new BadRequestError('Content or media is required'));
+    }
+
+    if (input.mediaUrl || input.mediaType || input.mediaMimetype) {
+      const check = validateMedia({
+        mediaType: input.mediaType,
+        mimetype: input.mediaMimetype,
+        url: input.mediaUrl,
+      });
+      if (!check.ok) {
+        return err(new BadRequestError(check.message || 'Invalid media'));
+      }
+      if (input.mediaFilename) {
+        input.mediaFilename = safeFilename(input.mediaFilename);
+      }
     }
 
     const conversation = await conversationRepository.findById(input.conversationId);

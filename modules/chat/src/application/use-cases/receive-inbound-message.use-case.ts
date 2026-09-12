@@ -1,7 +1,7 @@
 import { conversationRepository } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { ok, err, type Result } from '@cvg/shared';
-import { BadRequestError } from '@cvg/shared';
+import { BadRequestError, validateMedia, safeFilename } from '@cvg/shared';
 import { publishMessagePersisted, publishConversationCreated } from '../events/chat-publisher';
 import { processMessageWithSecretary, type ProcessMessageWithSecretaryOutput } from './process-message-with-secretary.use-case';
 import { createAuditLog } from '@cvg/audit';
@@ -36,6 +36,20 @@ export async function receiveInboundMessage(
   try {
     if (!input.content || !input.sender) {
       return err(new BadRequestError('Content and sender are required'));
+    }
+
+    if (input.mediaUrl || input.mediaType || input.mediaMimetype) {
+      const check = validateMedia({
+        mediaType: input.mediaType,
+        mimetype: input.mediaMimetype,
+        url: input.mediaUrl,
+      });
+      if (!check.ok) {
+        return err(new BadRequestError(check.message || 'Invalid media'));
+      }
+      if (input.mediaFilename) {
+        input.mediaFilename = safeFilename(input.mediaFilename);
+      }
     }
 
     const existingMessage = await messageRepository.findByExternalId(input.externalMessageId);
