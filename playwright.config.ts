@@ -30,7 +30,8 @@ export default defineConfig({
   webServer: {
     command: 'DATABASE_URL=postgresql://connect_desk:root@localhost:55432/connect_desk_db REDIS_URL=redis://localhost:56379 PORT=4330 REALTIME_PORT=4930 VITE_API_URL=http://localhost:4330 VITE_REALTIME_URL=ws://localhost:4930 pnpm exec tsx e2e/support/start-e2e-stack.ts',
     url: `${webBaseUrl}/login`,
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
+    gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
     timeout: 180_000,
   },
 
