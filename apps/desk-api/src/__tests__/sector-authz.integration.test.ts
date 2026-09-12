@@ -171,6 +171,40 @@ describe('Sector authorization integration', () => {
     expect(ids).not.toContain(convBId);
   });
 
+  it('listagem traz a última mensagem correta em 1 round-trip (sem N+1)', async () => {
+    await db.insert(schema.messages).values([
+      {
+        conversationId: convAId,
+        direction: 'inbound',
+        content: 'primeira',
+        sender: '+5511000000001',
+        sentAt: new Date('2026-01-01T10:00:00Z'),
+        createdAt: new Date('2026-01-01T10:00:00Z'),
+      },
+      {
+        conversationId: convAId,
+        direction: 'inbound',
+        content: 'última-msg-n1',
+        sender: '+5511000000001',
+        sentAt: new Date('2026-01-02T10:00:00Z'),
+        createdAt: new Date('2026-01-02T10:00:00Z'),
+      },
+    ]);
+    try {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/conversations',
+        headers: { authorization: `Bearer ${memberToken}` },
+      });
+      expect(response.statusCode).toBe(200);
+      const conversations = (response.json() as { conversations: { id: string; lastMessage: { content: string } | null }[] }).conversations;
+      const convA = conversations.find((c) => c.id === convAId);
+      expect(convA?.lastMessage?.content).toBe('última-msg-n1');
+    } finally {
+      await db.delete(schema.messages).where(eq(schema.messages.conversationId, convAId));
+    }
+  });
+
   it('não-membro com filtro explícito de setor alheio recebe 403 (negativo)', async () => {
     const response = await app.inject({
       method: 'GET',

@@ -18,7 +18,15 @@
 
 ## Metodologia
 
-Burn-rate sobre janelas 1h/6h. Evidência atual: k6 smoke (`e2e/load/smoke-load.js`, 10 VUs, p95 6,7 ms em leitura+webhook local).
+Burn-rate sobre janelas 1h/6h.
+
+## Baseline medido (Final-11, k6 local contra API real + PG real)
+
+- 10 VUs + burst (30s): 100% checks, p95 6,7 ms, 0 falhas por kind.
+- 25 + 50 VUs (45s, ~432 rps): 100% checks (19.654), p50 ~5,3 ms, p95 12,7 ms, 0 falhas.
+- N+1 da listagem eliminado (`findLatestByConversationIds`, 1 query; teste `sem N+1`).
+- Rate-limit validado sob carga (429 correto com limites baixos; sem 5xx).
+
 Metas de produção exigem baseline em ambiente real antes de apertar thresholds.
 
 ## Não-SLO (documentado)

@@ -191,18 +191,21 @@ export async function registerOutboundController(app: FastifyInstance) {
           }
         }
 
-        const conversationsWithLastMessage = await Promise.all(
-          conversations.map(async (conv) => {
-            const messages = await messageRepository.findRecentByConversationId(conv.id, 1);
+        const conversationsWithLastMessage = await (async () => {
+          // 1 query para a última mensagem de todas (sem N+1).
+          const latestByConversation = await messageRepository.findLatestByConversationIds(
+            conversations.map((conv) => conv.id),
+          );
+          return conversations.map((conv) => {
             const contact = conv.contactId ? contactsMap.get(conv.contactId) : null;
             return {
               ...conv,
               contactName: contact?.name || null,
               contactPhone: contact?.phone || null,
-              lastMessage: messages[0] || null,
+              lastMessage: latestByConversation.get(conv.id) || null,
             };
-          })
-        );
+          });
+        })();
 
         return reply.status(200).send({ conversations: conversationsWithLastMessage });
       } catch (error) {

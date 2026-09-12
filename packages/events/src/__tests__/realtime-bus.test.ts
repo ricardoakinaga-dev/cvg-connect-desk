@@ -65,10 +65,22 @@ describe('RedisRealtimeBus (real Redis)', () => {
       await bus.stop();
     }
   });
+  it('redis down → explicit degraded state, never silent (poll covers)', async () => {
+    process.env.REALTIME_BUS_CONNECT_TIMEOUT_MS = '1500';
+    try {
+      const bus = new RedisRealtimeBus({ url: 'redis://127.0.0.1:9' });
+      await expect(bus.start()).rejects.toThrow();
+      expect(bus.isConnected()).toBe(false);
+      // publish sem conexão: false explícito (caller faz fallback para poll).
+      expect(await bus.publish(envelope('evt-down'))).toBe(false);
+      await bus.stop();
+    } finally {
+      delete process.env.REALTIME_BUS_CONNECT_TIMEOUT_MS;
+    }
+  }, 20000);
 });
 
-describe('NoopRealtimeBus', () => {
-  it('never delivers and reports disconnected', async () => {
+describe('NoopRealtimeBus', () => {  it('never delivers and reports disconnected', async () => {
     const bus = new NoopRealtimeBus();
     await bus.start();
     expect(bus.isConnected()).toBe(false);

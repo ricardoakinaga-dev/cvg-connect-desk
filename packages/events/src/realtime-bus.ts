@@ -12,6 +12,14 @@ import type { EventEnvelope } from './envelope';
 
 export const REALTIME_BUS_CHANNEL = process.env.REALTIME_BUS_CHANNEL || 'cvg:realtime';
 
+function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(message)), ms);
+  });
+  return Promise.race([promise.finally(() => clearTimeout(timer)), timeout]);
+}
+
 export interface RealtimeBus {
   readonly instanceId: string;
   start(): Promise<void>;
@@ -33,8 +41,7 @@ type RedisClient = {
   get isOpen(): boolean;
 };
 
-async function createRedisClient(url: string, logger: (message: string) => void): Promise<RedisClient> {
-  const { createClient } = (await import('redis')) as typeof import('redis');
+async function createRedisClient(url: string, logger: (message: string) => void): Promise<RedisClient> {  const { createClient } = (await import('redis')) as typeof import('redis');
   const client = createClient({
     url,
     socket: {
@@ -73,8 +80,14 @@ export class RedisRealtimeBus implements RealtimeBus {
     if (this.started) return;
     this.publisher = await createRedisClient(this.url, this.logger);
     this.subscriber = this.publisher.duplicate();
-    await this.publisher.connect();
-    await this.subscriber.connect();
+    const timeoutMs = Number(process.env.REALTIME_BUS_CONNECT_TIMEOUT_MS) || 8000;
+    try {
+      await withTimeout(this.publisher.connect(), timeoutMs, 'realtime bus publisher connect timed out');
+      await withTimeout(this.subscriber.connect(), timeoutMs, 'realtime bus subscriber connect timed out');
+    } catch (error) {
+      await this.stop().catch(() => {});
+      throw error;
+    }
     await this.subscriber.subscribe(this.channel, (message: string) => {
       try {
         const parsed = JSON.parse(message) as { instanceId?: string; envelope?: EventEnvelope };
@@ -100,20 +113,18 @@ export class RedisRealtimeBus implements RealtimeBus {
     const pub = this.publisher;
     this.subscriber = null;
     this.publisher = null;
-    try {
-      if (sub) {
-        await sub.unSubscribe(this.channel).catch(() => {});
-        await sub.quit().catch(() => sub.disconnect().catch(() => {}));
+    // quit() pode travar em cliente nunca conectado: timeout + disconnect forçado.
+    for (const client of [sub, pub]) {
+      if (!client) continue;
+      try {
+        await withTimeout(client.quit().catch(() => {}), 2000, 'redis quit timed out');
+      } catch {
+        try {
+          await client.disconnect().catch(() => {});
+        } catch {
+          // best-effort
+        }
       }
-    } catch {
-      // best-effort
-    }
-    try {
-      if (pub) {
-        await pub.quit().catch(() => pub.disconnect().catch(() => {}));
-      }
-    } catch {
-      // best-effort
     }
   }
 

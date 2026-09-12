@@ -94,4 +94,13 @@ describe('S3MediaStorage (mocked client)', () => {
     await storage.get('media/k');
     expect(calls[0]).toBeInstanceOf(GetObjectCommand);
   });
+
+  it('object storage unavailable → explicit rejection (no silent success)', async () => {
+    const { storage } = makeStorage(() => {
+      throw new Error('socket hang up');
+    });
+    await expect(
+      storage.put({ key: 'media/x', body: Buffer.from('d'), contentType: 'image/jpeg' }),
+    ).rejects.toThrow('socket hang up');
+  });
 });

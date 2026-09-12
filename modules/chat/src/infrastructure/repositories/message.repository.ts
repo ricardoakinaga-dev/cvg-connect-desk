@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, inArray } from 'drizzle-orm';
 
 export type Message = typeof schema.messages.$inferSelect;
 export type NewMessage = typeof schema.messages.$inferInsert;
@@ -50,6 +50,27 @@ export const messageRepository = {
       .where(eq(schema.messages.conversationId, conversationId))
       .orderBy(desc(schema.messages.createdAt))
       .limit(limit);
+  },
+
+  /**
+   * Última mensagem de cada conversa em 1 query (sem N+1).
+   * Ordena por conversa + mais recente; a primeira ocorrência de cada
+   * conversa é a última mensagem (mesma semântica do DISTINCT ON).
+   */
+  async findLatestByConversationIds(conversationIds: string[]): Promise<Map<string, Message>> {
+    const result = new Map<string, Message>();
+    if (conversationIds.length === 0) return result;
+    const rows = await db
+      .select()
+      .from(schema.messages)
+      .where(inArray(schema.messages.conversationId, conversationIds))
+      .orderBy(schema.messages.conversationId, desc(schema.messages.createdAt));
+    for (const row of rows) {
+      if (!result.has(row.conversationId as string)) {
+        result.set(row.conversationId as string, row);
+      }
+    }
+    return result;
   },
 
   async updateStatus(id: string, status: string) {

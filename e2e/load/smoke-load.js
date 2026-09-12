@@ -16,14 +16,14 @@ export const options = {
   scenarios: {
     baseline: {
       executor: 'constant-vus',
-      vus: 10,
-      duration: '30s',
+      vus: Number(__ENV.VUS_BASELINE || 10),
+      duration: __ENV.DURATION || '30s',
       exec: 'baseline',
     },
     webhook_burst: {
       executor: 'constant-vus',
-      vus: 10,
-      duration: '30s',
+      vus: Number(__ENV.VUS_BURST || 10),
+      duration: __ENV.DURATION || '30s',
       exec: 'webhookBurst',
     },
   },
