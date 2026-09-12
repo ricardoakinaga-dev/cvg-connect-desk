@@ -32,8 +32,8 @@ describe('tracing (OpenTelemetry)', () => {
     const child = spans.find((s) => s.name === 'child-op');
     expect(parent).toBeDefined();
     expect(child).toBeDefined();
-    expect(child?.parentSpanContext?.spanId).toBe(parent?.spanContext.spanId);
-    expect(child?.spanContext.traceId).toBe(parent?.spanContext.traceId);
+    expect(child?.parentSpanContext?.spanId).toBe(parent?.spanContext().spanId);
+    expect(child?.spanContext().traceId).toBe(parent?.spanContext().traceId);
   });
 
   it('propagates W3C traceparent across process boundary', async () => {
@@ -56,7 +56,7 @@ describe('tracing (OpenTelemetry)', () => {
     const spans = testTracing.getSpans();
     const sender = spans.find((s) => s.name === 'sender-op');
     const receiver = spans.find((s) => s.name === 'receiver-op');
-    expect(receiver?.spanContext.traceId).toBe(sender?.spanContext.traceId);
+    expect(receiver?.spanContext().traceId).toBe(sender?.spanContext().traceId);
   });
 
   it('withExtractedContext continues the incoming trace', async () => {
@@ -72,8 +72,8 @@ describe('tracing (OpenTelemetry)', () => {
     const spans = testTracing.getSpans();
     const entry = spans.find((s) => s.name === 'entry-op');
     const downstream = spans.find((s) => s.name === 'downstream-op');
-    expect(downstream?.spanContext.traceId).toBe(entry?.spanContext.traceId);
-    expect(downstream?.parentSpanContext?.spanId).toBe(entry?.spanContext.spanId);
+    expect(downstream?.spanContext().traceId).toBe(entry?.spanContext().traceId);
+    expect(downstream?.parentSpanContext?.spanId).toBe(entry?.spanContext().spanId);
   });
 
   it('records error status on exceptions', async () => {

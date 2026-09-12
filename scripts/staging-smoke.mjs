@@ -8,7 +8,7 @@
  *
  * Uso: pnpm staging:smoke (env S3 e CLAMAV e OTEL herdados do compose)
  */
-const { S3Client, CreateBucketCommand, DeleteObjectCommand, HeadObjectCommand } = await import('@aws-sdk/client-s3');
+const { S3Client, CreateBucketCommand } = await import('@aws-sdk/client-s3');
 const net = await import('node:net');
 
 const results = [];
@@ -39,8 +39,8 @@ try {
   check('minio.get+exists', got.toString() === 'staging-smoke');
   const signed = await storage.createSignedReadUrl(`smoke/${stamp}`, 60);
   check('minio.signed-url', signed.includes('X-Amz-Signature'));
-  await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: `smoke/${stamp}` }));
-  check('minio.delete', (await client.send(new HeadObjectCommand({ Bucket: bucket, Key: `smoke/${stamp}` }))).$metadata?.httpStatusCode !== 200 || true);
+  await storage.delete(`smoke/${stamp}`);
+  check('minio.delete', !(await storage.exists(`smoke/${stamp}`)));
 } catch (error) {
   check('minio', false, error.message);
 }

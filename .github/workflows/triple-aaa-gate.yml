@@ -64,9 +64,7 @@ jobs:
       - name: Postgres real chain
         run: pnpm test:postgres-real
       - name: Migration fresh-DB check
-        run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres pnpm --filter @cvg/database db:check
-        env:
-          DATABASE_URL: postgresql://connect_desk:root@localhost:5432/connect_desk_db
+        run: pnpm --filter @cvg/database db:check
       - name: Build
         run: pnpm --filter @cvg/desk-web build
 

@@ -14,7 +14,7 @@ import {
   InMemorySpanExporter,
   type ReadableSpan,
 } from '@opentelemetry/sdk-trace-base';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 
 /**
@@ -76,7 +76,7 @@ export async function initTracing(): Promise<TracingInit> {
   }
 
   const provider = new NodeTracerProvider({
-    resource: new Resource({
+    resource: resourceFromAttributes({
       [ATTR_SERVICE_NAME]: serviceName(),
       ...resourceAttributes(),
     }),
@@ -96,7 +96,7 @@ export async function initTracing(): Promise<TracingInit> {
 export function initTestTracing(): { shutdown: () => Promise<void>; getSpans: () => ReadableSpan[] } {
   const exporter = new InMemorySpanExporter();
   const provider = new NodeTracerProvider({
-    resource: new Resource({ [ATTR_SERVICE_NAME]: 'cvg-test' }),
+    resource: resourceFromAttributes({ [ATTR_SERVICE_NAME]: 'cvg-test' }),
     spanProcessors: [new SimpleSpanProcessor(exporter)],
   });
   provider.register();
