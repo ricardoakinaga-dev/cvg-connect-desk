@@ -10,6 +10,18 @@ export const messageRepository = {
     return message;
   },
 
+  /** Insert idempotente: concorrência retorna a linha existente (200 idempotente, nunca 500). */
+  async createIdempotent(data: NewMessage & { externalMessageId: string }) {
+    const [message] = await db
+      .insert(schema.messages)
+      .values(data)
+      .onConflictDoNothing({ target: schema.messages.externalMessageId })
+      .returning();
+    if (message) return { message, isDuplicate: false as const };
+    const existing = await this.findByExternalId(data.externalMessageId);
+    return { message: existing!, isDuplicate: true as const };
+  },
+
   async findById(id: string) {
     const [message] = await db.select().from(schema.messages).where(eq(schema.messages.id, id));
     return message || null;

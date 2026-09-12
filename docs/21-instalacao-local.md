@@ -147,10 +147,14 @@ Isso cria:
 - perfis básicos de papel (`Admin`, `Receptionist`, `Veterinarian`, `Manager`)
 - usuário administrador inicial
 
-Credenciais iniciais:
+Credenciais iniciais (desenvolvimento — defina `ADMIN_BOOTSTRAP_EMAIL` e
+`ADMIN_BOOTSTRAP_PASSWORD` no `.env`; senha mínima de 12 caracteres):
 
-- e-mail: `admin@cvg.com`
-- senha: `admin123`
+- e-mail: valor de `ADMIN_BOOTSTRAP_EMAIL`
+- senha: valor de `ADMIN_BOOTSTRAP_PASSWORD`
+
+Em produção o seed se recusa a criar admin sem essas variáveis (fail-secure)
+e nunca usa senha default.
 
 ## 6. Subindo os serviços
 
@@ -234,7 +238,7 @@ O comando `pnpm test:e2e`:
 
 - carrega `.env` automaticamente na stack E2E;
 - aplica migrations;
-- garante o usuário `admin@cvg.com` com senha `admin123`;
+- garante o usuário bootstrap (`ADMIN_BOOTSTRAP_EMAIL`) para o smoke;
 - sobe `desk-api`, `realtime-service` e `desk-web` em portas isoladas para o smoke;
 - executa os smoke browser-driven de login, inbox, kanban e criação de tarefa.
 
@@ -281,7 +285,7 @@ Depois de subir os serviços:
 - `GET /readiness` retorna `database: ok`
 - Swagger abre em `http://localhost:3000/docs`
 - frontend abre em `http://localhost:5173`
-- login funciona com `admin@cvg.com` / `admin123`
+- login funciona com o usuário bootstrap (`ADMIN_BOOTSTRAP_EMAIL`)
 
 ## 11. Problemas comuns
 

@@ -1,7 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
-import { authRepository } from './infrastructure/repositories/auth.repository';
+import { authRepository, hashSessionToken } from './infrastructure/repositories/auth.repository';
+
+const SESSION_IDLE_TIMEOUT_MS = Number(process.env.SESSION_IDLE_TIMEOUT_MS) || 24 * 60 * 60 * 1000;
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -27,24 +29,45 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
   const token = authHeader.substring(7);
   
   try {
+    const tokenHash = hashSessionToken(token);
     const [session] = await db
       .select()
       .from(schema.sessions)
-      .where(eq(schema.sessions.token, token));
+      .where(eq(schema.sessions.token, tokenHash));
 
-    if (!session) {
+    if (!session || session.revokedAt) {
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
         message: 'Invalid token',
       });
     }
 
-    if (session.expiresAt && new Date(session.expiresAt) < new Date()) {
+    const now = new Date();
+    if (session.expiresAt && new Date(session.expiresAt) < now) {
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
         message: 'Token expired',
       });
     }
+
+    if (session.absoluteExpiresAt && new Date(session.absoluteExpiresAt) < now) {
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        message: 'Session expired',
+      });
+    }
+
+    if (session.lastSeenAt && now.getTime() - new Date(session.lastSeenAt).getTime() > SESSION_IDLE_TIMEOUT_MS) {
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        message: 'Session idle timeout',
+      });
+    }
+
+    await db
+      .update(schema.sessions)
+      .set({ lastSeenAt: now })
+      .where(eq(schema.sessions.id, session.id));
 
     const [user] = await db
       .select()

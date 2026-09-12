@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getWebhookSecurityStats, resetWebhookSecurityStats } from '../webhook-security-stats';
+import { InMemoryWebhookReplayStore, setDefaultWebhookReplayStore } from '../webhook-anti-replay';
 
 const mockReply = {
   status: vi.fn().mockReturnThis(),
@@ -16,11 +17,28 @@ const mockRequest = {
   },
 };
 
+function freshReply() {
+  return { status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
+}
+
+function freshLog() {
+  return { warn: vi.fn(), error: vi.fn(), info: vi.fn() };
+}
+
+async function signPayload(rawBody: string, secret: string, timestamp?: number): Promise<string> {
+  const crypto = await import('crypto');
+  const payload = timestamp !== undefined ? `${timestamp}.${rawBody}` : rawBody;
+  return `sha256=${crypto.createHmac('sha256', secret).update(payload).digest('hex')}`;
+}
+
 describe('WebhookGuard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.NODE_ENV = 'test';
+    process.env.DESK_ENV = '';
     process.env.WEBHOOK_SECRET = '';
+    delete process.env.DATABASE_URL;
+    setDefaultWebhookReplayStore(new InMemoryWebhookReplayStore());
     resetWebhookSecurityStats();
   });
 
@@ -28,6 +46,7 @@ describe('WebhookGuard', () => {
     process.env.NODE_ENV = 'test';
     process.env.WEBHOOK_SECRET = '';
     process.env.DESK_ENV = '';
+    setDefaultWebhookReplayStore(new InMemoryWebhookReplayStore());
     resetWebhookSecurityStats();
   });
 
@@ -138,10 +157,15 @@ describe('WebhookGuard', () => {
 
     const { createWebhookGuard } = await import('../webhook-guard');
     const guard = createWebhookGuard();
+    const timestamp = Math.floor(Date.now() / 1000);
 
     const request = {
       ...mockRequest,
-      headers: { 'x-webhook-signature': 'sha256=invalidsignature' },
+      headers: {
+        'x-webhook-signature': 'sha256=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef',
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': 'evt-invalid-sig',
+      },
       body: { test: 'data' },
       log: { ...mockRequest.log, warn: vi.fn() },
     };
@@ -161,25 +185,30 @@ describe('WebhookGuard', () => {
     });
   });
 
-  it('accepts request with valid HMAC signature', async () => {
+  it('accepts request with valid HMAC signature (timestamp.event-id envelope)', async () => {
     process.env.NODE_ENV = 'production';
     process.env.WEBHOOK_SECRET = 'test-secret';
     delete process.env.DESK_ENV;
 
-    const crypto = await import('crypto');
-    const body = JSON.stringify({ test: 'data' });
-    const expectedHash = crypto.createHmac('sha256', 'test-secret').update(body).digest('hex');
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
 
     const { createWebhookGuard } = await import('../webhook-guard');
     const guard = createWebhookGuard();
 
     const request = {
-      ...mockRequest,
-      headers: { 'x-webhook-signature': `sha256=${expectedHash}` },
-      body: { test: 'data' },
-      log: { ...mockRequest.log, info: vi.fn() },
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': `evt-valid-${Date.now()}`,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
     };
-    const reply = { ...mockReply, status: vi.fn().mockReturnThis(), send: vi.fn().mockReturnThis() };
+    const reply = freshReply();
 
     await guard(request as any, reply as any);
 
@@ -197,5 +226,190 @@ describe('WebhookGuard', () => {
       allowed: 1,
       byReason: { signature_valid: 1 },
     });
+  });
+
+  it('rejects request with old timestamp (anti-replay)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000) - 3600;
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const request = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': `evt-old-${Date.now()}`,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    const reply = freshReply();
+
+    await guard(request as any, reply as any);
+
+    expect(reply.status).toHaveBeenCalledWith(401);
+    expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'timestamp_too_old' }));
+  });
+
+  it('rejects request with future timestamp (anti-replay)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000) + 3600;
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const request = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': `evt-future-${Date.now()}`,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    const reply = freshReply();
+
+    await guard(request as any, reply as any);
+
+    expect(reply.status).toHaveBeenCalledWith(401);
+    expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'timestamp_too_future' }));
+  });
+
+  it('rejects duplicate event ID (anti-replay)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+    const eventId = `evt-dup-${Date.now()}`;
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const firstReq = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': eventId,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    await guard(firstReq as any, freshReply() as any);
+
+    const secondReq = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': eventId,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    const secondReply = freshReply();
+    await guard(secondReq as any, secondReply as any);
+
+    expect(secondReply.status).toHaveBeenCalledWith(409);
+    expect(secondReply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'duplicate_event_id' }));
+  });
+
+  it('rejects production request without timestamp', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const crypto = await import('crypto');
+    const signature = `sha256=${crypto.createHmac('sha256', 'test-secret').update(rawBody).digest('hex')}`;
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const request = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-event-id': `evt-no-ts-${Date.now()}`,
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    const reply = freshReply();
+
+    await guard(request as any, reply as any);
+
+    expect(reply.status).toHaveBeenCalledWith(401);
+    expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'missing_timestamp' }));
+  });
+
+  it('rejects production request without event ID', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'data' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const request = {
+      headers: {
+        'x-webhook-signature': signature,
+        'x-webhook-timestamp': String(timestamp),
+      },
+      body,
+      rawBody,
+      log: freshLog(),
+    };
+    const reply = freshReply();
+
+    await guard(request as any, reply as any);
+
+    expect(reply.status).toHaveBeenCalledWith(401);
+    expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'missing_event_id' }));
+  });
+
+  it('rejects malformed hex signature without throwing', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const request = {
+      headers: {
+        'x-webhook-signature': 'sha256=!!!not-hex!!!',
+        'x-webhook-timestamp': String(timestamp),
+        'x-webhook-event-id': `evt-malformed-${Date.now()}`,
+      },
+      body: { test: 'data' },
+      log: freshLog(),
+    };
+    const reply = freshReply();
+
+    await guard(request as any, reply as any);
+
+    expect(reply.status).toHaveBeenCalledWith(401);
+    expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'invalid_signature' }));
   });
 });

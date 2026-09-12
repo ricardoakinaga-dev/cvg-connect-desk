@@ -20,6 +20,12 @@ describe('Webhook inbound integration', () => {
 
   afterEach(async () => {
     await cleanupWebhookArtifacts(externalConversationId, externalMessageId);
+    await cleanupWebhookArtifacts(`${externalConversationId}-replay`, `${externalMessageId}-replay`);
+    try {
+      await db.execute(`DELETE FROM webhook_replay_log WHERE event_id LIKE 'evt-%'`);
+    } catch {
+      // tabela pode não existir em ambientes sem migration 0013 — ignorar
+    }
 
     if (app) {
       await app.close();
@@ -46,10 +52,16 @@ describe('Webhook inbound integration', () => {
     await db.delete(schema.messages).where(eq(schema.messages.externalMessageId, msgId));
   }
 
-  function signBody(body: Record<string, unknown>): string {
-    const payload = JSON.stringify(body);
-    const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
-    return `sha256=${signature}`;
+  function signedHeaders(body: Record<string, unknown>, eventId: string): Record<string, string> {
+    const rawBody = JSON.stringify(body);
+    const timestamp = String(Math.floor(Date.now() / 1000));
+    const signature = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+    return {
+      'x-webhook-signature': `sha256=${signature}`,
+      'x-webhook-timestamp': timestamp,
+      'x-webhook-event-id': eventId,
+      'content-type': 'application/json',
+    };
   }
 
   it('rejeita request sem assinatura e nao contamina o pipeline', async () => {
@@ -86,7 +98,9 @@ describe('Webhook inbound integration', () => {
       method: 'POST',
       url: '/webhook/inbound',
       headers: {
-        'x-webhook-signature': 'sha256=invalidsignature',
+        'x-webhook-signature': 'sha256=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef',
+        'x-webhook-timestamp': String(Math.floor(Date.now() / 1000)),
+        'x-webhook-event-id': `evt-invalid-${Date.now()}`,
       },
       payload: body,
     });
@@ -97,6 +111,78 @@ describe('Webhook inbound integration', () => {
       reason: 'invalid_signature',
       message: 'Invalid webhook signature',
     });
+  });
+
+  it('rejeita replay de event ID duplicado', async () => {
+    const body = {
+      messageId: `${externalMessageId}-replay`,
+      conversationId: `${externalConversationId}-replay`,
+      from: '+5511999000005',
+      content: 'Mensagem replay',
+    };
+    const eventId = `evt-replay-${Date.now()}`;
+    const headers = signedHeaders(body, eventId);
+
+    const first = await app!.inject({
+      method: 'POST',
+      url: '/webhook/inbound',
+      headers,
+      payload: body,
+    });
+    expect(first.statusCode).toBe(200);
+
+    const second = await app!.inject({
+      method: 'POST',
+      url: '/webhook/inbound',
+      headers,
+      payload: body,
+    });
+    expect(second.statusCode).toBe(409);
+    expect(second.json()).toMatchObject({ reason: 'duplicate_event_id' });
+
+    await cleanupWebhookArtifacts(`${externalConversationId}-replay`, `${externalMessageId}-replay`);
+  });
+
+  it('rejeita timestamp antigo (anti-replay)', async () => {
+    const body = {
+      messageId: `${externalMessageId}-oldts`,
+      conversationId: `${externalConversationId}-oldts`,
+      from: '+5511999000006',
+      content: 'Mensagem antiga',
+    };
+    const rawBody = JSON.stringify(body);
+    const timestamp = String(Math.floor(Date.now() / 1000) - 3600);
+    const signature = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+
+    const response = await app!.inject({
+      method: 'POST',
+      url: '/webhook/inbound',
+      headers: {
+        'x-webhook-signature': `sha256=${signature}`,
+        'x-webhook-timestamp': timestamp,
+        'x-webhook-event-id': `evt-oldts-${Date.now()}`,
+      },
+      payload: body,
+    });
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ reason: 'timestamp_too_old' });
+  });
+
+  it('rejeita inbound sem messageId (canonical ID obrigatório)', async () => {
+    const body = {
+      conversationId: `${externalConversationId}-noid`,
+      from: '+5511999000007',
+      content: 'Sem ID',
+    };
+
+    const response = await app!.inject({
+      method: 'POST',
+      url: '/webhook/inbound',
+      headers: signedHeaders(body, `evt-noid-${Date.now()}`),
+      payload: body,
+    });
+    // Schema exige messageId; sem ele, 400 de validação.
+    expect([400, 500]).toContain(response.statusCode);
   });
 
   it('request valida passa pela rota e persiste conversa/mensagem', async () => {
@@ -111,9 +197,7 @@ describe('Webhook inbound integration', () => {
     const response = await app!.inject({
       method: 'POST',
       url: '/webhook/inbound',
-      headers: {
-        'x-webhook-signature': signBody(body),
-      },
+      headers: signedHeaders(body, `evt-valid-${Date.now()}`),
       payload: body,
     });
 
@@ -147,6 +231,7 @@ describe('Webhook inbound integration', () => {
     process.env.NODE_ENV = 'production';
     process.env.DESK_ENV = 'production';
     process.env.WEBHOOK_SECRET = '';
+    process.env.CORS_ORIGIN = 'https://desk.test';
 
     app = await buildDeskApiApp();
     await app.ready();

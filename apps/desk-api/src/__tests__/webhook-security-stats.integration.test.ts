@@ -25,6 +25,7 @@ describe('Webhook security stats integration', () => {
     process.env.NODE_ENV = 'production';
     process.env.DESK_ENV = 'production';
     process.env.WEBHOOK_SECRET = secret;
+    process.env.CORS_ORIGIN = 'https://desk.test';
 
     app = await buildDeskApiApp();
     await app.ready();
@@ -105,10 +106,16 @@ describe('Webhook security stats integration', () => {
     await db.delete(schema.messages).where(eq(schema.messages.externalMessageId, messageId));
   }
 
-  function signBody(body: Record<string, unknown>): string {
-    const payload = JSON.stringify(body);
-    const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
-    return `sha256=${signature}`;
+  function signedHeaders(body: Record<string, unknown>, eventId: string): Record<string, string> {
+    const rawBody = JSON.stringify(body);
+    const timestamp = String(Math.floor(Date.now() / 1000));
+    const signature = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+    return {
+      'x-webhook-signature': `sha256=${signature}`,
+      'x-webhook-timestamp': timestamp,
+      'x-webhook-event-id': eventId,
+      'content-type': 'application/json',
+    };
   }
 
   it('exposes operational counters for webhook reasons', async () => {
@@ -143,7 +150,9 @@ describe('Webhook security stats integration', () => {
       method: 'POST',
       url: '/webhook/inbound',
       headers: {
-        'x-webhook-signature': 'sha256=invalidsignature',
+        'x-webhook-signature': 'sha256=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef',
+        'x-webhook-timestamp': String(Math.floor(Date.now() / 1000)),
+        'x-webhook-event-id': `evt-stats-invalid-${Date.now()}`,
       },
       payload: invalidSignatureBody,
     });
@@ -152,9 +161,7 @@ describe('Webhook security stats integration', () => {
     const validResponse = await app.inject({
       method: 'POST',
       url: '/webhook/inbound',
-      headers: {
-        'x-webhook-signature': signBody(validBody),
-      },
+      headers: signedHeaders(validBody, `evt-stats-valid-${Date.now()}`),
       payload: validBody,
     });
     expect(validResponse.statusCode).toBe(200);

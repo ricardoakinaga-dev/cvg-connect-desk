@@ -76,6 +76,14 @@ export class OutboxReader {
   }
 
   private mapRowToOutboxEvent(row: typeof schema.outboxEvents.$inferSelect): OutboxEvent {
+    const safeParse = (value: unknown): unknown => {
+      if (typeof value !== 'string') return value;
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value;
+      }
+    };
     return {
       id: row.id,
       eventId: row.eventId,
@@ -84,8 +92,8 @@ export class OutboxReader {
       aggregateType: row.aggregateType,
       aggregateId: row.aggregateId,
       occurredAt: row.occurredAt,
-      payload: JSON.parse(row.payload as string),
-      metadata: row.metadata ? JSON.parse(row.metadata as string) : undefined,
+      payload: safeParse(row.payload),
+      metadata: row.metadata ? (safeParse(row.metadata) as Record<string, unknown> | undefined) : undefined,
       correlationId: row.correlationId ?? undefined,
       causationId: row.causationId ?? undefined,
       version: row.version,
@@ -200,7 +208,55 @@ export class ConsumerAwareOutboxReader {
       .orderBy(asc(schema.outboxEvents.createdAt))
       .limit(this.batchSize);
 
-    return results.map(row => this.mapRowToConsumerOutboxEvent(row));
+    const events = results.map(row => this.mapRowToConsumerOutboxEvent(row));
+    await this.populateConsumerMeta(events);
+    return events;
+  }
+
+  /**
+   * Claim com semântica de lease (Phase 2 §5.7): GET aluga, ACK explícito confirma.
+   * Implementação atual: fetch sem ACK destrutivo. O lease distribuído via
+   * SELECT ... FOR UPDATE SKIP LOCKED chega na migration 0014; até lá o claim
+   * apenas evita a perda lógica (response perdido ≠ evento perdido).
+   */
+  async claimPendingEvents(_opts?: { leaseOwner?: string; leaseSeconds?: number }): Promise<ConsumerOutboxEvent[]> {
+    return this.fetchPendingEvents();
+  }
+
+  private async populateConsumerMeta(events: ConsumerOutboxEvent[]): Promise<void> {
+    if (events.length === 0) return;
+    const { inArray } = await import('drizzle-orm');
+    const ids = events.map((e) => e.eventId);
+    const acks = await db
+      .select({
+        eventId: schema.outboxConsumerAcks.eventId,
+        retryCount: schema.outboxConsumerAcks.retryCount,
+        lastError: schema.outboxConsumerAcks.lastError,
+      })
+      .from(schema.outboxConsumerAcks)
+      .where(
+        and(
+          eq(schema.outboxConsumerAcks.consumerId, this.consumerId),
+          inArray(schema.outboxConsumerAcks.eventId, ids)
+        )
+      );
+    const byId = new Map(acks.map((a) => [a.eventId, a]));
+    for (const event of events) {
+      const ack = byId.get(event.eventId);
+      if (ack) {
+        event.consumerRetryCount = ack.retryCount;
+        event.consumerLastError = ack.lastError ?? undefined;
+      }
+    }
+  }
+
+  private safeJsonParse(value: unknown): unknown {
+    if (typeof value !== 'string') return value;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
   }
 
   /**
@@ -297,8 +353,8 @@ export class ConsumerAwareOutboxReader {
       aggregateType: row.aggregateType,
       aggregateId: row.aggregateId,
       occurredAt: row.occurredAt,
-      payload: JSON.parse(row.payload as string),
-      metadata: row.metadata ? JSON.parse(row.metadata as string) : undefined,
+      payload: this.safeJsonParse(row.payload),
+      metadata: row.metadata ? (this.safeJsonParse(row.metadata) as Record<string, unknown> | undefined) : undefined,
       correlationId: row.correlationId ?? undefined,
       causationId: row.causationId ?? undefined,
       version: row.version,

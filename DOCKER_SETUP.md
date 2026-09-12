@@ -179,7 +179,7 @@ Após subir, verifique:
 - [ ] `curl http://localhost:3000/readiness` retorna `ready: true` e database ok
 - [ ] `curl http://localhost:3000/docs` abre Swagger
 - [ ] Frontend http://localhost:8081 carrega
-- [ ] Login inicial funciona com `admin@cvg.com` / `admin123` (seed padrão)
+- [ ] Login inicial funciona com o usuário bootstrap (`ADMIN_BOOTSTRAP_EMAIL` / `ADMIN_BOOTSTRAP_PASSWORD`)
 - [ ] PostgreSQL contém dados seedados
 
 ## Considerações

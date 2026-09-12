@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { User, Role, Permission, Queue, Team } from '@cvg/database';
 import type {
   UserListItem, CreateUserInput, UpdateUserInput,
@@ -298,7 +298,7 @@ export class AdminRepository {
 
   async removeUserRole(userId: string, roleId: string): Promise<void> {
     await db.delete(schema.userRoles).where(
-      eq(schema.userRoles.userId, userId) && eq(schema.userRoles.roleId, roleId)
+      and(eq(schema.userRoles.userId, userId), eq(schema.userRoles.roleId, roleId))
     );
   }
 }

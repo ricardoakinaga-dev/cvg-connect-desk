@@ -20,6 +20,16 @@ function warnOnProductionWebhookMisconfiguration(): void {
     console.error('[API] FATAL: WEBHOOK_SECRET is not set in production. Webhook endpoint /webhook/inbound will reject all requests with 500. Set WEBHOOK_SECRET before deploying.');
   }
 }
+
+function assertProductionEnv(): void {
+  if (!isProduction()) return;
+  // Testes usam DESK_ENV=production para exercitar o guard; não derrubar o boot em NODE_ENV=test.
+  if (process.env.NODE_ENV === 'test') return;
+  const corsOrigin = (process.env.CORS_ORIGIN || '').trim();
+  if (!corsOrigin || corsOrigin === '*') {
+    throw new Error('[API] FATAL: CORS_ORIGIN ausente ou "*" em produção (fail-secure). Defina origens explícitas.');
+  }
+}
 import { registerTaskRoutes } from '@cvg/tasks';
 import { registerNoteRoutes } from '@cvg/notes';
 import { registerAlertRoutes } from '@cvg/alerts';
@@ -38,6 +48,7 @@ import { registerContactRoutes } from '@cvg/contacts';
 
 export async function buildDeskApiApp(): Promise<FastifyInstance> {
   warnOnProductionWebhookMisconfiguration();
+  assertProductionEnv();
 
   const app = Fastify({
     logger: {
@@ -49,6 +60,17 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     trustProxy: true,
     bodyLimit: 1048576,
   }).withTypeProvider<ZodTypeProvider>();
+
+  // Captura rawBody para HMAC sem consumir o stream antes do parse:
+  // parser customizado preserva bytes exatos e entrega objeto parseado ao Fastify.
+  app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {
+    try {
+      (req as unknown as { rawBody: string }).rawBody = typeof body === 'string' ? body : '';
+      done(null, body === '' ? undefined : JSON.parse(body as string));
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  });
 
   app.setErrorHandler((error, request, reply) => {
     const statusCode = error.statusCode || 500;
@@ -93,9 +115,9 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
 
   const corsOrigin = process.env.CORS_ORIGIN;
   await app.register(cors, {
-    origin: corsOrigin ? corsOrigin.split(',') : true,
+    origin: corsOrigin ? corsOrigin.split(',').map((o) => o.trim()).filter(Boolean) : false,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Webhook-Signature', 'X-Webhook-Timestamp', 'X-Webhook-Event-Id'],
     credentials: true,
     maxAge: 86400,
   });
@@ -108,7 +130,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
       const path = req.url;
       return path === '/health' || path === '/readiness';
     },
-    skipOnError: true,
+    skipOnError: false,
     addHeaders: {
       'x-ratelimit-limit': true,
       'x-ratelimit-remaining': true,
@@ -180,7 +202,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
       response: { 200: { type: 'object' } },
     },
   }, async () => {
-    const checks: Record<string, { status: 'ok' | 'error'; latencyMs?: number; error?: string }> = {};
+    const checks: Record<string, { status: 'ok' | 'error' | 'degraded'; latencyMs?: number; error?: string }> = {};
 
     const dbStart = Date.now();
     try {
@@ -189,17 +211,71 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
       await db.select().from(dbSchema.users).limit(1);
       checks.database = { status: 'ok', latencyMs: Date.now() - dbStart };
     } catch (err: any) {
-      checks.database = { status: 'error', latencyMs: Date.now() - dbStart, error: err.message };
+      checks.database = { status: 'error', latencyMs: Date.now() - dbStart, error: err?.message || 'db failed' };
     }
 
     if (process.env.REDIS_URL) {
-      checks.redis = { status: 'ok' };
+      const redisStart = Date.now();
+      try {
+        // PING real via TCP sem depender do pacote `redis` (evita dep nova no hot path).
+        const redisUrl = new URL(process.env.REDIS_URL);
+        const host = redisUrl.hostname || 'localhost';
+        const port = Number(redisUrl.port) || 6379;
+        const pong = await new Promise<string>((resolve, reject) => {
+          import('net').then(({ default: net }) => {
+            const socket = net.connect(port, host);
+            const timer = setTimeout(() => {
+              socket.destroy();
+              reject(new Error('redis ping timeout'));
+            }, 3000);
+            socket.on('connect', () => socket.write('PING\r\n'));
+            socket.on('data', (data: Buffer) => {
+              clearTimeout(timer);
+              socket.end();
+              resolve(data.toString());
+            });
+            socket.on('error', (err: Error) => {
+              clearTimeout(timer);
+              reject(err);
+            });
+          }).catch(reject);
+        });
+        checks.redis = pong.includes('PONG')
+          ? { status: 'ok', latencyMs: Date.now() - redisStart }
+          : { status: 'degraded', error: `unexpected redis reply: ${pong.slice(0, 32)}` };
+      } catch (err: any) {
+        checks.redis = { status: 'error', latencyMs: Date.now() - redisStart, error: err?.message || 'redis failed' };
+      }
     }
 
-    const allReady = Object.values(checks).every((c) => c.status === 'ok');
+    try {
+      const dbModule = await import('@cvg/database');
+      await (dbModule.db as unknown as { execute: (q: unknown) => Promise<unknown> }).execute('SELECT 1');
+      checks.migrations = { status: 'ok' };
+    } catch (err: any) {
+      checks.migrations = { status: 'error', error: err?.message || 'migration check failed' };
+    }
+
+    const secretaryUrl = process.env.SECRETARY_URL;
+    if (secretaryUrl) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 3000);
+        const res = await fetch(`${secretaryUrl.replace(/\/$/, '')}/health`, { signal: controller.signal });
+        clearTimeout(timer);
+        checks.secretary = res.ok ? { status: 'ok' } : { status: 'degraded', error: `http ${res.status}` };
+      } catch (err: any) {
+        checks.secretary = { status: 'degraded', error: err?.message || 'secretary unreachable' };
+      }
+    }
+
+    const fatalFailed = ['database', 'migrations'].some((k) => checks[k]?.status === 'error');
+    const degraded = Object.values(checks).some((c) => c.status === 'degraded' || c.status === 'error') && !fatalFailed;
     return {
-      ready: allReady,
+      ready: !fatalFailed,
+      degraded,
       checks,
+      version: process.env.npm_package_version || '1.0.0',
       timestamp: new Date().toISOString(),
     };
   });
@@ -220,6 +296,8 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
           type: 'object',
           properties: {
             events: { type: 'array' },
+            leaseSeconds: { type: 'integer' },
+            ackEndpoint: { type: 'string' },
             serverTime: { type: 'string' },
           },
         },
@@ -234,23 +312,44 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
       batchSize: query.limit || 50,
       maxRetries: 3,
     });
-    let events = await reader.fetchPendingEvents();
+    // Semântica de lease: GET apenas aluga (claim); o ACK é explícito via POST /events/:id/ack.
+    let events = await reader.claimPendingEvents({ leaseOwner: 'http-poll', leaseSeconds: 120 });
 
     if (query.since) {
       const sinceDate = new Date(query.since);
       events = events.filter((e) => e.occurredAt > sinceDate);
     }
 
-    for (const event of events) {
-      await reader.acknowledge(event.eventId);
-    }
-
     const envelopes = events.map((e) => reader.toEventEnvelope(e));
 
     return {
       events: envelopes,
+      leaseSeconds: 120,
+      ackEndpoint: '/events/:eventId/ack',
       serverTime: new Date().toISOString(),
     };
+  });
+
+  app.post('/events/:eventId/ack', {
+    schema: {
+      description: 'Explicit ACK for a leased outbox event (http-poll consumer)',
+      tags: ['Internal'],
+      params: {
+        type: 'object',
+        properties: { eventId: { type: 'string', minLength: 1 } },
+        required: ['eventId'],
+      },
+    },
+  }, async (request) => {
+    const { ConsumerAwareOutboxReader, CONSUMER_IDS } = await import('@cvg/events');
+    const { eventId } = request.params as { eventId: string };
+    const reader = new ConsumerAwareOutboxReader({
+      consumerId: CONSUMER_IDS.HTTP_POLL,
+      batchSize: 1,
+      maxRetries: 3,
+    });
+    await reader.acknowledge(eventId);
+    return { acknowledged: true, eventId };
   });
 
   await registerInboundWebhook(app);

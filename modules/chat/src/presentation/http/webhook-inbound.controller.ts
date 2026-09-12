@@ -20,6 +20,12 @@ export async function registerInboundWebhook(app: FastifyInstance) {
     '/webhook/inbound',
     {
       preHandler: webhookGuard,
+      config: {
+        rateLimit: {
+          max: Number(process.env.RATE_LIMIT_WEBHOOK_MAX) || 300,
+          timeWindow: process.env.RATE_LIMIT_WEBHOOK_WINDOW || '1 minute',
+        },
+      },
       schema: {
         description: 'Webhook inbound do Gateway — recebe mensagens do WhatsApp',
         tags: ['Webhook'],
@@ -35,7 +41,7 @@ export async function registerInboundWebhook(app: FastifyInstance) {
             timestamp: { type: 'string', maxLength: 32 },
             type: { type: 'string', maxLength: 32 },
           },
-          required: ['from'],
+          required: ['from', 'messageId'],
           additionalProperties: false,
         },
         response: {
@@ -56,9 +62,15 @@ export async function registerInboundWebhook(app: FastifyInstance) {
 
         const messageContent = content || text || '';
         const sentAt = timestamp ? new Date(timestamp) : new Date();
+        if (!messageId) {
+          return reply.status(400).send({
+            error: 'BAD_REQUEST',
+            message: 'messageId (externalMessageId) é obrigatório',
+          });
+        }
 
         const result = await receiveInboundMessage({
-          externalMessageId: messageId || `msg_${Date.now()}`,
+          externalMessageId: messageId,
           externalConversationId: conversationId,
           content: messageContent,
           sender: from,

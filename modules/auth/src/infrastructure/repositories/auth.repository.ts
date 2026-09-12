@@ -1,7 +1,12 @@
 import { db, schema } from '@cvg/database';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+import { randomBytes, createHash } from 'crypto';
 import { v4 as uuid } from 'uuid';
+
+export function hashSessionToken(token: string): string {
+  return createHash('sha256').update(token, 'utf8').digest('hex');
+}
 
 export interface LoginResult {
   user: {
@@ -27,16 +32,20 @@ export const authRepository = {
   },
 
   async createSession(userId: string, expiresAt?: Date): Promise<string> {
-    const token = uuid();
-    const [session] = await db
+    const token = `${uuid()}.${randomBytes(24).toString('hex')}`;
+    const tokenHash = hashSessionToken(token);
+    const now = new Date();
+    await db
       .insert(schema.sessions)
       .values({
         userId,
-        token,
-        expiresAt: expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      })
-      .returning();
-    return session.token;
+        token: tokenHash,
+        tokenHash,
+        lastSeenAt: now,
+        absoluteExpiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
+        expiresAt: expiresAt || new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      });
+    return token;
   },
 
   async getUserRoles(userId: string): Promise<string[]> {
@@ -53,21 +62,15 @@ export const authRepository = {
     const roles = await db
       .select()
       .from(schema.roles)
-      .where(
-        roleIds.length > 0 
-          ? undefined 
-          : eq(schema.roles.id, '00000000-0000-0000-0000-000000000000' as any)
-      );
+      .where(inArray(schema.roles.id, roleIds));
 
-    return roles
-      .filter(r => roleIds.includes(r.id))
-      .map(r => r.name);
+    return roles.map(r => r.name);
   },
 
   async invalidateSession(token: string): Promise<void> {
     await db
       .delete(schema.sessions)
-      .where(eq(schema.sessions.token, token));
+      .where(eq(schema.sessions.token, hashSessionToken(token)));
   },
 
   async invalidateAllUserSessions(userId: string): Promise<void> {

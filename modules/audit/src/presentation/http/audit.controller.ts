@@ -53,13 +53,24 @@ export async function registerAuditRoutes(app: FastifyInstance) {
 
   app.get<{ Params: { entityType: string }; Querystring: { entityId: string } }>(
     '/audit/entity/:entityType',
+    {
+      preHandler: [authenticate, requirePermission('audit:read')],
+      schema: {
+        params: {
+          type: 'object',
+          properties: { entityType: { type: 'string', minLength: 1, maxLength: 64 } },
+          required: ['entityType'],
+        },
+        querystring: {
+          type: 'object',
+          properties: { entityId: { type: 'string', format: 'uuid' } },
+          required: ['entityId'],
+        },
+      },
+    },
     async (request) => {
       const { entityType } = request.params;
       const { entityId } = request.query;
-
-      if (!entityId) {
-        throw new Error('entityId is required');
-      }
 
       const logs = await getEntityAuditHistory(entityType, entityId);
       return logs;

@@ -1,12 +1,20 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import crypto from 'crypto';
 import { recordWebhookSecurityDecision } from './webhook-security-stats';
+import {
+  buildWebhookSignaturePayload,
+  extractWebhookEventId,
+  getDefaultWebhookReplayStore,
+  validateWebhookTimestamp,
+} from './webhook-anti-replay';
 
 /**
  * Middleware de segurança para webhook inbound.
- * Valida assinatura HMAC-SHA256 quando WEBHOOK_SECRET está configurado.
+ * Valida assinatura HMAC-SHA256 sobre RAW BODY quando WEBHOOK_SECRET configurado.
  * Header esperado: X-Webhook-Signature: sha256=<hex>
- * 
+ * Anti-replay: X-Webhook-Timestamp (epoch s) + X-Webhook-Event-Id.
+ * Mensagem assinada: `${timestamp}.${rawBody}` (modo novo) ou `rawBody` (legado dev).
+ *
  * Em produção (NODE_ENV=production ou DESK_ENV=production), a ausência de
  * WEBHOOK_SECRET causa rejeição imediata (fail-secure).
  * Em desenvolvimento, permite bypass com warning.
@@ -29,7 +37,7 @@ function denyWebhook(
   },
 ) {
   recordWebhookSecurityDecision({
-    reason: reason as 'missing_secret' | 'missing_signature' | 'invalid_signature_format' | 'invalid_signature',
+    reason: reason as Parameters<typeof recordWebhookSecurityDecision>[0]['reason'],
     allowed: false,
     webhookMode: metadata.webhookMode,
     hasSecret: metadata.hasSecret,
@@ -41,6 +49,13 @@ function denyWebhook(
     reason,
     message,
   });
+}
+
+function rawBodyOf(request: FastifyRequest): string {
+  const raw = (request as unknown as { rawBody?: unknown }).rawBody;
+  if (typeof raw === 'string') return raw;
+  if (Buffer.isBuffer(raw)) return raw.toString('utf8');
+  return JSON.stringify(request.body);
 }
 
 export function createWebhookGuard() {
@@ -102,11 +117,68 @@ export function createWebhookGuard() {
       });
     }
 
-    const body = JSON.stringify(request.body);
+    const body = rawBodyOf(request);
+    const timestampCheck = validateWebhookTimestamp(request.headers['x-webhook-timestamp']);
+    if (!timestampCheck.ok) {
+      request.log.warn({
+        reason: timestampCheck.reason,
+        webhook_mode: 'hmac',
+        has_secret: true,
+      }, '[WebhookGuard] Timestamp anti-replay rejeitado');
+      recordWebhookSecurityDecision({
+        reason: (timestampCheck.reason || 'invalid_timestamp') as Parameters<typeof recordWebhookSecurityDecision>[0]['reason'],
+        allowed: false,
+        webhookMode: 'hmac',
+        hasSecret: true,
+        signaturePresent: true,
+      });
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        reason: timestampCheck.reason,
+        message: timestampCheck.message,
+      });
+    }
+
+    const eventId = extractWebhookEventId(request);
+    if (!timestampCheck.legacyMode && !eventId) {
+      request.log.warn({
+        reason: 'missing_event_id',
+        webhook_mode: 'hmac',
+        has_secret: true,
+      }, '[WebhookGuard] Header X-Webhook-Event-Id ausente');
+      recordWebhookSecurityDecision({
+        reason: 'missing_event_id',
+        allowed: false,
+        webhookMode: 'hmac',
+        hasSecret: true,
+        signaturePresent: true,
+      });
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        reason: 'missing_event_id',
+        message: 'Missing X-Webhook-Event-Id',
+      });
+    }
+
+    const signedPayload = buildWebhookSignaturePayload(body, timestampCheck.timestamp);
     const expectedHash = crypto
       .createHmac('sha256', secret)
-      .update(body)
+      .update(signedPayload)
       .digest('hex');
+
+    if (!/^[0-9a-fA-F]+$/.test(receivedHash) || receivedHash.length !== expectedHash.length) {
+      request.log.warn({
+        reason: 'invalid_signature',
+        webhook_mode: 'hmac',
+        has_secret: true,
+        signature_present: true,
+      }, '[WebhookGuard] Assinatura inválida');
+      return denyWebhook(reply, 401, 'invalid_signature', 'Invalid webhook signature', {
+        webhookMode: 'hmac',
+        hasSecret: true,
+        signaturePresent: true,
+      });
+    }
 
     const expectedBuffer = Buffer.from(expectedHash, 'hex');
     const receivedBuffer = Buffer.from(receivedHash, 'hex');
@@ -133,6 +205,32 @@ export function createWebhookGuard() {
       hasSecret: true,
       signaturePresent: true,
     });
+
+    if (eventId) {
+      const store = getDefaultWebhookReplayStore();
+      const signatureHash = crypto.createHash('sha256').update(receivedHash, 'utf8').digest('hex');
+      const firstSeen = await store.add(eventId, signatureHash);
+      if (!firstSeen) {
+        request.log.warn({
+          reason: 'duplicate_event_id',
+          webhook_mode: 'hmac',
+          has_secret: true,
+        }, '[WebhookGuard] Webhook event ID duplicado — replay rejeitado');
+        recordWebhookSecurityDecision({
+          reason: 'duplicate_event_id',
+          allowed: false,
+          webhookMode: 'hmac',
+          hasSecret: true,
+          signaturePresent: true,
+        });
+        return reply.status(409).send({
+          error: 'CONFLICT',
+          reason: 'duplicate_event_id',
+          message: 'Duplicate webhook event',
+        });
+      }
+    }
+
     request.log.info({
       reason: 'signature_valid',
       webhook_mode: 'hmac',

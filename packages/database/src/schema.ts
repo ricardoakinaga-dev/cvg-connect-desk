@@ -15,12 +15,16 @@ export const contacts = pgTable('contacts', {
   phone: text('phone'),
   name: text('name'),
   email: text('email'),
-  tutorId: uuid('tutor_id'),
-  patientId: uuid('patient_id'),
+  tutorId: uuid('tutor_id').references(() => tutors.id),
+  patientId: uuid('patient_id').references(() => patients.id),
   metadata: text('metadata'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+}, (t) => ({
+  externalIdx: uniqueIndex('idx_contacts_external').on(t.externalId),
+  phoneIdx: index('idx_contacts_phone').on(t.phone),
+  emailIdx: index('idx_contacts_email').on(t.email),
+}));
 
 export const tutors = pgTable('tutors', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -230,11 +234,9 @@ export const permissions = pgTable('permissions', {
 export const rolePermissions = pgTable('role_permissions', {
   roleId: uuid('role_id').references(() => roles.id).notNull(),
   permissionId: uuid('permission_id').references(() => permissions.id).notNull(),
-}, (t) => ({
-  pk: {
-    columns: [t.roleId, t.permissionId]
-  }
-}));
+}, (t) => [
+  uniqueIndex('idx_role_permissions_unique').on(t.roleId, t.permissionId),
+]);
 
 export const queues = pgTable('queues', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -262,16 +264,21 @@ export const users = pgTable('users', {
 export const userRoles = pgTable('user_roles', {
   userId: uuid('user_id').references(() => users.id).notNull(),
   roleId: uuid('role_id').references(() => roles.id).notNull(),
-}, (t) => ({
-  pk: {
-    columns: [t.userId, t.roleId]
-  }
-}));
+}, (t) => [
+  uniqueIndex('idx_user_roles_unique').on(t.userId, t.roleId),
+]);
 
 export const sessions = pgTable('sessions', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').references(() => users.id).notNull(),
   token: text('token').notNull().unique(),
+  tokenHash: text('token_hash'),
+  lastSeenAt: timestamp('last_seen_at'),
+  absoluteExpiresAt: timestamp('absolute_expires_at'),
+  revokedAt: timestamp('revoked_at'),
+  revokedReason: text('revoked_reason'),
+  ipHash: text('ip_hash'),
+  userAgentHash: text('user_agent_hash'),
   expiresAt: timestamp('expires_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   ipAddress: text('ip_address'),
@@ -279,6 +286,7 @@ export const sessions = pgTable('sessions', {
 }, (t) => ({
   userIdx: index('idx_sessions_user').on(t.userId),
   tokenIdx: uniqueIndex('idx_sessions_token').on(t.token),
+  tokenHashIdx: uniqueIndex('idx_sessions_token_hash').on(t.tokenHash),
 }));
 
 export const auditLogs = pgTable('audit_logs', {
@@ -493,3 +501,7 @@ export const outboxConsumerAcks = pgTable('outbox_consumer_acks', {
   pk: { columns: [t.eventId, t.consumerId] },
   consumerIdx: index('idx_acks_consumer').on(t.consumerId),
 }));
+
+// Outbox lease/ACK explícito (Phase 2) + Anti-replay webhook (Phase 1).
+// Tabelas complementares declaradas em webhook-replay.ts e outbox-lease.ts
+// para manter este arquivo legível. Migrations correspondentes: 0013/0014.

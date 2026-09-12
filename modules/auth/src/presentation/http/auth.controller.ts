@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
-import { authRepository } from '../../infrastructure/repositories/auth.repository';
+import { authRepository, hashSessionToken } from '../../infrastructure/repositories/auth.repository';
 
 interface LoginBody {
   email: string;
@@ -134,9 +134,9 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const [session] = await db
           .select()
           .from(schema.sessions)
-          .where(eq(schema.sessions.token, token));
+          .where(eq(schema.sessions.token, hashSessionToken(token)));
 
-        if (!session) {
+        if (!session || session.revokedAt) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid token',

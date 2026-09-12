@@ -98,11 +98,11 @@ docker compose logs -f desk-api
 - **Swagger**: http://localhost:3000/docs
 - **Portainer**: http://localhost:9000 (se instalado)
 
-### Credenciais Padrão
+### Credenciais Iniciais (desenvolvimento)
 
-- **Email**: admin@cvg.com
-- **Senha**: admin123
-- ⚠️ **Altere imediatamente em produção!**
+- **Email**: valor de `ADMIN_BOOTSTRAP_EMAIL` (default local: admin@cvg.com)
+- **Senha**: valor de `ADMIN_BOOTSTRAP_PASSWORD` (defina no `.env`; mínimo 12 caracteres)
+- ⚠️ **Produção: o seed NÃO cria admin sem `ADMIN_BOOTSTRAP_EMAIL` + `ADMIN_BOOTSTRAP_PASSWORD` (fail-secure). Nunca use senha default em produção.**
 
 ## Módulos
 

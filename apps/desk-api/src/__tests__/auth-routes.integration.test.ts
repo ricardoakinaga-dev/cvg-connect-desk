@@ -138,4 +138,69 @@ describe('Auth routes integration', () => {
       message: 'Invalid token',
     });
   });
+
+  it('/auth/rotate emite novo token e invalida o antigo', async () => {
+    const login = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email, password },
+    });
+    expect(login.statusCode).toBe(200);
+    const oldToken = (login.json() as { token: string }).token;
+
+    const rotate = await app.inject({
+      method: 'POST',
+      url: '/auth/rotate',
+      headers: { authorization: `Bearer ${oldToken}` },
+    });
+    expect(rotate.statusCode).toBe(200);
+    const newToken = (rotate.json() as { token: string }).token;
+    expect(newToken).toBeTypeOf('string');
+    expect(newToken).not.toBe(oldToken);
+
+    const oldMe = await app.inject({
+      method: 'GET',
+      url: '/auth/me',
+      headers: { authorization: `Bearer ${oldToken}` },
+    });
+    expect(oldMe.statusCode).toBe(401);
+
+    const newMe = await app.inject({
+      method: 'GET',
+      url: '/auth/me',
+      headers: { authorization: `Bearer ${newToken}` },
+    });
+    expect(newMe.statusCode).toBe(200);
+  });
+
+  it('/auth/logout-all revoga todas as sessoes do usuario', async () => {
+    const first = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email, password },
+    });
+    const second = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email, password },
+    });
+    const tokenA = (first.json() as { token: string }).token;
+    const tokenB = (second.json() as { token: string }).token;
+
+    const logoutAll = await app.inject({
+      method: 'POST',
+      url: '/auth/logout-all',
+      headers: { authorization: `Bearer ${tokenA}` },
+    });
+    expect(logoutAll.statusCode).toBe(200);
+
+    for (const token of [tokenA, tokenB]) {
+      const me = await app.inject({
+        method: 'GET',
+        url: '/auth/me',
+        headers: { authorization: `Bearer ${token}` },
+      });
+      expect(me.statusCode).toBe(401);
+    }
+  });
 });

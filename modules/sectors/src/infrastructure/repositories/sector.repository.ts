@@ -5,8 +5,8 @@ import type { CreateSectorInput, UpdateSectorInput } from '../types';
 
 export class SectorRepository {
   async findAll(activeOnly = true) {
-    const query = db.select().from(sectors);
-    if (activeOnly) query.where(eq(sectors.isActive, true));
+    let query = db.select().from(sectors).$dynamic();
+    if (activeOnly) query = query.where(eq(sectors.isActive, true));
     return query.orderBy(sectors.name);
   }
 

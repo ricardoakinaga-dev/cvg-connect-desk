@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
-import { authRepository } from '../../infrastructure/repositories/auth.repository';
+import { authRepository, hashSessionToken } from '../../infrastructure/repositories/auth.repository';
 
 interface LoginBody {
   email: string;
@@ -16,6 +16,12 @@ export async function registerAuthRoutes(app: FastifyInstance) {
   app.post<{ Body: LoginBody }>(
     '/auth/login',
     {
+      config: {
+        rateLimit: {
+          max: Number(process.env.RATE_LIMIT_LOGIN_MAX) || 10,
+          timeWindow: process.env.RATE_LIMIT_LOGIN_WINDOW || '1 minute',
+        },
+      },
       schema: {
         body: {
           type: 'object',
@@ -116,6 +122,88 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     }
   );
 
+  app.post(
+    '/auth/logout-all',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const authHeader = request.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          return reply.status(401).send({
+            error: 'UNAUTHORIZED',
+            message: 'Missing token',
+          });
+        }
+
+        const token = authHeader.substring(7);
+        const [session] = await db
+          .select()
+          .from(schema.sessions)
+          .where(eq(schema.sessions.token, hashSessionToken(token)));
+
+        if (!session || session.revokedAt) {
+          return reply.status(401).send({
+            error: 'UNAUTHORIZED',
+            message: 'Invalid token',
+          });
+        }
+
+        await authRepository.invalidateAllUserSessions(session.userId);
+        request.log.info({ userId: session.userId }, 'All user sessions revoked');
+
+        return reply.status(200).send({
+          message: 'All sessions revoked successfully',
+        });
+      } catch (error) {
+        request.log.error(error, 'Logout-all failed');
+        return reply.status(500).send({
+          error: 'INTERNAL_ERROR',
+          message: 'Logout-all failed',
+        });
+      }
+    }
+  );
+
+  app.post(
+    '/auth/rotate',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const authHeader = request.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          return reply.status(401).send({
+            error: 'UNAUTHORIZED',
+            message: 'Missing token',
+          });
+        }
+
+        const oldToken = authHeader.substring(7);
+        const [session] = await db
+          .select()
+          .from(schema.sessions)
+          .where(eq(schema.sessions.token, hashSessionToken(oldToken)));
+
+        if (!session || session.revokedAt) {
+          return reply.status(401).send({
+            error: 'UNAUTHORIZED',
+            message: 'Invalid token',
+          });
+        }
+
+        const token = await authRepository.rotateSession(oldToken, session.userId);
+        request.log.info({ userId: session.userId }, 'Session rotated');
+
+        return reply.status(200).send({ token });
+      } catch (error) {
+        request.log.error(error, 'Session rotation failed');
+        return reply.status(500).send({
+          error: 'INTERNAL_ERROR',
+          message: 'Session rotation failed',
+        });
+      }
+    }
+  );
+
   app.get(
     '/auth/me',
     async (request: FastifyRequest, reply: FastifyReply) => {
@@ -134,9 +222,9 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const [session] = await db
           .select()
           .from(schema.sessions)
-          .where(eq(schema.sessions.token, token));
+          .where(eq(schema.sessions.token, hashSessionToken(token)));
 
-        if (!session) {
+        if (!session || session.revokedAt) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid token',

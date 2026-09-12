@@ -89,7 +89,7 @@ describe('Events polling integration', () => {
     await app.close();
   });
 
-  it('returns pending outbox events ordered, filtered and acknowledged for http-poll consumer', async () => {
+  it('GET aluga eventos sem ACK destrutivo; POST /events/:id/ack confirma', async () => {
     const firstResponse = await app.inject({
       method: 'GET',
       url: '/events?limit=2',
@@ -104,10 +104,14 @@ describe('Events polling integration', () => {
         payload: Record<string, unknown>;
         metadata?: Record<string, unknown>;
       }>;
+      leaseSeconds: number;
+      ackEndpoint: string;
       serverTime: string;
     };
 
     expect(firstBody.serverTime).toBeTypeOf('string');
+    expect(firstBody.leaseSeconds).toBe(120);
+    expect(firstBody.ackEndpoint).toBe('/events/:eventId/ack');
     expect(firstBody.events).toHaveLength(2);
     expect(firstBody.events[0]).toMatchObject({
       event_id: eventIds[0],
@@ -121,6 +125,28 @@ describe('Events polling integration', () => {
       aggregate_type: 'Message',
       metadata: { source: 'events-polling-test' },
     });
+
+    // GET não marca como processado: nenhum ack com processedAt ainda.
+    const noAckYet = await db
+      .select()
+      .from(schema.outboxConsumerAcks)
+      .where(
+        and(
+          eq(schema.outboxConsumerAcks.eventId, eventIds[0]),
+          eq(schema.outboxConsumerAcks.consumerId, consumerId)
+        )
+      )
+      .limit(1);
+
+    expect(noAckYet.filter((a) => a.processedAt !== null)).toHaveLength(0);
+
+    // ACK explícito do primeiro evento.
+    const ackResponse = await app.inject({
+      method: 'POST',
+      url: `/events/${eventIds[0]}/ack`,
+    });
+    expect(ackResponse.statusCode).toBe(200);
+    expect(ackResponse.json()).toMatchObject({ acknowledged: true, eventId: eventIds[0] });
 
     const firstAck = await db
       .select()
@@ -158,6 +184,12 @@ describe('Events polling integration', () => {
       event_id: eventIds[2],
       metadata: { source: 'events-polling-test' },
     });
+
+    // ACK explícito dos restantes; só então todos aparecem como processados.
+    for (const eventId of [eventIds[1], eventIds[2]]) {
+      const ack = await app.inject({ method: 'POST', url: `/events/${eventId}/ack` });
+      expect(ack.statusCode).toBe(200);
+    }
 
     const ackedEvents = await db
       .select({

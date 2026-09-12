@@ -61,6 +61,7 @@ export const useAuthStore = create<AuthState>()(
             await api.post('/auth/logout');
           }
         } catch {
+          // Logout local prossegue mesmo se o servidor estiver inalcançável.
         } finally {
           set({ user: null, token: null, isAuthenticated: false, error: null });
         }

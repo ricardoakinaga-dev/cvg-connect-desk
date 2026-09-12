@@ -3,7 +3,13 @@ export type WebhookSecurityReason =
   | 'missing_signature'
   | 'invalid_signature_format'
   | 'invalid_signature'
-  | 'signature_valid';
+  | 'signature_valid'
+  | 'missing_timestamp'
+  | 'invalid_timestamp'
+  | 'timestamp_too_old'
+  | 'timestamp_too_future'
+  | 'missing_event_id'
+  | 'duplicate_event_id';
 
 export interface WebhookSecurityDecision {
   reason: WebhookSecurityReason;
@@ -30,6 +36,12 @@ const reasonKeys: WebhookSecurityReason[] = [
   'invalid_signature_format',
   'invalid_signature',
   'signature_valid',
+  'missing_timestamp',
+  'invalid_timestamp',
+  'timestamp_too_old',
+  'timestamp_too_future',
+  'missing_event_id',
+  'duplicate_event_id',
 ];
 
 function createInitialStats(): WebhookSecurityStats {
@@ -43,6 +55,12 @@ function createInitialStats(): WebhookSecurityStats {
       invalid_signature_format: 0,
       invalid_signature: 0,
       signature_valid: 0,
+      missing_timestamp: 0,
+      invalid_timestamp: 0,
+      timestamp_too_old: 0,
+      timestamp_too_future: 0,
+      missing_event_id: 0,
+      duplicate_event_id: 0,
     },
     lastDecisionAt: null,
     lastDecision: null,

@@ -1,16 +1,22 @@
 import { FastifyInstance } from 'fastify';
 import { handleGatewayInbound, handleGatewayReceipt, handleInstanceStatus, checkGatewayHealth } from '../../application/use-cases';
 import { normalizeEvolutionMessage, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
+import { createWebhookGuard } from '@cvg/shared';
 import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 
 export async function registerGatewayRoutes(app: FastifyInstance) {
+  const webhookGuard = createWebhookGuard();
 
   // ============================================
   // WEBHOOK: Inbound do Gateway (WA_INBOUND)
-  // Aceita tanto /gateway/inbound quanto /gateway/inbound/*
+  // Protegido por HMAC (fail-secure em produção).
   // ============================================
-  app.post('/gateway/inbound', handleInbound);
-  app.post('/gateway/inbound/*', handleInbound);
+  const webhookRateLimit = {
+    max: Number(process.env.RATE_LIMIT_WEBHOOK_MAX) || 300,
+    timeWindow: process.env.RATE_LIMIT_WEBHOOK_WINDOW || '1 minute',
+  };
+  app.post('/gateway/inbound', { preHandler: webhookGuard, config: { rateLimit: webhookRateLimit } }, handleInbound);
+  app.post('/gateway/inbound/*', { preHandler: webhookGuard, config: { rateLimit: webhookRateLimit } }, handleInbound);
 
   async function handleInbound(request: any, reply: any) {
     const event = request.body as any;
@@ -82,6 +88,8 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // WEBHOOK: Receipt do Gateway (WA_RECEIPT)
   // ============================================
   app.post('/gateway/receipt', {
+    preHandler: webhookGuard,
+    config: { rateLimit: webhookRateLimit },
     schema: {
       description: 'Recebe confirmações de entrega do gateway',
       tags: ['Gateway'],
@@ -103,6 +111,8 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // WEBHOOK: Instance Status (INSTANCE_STATUS)
   // ============================================
   app.post('/gateway/instance-status', {
+    preHandler: webhookGuard,
+    config: { rateLimit: webhookRateLimit },
     schema: {
       description: 'Recebe status de instâncias WhatsApp',
       tags: ['Gateway'],

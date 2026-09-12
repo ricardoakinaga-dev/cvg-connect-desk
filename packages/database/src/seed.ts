@@ -1,5 +1,5 @@
 import { db, schema } from './index';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
 async function seed() {
@@ -75,7 +75,7 @@ async function seed() {
         .select()
         .from(schema.rolePermissions)
         .where(
-          eq(schema.rolePermissions.roleId, adminRole.id) && eq(schema.rolePermissions.permissionId, perm.id)
+          and(eq(schema.rolePermissions.roleId, adminRole.id), eq(schema.rolePermissions.permissionId, perm.id))
         )
         .limit(1);
       
@@ -88,8 +88,23 @@ async function seed() {
     }
   }
 
-  // 4. Criar admin user
-  const adminEmail = 'admin@cvg.com';
+  // 4. Criar admin user — APENAS em desenvolvimento/teste.
+  // Em produção, usar ADMIN_BOOTSTRAP_EMAIL + ADMIN_BOOTSTRAP_PASSWORD via bootstrap dedicado.
+  const nodeEnv = (process.env.NODE_ENV || process.env.DESK_ENV || 'development').toLowerCase();
+  const isProduction = nodeEnv === 'production' || nodeEnv === 'prod';
+  const bootstrapEmail = process.env.ADMIN_BOOTSTRAP_EMAIL;
+  const bootstrapPassword = process.env.ADMIN_BOOTSTRAP_PASSWORD;
+  const adminEmail = bootstrapEmail || 'admin@cvg.com';
+
+  if (isProduction && (!bootstrapEmail || !bootstrapPassword)) {
+    console.log('Seed: produção sem ADMIN_BOOTSTRAP_EMAIL/ADMIN_BOOTSTRAP_PASSWORD — nenhum admin criado (fail-secure).');
+    console.log('Seed completed!');
+    return;
+  }
+
+  if (bootstrapPassword && bootstrapPassword.length < 12) {
+    throw new Error('Seed: ADMIN_BOOTSTRAP_PASSWORD deve ter ao menos 12 caracteres.');
+  }
   const existingUser = await db
     .select()
     .from(schema.users)
@@ -97,7 +112,11 @@ async function seed() {
     .limit(1);
 
   if (existingUser.length === 0) {
-    const passwordHash = await bcrypt.hash('admin123', 10);
+    const defaultPassword = 'admin123';
+    if (isProduction && !bootstrapPassword) {
+      throw new Error('Seed: senha default proibida em produção.');
+    }
+    const passwordHash = await bcrypt.hash(bootstrapPassword || defaultPassword, 10);
     const [user] = await db
       .insert(schema.users)
       .values({

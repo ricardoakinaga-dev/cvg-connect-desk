@@ -1,10 +1,10 @@
 import { expect, type Page } from '@playwright/test';
 import { db, schema } from '@cvg/database';
 import { eq, and } from 'drizzle-orm';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
-export const ADMIN_EMAIL = 'admin@cvg.com';
-export const ADMIN_PASSWORD = 'admin123';
+export const ADMIN_EMAIL = process.env.ADMIN_BOOTSTRAP_EMAIL || 'admin@cvg.com';
+export const ADMIN_PASSWORD = process.env.ADMIN_BOOTSTRAP_PASSWORD || 'admin123';
 let cachedAdminAuthStorage: string | null = null;
 
 type AuthStorageState = {
@@ -39,9 +39,13 @@ async function seedAdminSession(): Promise<string> {
     .where(eq(schema.userRoles.userId, adminUser.id));
 
   const token = randomUUID();
+  const tokenHash = createHash('sha256').update(token, 'utf8').digest('hex');
   await db.insert(schema.sessions).values({
     userId: adminUser.id,
-    token,
+    token: tokenHash,
+    tokenHash,
+    lastSeenAt: new Date(),
+    absoluteExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 

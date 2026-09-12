@@ -107,7 +107,7 @@ export async function receiveInboundMessage(
       }
     }
 
-    const message = await messageRepository.create({
+    const { message, isDuplicate } = await messageRepository.createIdempotent({
       conversationId,
       direction: 'inbound',
       content: input.content,
@@ -123,6 +123,14 @@ export async function receiveInboundMessage(
       mediaFilename: input.mediaFilename,
       metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
     });
+
+    if (isDuplicate) {
+      return ok({
+        messageId: message.id,
+        conversationId: message.conversationId,
+        isNewConversation: false,
+      });
+    }
 
     await publishMessagePersisted(message);
 

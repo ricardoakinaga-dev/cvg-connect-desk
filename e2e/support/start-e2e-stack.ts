@@ -169,8 +169,12 @@ async function waitForTcp(host: string, port: number, timeoutMs = 120_000) {
 }
 
 async function ensureBootstrapAdmin() {
-  const adminEmail = 'admin@cvg.com';
-  const adminPasswordHash = '$2a$10$.sCUEq9veDJjD3TfRNCCjOxAeokl2WuGU0HtKmVMS3nRxNwOdfeqa';
+  // E2E usa banco efêmero dedicado (smoke stack com volume descartado).
+  // Credenciais parametrizáveis via env; defaults apenas para ambiente de teste isolado.
+  const adminEmail = process.env.ADMIN_BOOTSTRAP_EMAIL || 'admin@cvg.com';
+  const adminPassword = process.env.ADMIN_BOOTSTRAP_PASSWORD || 'admin123';
+  const { default: bcrypt } = await import('bcryptjs');
+  const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
 
   let [adminRole] = await db
     .select()

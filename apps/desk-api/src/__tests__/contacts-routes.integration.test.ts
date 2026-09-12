@@ -16,7 +16,7 @@ describe('Contacts routes integration', () => {
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
   let token = '';
 
-  const makePhone = () => `55199${Date.now().toString().slice(-8)}${randomUUID().replace(/-/g, '').slice(0, 4)}`.slice(0, 15);
+  const makePhone = () => `55199${Date.now().toString().slice(-8)}${Math.floor(Math.random() * 9000 + 1000)}`.slice(0, 15);
 
   beforeAll(async () => {
     app = await buildDeskApiApp();

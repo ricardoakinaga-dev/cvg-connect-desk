@@ -92,6 +92,13 @@
       "when": 1775212920000,
       "tag": "0012_outbox_event_version",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1786723200000,
+      "tag": "0013_security_correctness",
+      "breakpoints": true
     }
   ]
 }
