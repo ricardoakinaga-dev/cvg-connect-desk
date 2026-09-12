@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Icon, type IconName } from '../components/ui/Icon';
 import {
   api,
   deadLetterApi,
@@ -93,6 +94,10 @@ function formatCountList(
 }
 
 export function Admin() {
+  const pageRef = useRef<HTMLDivElement>(null);
+  const sectorDialogRef = useRef<HTMLDivElement>(null);
+  const sectorDialogCloseRef = useRef<HTMLButtonElement>(null);
+  const sectorDialogTriggerRef = useRef<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState<Tab>('users');
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -166,6 +171,41 @@ export function Admin() {
   useEffect(() => {
     fetchAll();
   }, []);
+
+  useEffect(() => {
+    if (!editUserSectors) return undefined;
+    const root = pageRef.current;
+    const dialog = sectorDialogRef.current;
+    if (!root || !dialog) return undefined;
+    const overlay = dialog.parentElement;
+    const candidates = [
+      document.querySelector<HTMLElement>('.sidebar'),
+      document.querySelector<HTMLElement>('.mobile-topbar'),
+      ...Array.from(root.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child !== overlay),
+    ].filter((element): element is HTMLElement => !!element);
+    const blocked = candidates.map((element) => ({ element, hadInert: element.hasAttribute('inert') }));
+    blocked.forEach(({ element }) => element.setAttribute('inert', ''));
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const frame = requestAnimationFrame(() => sectorDialogCloseRef.current?.focus());
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setEditUserSectors(null); return; }
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]'));
+      if (!focusable.length) return;
+      const first = focusable[0]; const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener('keydown', onKeyDown);
+      blocked.forEach(({ element, hadInert }) => { if (!hadInert) element.removeAttribute('inert'); });
+      document.body.style.overflow = previousOverflow;
+      sectorDialogTriggerRef.current?.focus();
+    };
+  }, [editUserSectors]);
 
   const selectedDeadLetter = useMemo(
     () => deadLetters.find((entry) => entry.id === selectedDeadLetterId) || deadLetters[0] || null,
@@ -283,30 +323,30 @@ export function Admin() {
       case 'users':
         return (
           <>
-            <input placeholder="Nome" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
-            <input placeholder="Email" type="email" value={newItem.email || ''} onChange={(e) => setNewItem({ ...newItem, email: e.target.value })} required />
-            <input placeholder="Senha" type="password" value={newItem.password || ''} onChange={(e) => setNewItem({ ...newItem, password: e.target.value })} required />
+            <input aria-label="Nome do usuário" placeholder="Nome" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
+            <input aria-label="Email do usuário" placeholder="Email" type="email" value={newItem.email || ''} onChange={(e) => setNewItem({ ...newItem, email: e.target.value })} required />
+            <input aria-label="Senha inicial do usuário" placeholder="Senha" type="password" value={newItem.password || ''} onChange={(e) => setNewItem({ ...newItem, password: e.target.value })} required />
           </>
         );
       case 'roles':
         return (
           <>
-            <input placeholder="Nome do papel" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
-            <input placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
+            <input aria-label="Nome do papel" placeholder="Nome do papel" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
+            <input aria-label="Descrição do papel" placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
           </>
         );
       case 'queues':
         return (
           <>
-            <input placeholder="Nome da fila" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
-            <input placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
+            <input aria-label="Nome da fila" placeholder="Nome da fila" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
+            <input aria-label="Descrição da fila" placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
           </>
         );
       case 'teams':
         return (
           <>
-            <input placeholder="Nome do time" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
-            <input placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
+            <input aria-label="Nome do time" placeholder="Nome do time" value={newItem.name || ''} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} required />
+            <input aria-label="Descrição do time" placeholder="Descrição" value={newItem.description || ''} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} />
           </>
         );
       default:
@@ -314,8 +354,11 @@ export function Admin() {
     }
   };
 
-  const renderUsersTable = () => (
+  const renderUsersTable = () => users.length === 0 ? (
+    <div className="admin-empty"><Icon name="contacts" /><strong>Nenhum usuário cadastrado</strong><span>Crie o primeiro acesso para começar.</span></div>
+  ) : (
     <>
+      <div className="admin-table-scroll" tabIndex={0} aria-label="Tabela de usuários; deslize horizontalmente para ver todas as colunas">
       <table className="data-table">
         <thead>
           <tr><th>Nome</th><th>Email</th><th>Status</th><th>Criado</th><th>Setores</th><th>Ações</th></tr>
@@ -328,22 +371,23 @@ export function Admin() {
               <td><span className={`badge ${user.isActive ? 'active' : 'inactive'}`}>{user.isActive ? 'Ativo' : 'Inativo'}</span></td>
               <td>{formatDate(user.createdAt)}</td>
               <td>
-                <button className="btn-sector" onClick={() => { setEditUserSectors(user.id); fetchUserSectors(user.id); }}>
-                  🏢 Setores
+                <button className="btn-sector" onClick={(event) => { sectorDialogTriggerRef.current = event.currentTarget; setEditUserSectors(user.id); fetchUserSectors(user.id); }}>
+                  <Icon name="sectors" size={15} /> Setores
                 </button>
               </td>
-              <td><button className="btn-delete-sm" onClick={() => handleDelete(user.id)}>🗑️</button></td>
+              <td><button className="btn-delete-sm" aria-label={`Excluir usuário ${user.name}`} onClick={() => handleDelete(user.id)}><Icon name="close" size={16} /></button></td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
 
       {editUserSectors && (
         <div className="modal-overlay" onClick={() => setEditUserSectors(null)}>
-          <div className="modal-content" onClick={(event) => event.stopPropagation()}>
+          <div ref={sectorDialogRef} className="modal-content" role="dialog" aria-modal="true" aria-labelledby="sector-permissions-title" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h3>🏢 Permissões por Setor</h3>
-              <button className="btn-close" onClick={() => setEditUserSectors(null)}>✕</button>
+              <h3 id="sector-permissions-title"><Icon name="sectors" size={19} /> Permissões por setor</h3>
+              <button ref={sectorDialogCloseRef} className="btn-close" aria-label="Fechar permissões por setor" onClick={() => setEditUserSectors(null)}><Icon name="close" size={17} /></button>
             </div>
             <div className="modal-body">
               <p className="modal-desc">Selecione os setores que este usuário pode acessar e o nível de permissão:</p>
@@ -357,7 +401,7 @@ export function Admin() {
                     <div key={sector.id} className={`sector-perm-card ${isSelected ? 'selected' : ''}`}>
                       <div className="sector-perm-header">
                         <label className="sector-checkbox">
-                          <input type="checkbox" checked={isSelected} onChange={() => toggleSector(sector.id)} />
+                          <input aria-label={`Permitir acesso ao setor ${sector.name}`} type="checkbox" checked={isSelected} onChange={() => toggleSector(sector.id)} />
                           <span className="sector-icon" style={{ background: sector.color }}>{sector.icon}</span>
                           <span className="sector-name">{sector.name}</span>
                         </label>
@@ -365,10 +409,8 @@ export function Admin() {
 
                       {isSelected && (
                         <div className="access-level-select">
-                          <select value={level} onChange={(event) => changeAccessLevel(sector.id, event.target.value)}>
-                            <option value="read">👁️ Somente Leitura</option>
-                            <option value="write">✏️ Leitura e Escrita</option>
-                            <option value="admin">🔑 Admin do Setor</option>
+                          <select aria-label={`Nível de acesso em ${sector.name}`} value={level} onChange={(event) => changeAccessLevel(sector.id, event.target.value)}>
+                            <option value="read">Somente leitura</option><option value="write">Leitura e escrita</option><option value="admin">Admin do setor</option>
                           </select>
                         </div>
                       )}
@@ -379,7 +421,7 @@ export function Admin() {
 
               <div className="modal-actions">
                 <button className="btn-cancel" onClick={() => setEditUserSectors(null)}>Cancelar</button>
-                <button className="btn-save" onClick={handleSaveUserSectors}>💾 Salvar Permissões</button>
+                <button className="btn-save" onClick={handleSaveUserSectors}><Icon name="check" size={16} /> Salvar permissões</button>
               </div>
             </div>
           </div>
@@ -503,12 +545,13 @@ export function Admin() {
       </div>
 
       <div className="dead-letter-toolbar">
-        <select value={deadLetterFilter} onChange={(event) => setDeadLetterFilter(event.target.value as DeadLetterFilter)}>
+        <select aria-label="Filtrar dead-letters" value={deadLetterFilter} onChange={(event) => setDeadLetterFilter(event.target.value as DeadLetterFilter)}>
           <option value="all">Todas</option>
           <option value="open">Abertas</option>
           <option value="resolved">Resolvidas</option>
         </select>
         <input
+          aria-label="Pesquisar dead-letters"
           placeholder="Filtrar por evento, handler, erro ou ID"
           value={deadLetterSearch}
           onChange={(event) => setDeadLetterSearch(event.target.value)}
@@ -519,6 +562,7 @@ export function Admin() {
       {deadLetterNotice && <div className="dead-letter-banner success">{deadLetterNotice}</div>}
       {deadLetterError && <div className="dead-letter-banner error">{deadLetterError}</div>}
 
+      <div className="admin-table-scroll" tabIndex={0} aria-label="Tabela de dead-letters; deslize horizontalmente para ver todas as colunas">
       <table className="data-table">
         <thead>
           <tr>
@@ -582,6 +626,7 @@ export function Admin() {
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="dead-letter-detail">
         {selectedDeadLetter ? (
@@ -651,35 +696,35 @@ export function Admin() {
     </div>
   );
 
-  const tabs: { key: Tab; label: string; icon: string; description: string }[] = [
+  const tabs: { key: Tab; label: string; icon: IconName; description: string }[] = [
     {
       key: 'users',
       label: 'Usuários',
-      icon: '👥',
+      icon: 'contacts',
       description: 'Pessoas que acessam o sistema (atendentes, veterinários, recepcionistas). Cada usuário tem login, senha e permissões específicas por setor.',
     },
     {
       key: 'roles',
       label: 'Papéis',
-      icon: '🔑',
+      icon: 'settings',
       description: 'Grupos de permissões pré-definidos (ex: Admin, Veterinário, Recepcionista). Ao atribuir um papel a um usuário, ele ganha todas as permissões daquele papel automaticamente.',
     },
     {
       key: 'queues',
       label: 'Filas',
-      icon: '📋',
+      icon: 'tasks',
       description: 'Fila de espera para distribuir atendimentos. Ex: quando chega uma mensagem, ela pode ser direcionada para a "Fila Recepção" e depois para a "Fila Clínica". Útil para organizar o fluxo de trabalho.',
     },
     {
       key: 'teams',
       label: 'Times',
-      icon: '🏢',
+      icon: 'sectors',
       description: 'Grupos de usuários que trabalham juntos. Ex: "Equipe Clínica" (Dr. João + Dra. Maria), "Equipe Recepção" (Ana + Pedro). Facilita a atribuição de conversas para grupos.',
     },
     {
       key: 'dead-letters',
       label: 'Dead-letter',
-      icon: '☠️',
+      icon: 'warning',
       description: 'Fila operacional de eventos que falharam após retry. Permite filtrar, inspecionar o payload e executar retry quando o backend tiver contexto suficiente, ou marcar como resolvida após tratamento manual.',
     },
   ];
@@ -687,15 +732,16 @@ export function Admin() {
   const currentTab = tabs.find((item) => item.key === tab);
 
   return (
-    <div className="admin-page">
+    <div ref={pageRef} className="admin-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>⚙️ Administração</h2>
+          <span className="page-kicker">Governança operacional</span>
+          <h2><Icon name="admin" /> Administração</h2>
           <p>Gerencie usuários, papéis, filas, times e dead-letters</p>
         </div>
         {tab !== 'dead-letters' && (
           <button className="btn-create" onClick={() => { setShowCreate(!showCreate); setNewItem({}); }}>
-            {showCreate ? '✕ Cancelar' : `＋ Novo${tab === 'users' ? ' Usuário' : tab === 'roles' ? ' Papel' : tab === 'queues' ? ' Fila' : ' Time'}`}
+            <Icon name={showCreate ? 'close' : 'plus'} size={17} /> {showCreate ? 'Cancelar' : `Novo${tab === 'users' ? ' usuário' : tab === 'roles' ? ' papel' : tab === 'queues' ? ' fila' : ' time'}`}
           </button>
         )}
       </div>
@@ -716,12 +762,12 @@ export function Admin() {
               onMouseEnter={() => setHoveredTab(item.key)}
               onMouseLeave={() => setHoveredTab(null)}
             >
-              {item.icon} {item.label}
+              <Icon name={item.icon} size={16} /> {item.label}
               <span className="tab-info-icon">ⓘ</span>
             </button>
             {hoveredTab === item.key && (
               <div className="tab-tooltip">
-                <div className="tooltip-title">{item.icon} {item.label}</div>
+                <div className="tooltip-title"><Icon name={item.icon} size={15} /> {item.label}</div>
                 <div className="tooltip-desc">{item.description}</div>
               </div>
             )}
@@ -730,7 +776,7 @@ export function Admin() {
       </div>
 
       <div className="tab-description">
-        {currentTab?.icon} <strong>{currentTab?.label}:</strong> {currentTab?.description}
+        {currentTab && <Icon name={currentTab.icon} size={16} />} <strong>{currentTab?.label}:</strong> {currentTab?.description}
       </div>
 
       {showCreate && tab !== 'dead-letters' && (
@@ -746,6 +792,7 @@ export function Admin() {
         <>
           {tab === 'users' && renderUsersTable()}
           {tab === 'roles' && (
+            <div className="admin-table-scroll" tabIndex={0} aria-label="Tabela de papéis; deslize horizontalmente para ver todas as colunas">
             <table className="data-table">
               <thead><tr><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
               <tbody>
@@ -753,13 +800,15 @@ export function Admin() {
                   <tr key={role.id}>
                     <td><strong>{role.name}</strong></td>
                     <td>{role.description || '—'}</td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(role.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" aria-label={`Excluir papel ${role.name}`} onClick={() => handleDelete(role.id)}><Icon name="close" size={16} /></button></td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           )}
           {tab === 'queues' && (
+            <div className="admin-table-scroll" tabIndex={0} aria-label="Tabela de filas; deslize horizontalmente para ver todas as colunas">
             <table className="data-table">
               <thead><tr><th>Nome</th><th>Descrição</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody>
@@ -768,13 +817,15 @@ export function Admin() {
                     <td><strong>{queue.name}</strong></td>
                     <td>{queue.description || '—'}</td>
                     <td><span className={`badge ${queue.isActive ? 'active' : 'inactive'}`}>{queue.isActive ? 'Ativa' : 'Inativa'}</span></td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(queue.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" aria-label={`Excluir fila ${queue.name}`} onClick={() => handleDelete(queue.id)}><Icon name="close" size={16} /></button></td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           )}
           {tab === 'teams' && (
+            <div className="admin-table-scroll" tabIndex={0} aria-label="Tabela de times; deslize horizontalmente para ver todas as colunas">
             <table className="data-table">
               <thead><tr><th>Nome</th><th>Descrição</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody>
@@ -783,11 +834,12 @@ export function Admin() {
                     <td><strong>{team.name}</strong></td>
                     <td>{team.description || '—'}</td>
                     <td><span className={`badge ${team.isActive ? 'active' : 'inactive'}`}>{team.isActive ? 'Ativo' : 'Inativo'}</span></td>
-                    <td><button className="btn-delete-sm" onClick={() => handleDelete(team.id)}>🗑️</button></td>
+                    <td><button className="btn-delete-sm" aria-label={`Excluir time ${team.name}`} onClick={() => handleDelete(team.id)}><Icon name="close" size={16} /></button></td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           )}
           {tab === 'dead-letters' && renderDeadLetters()}
         </>

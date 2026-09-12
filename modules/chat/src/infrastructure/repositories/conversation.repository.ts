@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, desc, and, count, inArray } from 'drizzle-orm';
+import { eq, desc, and, count, inArray, sql } from 'drizzle-orm';
 
 export type Conversation = typeof schema.conversations.$inferSelect;
 export type NewConversation = typeof schema.conversations.$inferInsert;
@@ -61,7 +61,42 @@ export const conversationRepository = {
       query = query.where(and(...conditions));
     }
 
-    return query.orderBy(desc(schema.conversations.createdAt));
+    return query.orderBy(
+      desc(sql`CASE WHEN ${schema.conversations.unreadCount} > 0 THEN 1 ELSE 0 END`),
+      desc(sql`CASE WHEN ${schema.conversations.currentHandler} = 'human' THEN 1 ELSE 0 END`),
+      desc(schema.conversations.updatedAt),
+    );
+  },
+
+  /** Registra atividade inbound sem perder incrementos concorrentes. */
+  async markInboundUnread(id: string) {
+    const [conversation] = await db
+      .update(schema.conversations)
+      .set({
+        unreadCount: sql`${schema.conversations.unreadCount} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.conversations.id, id))
+      .returning();
+    return conversation;
+  },
+
+  async markRead(id: string) {
+    const [conversation] = await db
+      .update(schema.conversations)
+      .set({ unreadCount: 0 })
+      .where(eq(schema.conversations.id, id))
+      .returning();
+    return conversation;
+  },
+
+  async attachContact(id: string, contactId: string) {
+    const [conversation] = await db
+      .update(schema.conversations)
+      .set({ contactId })
+      .where(eq(schema.conversations.id, id))
+      .returning();
+    return conversation;
   },
 
   async update(id: string, data: Partial<NewConversation>) {

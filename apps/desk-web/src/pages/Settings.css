@@ -63,7 +63,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4361ee, #7c3aed);
+  background: linear-gradient(135deg, #0369a1, #075985);
   color: #fff;
   display: flex;
   align-items: center;
@@ -170,7 +170,7 @@
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-toggle:hover {

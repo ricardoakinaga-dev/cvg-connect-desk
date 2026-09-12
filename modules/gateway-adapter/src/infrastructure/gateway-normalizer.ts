@@ -1,6 +1,20 @@
-import type { WAInboundEvent } from '../types/gateway-contracts';
-
 import type { WAInboundEvent, InstanceStatusEvent, WAReceiptEvent } from '../types/gateway-contracts';
+
+/**
+ * Aceita tanto o contrato canônico do CVG Gateway quanto o payload bruto da
+ * Evolution. Um WA_INBOUND já normalizado não pode passar novamente pelo
+ * normalizador da Evolution, pois isso descartaria payload.messageId e
+ * payload.remoteJid.
+ */
+export function toWAInboundEvent(event: unknown, eventType: string): WAInboundEvent | null {
+  if (eventType === 'WA_INBOUND') {
+    const candidate = event as Partial<WAInboundEvent>;
+    return candidate.event_type === 'WA_INBOUND' && candidate.payload
+      ? candidate as WAInboundEvent
+      : null;
+  }
+  return normalizeEvolutionMessage(event, eventType);
+}
 
 /**
  * Normaliza payload WA_INBOUND do gateway para o formato interno do Connect Desk.

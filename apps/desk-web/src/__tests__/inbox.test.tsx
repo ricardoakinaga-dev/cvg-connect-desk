@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   sectorListMock: vi.fn(),
   conversationListMock: vi.fn(),
   conversationMessagesMock: vi.fn(),
+  markReadMock: vi.fn(),
   sendMessageMock: vi.fn(),
 }));
 
@@ -38,6 +39,7 @@ vi.mock('../lib/api', () => ({
   conversationApi: {
     list: mocks.conversationListMock,
     getMessages: mocks.conversationMessagesMock,
+    markRead: mocks.markReadMock,
     sendMessage: mocks.sendMessageMock,
   },
   sectorApi: {
@@ -84,6 +86,7 @@ describe('Inbox page', () => {
           externalChannelId: null,
           externalConversationId: null,
           metadata: null,
+          unreadCount: 2,
           createdAt: '2026-04-10T12:00:00.000Z',
           updatedAt: '2026-04-10T12:00:00.000Z',
           closedAt: null,
@@ -101,6 +104,11 @@ describe('Inbox page', () => {
             sentAt: null,
             deliveredAt: null,
             createdAt: '2026-04-10T12:01:00.000Z',
+          },
+          lastInboundMessage: {
+            direction: 'inbound',
+            content: 'Mensagem nova do WhatsApp',
+            createdAt: '2026-04-10T12:02:00.000Z',
           },
           contactName: 'Maria Silva',
           contactPhone: '5511999999999',
@@ -135,6 +143,7 @@ describe('Inbox page', () => {
       conversationId: 'conv_1',
       status: 'sent',
     });
+    mocks.markReadMock.mockResolvedValue({ conversationId: 'conv_1', unreadCount: 0 });
 
     render(
       <MemoryRouter>
@@ -147,21 +156,24 @@ describe('Inbox page', () => {
     });
 
     expect(await screen.findByText('Maria Silva')).toBeTruthy();
-    expect(screen.getByText('Precisamos confirmar os dados')).toBeTruthy();
+    expect(screen.getByText('Mensagem nova do WhatsApp')).toBeTruthy();
+    expect(screen.getByLabelText('2 mensagens não lidas')).toBeTruthy();
 
     fireEvent.click(screen.getByText('Maria Silva'));
 
     expect(await screen.findByText('Olá, queria ajuda com a matrícula')).toBeTruthy();
+    await waitFor(() => expect(mocks.markReadMock).toHaveBeenCalledWith('conv_1'));
+    expect(screen.queryByLabelText('2 mensagens não lidas')).toBeNull();
     expect(screen.getByPlaceholderText('Mensagem')).toBeTruthy();
 
     fireEvent.change(screen.getByPlaceholderText('Mensagem'), { target: { value: 'Vamos seguir com o atendimento' } });
-    fireEvent.click(screen.getByRole('button', { name: '➤' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
 
     await waitFor(() => {
       expect(mocks.sendMessageMock).toHaveBeenCalledWith({
         conversationId: 'conv_1',
         content: 'Vamos seguir com o atendimento',
-        recipient: 'contact_1',
+        recipient: '5511999999999',
       });
     });
   });
@@ -173,6 +185,7 @@ describe('Inbox page', () => {
     mocks.conversationListMock.mockResolvedValue({ conversations: [] });
     mocks.conversationMessagesMock.mockResolvedValue({ messages: [] });
     mocks.sendMessageMock.mockResolvedValue({});
+    mocks.markReadMock.mockResolvedValue({ conversationId: 'conv_1', unreadCount: 0 });
 
     render(
       <MemoryRouter>

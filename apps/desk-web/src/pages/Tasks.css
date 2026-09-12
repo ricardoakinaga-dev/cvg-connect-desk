@@ -3,11 +3,11 @@
 .page-hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .hero-left h2 { margin: 0; font-size: 1.6rem; color: #1a1a2e; }
 .hero-left p { margin: 4px 0 0; font-size: 0.9rem; color: #888; }
-.btn-create { background: #4361ee; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
+.btn-create { background: #4361ee; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; }
 .btn-create:hover { background: #3a56d4; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(67,97,238,0.3); }
 
 .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-.stat-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 24px; display: flex; flex-direction: column; align-items: center; min-width: 100px; transition: all 0.2s; }
+.stat-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px 24px; display: flex; flex-direction: column; align-items: center; min-width: 100px; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; }
 .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
 .stat-num { font-size: 1.8rem; font-weight: 700; color: #1a1a2e; }
 .stat-label { font-size: 0.75rem; color: #888; margin-top: 4px; }
@@ -27,13 +27,13 @@
 .filter-bar { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-group { display: flex; align-items: center; gap: 6px; }
 .filter-label { font-size: 0.8rem; color: #888; font-weight: 500; }
-.chip { padding: 6px 14px; border: 1px solid #e0e0e0; border-radius: 20px; background: #fff; font-size: 0.8rem; color: #666; cursor: pointer; transition: all 0.2s; }
+.chip { padding: 6px 14px; border: 1px solid #e0e0e0; border-radius: 20px; background: #fff; font-size: 0.8rem; color: #666; cursor: pointer; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; }
 .chip:hover { border-color: #4361ee; color: #4361ee; }
 .chip.active { background: #4361ee; border-color: #4361ee; color: #fff; }
 
 .task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
 
-.task-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 14px; padding: 20px; transition: all 0.2s; }
+.task-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 14px; padding: 20px; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; }
 .task-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
 .task-card.overdue { border-color: #fca5a5; background: linear-gradient(135deg, #fff 0%, #fef2f2 100%); }
 
@@ -49,7 +49,7 @@
 .assignee { font-size: 0.78rem; color: #555; background: #e8f0fe; padding: 4px 10px; border-radius: 8px; }
 
 .task-actions { display: flex; gap: 8px; }
-.btn-action { padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 10px; background: #fff; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+.btn-action { padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 10px; background: #fff; font-size: 0.8rem; cursor: pointer; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; font-weight: 500; }
 .btn-action:hover { background: #f4f6f9; }
 .btn-action.start { border-color: #3b82f6; color: #2563eb; }
 .btn-action.start:hover { background: #eff6ff; }

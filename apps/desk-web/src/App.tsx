@@ -18,6 +18,7 @@ import { Kanban } from './pages/Kanban';
 import { Contacts } from './pages/Contacts';
 import { Tutors } from './pages/Tutors';
 import { Patients } from './pages/Patients';
+import './premium-surfaces.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();

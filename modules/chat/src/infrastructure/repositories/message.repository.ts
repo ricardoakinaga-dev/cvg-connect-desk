@@ -52,6 +52,20 @@ export const messageRepository = {
       .limit(limit);
   },
 
+  /** Número/JID confiável da mensagem inbound mais recente da conversa. */
+  async findLatestInboundSender(conversationId: string): Promise<string | null> {
+    const [message] = await db
+      .select({ sender: schema.messages.sender })
+      .from(schema.messages)
+      .where(and(
+        eq(schema.messages.conversationId, conversationId),
+        eq(schema.messages.direction, 'inbound'),
+      ))
+      .orderBy(desc(schema.messages.createdAt))
+      .limit(1);
+    return message?.sender?.trim() || null;
+  },
+
   /**
    * Última mensagem de cada conversa em 1 query (sem N+1).
    * Ordena por conversa + mais recente; a primeira ocorrência de cada
@@ -69,6 +83,23 @@ export const messageRepository = {
       if (!result.has(row.conversationId as string)) {
         result.set(row.conversationId as string, row);
       }
+    }
+    return result;
+  },
+
+  async findLatestInboundByConversationIds(conversationIds: string[]): Promise<Map<string, Message>> {
+    const result = new Map<string, Message>();
+    if (conversationIds.length === 0) return result;
+    const rows = await db
+      .select()
+      .from(schema.messages)
+      .where(and(
+        inArray(schema.messages.conversationId, conversationIds),
+        eq(schema.messages.direction, 'inbound'),
+      ))
+      .orderBy(schema.messages.conversationId, desc(schema.messages.createdAt));
+    for (const row of rows) {
+      if (!result.has(row.conversationId as string)) result.set(row.conversationId as string, row);
     }
     return result;
   },

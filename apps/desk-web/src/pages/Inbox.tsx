@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { api, conversationApi, sectorApi, type Conversation, type Message, type Sector } from '../lib/api';
 import { useAuthStore } from '../store/auth';
 import { realtimeClient, type RealtimeEvent } from '../lib/realtime';
+import { Icon } from '../components/ui/Icon';
 import './Inbox.css';
 
 type ConversationWithContact = Omit<Conversation, 'lastMessage'> & {
@@ -10,7 +11,8 @@ type ConversationWithContact = Omit<Conversation, 'lastMessage'> & {
   contactPhone?: string | null;
   sectorId?: string;
   statusV2?: string;
-  lastMessage?: { content: string; direction: string } | null;
+  lastMessage?: { content: string; direction: string; createdAt: string } | null;
+  lastInboundMessage?: { content: string; direction: string; createdAt: string } | null;
 };
 
 export function Inbox() {
@@ -34,6 +36,9 @@ export function Inbox() {
   const [newMessage, setNewMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showNewConv, setShowNewConv] = useState(false);
+  const [showContext, setShowContext] = useState(false);
+  const [showMessageSearch, setShowMessageSearch] = useState(false);
+  const [messageSearch, setMessageSearch] = useState('');
   const [newConvTab, setNewConvTab] = useState<'contacts' | 'collaborators'>('contacts');
   const [contactSearch, setContactSearch] = useState('');
 
@@ -60,6 +65,11 @@ export function Inbox() {
     } catch (err) { console.error(err); }
   }, []);
 
+  const markConversationRead = useCallback(async (id: string) => {
+    await conversationApi.markRead(id);
+    setConversations(current => current.map(conv => conv.id === id ? { ...conv, unreadCount: 0 } : conv));
+  }, []);
+
   // Realtime connection - substitui polling agressivo
   useEffect(() => {
     if (!token) return;
@@ -77,12 +87,13 @@ export function Inbox() {
   useEffect(() => {
     if (!token) return;
 
-    const handleMessagePersisted = (event: RealtimeEvent) => {
+    const handleMessagePersisted = async (event: RealtimeEvent) => {
       const payload = event.payload as { conversationId?: string };
       if (payload.conversationId && payload.conversationId === selectedConv) {
-        fetchMessages(payload.conversationId);
+        await fetchMessages(payload.conversationId);
+        await markConversationRead(payload.conversationId);
       }
-      fetchConversations();
+      await fetchConversations();
     };
 
     const handleConversationChanged = () => {
@@ -108,9 +119,9 @@ export function Inbox() {
       realtimeClient.unsubscribe('conversation.status.changed', handleStatusChanged);
       realtimeClient.unsubscribe('handoff.completed', handleHandoffCompleted);
     };
-  }, [token, selectedConv, fetchConversations, fetchMessages]);
+  }, [token, selectedConv, fetchConversations, fetchMessages, markConversationRead]);
 
-  // Polling de fallback (apenas se WS não estiver activo ou a cada 30s para reconectar state)
+  // Polling de fallback: mantém lista e conversa selecionada consistentes se o WS cair.
   useEffect(() => {
     fetchConversations();
     const i = setInterval(fetchConversations, 30000);
@@ -118,37 +129,59 @@ export function Inbox() {
   }, [fetchConversations]);
 
   useEffect(() => {
+    if (!selectedConv) return;
+    const i = setInterval(() => {
+      void fetchMessages(selectedConv).then(() => markConversationRead(selectedConv)).catch(console.error);
+    }, 5000);
+    return () => clearInterval(i);
+  }, [selectedConv, fetchMessages, markConversationRead]);
+
+  useEffect(() => {
     if (!token) return;
     fetchConversations();
   }, [token, fetchConversations]);
 
-  useEffect(() => { if (selectedConv) fetchMessages(selectedConv); }, [selectedConv, fetchMessages]);
+  useEffect(() => {
+    if (!selectedConv) return;
+    void fetchMessages(selectedConv);
+    void markConversationRead(selectedConv).catch(console.error);
+  }, [selectedConv, fetchMessages, markConversationRead]);
   useEffect(() => { const c = searchParams.get('conversation'); if (c) setSelectedConv(c); }, [searchParams]);
   useEffect(() => {
     if (!selectedConv) return;
     const matched = conversations.find(conv => conv.id === selectedConv);
+    if (!matched && !loading) {
+      setSelectedConv(null);
+      setSelectedConvData(null);
+      return;
+    }
     if (matched && matched.id !== selectedConvData?.id) {
       setSelectedConvData(matched);
     }
-  }, [conversations, selectedConv, selectedConvData?.id]);
+  }, [conversations, loading, selectedConv, selectedConvData?.id]);
 
   const selectConv = (conv: ConversationWithContact) => {
     setSelectedConv(conv.id);
     setSelectedConvData(conv);
     setShowNewConv(false);
+    setShowContext(false);
+    setConversations(current => current.map(item => item.id === conv.id ? { ...item, unreadCount: 0 } : item));
   };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if ((!newMessage.trim() && !selectedFile) || !selectedConv) return;
+    const recipient = selectedConvData?.contactPhone
+      || messages.find(message => message.direction === 'inbound' && message.sender?.trim())?.sender
+      || '';
     try {
       if (selectedFile) {
         const base64 = await new Promise<string>((res, rej) => { const r = new FileReader(); r.readAsDataURL(selectedFile); r.onload = () => res(r.result as string); r.onerror = rej; });
         const mediaType = selectedFile.type.startsWith('image/') ? 'image' : selectedFile.type.startsWith('audio/') ? 'audio' : 'document';
-        await api.post('/messages', { conversationId: selectedConv, content: newMessage || '', recipient: selectedConvData?.contactId || '', mediaUrl: base64, mediaType, mediaMimetype: selectedFile.type, mediaFilename: selectedFile.name });
+        await api.post('/messages', { conversationId: selectedConv, content: newMessage || '', recipient, mediaUrl: base64, mediaType, mediaMimetype: selectedFile.type, mediaFilename: selectedFile.name });
         setSelectedFile(null);
       } else {
-        await conversationApi.sendMessage({ conversationId: selectedConv, content: newMessage, recipient: selectedConvData?.contactId || '' });
+        await conversationApi.sendMessage({ conversationId: selectedConv, content: newMessage, recipient });
       }
       setNewMessage('');
       fetchMessages(selectedConv);
@@ -208,6 +241,10 @@ export function Inbox() {
 
   const sectorCount = (id: string) => conversations.filter(c => c.sectorId === id).length;
   const activeSector = sectors.find(s => s.id === selectedSector);
+  const conversationSector = sectors.find(s => s.id === selectedConvData?.sectorId);
+  const visibleMessages = messageSearch.trim()
+    ? messages.filter(message => (message.content || '').toLowerCase().includes(messageSearch.trim().toLowerCase()))
+    : messages;
 
   const getDisplayName = (conv: ConversationWithContact) => {
     if (conv.contactName) return conv.contactName;
@@ -217,19 +254,19 @@ export function Inbox() {
 
   const getInitial = (conv: ConversationWithContact) => {
     if (conv.contactName) return conv.contactName[0].toUpperCase();
-    if (conv.contactPhone) return '📞';
+    if (conv.contactPhone) return 'CV';
     return '?';
   };
 
   return (
-    <div className="inbox-v2">
+    <div className={`inbox-v2 ${selectedConv ? 'has-selection' : ''} ${showContext ? 'show-context' : ''}`}>
       {/* SIDEBAR */}
       <div className="inbox-sidebar">
         <div className="sidebar-top">
           <div className="sidebar-title-row">
-            <h2>💬 Conversas</h2>
-            <button className="btn-new-conv" onClick={() => setShowNewConv(!showNewConv)}>
-              {showNewConv ? '✕' : '✏️'}
+            <div><span className="inbox-kicker">Atendimento</span><h2>Conversas</h2></div>
+            <button type="button" className="btn-new-conv" aria-label={showNewConv ? 'Fechar nova conversa' : 'Iniciar nova conversa'} onClick={() => setShowNewConv(!showNewConv)}>
+              <Icon name={showNewConv ? 'close' : 'plus'} />
             </button>
           </div>
 
@@ -246,40 +283,41 @@ export function Inbox() {
                   className={`sector-tab ${selectedSector === s.id ? 'active' : ''}`}
                   onClick={() => setSelectedSector(s.id)}
                 >
-                  {s.icon} {s.name} {count > 0 && <span className="tab-badge">{count}</span>}
+                  <i className="sector-tab-dot" style={{ background: s.color }} /> {s.name} {count > 0 && <span className="tab-badge">{count}</span>}
                 </button>
               );
             })}
           </div>
 
-          <div className="sidebar-search">
-            <input placeholder="🔍 Pesquisar conversas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-          </div>
+          <label className="sidebar-search">
+            <Icon name="search" size={18} /><span className="sr-only">Pesquisar conversas</span>
+            <input placeholder="Pesquisar conversas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+          </label>
         </div>
 
         {/* Nova conversa */}
         {showNewConv && (
           <div className="new-conv-panel">
             <div className="new-conv-tabs">
-              <button className={`new-conv-tab ${newConvTab === 'contacts' ? 'active' : ''}`} onClick={() => setNewConvTab('contacts')}>👤 Clientes</button>
-              <button className={`new-conv-tab ${newConvTab === 'collaborators' ? 'active' : ''}`} onClick={() => setNewConvTab('collaborators')}>👩‍⚕️ Colaboradores</button>
+              <button className={`new-conv-tab ${newConvTab === 'contacts' ? 'active' : ''}`} onClick={() => setNewConvTab('contacts')}><Icon name="contacts" size={16} /> Clientes</button>
+              <button className={`new-conv-tab ${newConvTab === 'collaborators' ? 'active' : ''}`} onClick={() => setNewConvTab('collaborators')}><Icon name="tutors" size={16} /> Colaboradores</button>
             </div>
-            <input className="new-conv-search" placeholder="Buscar contato..." value={contactSearch} onChange={e => setContactSearch(e.target.value)} />
+            <input aria-label="Buscar contato para nova conversa" className="new-conv-search" placeholder="Buscar contato..." value={contactSearch} onChange={e => setContactSearch(e.target.value)} />
             <div className="new-conv-list">
               {filteredContacts.length > 0 ? filteredContacts.map(c => (
-                <div key={c.id} className="new-conv-item" onClick={() => handleStartConversation(c.id)}>
+                <button type="button" key={c.id} className="new-conv-item" onClick={() => handleStartConversation(c.id)}>
                   <div className="new-conv-avatar">{(c.name || '?')[0].toUpperCase()}</div>
                   <div className="new-conv-info">
                     <div className="new-conv-name">{c.name}</div>
                     <div className="new-conv-phone">{formatPhone(c.phone)}</div>
                   </div>
-                  <span className="new-conv-btn">💬</span>
-                </div>
+                  <span className="new-conv-btn"><Icon name="message" size={17} /></span>
+                </button>
               )) : (
                 <div className="new-conv-empty">Nenhum contato encontrado</div>
               )}
             </div>
-            <button className="btn-add-contact" onClick={() => navigate('/contacts')}>＋ Cadastrar novo contato</button>
+            <button className="btn-add-contact" onClick={() => navigate('/contacts')}><Icon name="plus" size={16} /> Cadastrar novo contato</button>
           </div>
         )}
 
@@ -289,7 +327,7 @@ export function Inbox() {
             <div className="loading-center"><div className="spinner" /></div>
           ) : filtered.length === 0 ? (
             <div className="empty-list">
-              <span>📭</span>
+              <span className="empty-list-icon"><Icon name="inbox" size={28} /></span>
               <p>Nenhuma conversa {activeSector ? `em ${activeSector.name}` : ''}</p>
             </div>
           ) : (
@@ -298,23 +336,27 @@ export function Inbox() {
               const sector = sectors.find(s => s.id === conv.sectorId);
               const name = getDisplayName(conv);
               const initial = getInitial(conv);
-              const lastMsg = conv.lastMessage?.content || 'Nova conversa';
+              const lastMsg = (conv.unreadCount > 0 ? conv.lastInboundMessage?.content : conv.lastMessage?.content)
+                || conv.lastMessage?.content
+                || 'Nova conversa';
               const st = statusColor(conv.statusV2 || conv.status);
 
               return (
-                <div key={conv.id} className={`conv-row ${isActive ? 'active' : ''}`} onClick={() => selectConv(conv)}>
+                <button type="button" key={conv.id} className={`conv-row ${isActive ? 'active' : ''}`} aria-pressed={isActive} onClick={() => selectConv(conv)}>
                   <div className="conv-avatar-v2" style={{ background: sector?.color || '#4361ee' }}>{initial}</div>
                   <div className="conv-content">
                     <div className="conv-header-row">
                       <span className="conv-name-v2">{name}</span>
-                      <span className="conv-time-v2">{timeAgo(conv.createdAt)}</span>
+                      <span className="conv-time-v2">{timeAgo(conv.lastMessage?.createdAt || conv.updatedAt)}</span>
                     </div>
                     <div className="conv-preview-row">
                       <span className="conv-last-msg">{lastMsg.length > 45 ? lastMsg.substring(0, 45) + '...' : lastMsg}</span>
-                      <span className="conv-status-dot" style={{ background: st }} />
+                      {conv.unreadCount > 0
+                        ? <span className="conv-unread-badge" aria-label={`${conv.unreadCount} mensagens não lidas`}>{conv.unreadCount > 99 ? '99+' : conv.unreadCount}</span>
+                        : <span className="conv-status-dot" style={{ background: st }} aria-label={`Status: ${statusLabel(conv.statusV2 || conv.status)}`} />}
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })
           )}
@@ -328,15 +370,16 @@ export function Inbox() {
             {/* Header */}
             <div className="main-header">
               <div className="header-left">
-                <div className="header-avatar" style={{ background: activeSector?.color || '#4361ee' }}>
+                <button type="button" className="mobile-back" aria-label="Voltar para conversas" onClick={() => { setSelectedConv(null); setSelectedConvData(null); }}><Icon name="back" /></button>
+                <div className="header-avatar" style={{ background: conversationSector?.color || '#0284c7' }}>
                   {getInitial(selectedConvData)}
                 </div>
                 <div className="header-info">
                   <div className="header-name">{getDisplayName(selectedConvData)}</div>
                   <div className="header-meta">
                     <span className="header-phone">{formatPhone(selectedConvData.contactPhone ?? null)}</span>
-                    <span className="header-sector" style={{ background: (activeSector?.color || '#666') + '20', color: activeSector?.color || '#666' }}>
-                      {activeSector?.icon} {activeSector?.name}
+                    <span className="header-sector" style={{ background: (conversationSector?.color || '#0284c7') + '18', color: conversationSector?.color || '#0369a1' }}>
+                      {conversationSector?.name || 'Sem setor'}
                     </span>
                     <span className="header-status" style={{ color: statusColor(selectedConvData.statusV2 ?? selectedConvData.status) }}>
                       ● {statusLabel(selectedConvData.statusV2 ?? selectedConvData.status)}
@@ -345,25 +388,27 @@ export function Inbox() {
                 </div>
               </div>
               <div className="header-actions">
-                <button className="header-btn" title="Buscar">🔍</button>
-                <button className="header-btn" title="Transferir">🔄</button>
-                <button className="header-btn" title="Info">ℹ️</button>
+                <button type="button" className="header-btn" aria-label="Buscar nesta conversa" aria-expanded={showMessageSearch} onClick={() => setShowMessageSearch(value => !value)}><Icon name="search" /></button>
+                <button type="button" className="header-btn" aria-label="Transferir conversa — indisponível" title="Transferência em configuração" disabled><Icon name="transfer" /></button>
+                <button type="button" className="header-btn" aria-label="Abrir informações da conversa" aria-expanded={showContext} onClick={() => setShowContext((value) => !value)}><Icon name="info" /></button>
               </div>
             </div>
+
+            {showMessageSearch && <label className="message-search"><Icon name="search" size={16} /><span className="sr-only">Buscar nas mensagens</span><input autoFocus value={messageSearch} onChange={event => setMessageSearch(event.target.value)} placeholder="Buscar nas mensagens…" /><button type="button" aria-label="Fechar busca" onClick={() => { setShowMessageSearch(false); setMessageSearch(''); }}><Icon name="close" size={15} /></button></label>}
 
             {/* Messages */}
             <div className="chat-bg">
               <div className="chat-messages-v2">
-                {messages.length === 0 ? (
+                {visibleMessages.length === 0 ? (
                   <div className="empty-chat-v2">
-                    <div className="empty-bubble">👋</div>
+                    <div className="empty-bubble"><Icon name="message" size={30} /></div>
                     <p>Início da conversa com {getDisplayName(selectedConvData)}</p>
                     <span>Envie uma mensagem para começar o atendimento</span>
                   </div>
                 ) : (
                   <>
                     <div className="date-separator"><span>Hoje</span></div>
-                    {messages.map(msg => (
+                    {visibleMessages.map(msg => (
                       <div key={msg.id} className={`message ${msg.direction}`}>
                         {(msg as any).mediaType === 'image' && (msg as any).mediaUrl && (
                           <div className="msg-media-v2"><img src={(msg as any).mediaUrl} alt="Imagem" /></div>
@@ -388,30 +433,43 @@ export function Inbox() {
             <div className="composer-v2">
               {selectedFile && (
                 <div className="file-bar">
-                  <span>📎 {selectedFile.name} ({(selectedFile.size / 1024).toFixed(0)}KB)</span>
-                  <button onClick={() => setSelectedFile(null)}>✕</button>
+                  <span><Icon name="attachment" size={15} /> {selectedFile.name} ({(selectedFile.size / 1024).toFixed(0)}KB)</span>
+                  <button type="button" aria-label="Remover anexo" onClick={() => setSelectedFile(null)}><Icon name="close" size={16} /></button>
                 </div>
               )}
               <form className="composer-row" onSubmit={handleSend}>
-                <button type="button" className="composer-btn" title="Emoji">😊</button>
+                <button type="button" className="composer-btn" aria-label="Adicionar emoji sorridente" onClick={() => setNewMessage(value => `${value}${value ? ' ' : ''}😊`)}><Icon name="smile" /></button>
                 <input ref={fileInputRef} type="file" accept="image/*,audio/*,.pdf,.doc,.docx" onChange={e => { const f = e.target.files?.[0]; if (f && f.size <= 16 * 1024 * 1024) setSelectedFile(f); e.target.value = ''; }} style={{ display: 'none' }} />
-                <button type="button" className="composer-btn" title="Anexar" onClick={() => fileInputRef.current?.click()}>📎</button>
-                <input className="composer-input-v2" placeholder={selectedFile ? 'Legenda (opcional)...' : 'Mensagem'} value={newMessage} onChange={e => setNewMessage(e.target.value)} autoFocus />
-                <button type="submit" className="composer-send">{newMessage.trim() || selectedFile ? '➤' : '🎤'}</button>
+                <button type="button" className="composer-btn" aria-label="Anexar arquivo" onClick={() => fileInputRef.current?.click()}><Icon name="attachment" /></button>
+                <label className="sr-only" htmlFor="message-composer">Mensagem</label><input id="message-composer" className="composer-input-v2" placeholder={selectedFile ? 'Legenda (opcional)...' : 'Mensagem'} value={newMessage} onChange={e => setNewMessage(e.target.value)} autoFocus />
+                <button type="submit" className="composer-send" aria-label="Enviar mensagem"><Icon name="send" /></button>
               </form>
             </div>
           </>
         ) : (
           <div className="inbox-empty">
             <div className="empty-center">
-              <div className="empty-logo">🐾</div>
+              <img className="empty-logo" src="/assets/brand/cvg-logo.webp" alt="" />
               <h2>CVG Connect Desk</h2>
               <p>Selecione uma conversa na barra lateral<br />ou inicie uma nova conversa</p>
-              <button className="btn-start-new" onClick={() => setShowNewConv(true)}>✏️ Nova Conversa</button>
+              <button className="btn-start-new" onClick={() => setShowNewConv(true)}><Icon name="plus" size={18} /> Nova conversa</button>
             </div>
           </div>
         )}
       </div>
+
+      {selectedConvData && <aside className="context-panel" aria-label="Contexto da conversa">
+        <div className="context-header"><div><span className="inbox-kicker">Contexto</span><h2>Atendimento</h2></div><button type="button" aria-label="Fechar informações" onClick={() => setShowContext(false)}><Icon name="close" /></button></div>
+        <div className="context-profile"><div className="context-avatar">{getInitial(selectedConvData)}</div><strong>{getDisplayName(selectedConvData)}</strong><span>{formatPhone(selectedConvData.contactPhone ?? null) || 'Telefone não informado'}</span></div>
+        <dl className="context-list">
+          <div><dt>Status</dt><dd><span className="context-status" style={{ background: statusColor(selectedConvData.statusV2 ?? selectedConvData.status) }} />{statusLabel(selectedConvData.statusV2 ?? selectedConvData.status)}</dd></div>
+          <div><dt>Setor</dt><dd>{conversationSector?.name || 'Não atribuído'}</dd></div>
+          <div><dt>Início</dt><dd>{new Date(selectedConvData.createdAt).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</dd></div>
+          <div><dt>Canal</dt><dd>{selectedConvData.externalChannelId ? 'Canal externo' : 'CVG Desk'}</dd></div>
+        </dl>
+        <button type="button" className="context-action" onClick={() => navigate('/contacts')}><Icon name="contacts" size={18} /> Abrir cadastro do contato</button>
+      </aside>}
+      {showContext && <button type="button" className="context-backdrop" aria-label="Fechar informações" onClick={() => setShowContext(false)} />}
     </div>
   );
 }

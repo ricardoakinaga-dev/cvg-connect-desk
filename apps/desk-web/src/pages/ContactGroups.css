@@ -19,7 +19,7 @@
 .group-card {
   background: #fff; border: 1px solid #e8e8e8; border-left: 4px solid #6b7280;
   border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-  cursor: pointer; transition: all 0.2s;
+  cursor: pointer; transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .group-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 .group-card.selected { background: #e8f0fe; border-color: #4361ee; }
@@ -48,3 +48,13 @@
 .member-phone { color: #888; font-size: 0.8rem; }
 
 .loading, .empty { text-align: center; padding: 48px; color: #888; }
+.groups-mobile-back{display:none;width:40px;height:40px;place-items:center;flex:0 0 auto;border:1px solid var(--color-border);border-radius:10px;background:#fff;color:var(--color-primary-hover)}
+.group-detail-header{display:flex;align-items:center;gap:10px}.group-detail-header h3{margin:0}
+@media(max-width:860px){
+  .groups-layout{grid-template-columns:1fr;gap:0}
+  .contact-groups-page:not(.has-selection) .group-detail{display:none}
+  .contact-groups-page.has-selection .groups-list{display:none}
+  .groups-mobile-back{display:grid}
+  .group-detail{min-height:240px;padding:16px}
+  .group-detail-header{margin-bottom:16px}
+}

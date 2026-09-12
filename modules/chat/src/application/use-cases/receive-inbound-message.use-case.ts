@@ -5,6 +5,7 @@ import { BadRequestError, validateMedia, safeFilename } from '@cvg/shared';
 import { publishMessagePersisted, publishConversationCreated } from '../events/chat-publisher';
 import { processMessageWithSecretary, type ProcessMessageWithSecretaryOutput } from './process-message-with-secretary.use-case';
 import { createAuditLog } from '@cvg/audit';
+import { resolveInboundContact } from '../../infrastructure/repositories/inbound-contact.repository';
 
 export interface ReceiveInboundMessageInput {
   externalMessageId: string;
@@ -63,13 +64,20 @@ export async function receiveInboundMessage(
 
     let conversationId: string;
     let isNewConversation = false;
+    const inboundContact = input.contactPhone
+      ? await resolveInboundContact(input.contactPhone, input.contactName)
+      : null;
 
     if (input.externalConversationId) {
       const existingConversation = await conversationRepository.findByExternalId(input.externalConversationId);
       if (existingConversation) {
         conversationId = existingConversation.id;
+        if (!existingConversation.contactId && inboundContact) {
+          await conversationRepository.attachContact(conversationId, inboundContact.id);
+        }
       } else {
         const newConv = await conversationRepository.create({
+          contactId: inboundContact?.id,
           externalConversationId: input.externalConversationId,
           externalChannelId: 'whatsapp',
           status: 'open',
@@ -97,6 +105,7 @@ export async function receiveInboundMessage(
       }
     } else {
       const newConv = await conversationRepository.create({
+        contactId: inboundContact?.id,
         externalChannelId: 'whatsapp',
         status: 'open',
         isActive: true,
@@ -146,6 +155,9 @@ export async function receiveInboundMessage(
       });
     }
 
+    // A mensagem já está persistida. Agora torna a conversa visível no topo do
+    // Desk antes de publicar o evento e antes de qualquer chamada à Secretary.
+    await conversationRepository.markInboundUnread(conversationId);
     await publishMessagePersisted(message);
 
     // Audit: registrar recebimento de mensagem inbound
@@ -198,6 +210,23 @@ export async function receiveInboundMessage(
                 },
               });
             }
+          } else if (secretaryOutput.secretaryResponse?.trim()) {
+            const { sendOutboundMessage } = await import('./send-outbound-message.use-case');
+            const outbound = await sendOutboundMessage({
+              conversationId,
+              content: secretaryOutput.secretaryResponse.trim(),
+              recipient: input.sender,
+              sender: 'agent-secretary',
+              senderType: 'bot',
+              instance: String(input.metadata?.instance || process.env.EVOLUTION_INSTANCE || 'cvg-local'),
+              idempotencyKey: `secretary-reply:${input.externalMessageId}`,
+              metadata: {
+                source: 'agent-secretary',
+                replyToMessageId: message.id,
+                instance: String(input.metadata?.instance || process.env.EVOLUTION_INSTANCE || 'cvg-local'),
+              },
+            });
+            if (outbound.isErr()) throw outbound.error;
           }
         }
       }

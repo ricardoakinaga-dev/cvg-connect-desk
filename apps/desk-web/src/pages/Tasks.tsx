@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { taskApi, type Task } from '../lib/api';
+import { Icon, type IconName } from '../components/ui/Icon';
 import './Tasks.css';
 
 export function Tasks() {
@@ -41,18 +42,18 @@ export function Tasks() {
     } catch (err) { console.error('Erro:', err); }
   };
 
-  const priorityConfig: Record<string, { label: string; icon: string; color: string; bg: string }> = {
-    urgent: { label: 'Urgente', icon: '🔴', color: '#dc2626', bg: '#fef2f2' },
-    high: { label: 'Alta', icon: '🟠', color: '#ea580c', bg: '#fff7ed' },
-    medium: { label: 'Média', icon: '🟡', color: '#ca8a04', bg: '#fefce8' },
-    low: { label: 'Baixa', icon: '🟢', color: '#16a34a', bg: '#f0fdf4' },
+  const priorityConfig: Record<string, { label: string; color: string; bg: string }> = {
+    urgent: { label: 'Urgente', color: '#b42334', bg: '#fdefef' },
+    high: { label: 'Alta', color: '#b4540b', bg: '#fff4e8' },
+    medium: { label: 'Média', color: '#8b6508', bg: '#fff9dd' },
+    low: { label: 'Baixa', color: '#127052', bg: '#eaf8f3' },
   };
 
-  const statusConfig: Record<string, { label: string; icon: string; color: string; bg: string }> = {
-    pending: { label: 'Pendente', icon: '⏳', color: '#ca8a04', bg: '#fefce8' },
-    in_progress: { label: 'Em Andamento', icon: '🔵', color: '#2563eb', bg: '#eff6ff' },
-    completed: { label: 'Concluída', icon: '✅', color: '#16a34a', bg: '#f0fdf4' },
-    cancelled: { label: 'Cancelada', icon: '❌', color: '#6b7280', bg: '#f9fafb' },
+  const statusConfig: Record<string, { label: string; icon: IconName; color: string; bg: string }> = {
+    pending: { label: 'Pendente', icon: 'clock', color: '#8b6508', bg: '#fff9dd' },
+    in_progress: { label: 'Em andamento', icon: 'activity', color: '#155bc7', bg: '#edf4ff' },
+    completed: { label: 'Concluída', icon: 'check', color: '#127052', bg: '#eaf8f3' },
+    cancelled: { label: 'Cancelada', icon: 'close', color: '#5d6f7b', bg: '#f2f5f7' },
   };
 
   const isOverdue = (task: Task) => task.dueAt && new Date(task.dueAt) < new Date() && task.status !== 'completed' && task.status !== 'cancelled';
@@ -77,11 +78,12 @@ export function Tasks() {
     <div className="tasks-page">
       <div className="page-hero">
         <div className="hero-left">
-          <h2>✓ Tarefas</h2>
+          <span className="page-kicker">Fluxo de trabalho</span>
+          <h2><Icon name="tasks" /> Tarefas</h2>
           <p>Gerencie as tarefas da operação</p>
         </div>
         <button className="btn-create" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? '✕ Cancelar' : '＋ Nova Tarefa'}
+          <Icon name={showCreate ? 'close' : 'plus'} size={17} /> {showCreate ? 'Cancelar' : 'Nova tarefa'}
         </button>
       </div>
 
@@ -95,16 +97,13 @@ export function Tasks() {
 
       {showCreate && (
         <form className="create-panel" onSubmit={handleCreate}>
-          <input placeholder="Título da tarefa" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} required />
-          <textarea placeholder="Descrição (opcional)" value={newTask.description} onChange={e => setNewTask({ ...newTask, description: e.target.value })} rows={2} />
+          <input aria-label="Título da tarefa" placeholder="Título da tarefa" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} required />
+          <textarea aria-label="Descrição da tarefa" placeholder="Descrição (opcional)" value={newTask.description} onChange={e => setNewTask({ ...newTask, description: e.target.value })} rows={2} />
           <div className="create-row">
-            <select value={newTask.priority} onChange={e => setNewTask({ ...newTask, priority: e.target.value })}>
-              <option value="low">🟢 Baixa</option>
-              <option value="medium">🟡 Média</option>
-              <option value="high">🟠 Alta</option>
-              <option value="urgent">🔴 Urgente</option>
+            <select aria-label="Prioridade da tarefa" value={newTask.priority} onChange={e => setNewTask({ ...newTask, priority: e.target.value })}>
+              <option value="low">Baixa</option><option value="medium">Média</option><option value="high">Alta</option><option value="urgent">Urgente</option>
             </select>
-            <input type="datetime-local" value={newTask.dueAt} onChange={e => setNewTask({ ...newTask, dueAt: e.target.value })} />
+            <input aria-label="Prazo da tarefa" type="datetime-local" value={newTask.dueAt} onChange={e => setNewTask({ ...newTask, dueAt: e.target.value })} />
             <button type="submit" className="btn-create">Criar</button>
           </div>
         </form>
@@ -119,8 +118,8 @@ export function Tasks() {
         </div>
         <div className="filter-group">
           <span className="filter-label">Prioridade:</span>
-          {[{ k: '', l: 'Todas' }, { k: 'urgent', l: '🔴' }, { k: 'high', l: '🟠' }, { k: 'medium', l: '🟡' }, { k: 'low', l: '🟢' }].map(f => (
-            <button key={f.k} className={`chip ${filterPriority === f.k ? 'active' : ''}`} onClick={() => setFilterPriority(f.k)}>{f.l}</button>
+          {[{ k: '', l: 'Todas' }, { k: 'urgent', l: 'Urgente' }, { k: 'high', l: 'Alta' }, { k: 'medium', l: 'Média' }, { k: 'low', l: 'Baixa' }].map(f => (
+            <button key={f.k} className={`chip priority-filter priority-${f.k || 'all'} ${filterPriority === f.k ? 'active' : ''}`} onClick={() => setFilterPriority(f.k)}>{f.l}</button>
           ))}
         </div>
       </div>
@@ -128,7 +127,7 @@ export function Tasks() {
       {loading ? (
         <div className="loading-state"><div className="spinner" /> Carregando tarefas...</div>
       ) : tasks.length === 0 ? (
-        <div className="empty-state"><span className="empty-icon">📋</span><p>Nenhuma tarefa encontrada</p></div>
+        <div className="empty-state"><span className="empty-icon"><Icon name="tasks" /></span><p>Nenhuma tarefa encontrada</p></div>
       ) : (
         <div className="task-grid">
           {tasks.map(task => {
@@ -139,8 +138,8 @@ export function Tasks() {
             return (
               <div key={task.id} className={`task-card ${overdue ? 'overdue' : ''}`}>
                 <div className="task-card-header">
-                  <span className="priority-badge" style={{ background: pri.bg, color: pri.color }}>{pri.icon} {pri.label}</span>
-                  <span className="status-badge" style={{ background: sta.bg, color: sta.color }}>{sta.icon} {sta.label}</span>
+                  <span className="priority-badge" style={{ background: pri.bg, color: pri.color }}><i style={{ background: pri.color }} /> {pri.label}</span>
+                  <span className="status-badge" style={{ background: sta.bg, color: sta.color }}><Icon name={sta.icon} size={13} /> {sta.label}</span>
                 </div>
 
                 <h3 className="task-title">{task.title}</h3>
@@ -149,21 +148,21 @@ export function Tasks() {
                 <div className="task-meta">
                   {task.dueAt && (
                     <span className={`due-badge ${overdue ? 'overdue' : ''}`}>
-                      📅 {new Date(task.dueAt).toLocaleDateString('pt-BR')} · {timeUntil(task.dueAt)}
+                      <Icon name="clock" size={13} /> {new Date(task.dueAt).toLocaleDateString('pt-BR')} · {timeUntil(task.dueAt)}
                     </span>
                   )}
-                  {task.assignedTo && <span className="assignee">👩‍⚕️ {task.assignedTo.slice(0, 8)}</span>}
+                  {task.assignedTo && <span className="assignee"><Icon name="tutors" size={13} /> {task.assignedTo.slice(0, 8)}</span>}
                 </div>
 
                 <div className="task-actions">
                   {task.status === 'pending' && (
-                    <button className="btn-action start" onClick={() => handleStatusChange(task.id, 'in_progress')}>▶ Iniciar</button>
+                    <button className="btn-action start" onClick={() => handleStatusChange(task.id, 'in_progress')}><Icon name="activity" size={14} /> Iniciar</button>
                   )}
                   {task.status === 'in_progress' && (
-                    <button className="btn-action done" onClick={() => handleStatusChange(task.id, 'completed')}>✅ Concluir</button>
+                    <button className="btn-action done" onClick={() => handleStatusChange(task.id, 'completed')}><Icon name="check" size={14} /> Concluir</button>
                   )}
                   {(task.status === 'pending' || task.status === 'in_progress') && (
-                    <button className="btn-action cancel" onClick={() => handleStatusChange(task.id, 'cancelled')}>❌ Cancelar</button>
+                    <button className="btn-action cancel" onClick={() => handleStatusChange(task.id, 'cancelled')}><Icon name="close" size={14} /> Cancelar</button>
                   )}
                 </div>
               </div>

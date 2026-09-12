@@ -9,7 +9,7 @@ import { inArray } from 'drizzle-orm';
 interface SendMessageBody {
   conversationId: string;
   content?: string;
-  recipient: string;
+  recipient?: string;
   sender?: string;
   mediaUrl?: string;
   mediaType?: string;
@@ -29,7 +29,7 @@ export async function registerOutboundController(app: FastifyInstance) {
           properties: {
             conversationId: { type: 'string', format: 'uuid' },
             content: { type: 'string' },
-            recipient: { type: 'string', minLength: 1 },
+            recipient: { type: 'string' },
             sender: { type: 'string' },
             mediaUrl: { type: 'string' },
             mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document'] },
@@ -37,7 +37,7 @@ export async function registerOutboundController(app: FastifyInstance) {
             mediaFilename: { type: 'string' },
             clientMessageId: { type: 'string', maxLength: 128 },
           },
-          required: ['conversationId', 'recipient'],
+          required: ['conversationId'],
         },
       },
     },
@@ -134,6 +134,27 @@ export async function registerOutboundController(app: FastifyInstance) {
     }
   );
 
+  app.post(
+    '/conversations/:conversationId/read',
+    {
+      preHandler: [authenticate, requirePermission('chat:read')],
+      schema: {
+        params: {
+          type: 'object',
+          properties: { conversationId: { type: 'string', format: 'uuid' } },
+          required: ['conversationId'],
+        },
+      },
+    },
+    async (request: FastifyRequest<{ Params: { conversationId: string } }>, reply: FastifyReply) => {
+      const conversation = await conversationRepository.markRead(request.params.conversationId);
+      if (!conversation) {
+        return reply.status(404).send({ error: 'NOT_FOUND', message: 'Conversation not found' });
+      }
+      return reply.status(200).send({ conversationId: conversation.id, unreadCount: conversation.unreadCount });
+    },
+  );
+
   app.get(
     '/conversations',
     {
@@ -193,9 +214,11 @@ export async function registerOutboundController(app: FastifyInstance) {
 
         const conversationsWithLastMessage = await (async () => {
           // 1 query para a última mensagem de todas (sem N+1).
-          const latestByConversation = await messageRepository.findLatestByConversationIds(
-            conversations.map((conv) => conv.id),
-          );
+          const conversationIds = conversations.map((conv) => conv.id);
+          const [latestByConversation, latestInboundByConversation] = await Promise.all([
+            messageRepository.findLatestByConversationIds(conversationIds),
+            messageRepository.findLatestInboundByConversationIds(conversationIds),
+          ]);
           return conversations.map((conv) => {
             const contact = conv.contactId ? contactsMap.get(conv.contactId) : null;
             return {
@@ -203,6 +226,7 @@ export async function registerOutboundController(app: FastifyInstance) {
               contactName: contact?.name || null,
               contactPhone: contact?.phone || null,
               lastMessage: latestByConversation.get(conv.id) || null,
+              lastInboundMessage: latestInboundByConversation.get(conv.id) || null,
             };
           });
         })();

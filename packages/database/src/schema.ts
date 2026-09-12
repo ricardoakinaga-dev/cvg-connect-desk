@@ -62,6 +62,7 @@ export const conversations = pgTable('conversations', {
   externalChannelId: text('external_channel_id'),
   externalConversationId: text('external_conversation_id'),
   metadata: text('metadata'),
+  unreadCount: integer('unread_count').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
   closedAt: timestamp('closed_at'),
@@ -72,6 +73,7 @@ export const conversations = pgTable('conversations', {
   currentHandlerIdx: index('idx_conversations_current_handler').on(t.currentHandler),
   sectorIdx: index('idx_conversations_sector').on(t.sectorId),
   assignedIdx: index('idx_conversations_assigned').on(t.assignedUserId),
+  unreadIdx: index('idx_conversations_unread').on(t.unreadCount),
   externalIdx: uniqueIndex('idx_conversations_external').on(t.externalConversationId),
 }));
 

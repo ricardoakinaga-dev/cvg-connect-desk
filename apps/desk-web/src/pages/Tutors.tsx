@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { tutorApi, type Tutor } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './EntityPages.css';
 
 function messageFromError(error: unknown): string {
@@ -23,6 +25,7 @@ export function Tutors() {
   const [editing, setEditing] = useState<Tutor | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
+  const modal = useModalFocus(modalOpen, () => !saving && setModalOpen(false));
 
   const loadTutors = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
@@ -45,14 +48,16 @@ export function Tutors() {
     return () => { controller.abort(); window.clearTimeout(timer); };
   }, [loadTutors]);
 
-  const openCreate = () => {
+  const openCreate = (trigger?: HTMLElement) => {
+    modal.rememberTrigger(trigger);
     setEditing(null);
     setForm({ name: '', phone: '', email: '' });
     setError(null);
     setModalOpen(true);
   };
 
-  const openEdit = (tutor: Tutor) => {
+  const openEdit = (tutor: Tutor, trigger?: HTMLElement) => {
+    modal.rememberTrigger(trigger);
     setEditing(tutor);
     setForm({ name: tutor.name, phone: tutor.phone || '', email: tutor.email || '' });
     setError(null);
@@ -99,7 +104,7 @@ export function Tutors() {
   };
 
   return (
-    <div className="entity-page">
+    <div className={`entity-page ${selected ? 'has-selection' : ''}`}>
       <header className="entity-header">
         <div className="entity-title">
           <h2>Tutores</h2>
@@ -107,7 +112,7 @@ export function Tutors() {
         </div>
         <div className="entity-actions">
           <input className="entity-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar por nome ou telefone" aria-label="Buscar tutores" />
-          <button className="entity-button primary" type="button" onClick={openCreate}>+ Novo tutor</button>
+          <button className="entity-button primary" type="button" onClick={(event) => openCreate(event.currentTarget)}><Icon name="plus" size={16} /> Novo tutor</button>
         </div>
       </header>
 
@@ -123,14 +128,14 @@ export function Tutors() {
                 <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Cadastro</th><th>Ações</th></tr></thead>
                 <tbody>
                   {tutors.map((tutor) => (
-                    <tr key={tutor.id} onClick={() => void showDetails(tutor)}>
+                    <tr key={tutor.id} tabIndex={0} role="button" onClick={() => void showDetails(tutor)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); void showDetails(tutor); } }}>
                       <td className="primary-cell">{tutor.name}</td>
                       <td>{formatPhone(tutor.phone)}</td>
                       <td className="muted">{tutor.email || '—'}</td>
                       <td className="muted">{new Date(tutor.createdAt).toLocaleDateString('pt-BR')}</td>
                       <td>
                         <div className="entity-row-actions">
-                          <button className="entity-row-action" type="button" title="Editar tutor" onClick={(event) => { event.stopPropagation(); openEdit(tutor); }}>Editar</button>
+                          <button className="entity-row-action" type="button" title="Editar tutor" onClick={(event) => { event.stopPropagation(); openEdit(tutor, event.currentTarget); }}>Editar</button>
                           <button className="entity-row-action danger" type="button" title="Excluir tutor" onClick={(event) => { event.stopPropagation(); void remove(tutor); }}>Excluir</button>
                         </div>
                       </td>
@@ -145,6 +150,7 @@ export function Tutors() {
         <aside className="entity-card entity-detail" aria-live="polite">
           {selected ? (
             <>
+              <button type="button" className="entity-mobile-back" aria-label="Voltar para tutores" onClick={() => setSelected(null)}><Icon name="back" size={18} /></button>
               <h3>{selected.name}</h3>
               <p className="entity-detail-subtitle">Detalhes do responsável</p>
               <dl className="entity-detail-list">
@@ -163,7 +169,7 @@ export function Tutors() {
       </div>
 
       {modalOpen && <div className="entity-modal-backdrop" role="presentation" onMouseDown={() => !saving && setModalOpen(false)}>
-        <div className="entity-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-form-title" onMouseDown={(event) => event.stopPropagation()}>
+        <div ref={modal.dialogRef} className="entity-modal" role="dialog" aria-modal="true" aria-labelledby="tutor-form-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
           <h3 id="tutor-form-title">{editing ? 'Editar tutor' : 'Novo tutor'}</h3>
           <form className="entity-form" onSubmit={save}>
             <label>Nome *<input autoFocus required maxLength={200} value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>

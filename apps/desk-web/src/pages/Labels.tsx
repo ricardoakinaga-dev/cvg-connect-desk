@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
 import './Labels.css';
 
 interface Label {
@@ -70,18 +71,18 @@ export function Labels() {
   return (
     <div className="labels-page">
       <div className="page-header">
-        <h2>🏷️ Labels</h2>
+        <h2><Icon name="labels" /> Labels</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? '✕ Cancelar' : '+ Nova Label'}
+          <Icon name={showCreate ? 'close' : 'plus'} size={17} /> {showCreate ? 'Cancelar' : 'Nova label'}
         </button>
       </div>
 
       {showCreate && (
         <form className="create-form" onSubmit={handleCreate}>
-          <input placeholder="Nome da label" value={newLabel.name} onChange={e => setNewLabel({ ...newLabel, name: e.target.value })} required />
-          <input type="color" value={newLabel.color} onChange={e => setNewLabel({ ...newLabel, color: e.target.value })} className="color-picker" />
-          <input placeholder="Categoria (opcional)" value={newLabel.category} onChange={e => setNewLabel({ ...newLabel, category: e.target.value })} />
-          <input placeholder="Descrição (opcional)" value={newLabel.description} onChange={e => setNewLabel({ ...newLabel, description: e.target.value })} />
+          <input aria-label="Nome da label" placeholder="Nome da label" value={newLabel.name} onChange={e => setNewLabel({ ...newLabel, name: e.target.value })} required />
+          <input aria-label="Cor da label" type="color" value={newLabel.color} onChange={e => setNewLabel({ ...newLabel, color: e.target.value })} className="color-picker" />
+          <input aria-label="Categoria da label" placeholder="Categoria (opcional)" value={newLabel.category} onChange={e => setNewLabel({ ...newLabel, category: e.target.value })} />
+          <input aria-label="Descrição da label" placeholder="Descrição (opcional)" value={newLabel.description} onChange={e => setNewLabel({ ...newLabel, description: e.target.value })} />
           <button type="submit" className="btn-primary">Criar</button>
         </form>
       )}
@@ -94,8 +95,8 @@ export function Labels() {
             <div key={label.id} className="label-card" style={{ borderLeftColor: label.color }}>
               {editId === label.id ? (
                 <div className="label-edit">
-                  <input value={editData.name || ''} onChange={e => setEditData({ ...editData, name: e.target.value })} />
-                  <input type="color" value={editData.color || '#6b7280'} onChange={e => setEditData({ ...editData, color: e.target.value })} className="color-picker-sm" />
+                  <input aria-label="Editar nome da label" value={editData.name || ''} onChange={e => setEditData({ ...editData, name: e.target.value })} />
+                  <input aria-label="Editar cor da label" type="color" value={editData.color || '#6b7280'} onChange={e => setEditData({ ...editData, color: e.target.value })} className="color-picker-sm" />
                   <div className="edit-actions">
                     <button className="btn-save" onClick={() => handleUpdate(label.id)}>Salvar</button>
                     <button className="btn-cancel" onClick={() => setEditId(null)}>Cancelar</button>
@@ -112,8 +113,8 @@ export function Labels() {
                   <div className="label-actions">
                     {!label.isSystem && (
                       <>
-                        <button className="btn-edit-sm" onClick={() => { setEditId(label.id); setEditData({ name: label.name, color: label.color }); }}>✏️</button>
-                        <button className="btn-delete-sm" onClick={() => handleDelete(label.id, label.isSystem)}>🗑️</button>
+                        <button className="btn-edit-sm" aria-label={`Editar label ${label.name}`} onClick={() => { setEditId(label.id); setEditData({ name: label.name, color: label.color }); }}><Icon name="settings" size={16} /></button>
+                        <button className="btn-delete-sm" aria-label={`Excluir label ${label.name}`} onClick={() => handleDelete(label.id, label.isSystem)}><Icon name="close" size={16} /></button>
                       </>
                     )}
                   </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
 import './Audit.css';
 
 interface AuditLog {
@@ -72,12 +73,12 @@ export function Audit() {
   return (
     <div className="audit-page">
       <div className="page-header">
-        <h2>🔍 Auditoria</h2>
+        <h2><Icon name="audit" /> Auditoria</h2>
       </div>
 
       <div className="audit-filters">
-        <input placeholder="Filtrar por ação (ex: task.created)" value={filterAction} onChange={e => setFilterAction(e.target.value)} />
-        <input placeholder="Filtrar por entidade (ex: conversation)" value={filterEntity} onChange={e => setFilterEntity(e.target.value)} />
+        <input aria-label="Filtrar auditoria por ação" placeholder="Filtrar por ação (ex: task.created)" value={filterAction} onChange={e => setFilterAction(e.target.value)} />
+        <input aria-label="Filtrar auditoria por entidade" placeholder="Filtrar por entidade (ex: conversation)" value={filterEntity} onChange={e => setFilterEntity(e.target.value)} />
         <button className="btn-primary" onClick={fetchLogs}>Filtrar</button>
       </div>
 

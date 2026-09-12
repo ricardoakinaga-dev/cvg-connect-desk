@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   normalizeEvolutionMessage,
   normalizeGatewayInbound,
+  toWAInboundEvent,
 } from '../infrastructure/gateway-normalizer';
 import { parseInboundMessageV1 } from '@cvg/messaging-contracts';
 
@@ -55,6 +56,17 @@ describe('gateway → chat message contracts', () => {
     });
 
     expect(parsed.ok).toBe(true);
+  });
+
+  it('WA_INBOUND canônico não é normalizado novamente como payload Evolution', () => {
+    const canonical = normalizeEvolutionMessage(evolutionTextPayload, 'MESSAGES_UPSERT');
+    expect(canonical).not.toBeNull();
+
+    const routed = toWAInboundEvent(canonical, 'WA_INBOUND');
+
+    expect(routed).toBe(canonical);
+    expect(routed?.payload.messageId).toBe('wamid.contract123');
+    expect(routed?.payload.remoteJid).toBe('5511999999999@s.whatsapp.net');
   });
 
   it('mensagem de imagem preserva metadados de mídia no contrato', () => {

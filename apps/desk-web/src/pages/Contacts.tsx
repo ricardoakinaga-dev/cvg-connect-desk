@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './Contacts.css';
 
 interface Contact {
@@ -34,6 +36,8 @@ export function Contacts() {
   const [contactNotes, setContactNotes] = useState<any[]>([]);
   const [showNotes, setShowNotes] = useState(false);
   const [newNote, setNewNote] = useState('');
+  const createModal = useModalFocus(showCreate, () => setShowCreate(false));
+  const editModal = useModalFocus(showEdit, () => setShowEdit(false));
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -55,6 +59,7 @@ export function Contacts() {
   };
 
   useEffect(() => { fetchContacts(); }, [fetchContacts]);
+  const openCreate = (trigger?: HTMLElement) => { createModal.rememberTrigger(trigger); setShowCreate(true); };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,8 +114,9 @@ export function Contacts() {
     } catch (err: any) { alert(err.message); }
   };
 
-  const openEdit = () => {
+  const openEdit = (trigger?: HTMLElement) => {
     if (!selectedContact) return;
+    editModal.rememberTrigger(trigger);
     const meta = selectedContact.metadata ? JSON.parse(selectedContact.metadata) : {};
     setEditContact({
       name: selectedContact.name || '',
@@ -136,17 +142,17 @@ export function Contacts() {
   };
 
   return (
-    <div className="contacts-page">
+    <div className={`contacts-page ${selectedContact ? 'has-selection' : ''}`}>
       {/* COLUNA 1 — Lista */}
       <div className="contacts-col-list">
         <div className="contacts-topbar">
-          <h2>👥 Contatos</h2>
-          <button className="btn-new" onClick={() => setShowCreate(true)} title="Novo contato">＋</button>
+          <h2><Icon name="contacts" /> Contatos</h2>
+          <button className="btn-new" onClick={(event) => openCreate(event.currentTarget)} aria-label="Novo contato"><Icon name="plus" /></button>
         </div>
 
         <div className="contacts-search">
-          <span className="search-icon">🔍</span>
-          <input placeholder="Buscar por nome, telefone..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+          <span className="search-icon"><Icon name="search" size={17} /></span>
+          <input aria-label="Buscar contatos" placeholder="Buscar por nome, telefone..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
 
         <div className="contacts-count">{contacts.length} contatos</div>
@@ -156,18 +162,18 @@ export function Contacts() {
             <div className="loading-state"><div className="spinner" /></div>
           ) : contacts.length === 0 ? (
             <div className="empty-state"><span className="empty-icon">👤</span><p>Nenhum contato encontrado</p>
-              <button className="btn-primary-sm" onClick={() => setShowCreate(true)}>＋ Adicionar contato</button>
+              <button className="btn-primary-sm" onClick={(event) => openCreate(event.currentTarget)}><Icon name="plus" size={15} /> Adicionar contato</button>
             </div>
           ) : (
             contacts.map(contact => (
-              <div key={contact.id} className={`contact-item ${selectedContact?.id === contact.id ? 'selected' : ''}`} onClick={() => fetchContactDetail(contact.id)}>
+              <button type="button" key={contact.id} className={`contact-item ${selectedContact?.id === contact.id ? 'selected' : ''}`} aria-pressed={selectedContact?.id === contact.id} onClick={() => fetchContactDetail(contact.id)}>
                 <div className="contact-avatar">{(contact.name || '?')[0].toUpperCase()}</div>
                 <div className="contact-info">
                   <div className="contact-name">{contact.name || 'Sem nome'}</div>
                   <div className="contact-phone">{formatPhone(contact.phone)}</div>
                 </div>
                 <div className="contact-date">{formatDate(contact.createdAt)}</div>
-              </div>
+              </button>
             ))
           )}
         </div>
@@ -179,6 +185,7 @@ export function Contacts() {
           <>
             {/* Header do perfil */}
             <div className="profile-header">
+              <button type="button" className="contacts-mobile-back" aria-label="Voltar para lista de contatos" onClick={() => setSelectedContact(null)}><Icon name="back" /></button>
               <div className="profile-avatar-large">{(selectedContact.name || '?')[0].toUpperCase()}</div>
               <div className="profile-info">
                 <h2>{selectedContact.name || 'Sem nome'}</h2>
@@ -186,10 +193,10 @@ export function Contacts() {
                 {selectedContact.email && <div className="profile-email">📧 {selectedContact.email}</div>}
               </div>
               <div className="profile-actions">
-                <button className="btn-action-icon" onClick={handleStartConversation} title="Iniciar conversa">💬</button>
-                <button className="btn-action-icon" onClick={openEdit} title="Editar">✏️</button>
-                <button className="btn-action-icon" onClick={() => setShowNotes(!showNotes)} title="Notas">📝</button>
-                <button className="btn-action-icon danger" onClick={handleDelete} title="Excluir">🗑️</button>
+                <button className="btn-action-icon" aria-label="Iniciar conversa" onClick={handleStartConversation}><Icon name="message" /></button>
+                <button className="btn-action-icon" aria-label="Editar contato" onClick={(event) => openEdit(event.currentTarget)}><Icon name="settings" /></button>
+                <button className="btn-action-icon" aria-label="Notas do contato" onClick={() => setShowNotes(!showNotes)}><Icon name="notes" /></button>
+                <button className="btn-action-icon danger" aria-label="Excluir contato" onClick={handleDelete}><Icon name="close" /></button>
               </div>
             </div>
 
@@ -212,7 +219,7 @@ export function Contacts() {
               <div className="profile-section notes-section">
                 <h4>📝 Notas do Contato</h4>
                 <div className="add-note">
-                  <textarea placeholder="Adicionar nota..." value={newNote} onChange={e => setNewNote(e.target.value)} rows={2} />
+                  <textarea aria-label="Adicionar nota ao contato" placeholder="Adicionar nota..." value={newNote} onChange={e => setNewNote(e.target.value)} rows={2} />
                   <button className="btn-primary-sm" onClick={handleAddNote} disabled={!newNote.trim()}>Adicionar</button>
                 </div>
                 {contactNotes.length > 0 ? (
@@ -233,7 +240,7 @@ export function Contacts() {
             {/* Ação principal */}
             <div className="profile-section">
               <button className="btn-start-chat" onClick={handleStartConversation}>
-                💬 Iniciar Conversa
+                <Icon name="message" /> Iniciar conversa
               </button>
             </div>
 
@@ -243,14 +250,14 @@ export function Contacts() {
               {selectedContact.conversations.length > 0 ? (
                 <div className="conversations-list">
                   {selectedContact.conversations.map(conv => (
-                    <div key={conv.id} className="conv-mini" onClick={() => navigate(`/inbox?conversation=${conv.id}`)}>
+                    <button type="button" key={conv.id} className="conv-mini" onClick={() => navigate(`/inbox?conversation=${conv.id}`)}>
                       <span className="conv-status-icon">{statusIcon(conv.statusV2)}</span>
                       <div className="conv-mini-info">
                         <div className="conv-mini-status">{conv.statusV2}</div>
                         <div className="conv-mini-msg">{conv.lastMessage || 'Sem mensagens'}</div>
                       </div>
                       <div className="conv-mini-date">{formatDate(conv.createdAt)}</div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               ) : (
@@ -293,7 +300,7 @@ export function Contacts() {
             <span className="empty-icon-big">👤</span>
             <h3>Selecione um contato</h3>
             <p>Escolha um contato na lista para ver o perfil</p>
-            <button className="btn-primary" onClick={() => setShowCreate(true)}>＋ Novo Contato</button>
+            <button className="btn-primary" onClick={(event) => openCreate(event.currentTarget)}><Icon name="plus" size={16} /> Novo contato</button>
           </div>
         )}
       </div>
@@ -301,27 +308,27 @@ export function Contacts() {
       {/* MODAL: Criar contato */}
       {showCreate && (
         <div className="modal-overlay" onClick={() => setShowCreate(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div ref={createModal.dialogRef} className="modal-content" role="dialog" aria-modal="true" aria-labelledby="create-contact-title" tabIndex={-1} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>＋ Novo Contato</h3>
-              <button className="btn-close" onClick={() => setShowCreate(false)}>✕</button>
+              <h3 id="create-contact-title">Novo contato</h3>
+              <button className="btn-close" aria-label="Fechar" onClick={() => setShowCreate(false)}><Icon name="close" /></button>
             </div>
             <form className="modal-body" onSubmit={handleCreate}>
               <div className="form-group">
-                <label>Nome *</label>
-                <input placeholder="Nome completo" value={newContact.name} onChange={e => setNewContact({ ...newContact, name: e.target.value })} required autoFocus />
+                <label htmlFor="new-contact-name">Nome *</label>
+                <input id="new-contact-name" placeholder="Nome completo" value={newContact.name} onChange={e => setNewContact({ ...newContact, name: e.target.value })} required autoFocus />
               </div>
               <div className="form-group">
-                <label>Telefone *</label>
-                <input placeholder="+55 11 99999-9999" value={newContact.phone} onChange={e => setNewContact({ ...newContact, phone: e.target.value })} required />
+                <label htmlFor="new-contact-phone">Telefone *</label>
+                <input id="new-contact-phone" placeholder="+55 11 99999-9999" value={newContact.phone} onChange={e => setNewContact({ ...newContact, phone: e.target.value })} required />
               </div>
               <div className="form-group">
-                <label>Email</label>
-                <input type="email" placeholder="email@exemplo.com" value={newContact.email} onChange={e => setNewContact({ ...newContact, email: e.target.value })} />
+                <label htmlFor="new-contact-email">Email</label>
+                <input id="new-contact-email" type="email" placeholder="email@exemplo.com" value={newContact.email} onChange={e => setNewContact({ ...newContact, email: e.target.value })} />
               </div>
               <div className="form-group">
-                <label>Notas</label>
-                <textarea placeholder="Informações sobre o contato..." value={newContact.notes} onChange={e => setNewContact({ ...newContact, notes: e.target.value })} rows={3} />
+                <label htmlFor="new-contact-notes">Notas</label>
+                <textarea id="new-contact-notes" placeholder="Informações sobre o contato..." value={newContact.notes} onChange={e => setNewContact({ ...newContact, notes: e.target.value })} rows={3} />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn-cancel" onClick={() => setShowCreate(false)}>Cancelar</button>
@@ -335,27 +342,27 @@ export function Contacts() {
       {/* MODAL: Editar contato */}
       {showEdit && selectedContact && (
         <div className="modal-overlay" onClick={() => setShowEdit(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div ref={editModal.dialogRef} className="modal-content" role="dialog" aria-modal="true" aria-labelledby="edit-contact-title" tabIndex={-1} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>✏️ Editar Contato</h3>
-              <button className="btn-close" onClick={() => setShowEdit(false)}>✕</button>
+              <h3 id="edit-contact-title">Editar contato</h3>
+              <button className="btn-close" aria-label="Fechar" onClick={() => setShowEdit(false)}><Icon name="close" /></button>
             </div>
             <form className="modal-body" onSubmit={handleUpdate}>
               <div className="form-group">
-                <label>Nome</label>
-                <input value={editContact.name} onChange={e => setEditContact({ ...editContact, name: e.target.value })} />
+                <label htmlFor="edit-contact-name">Nome</label>
+                <input id="edit-contact-name" autoFocus value={editContact.name} onChange={e => setEditContact({ ...editContact, name: e.target.value })} />
               </div>
               <div className="form-group">
-                <label>Telefone</label>
-                <input value={editContact.phone} onChange={e => setEditContact({ ...editContact, phone: e.target.value })} />
+                <label htmlFor="edit-contact-phone">Telefone</label>
+                <input id="edit-contact-phone" value={editContact.phone} onChange={e => setEditContact({ ...editContact, phone: e.target.value })} />
               </div>
               <div className="form-group">
-                <label>Email</label>
-                <input type="email" value={editContact.email} onChange={e => setEditContact({ ...editContact, email: e.target.value })} />
+                <label htmlFor="edit-contact-email">Email</label>
+                <input id="edit-contact-email" type="email" value={editContact.email} onChange={e => setEditContact({ ...editContact, email: e.target.value })} />
               </div>
               <div className="form-group">
-                <label>Notas</label>
-                <textarea value={editContact.notes} onChange={e => setEditContact({ ...editContact, notes: e.target.value })} rows={3} />
+                <label htmlFor="edit-contact-notes">Notas</label>
+                <textarea id="edit-contact-notes" value={editContact.notes} onChange={e => setEditContact({ ...editContact, notes: e.target.value })} rows={3} />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn-cancel" onClick={() => setShowEdit(false)}>Cancelar</button>

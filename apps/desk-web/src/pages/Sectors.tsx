@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
+import { Icon, type IconName } from '../components/ui/Icon';
 import './Sectors.css';
 
 interface Sector {
@@ -55,28 +56,33 @@ export function Sectors() {
     }
   };
 
-  const iconOptions = ['📋', '🏥', '🩺', '🏨', '⚕️', '💼', '💊', '🦷', '🔬', '📞', '🛒', '🐾'];
+  const iconOptions: Array<{ value: string; label: string; icon: IconName }> = [
+    { value: '📋', label: 'Triagem', icon: 'tasks' }, { value: '🏥', label: 'Clínica', icon: 'sectors' },
+    { value: '🩺', label: 'Atendimento', icon: 'activity' }, { value: '🏨', label: 'Internação', icon: 'dashboard' },
+    { value: '💊', label: 'Farmácia', icon: 'plus' }, { value: '🔬', label: 'Diagnóstico', icon: 'search' },
+    { value: '📞', label: 'Contato', icon: 'message' }, { value: '🐾', label: 'Pacientes', icon: 'patients' },
+  ];
 
   return (
     <div className="sectors-page">
       <div className="page-header">
-        <h2>🏢 Setores</h2>
+        <h2><Icon name="sectors" /> Setores</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? '✕ Cancelar' : '+ Novo Setor'}
+          <Icon name={showCreate ? 'close' : 'plus'} size={17} /> {showCreate ? 'Cancelar' : 'Novo setor'}
         </button>
       </div>
 
       {showCreate && (
         <form className="create-form" onSubmit={handleCreate}>
-          <input placeholder="Nome do setor" value={newSector.name} onChange={e => setNewSector({ ...newSector, name: e.target.value })} required />
-          <input placeholder="Código (ex: recepcao)" value={newSector.code} onChange={e => setNewSector({ ...newSector, code: e.target.value.toLowerCase().replace(/\s/g, '-') })} required />
+          <input aria-label="Nome do setor" placeholder="Nome do setor" value={newSector.name} onChange={e => setNewSector({ ...newSector, name: e.target.value })} required />
+          <input aria-label="Código do setor" placeholder="Código (ex: recepcao)" value={newSector.code} onChange={e => setNewSector({ ...newSector, code: e.target.value.toLowerCase().replace(/\s/g, '-') })} required />
           <div className="icon-picker">
-            {iconOptions.map(icon => (
-              <button key={icon} type="button" className={`icon-option ${newSector.icon === icon ? 'selected' : ''}`} onClick={() => setNewSector({ ...newSector, icon })}>{icon}</button>
+            {iconOptions.map(option => (
+              <button key={option.value} aria-label={`Ícone ${option.label}`} title={option.label} type="button" className={`icon-option ${newSector.icon === option.value ? 'selected' : ''}`} onClick={() => setNewSector({ ...newSector, icon: option.value })}><Icon name={option.icon} size={18} /></button>
             ))}
           </div>
-          <input type="color" value={newSector.color} onChange={e => setNewSector({ ...newSector, color: e.target.value })} className="color-picker" />
-          <input placeholder="Descrição" value={newSector.description} onChange={e => setNewSector({ ...newSector, description: e.target.value })} />
+          <input aria-label="Cor do setor" type="color" value={newSector.color} onChange={e => setNewSector({ ...newSector, color: e.target.value })} className="color-picker" />
+          <input aria-label="Descrição do setor" placeholder="Descrição" value={newSector.description} onChange={e => setNewSector({ ...newSector, description: e.target.value })} />
           <button type="submit" className="btn-primary">Criar Setor</button>
         </form>
       )}
@@ -99,8 +105,8 @@ export function Sectors() {
                 </div>
               </div>
               <div className="sector-actions">
-                <button className={`btn-toggle ${sector.isActive ? 'on' : 'off'}`} onClick={() => handleToggleActive(sector)}>
-                  {sector.isActive ? '🟢' : '🔴'}
+                <button className={`btn-toggle ${sector.isActive ? 'on' : 'off'}`} aria-label={`${sector.isActive ? 'Desativar' : 'Ativar'} setor ${sector.name}`} onClick={() => handleToggleActive(sector)}>
+                  <Icon name={sector.isActive ? 'close' : 'check'} size={15} /> <span>{sector.isActive ? 'Desativar' : 'Ativar'}</span>
                 </button>
               </div>
             </div>

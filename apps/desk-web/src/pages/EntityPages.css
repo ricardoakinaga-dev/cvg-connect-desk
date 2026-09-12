@@ -108,6 +108,7 @@
 .entity-empty strong { display: block; color: var(--color-text); margin-bottom: 6px; }
 
 .entity-detail { padding: 20px; }
+.entity-mobile-back { display:none;width:40px;height:40px;margin-bottom:14px;place-items:center;border:1px solid var(--color-border);border-radius:10px;background:#fff;color:var(--color-primary-hover);cursor:pointer }
 .entity-detail h3 { margin: 0; font-size: 18px; }
 .entity-detail-subtitle { margin: 5px 0 18px; color: var(--color-text-secondary); font-size: 13px; }
 .entity-detail-list { display: grid; gap: 10px; margin: 0; }
@@ -135,6 +136,9 @@
   .entity-actions { width: 100%; }
   .entity-search { flex: 1; min-width: 180px; }
   .entity-layout { grid-template-columns: 1fr; }
+  .entity-page:not(.has-selection) .entity-detail { display:none; }
+  .entity-page.has-selection .entity-layout > section { display:none; }
+  .entity-page.has-selection .entity-mobile-back { display:grid; }
 }
 
 @media (max-width: 520px) {

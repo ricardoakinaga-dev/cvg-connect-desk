@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/auth';
 import { api } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
 import './Settings.css';
 
 interface UserProfile {
@@ -79,7 +80,7 @@ export function Settings() {
   return (
     <div className="settings-page">
       <div className="page-header">
-        <h2>👤 Configurações</h2>
+        <h2><Icon name="settings" /> Configurações</h2>
       </div>
 
       {message && (
@@ -88,7 +89,7 @@ export function Settings() {
 
       {/* Perfil */}
       <div className="settings-section">
-        <h3>📋 Perfil</h3>
+        <h3><Icon name="contacts" size={18} /> Perfil</h3>
         <div className="profile-card">
           <div className="profile-avatar">
             {profile?.name?.charAt(0).toUpperCase() || '?'}
@@ -108,7 +109,7 @@ export function Settings() {
 
       {/* Papéis */}
       <div className="settings-section">
-        <h3>🔑 Papéis Atribuídos</h3>
+        <h3><Icon name="settings" size={18} /> Papéis atribuídos</h3>
         <div className="roles-list">
           {profile?.roles && profile.roles.length > 0 ? (
             profile.roles.map(role => (
@@ -122,7 +123,7 @@ export function Settings() {
 
       {/* Permissões */}
       <div className="settings-section">
-        <h3>🛡️ Permissões</h3>
+        <h3><Icon name="check" size={18} /> Permissões</h3>
         <div className="permissions-grid">
           {profile?.permissions && profile.permissions.length > 0 ? (
             profile.permissions.map(perm => (
@@ -140,16 +141,16 @@ export function Settings() {
       {/* Alterar Senha */}
       <div className="settings-section">
         <h3>
-          🔒 Segurança
+          <span><Icon name="settings" size={18} /> Segurança</span>
           <button className="btn-toggle" onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? 'Cancelar' : 'Alterar Senha'}
           </button>
         </h3>
         {showPassword && (
           <form className="password-form" onSubmit={handlePasswordChange}>
-            <input type="password" placeholder="Senha atual" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} required />
-            <input type="password" placeholder="Nova senha" value={passwords.newPass} onChange={e => setPasswords({ ...passwords, newPass: e.target.value })} required />
-            <input type="password" placeholder="Confirmar nova senha" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} required />
+            <input aria-label="Senha atual" type="password" placeholder="Senha atual" value={passwords.current} onChange={e => setPasswords({ ...passwords, current: e.target.value })} required />
+            <input aria-label="Nova senha" type="password" placeholder="Nova senha" value={passwords.newPass} onChange={e => setPasswords({ ...passwords, newPass: e.target.value })} required />
+            <input aria-label="Confirmar nova senha" type="password" placeholder="Confirmar nova senha" value={passwords.confirm} onChange={e => setPasswords({ ...passwords, confirm: e.target.value })} required />
             <button type="submit" className="btn-primary">Salvar Nova Senha</button>
           </form>
         )}
@@ -157,7 +158,7 @@ export function Settings() {
 
       {/* Sessão */}
       <div className="settings-section">
-        <h3>ℹ️ Sessão</h3>
+        <h3><Icon name="info" size={18} /> Sessão</h3>
         <div className="session-info">
           <div><strong>ID do Usuário:</strong> <code>{profile?.id}</code></div>
           <div><strong>Token:</strong> <code>{token ? `${token.slice(0, 20)}...` : 'N/A'}</code></div>

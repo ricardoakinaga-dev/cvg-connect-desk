@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { patientApi, tutorApi, type Patient, type Tutor } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './EntityPages.css';
 
 function messageFromError(error: unknown): string {
@@ -27,6 +29,7 @@ export function Patients() {
   const [editing, setEditing] = useState<Patient | null>(null);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ name: '', species: '', breed: '', tutorId: '' });
+  const modal = useModalFocus(modalOpen, () => !saving && setModalOpen(false));
 
   const loadPatients = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
@@ -48,14 +51,16 @@ export function Patients() {
 
   useEffect(() => { void tutorApi.list().then(setTutors).catch((loadError) => setError(messageFromError(loadError))); }, []);
 
-  const openCreate = () => {
+  const openCreate = (trigger?: HTMLElement) => {
+    modal.rememberTrigger(trigger);
     setEditing(null);
     setForm({ name: '', species: '', breed: '', tutorId: '' });
     setError(null);
     setModalOpen(true);
   };
 
-  const openEdit = (patient: Patient) => {
+  const openEdit = (patient: Patient, trigger?: HTMLElement) => {
+    modal.rememberTrigger(trigger);
     setEditing(patient);
     setForm({ name: patient.name, species: patient.species || '', breed: patient.breed || '', tutorId: patient.tutorId || '' });
     setError(null);
@@ -103,7 +108,7 @@ export function Patients() {
   };
 
   return (
-    <div className="entity-page">
+    <div className={`entity-page ${selected ? 'has-selection' : ''}`}>
       <header className="entity-header">
         <div className="entity-title">
           <h2>Pacientes</h2>
@@ -112,7 +117,7 @@ export function Patients() {
         <div className="entity-actions">
           <input className="entity-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar por nome ou espécie" aria-label="Buscar pacientes" />
           <select className="entity-select" value={species} onChange={(event) => setSpecies(event.target.value)} aria-label="Filtrar espécie"><option value="">Todas as espécies</option><option value="cachorro">Cachorro</option><option value="gato">Gato</option><option value="pássaro">Pássaro</option><option value="coelho">Coelho</option></select>
-          <button className="entity-button primary" type="button" onClick={openCreate}>+ Novo paciente</button>
+          <button className="entity-button primary" type="button" onClick={(event) => openCreate(event.currentTarget)}><Icon name="plus" size={16} /> Novo paciente</button>
         </div>
       </header>
 
@@ -128,12 +133,12 @@ export function Patients() {
                 <thead><tr><th>Paciente</th><th>Espécie</th><th>Raça</th><th>Tutor</th><th>Ações</th></tr></thead>
                 <tbody>
                   {patients.map((patient) => (
-                    <tr key={patient.id} onClick={() => void showDetails(patient)}>
+                    <tr key={patient.id} tabIndex={0} role="button" onClick={() => void showDetails(patient)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); void showDetails(patient); } }}>
                       <td className="primary-cell">{speciesIcon(patient.species)} {patient.name}</td>
                       <td>{patient.species || '—'}</td>
                       <td className="muted">{patient.breed || '—'}</td>
                       <td className="muted">{patient.tutor?.name || '—'}</td>
-                      <td><div className="entity-row-actions"><button className="entity-row-action" type="button" title="Editar paciente" onClick={(event) => { event.stopPropagation(); openEdit(patient); }}>Editar</button><button className="entity-row-action danger" type="button" title="Excluir paciente" onClick={(event) => { event.stopPropagation(); void remove(patient); }}>Excluir</button></div></td>
+                      <td><div className="entity-row-actions"><button className="entity-row-action" type="button" title="Editar paciente" onClick={(event) => { event.stopPropagation(); openEdit(patient, event.currentTarget); }}>Editar</button><button className="entity-row-action danger" type="button" title="Excluir paciente" onClick={(event) => { event.stopPropagation(); void remove(patient); }}>Excluir</button></div></td>
                     </tr>
                   ))}
                 </tbody>
@@ -145,6 +150,7 @@ export function Patients() {
         <aside className="entity-card entity-detail" aria-live="polite">
           {selected ? (
             <>
+              <button type="button" className="entity-mobile-back" aria-label="Voltar para pacientes" onClick={() => setSelected(null)}><Icon name="back" size={18} /></button>
               <h3>{speciesIcon(selected.species)} {selected.name}</h3>
               <p className="entity-detail-subtitle">Ficha resumida do paciente</p>
               <dl className="entity-detail-list">
@@ -160,7 +166,7 @@ export function Patients() {
       </div>
 
       {modalOpen && <div className="entity-modal-backdrop" role="presentation" onMouseDown={() => !saving && setModalOpen(false)}>
-        <div className="entity-modal" role="dialog" aria-modal="true" aria-labelledby="patient-form-title" onMouseDown={(event) => event.stopPropagation()}>
+        <div ref={modal.dialogRef} className="entity-modal" role="dialog" aria-modal="true" aria-labelledby="patient-form-title" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()}>
           <h3 id="patient-form-title">{editing ? 'Editar paciente' : 'Novo paciente'}</h3>
           <form className="entity-form" onSubmit={save}>
             <label>Nome do paciente *<input autoFocus required maxLength={200} value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>

@@ -14,7 +14,7 @@
 .icon-option {
   width: 36px; height: 36px; border: 2px solid #e0e0e0; border-radius: 8px;
   background: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .icon-option.selected { border-color: #4361ee; background: #e8f0fe; }
 .icon-option:hover { border-color: #4361ee; }
@@ -44,7 +44,7 @@
 .badge.limit { background: #fff3e0; color: #e65100; }
 
 .sector-actions { flex-shrink: 0; }
-.btn-toggle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #e0e0e0; background: #fff; font-size: 1rem; cursor: pointer; }
+.btn-toggle { min-width: 92px; min-height: 36px; padding: 0 10px; display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius: 9px; border: 2px solid #e0e0e0; background: #fff; font-size: .75rem; cursor: pointer; }
 .btn-toggle:hover { border-color: #4361ee; }
 
 .loading { text-align: center; padding: 48px; color: #888; }

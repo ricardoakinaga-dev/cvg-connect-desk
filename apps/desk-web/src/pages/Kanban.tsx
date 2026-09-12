@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../lib/api';
+import { Icon } from '../components/ui/Icon';
 import './Kanban.css';
 
 interface KanbanCard {
@@ -73,13 +74,16 @@ export function Kanban() {
     if (!draggedCard) return;
     setDragOverColumn(null);
 
+    await moveCard(draggedCard, targetStatus);
+    setDraggedCard(null);
+  };
+
+  const moveCard = async (cardId: string, targetStatus: string) => {
     try {
-      await api.patch(`/kanban/card/${draggedCard}/move`, { status: targetStatus });
-      fetchBoard();
+      await api.patch(`/kanban/card/${cardId}/move`, { status: targetStatus });
+      await fetchBoard();
     } catch (err) {
       console.error('Erro ao mover card:', err);
-    } finally {
-      setDraggedCard(null);
     }
   };
 
@@ -97,6 +101,7 @@ export function Kanban() {
       default: return 'transparent';
     }
   };
+  const priorityLabel = (priority: string) => ({ urgent: 'Urgente', high: 'Alta', low: 'Baixa', normal: 'Normal', medium: 'Média' }[priority] || priority);
 
   if (loading) return <div className="kanban-page"><div className="loading">Carregando Kanban...</div></div>;
 
@@ -107,22 +112,22 @@ export function Kanban() {
   return (
     <div className="kanban-page">
       <div className="kanban-header">
-        <h2>📋 Kanban</h2>
+        <h2><Icon name="kanban" /> Kanban</h2>
         <div className="kanban-filters">
-          <select value={filterSector} onChange={e => setFilterSector(e.target.value)}>
+          <select aria-label="Filtrar Kanban por setor" value={filterSector} onChange={e => setFilterSector(e.target.value)}>
             <option value="">Todos os Setores</option>
             {board?.filters.sectors.map(s => (
-              <option key={s.id} value={s.id}>{s.icon} {s.name}</option>
+              <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
-          <button className="btn-refresh" onClick={() => fetchBoard()}>🔄</button>
+          <button className="btn-refresh" aria-label="Atualizar Kanban" onClick={() => fetchBoard()}><Icon name="refresh" /></button>
         </div>
       </div>
 
       <div className="kanban-stats">
         {columns.map(col => (
           <div key={col.status} className="stat-pill" style={{ borderColor: col.color }}>
-            {col.icon} {col.count}
+            <i style={{ background: col.color }} /> <span className="sr-only">{col.label}:</span>{col.count}
           </div>
         ))}
       </div>
@@ -137,7 +142,7 @@ export function Kanban() {
             onDrop={() => handleDrop(column.status)}
           >
             <div className="column-header" style={{ borderTopColor: column.color }}>
-              <span className="column-icon">{column.icon}</span>
+              <span className="column-icon" style={{ background: column.color }} />
               <span className="column-label">{column.label}</span>
               <span className="column-count">{column.count}</span>
             </div>
@@ -155,6 +160,7 @@ export function Kanban() {
                     <span className="card-name">{card.contactName || 'Sem nome'}</span>
                     <span className="card-time">{formatTime(card.minutesSinceUpdate)}</span>
                   </div>
+                  <span className={`card-priority priority-${card.priority}`}>Prioridade {priorityLabel(card.priority)}</span>
 
                   {card.sectorName && (
                     <div className="card-sector" style={{ color: card.sectorColor || '#666' }}>
@@ -168,16 +174,22 @@ export function Kanban() {
 
                   <div className="card-footer">
                     {card.assignedUserName && (
-                      <span className="card-agent">👩‍⚕️ {card.assignedUserName.split(' ')[0]}</span>
+                      <span className="card-agent"><Icon name="tutors" size={13} /> {card.assignedUserName.split(' ')[0]}</span>
                     )}
                     {card.labels.length > 0 && (
                       <div className="card-labels">
                         {card.labels.slice(0, 3).map((label, i) => (
-                          <span key={i} className="label-dot" style={{ background: label.color }} title={label.name} />
+                          <span key={i} className="label-dot" role="img" aria-label={label.name} style={{ background: label.color }} title={label.name} />
                         ))}
                       </div>
                     )}
                   </div>
+                  <label className="card-move">
+                    <span>Mover para</span>
+                    <select value={column.status} onChange={(event) => void moveCard(card.id, event.target.value)}>
+                      {columns.map((destination) => <option key={destination.status} value={destination.status}>Para {destination.label}</option>)}
+                    </select>
+                  </label>
                 </div>
               ))}
 

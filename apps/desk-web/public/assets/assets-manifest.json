@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "path": "brand/cvg-logo.webp",
+      "role": "official-brand-mark",
+      "provenance": "User-supplied registered/licensed logo, explicitly authorized on 2026-09-12; lossless-intent crop and WebP delivery derivative via FFmpeg.",
+      "sourceSha256": "6509dabbf54b9441f4b9b39edaaa78cb82df2795d8eb938ac918b4ddc84dac8a",
+      "sha256": "a2774b80e63fbe5dffffa6abe5d983697ae17c98b6bee8d66bec3d7d58c780c9",
+      "dimensions": "256x256",
+      "bytes": 11648,
+      "usage": "Sidebar and login identity; preserve aspect ratio and do not redraw."
+    },
+    {
+      "path": "visual/cvg-water-texture.webp",
+      "role": "atmospheric-login-texture",
+      "provenance": "Local ComfyUI generation, prompt_id 3918eea1-f5e9-42d6-b320-c30f3fda718f; second adaptive cycle selected after rejecting a floating-bar artifact in cycle one.",
+      "sha256": "bed1e38456509c54acbf591abbd652c6b24f88e53678701caa2014a32e010fec",
+      "dimensions": "1024x1024",
+      "bytes": 14008,
+      "usage": "Decorative background only; all content remains available without it."
+    },
+    {
+      "path": "visual/cvg-orbit-pulso.webp",
+      "role": "login-hero-sculpture",
+      "provenance": "Isolated Blender 5.2 scene authored and rendered through Blender MCP CLI; source at docs/design/source/cvg-orbit-pulso.blend. CLI verification on 2026-09-12 succeeded: 10 objects, EEVEE scene, 768x768 source render.",
+      "sourceSha256": "8710272ca73c4f763b9c4e345a876578542507189a6433ec43f1d1fbc6d7a963",
+      "sha256": "28ad713bf93d630afcba881283aed7edd75e3c5b43c3aa8c8f48cbe0e9eb535f",
+      "dimensions": "640x640",
+      "bytes": 52884,
+      "usage": "Decorative transparent sculpture for spacious login view; hidden at constrained widths."
+    }
+  ]
+}

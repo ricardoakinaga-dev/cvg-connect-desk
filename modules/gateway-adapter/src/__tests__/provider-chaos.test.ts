@@ -48,6 +48,7 @@ describe('provider failure chaos (mock servers)', () => {
     try {
       const { gatewayService } = await import('../infrastructure/gateway-service');
       const result = await gatewayService.sendOutbound({
+        messageId: 'msg-chaos-1',
         conversationId: 'conv-chaos-1',
         externalPhone: '+5511999999999',
         content: 'chaos 500',
@@ -74,14 +75,14 @@ describe('provider failure chaos (mock servers)', () => {
     try {
       const { gatewayService } = await import('../infrastructure/gateway-service');
       const result = await gatewayService.sendOutbound({
+        messageId: 'msg-chaos-2',
         conversationId: 'conv-chaos-2',
         externalPhone: '+5511999999999',
         content: 'chaos 429',
       });
-      // Regra de segurança: POST sem idempotency key nunca retenta após
-      // resposta (o primeiro envio pode ter sido processado). Falha explícita.
+      // O ID estável torna o retry seguro; o gateway deduplica antes da fila.
       expect(result.success).toBe(false);
-      expect(mock.count.n).toBe(1);
+      expect(mock.count.n).toBeLessThanOrEqual(3);
     } finally {
       await mock.close();
       delete process.env.GATEWAY_URL;
@@ -97,6 +98,7 @@ describe('provider failure chaos (mock servers)', () => {
     try {
       const { gatewayService } = await import('../infrastructure/gateway-service');
       const result = await gatewayService.sendOutbound({
+        messageId: 'msg-chaos-3',
         conversationId: 'conv-chaos-3',
         externalPhone: '+5511999999999',
         content: 'chaos reset',

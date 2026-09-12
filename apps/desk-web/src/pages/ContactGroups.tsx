@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../lib/api';
+import { Icon, type IconName } from '../components/ui/Icon';
 import './ContactGroups.css';
 
 interface ContactGroup {
@@ -79,33 +80,38 @@ export function ContactGroups() {
     return map[type] || type;
   };
 
-  const iconOptions = ['👥', '👤', '🐕', '🐈', '🏥', '💼', '⭐', '🔑'];
+  const iconOptions: Array<{ value: string; label: string; icon: IconName }> = [
+    { value: '👥', label: 'Equipe', icon: 'groups' }, { value: '👤', label: 'Pessoa', icon: 'contacts' },
+    { value: '🐕', label: 'Cães', icon: 'patients' }, { value: '🐈', label: 'Gatos', icon: 'patients' },
+    { value: '🏥', label: 'Clínica', icon: 'sectors' }, { value: '💼', label: 'Trabalho', icon: 'tasks' },
+    { value: '⭐', label: 'Destaque', icon: 'activity' }, { value: '🔑', label: 'Acesso', icon: 'settings' },
+  ];
 
   return (
-    <div className="contact-groups-page">
+    <div className={`contact-groups-page ${selectedGroup ? 'has-selection' : ''}`}>
       <div className="page-header">
-        <h2>👥 Grupos de Contatos</h2>
+        <h2><Icon name="groups" /> Grupos de contatos</h2>
         <button className="btn-primary" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? '✕ Cancelar' : '+ Novo Grupo'}
+          <Icon name={showCreate ? 'close' : 'plus'} size={17} /> {showCreate ? 'Cancelar' : 'Novo grupo'}
         </button>
       </div>
 
       {showCreate && (
         <form className="create-form" onSubmit={handleCreate}>
-          <input placeholder="Nome do grupo" value={newGroup.name} onChange={e => setNewGroup({ ...newGroup, name: e.target.value })} required />
-          <select value={newGroup.groupType} onChange={e => setNewGroup({ ...newGroup, groupType: e.target.value })}>
+          <input aria-label="Nome do grupo" placeholder="Nome do grupo" value={newGroup.name} onChange={e => setNewGroup({ ...newGroup, name: e.target.value })} required />
+          <select aria-label="Tipo do grupo" value={newGroup.groupType} onChange={e => setNewGroup({ ...newGroup, groupType: e.target.value })}>
             <option value="custom">Custom</option>
             <option value="internal">Interno (Colaboradores)</option>
             <option value="external">Externo (Tutores)</option>
             <option value="mixed">Misto</option>
           </select>
           <div className="icon-picker">
-            {iconOptions.map(icon => (
-              <button key={icon} type="button" className={`icon-opt ${newGroup.icon === icon ? 'sel' : ''}`} onClick={() => setNewGroup({ ...newGroup, icon })}>{icon}</button>
+            {iconOptions.map(option => (
+              <button key={option.value} aria-label={`Ícone ${option.label}`} title={option.label} type="button" className={`icon-opt ${newGroup.icon === option.value ? 'sel' : ''}`} onClick={() => setNewGroup({ ...newGroup, icon: option.value })}><Icon name={option.icon} size={18} /></button>
             ))}
           </div>
-          <input type="color" value={newGroup.color} onChange={e => setNewGroup({ ...newGroup, color: e.target.value })} className="color-input" />
-          <input placeholder="Descrição" value={newGroup.description} onChange={e => setNewGroup({ ...newGroup, description: e.target.value })} />
+          <input aria-label="Cor do grupo" type="color" value={newGroup.color} onChange={e => setNewGroup({ ...newGroup, color: e.target.value })} className="color-input" />
+          <input aria-label="Descrição do grupo" placeholder="Descrição" value={newGroup.description} onChange={e => setNewGroup({ ...newGroup, description: e.target.value })} />
           <button type="submit" className="btn-primary">Criar</button>
         </form>
       )}
@@ -119,7 +125,10 @@ export function ContactGroups() {
               <div
                 key={group.id}
                 className={`group-card ${selectedGroup === group.id ? 'selected' : ''}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => setSelectedGroup(group.id)}
+                onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedGroup(group.id); } }}
                 style={{ borderLeftColor: group.color }}
               >
                 <div className="group-icon">{group.icon}</div>
@@ -130,7 +139,7 @@ export function ContactGroups() {
                     <span className="group-count">{group.memberCount} membros</span>
                   </div>
                 </div>
-                <button className="btn-delete-sm" onClick={(e) => { e.stopPropagation(); handleDelete(group.id); }}>🗑️</button>
+                <button className="btn-delete-sm" aria-label={`Excluir grupo ${group.name}`} onClick={(e) => { e.stopPropagation(); handleDelete(group.id); }}><Icon name="close" size={15} /></button>
               </div>
             ))}
 
@@ -140,7 +149,7 @@ export function ContactGroups() {
           <div className="group-detail">
             {selectedGroup ? (
               <>
-                <h3>Membros do Grupo</h3>
+                <div className="group-detail-header"><button type="button" className="groups-mobile-back" aria-label="Voltar para grupos" onClick={() => setSelectedGroup(null)}><Icon name="back" size={18} /></button><h3>Membros do grupo</h3></div>
                 {members.length > 0 ? (
                   <div className="members-list">
                     {members.map(m => (

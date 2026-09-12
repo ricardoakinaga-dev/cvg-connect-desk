@@ -100,10 +100,13 @@ export interface Conversation {
   externalChannelId: string | null;
   externalConversationId: string | null;
   metadata: string | null;
+  unreadCount: number;
+  currentHandler?: 'bot' | 'human';
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
   lastMessage: Message | null;
+  lastInboundMessage?: Message | null;
 }
 
 export interface Message {
@@ -370,6 +373,10 @@ export const conversationApi = {
 
   getMessages: (conversationId: string, limit = 50) => {
     return api.get<{ messages: Message[] }>(`/conversations/${conversationId}/messages?limit=${limit}`);
+  },
+
+  markRead: (conversationId: string) => {
+    return api.post<{ conversationId: string; unreadCount: number }>(`/conversations/${conversationId}/read`);
   },
 
   sendMessage: (data: { conversationId: string; content: string; recipient: string; sender?: string }) => {

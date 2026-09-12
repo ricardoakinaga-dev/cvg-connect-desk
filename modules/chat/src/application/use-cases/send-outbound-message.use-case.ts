@@ -9,8 +9,10 @@ import { createAuditLog } from '@cvg/audit';
 export interface SendOutboundMessageInput {
   conversationId: string;
   content: string;
-  recipient: string;
+  recipient?: string;
   sender?: string;
+  senderType?: 'human' | 'bot' | 'system';
+  instance?: string;
   // Media fields
   mediaUrl?: string;
   mediaType?: string; // 'image', 'audio', 'video', 'document'
@@ -33,10 +35,6 @@ export async function sendOutboundMessage(
   input: SendOutboundMessageInput
 ): Promise<Result<SendOutboundMessageOutput, NotFoundError | BadRequestError>> {
   try {
-    if (!input.recipient) {
-      return err(new BadRequestError('Recipient is required'));
-    }
-
     // Texto ou mídia é obrigatório
     if (!input.content && !input.mediaUrl) {
       return err(new BadRequestError('Content or media is required'));
@@ -83,6 +81,15 @@ export async function sendOutboundMessage(
       return err(new BadRequestError('Cannot send message to closed conversation'));
     }
 
+    // Conversas originadas por webhook ainda podem não possuir contactId.
+    // Nesse caso, o remetente inbound persistido é a fonte de verdade para o
+    // destino da resposta. Mantém compatibilidade com clientes web antigos.
+    const recipient = input.recipient?.trim()
+      || await messageRepository.findLatestInboundSender(input.conversationId);
+    if (!recipient) {
+      return err(new BadRequestError('Recipient is required'));
+    }
+
     const idempotencyKey = input.idempotencyKey?.trim() || undefined;
 
     // Dedup prévio: chave já vista retorna a mensagem original (sem side effects).
@@ -105,9 +112,9 @@ export async function sendOutboundMessage(
     const message = await messageRepository.create({
       conversationId: input.conversationId,
       direction: 'outbound',
-      senderType: 'human',
+      senderType: input.senderType || 'human',
       content: input.content || '',
-      recipient: input.recipient,
+      recipient,
       sender: input.sender,
       status: 'pending',
       // Media fields
@@ -139,10 +146,9 @@ export async function sendOutboundMessage(
       }
     }
 
-    // Enviar via Evolution API (assíncrono) com reconciliação de status.
-    sendViaEvolution(input.recipient, input, { messageId: message.id, deliveryId }).catch(err => {
-      console.error('[sendOutboundMessage] Erro ao enviar via Evolution:', err);
-    });
+    // O Desk nunca fala diretamente com a Evolution: entrega ao Gateway, que
+    // persiste uma intenção idempotente e só então chama o provider.
+    await sendViaGateway(recipient, input, { messageId: message.id, deliveryId });
 
     await publishMessagePersisted(message);
 
@@ -153,7 +159,7 @@ export async function sendOutboundMessage(
         action: input.mediaType ? `message.outbound.${input.mediaType}` : 'message.outbound.sent',
         entityType: 'message',
         entityId: message.id,
-        newValue: { content: input.content, recipient: input.recipient, mediaType: input.mediaType },
+        newValue: { content: input.content, recipient, mediaType: input.mediaType },
         metadata: { conversationId: input.conversationId },
       });
     }
@@ -161,7 +167,7 @@ export async function sendOutboundMessage(
     return ok({
       messageId: message.id,
       conversationId: message.conversationId,
-      status: message.status,
+      status: (await messageRepository.findById(message.id))?.status || message.status,
       deduplicated: false,
     });
   } catch (error) {
@@ -170,34 +176,27 @@ export async function sendOutboundMessage(
 }
 
 /**
- * Envia mensagem via Evolution API de forma assíncrona, com reconciliação:
+ * Entrega mensagem ao Gateway, com reconciliação:
  * atualiza messages.status (sent/failed) e o mapping de idempotência, de modo
  * que a mensagem nunca fique em `pending` para sempre sem explicação.
  */
-async function sendViaEvolution(
+async function sendViaGateway(
   recipient: string,
   input: SendOutboundMessageInput,
   ids: { messageId: string; deliveryId?: string },
 ) {
   try {
-    // Extrair telefone do recipient (pode ser JID ou telefone puro)
-    const phone = recipient.replace(/@.*$/, '').replace(/\D/g, '');
-
-    // Importar media service do gateway adapter
-    const { mediaService } = await import('@cvg/gateway-adapter');
-
-    let result: { success: boolean; messageId?: string; error?: string };
-
-    if (input.mediaUrl && input.mediaType === 'image') {
-      result = await mediaService.sendImage(phone, input.mediaUrl, input.content);
-    } else if (input.mediaUrl && input.mediaType === 'audio') {
-      result = await mediaService.sendAudio(phone, input.mediaUrl);
-    } else if (input.mediaUrl && input.mediaType === 'document') {
-      result = await mediaService.sendDocument(phone, input.mediaUrl, input.mediaFilename);
-    } else {
-      // Texto simples
-      result = await mediaService.sendText(phone, input.content);
-    }
+    const { gatewayService } = await import('@cvg/gateway-adapter');
+    const result = await gatewayService.sendOutbound({
+      messageId: ids.messageId,
+      conversationId: input.conversationId,
+      externalPhone: recipient,
+      content: input.content,
+      instance: input.instance,
+      senderName: input.sender,
+      senderType: input.senderType === 'bot' ? 'bot' : input.senderType === 'system' ? 'system' : 'agent',
+      attachmentUrl: input.mediaUrl,
+    });
 
     if (result.success) {
       try {
@@ -222,9 +221,9 @@ async function sendViaEvolution(
     }
 
     if (result.success) {
-      console.log(`[sendViaEvolution] Mensagem enviada: ${result.messageId}`);
+      console.log(`[sendViaGateway] Mensagem aceita: ${result.messageId}`);
     } else {
-      console.error(`[sendViaEvolution] Falha: ${result.error}`);
+      console.error(`[sendViaGateway] Falha: ${result.error}`);
     }
   } catch (error) {
     try {
@@ -235,6 +234,6 @@ async function sendViaEvolution(
     } catch {
       // Reconciliação é best-effort; o erro original prevalece no log.
     }
-    console.error('[sendViaEvolution] Erro:', error);
+    console.error('[sendViaGateway] Erro:', error);
   }
 }

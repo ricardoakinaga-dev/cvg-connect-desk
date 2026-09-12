@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { withRetry } from '@cvg/shared';
 import { withSpan, injectTraceContext, correlationAttributes } from '@cvg/tracing';
-import type { CWOutboundEvent } from '../types/gateway-contracts';
-import { v4 as uuidv4 } from 'uuid';
 
 const GATEWAY_URL = process.env.GATEWAY_URL || 'http://localhost:3000';
 const GATEWAY_API_KEY = process.env.GATEWAY_API_KEY || '';
@@ -17,6 +15,7 @@ export const gatewayService = {
    * Envia mensagem outbound para o gateway (que encaminha para WhatsApp).
    */
   async sendOutbound(params: {
+    messageId: string;
     conversationId: string;
     externalPhone: string;
     content: string;
@@ -26,40 +25,37 @@ export const gatewayService = {
     attachmentUrl?: string;
   }): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
-      const event: CWOutboundEvent = {
+      const digits = params.externalPhone.replace(/@.*$/, '').replace(/\D/g, '');
+      if (!digits) return { success: false, error: 'Invalid recipient phone' };
+      const event = {
         contract_version: '1.0.0',
-        event_type: 'CW_OUTBOUND',
-        event_id: uuidv4(),
+        event_type: 'DESK_OUTBOUND',
+        event_id: params.messageId,
         occurred_at: new Date().toISOString(),
         tenant: 'cvg',
-        provider: 'chatwoot',
+        provider: 'connect-desk',
         channel: 'whatsapp',
         payload: {
-          accountId: 1,
-          inboxId: 1,
-          conversationId: parseInt(params.conversationId.replace(/\D/g, '').slice(0, 8)) || 0,
-          chatwoot_message_id: Date.now(),
+          instance: params.instance || process.env.EVOLUTION_INSTANCE || 'cvg-local',
+          conversationId: params.conversationId,
+          messageId: params.messageId,
+          remoteJid: `${digits}@s.whatsapp.net`,
           content: params.content,
-          sender: {
-            type: params.senderType || 'agent',
-            id: 1,
-            name: params.senderName || 'CVG Desk',
-          },
+          senderType: params.senderType || 'agent',
           attachments: params.attachmentUrl
             ? [{ url: params.attachmentUrl, file_type: 'image' }]
             : undefined,
         },
       };
 
-      // Enviar para o endpoint outbound do gateway (retry limitado a falhas
-      // pré-resposta/retryable; idempotent:false — POST sem idempotency key).
-      // Trace W3C propagado nos headers (Final-2).
+      // event_id é o UUID persistido da mensagem: retries são seguros porque o
+      // gateway mantém uma reivindicação durável de idempotência antes da fila.
       const outcome = await withSpan(
         'gateway.send',
         () =>
           withRetry(
             async () => {
-              await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
+              return axios.post<{ status: string; operation_id?: string }>(`${GATEWAY_URL}/webhooks/desk`, event, {
                 headers: injectTraceContext({
                   'Content-Type': 'application/json',
                   'x-api-key': GATEWAY_API_KEY,
@@ -69,7 +65,7 @@ export const gatewayService = {
             },
             {
               maxRetries: Number(process.env.GATEWAY_MAX_RETRIES) || 2,
-              idempotent: false,
+              idempotent: true,
               onRetry: (info) => {
                 console.error(
                   `[GatewayService] retry attempt=${info.attempt} classification=${info.classification} event=${event.event_id}`,
@@ -87,7 +83,11 @@ export const gatewayService = {
         return { success: false, error: message };
       }
 
-      return { success: true, messageId: event.event_id };
+      const status = outcome.value?.data?.status;
+      if (status !== 'queued' && status !== 'duplicate') {
+        return { success: false, error: `Unexpected gateway status: ${String(status)}` };
+      }
+      return { success: true, messageId: outcome.value?.data?.operation_id || event.event_id };
     } catch (error: any) {
       console.error('[GatewayService] Erro ao enviar outbound:', error.message);
       return { success: false, error: error.message };

@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "version": "v3",
+  "frozen_at": "2026-09-12T14:10:00-03:00",
+  "goal": "Atualizar integralmente o design do CVG Connect Desk para um layout premium State of Art, fluido, responsivo, acessível e interativo, baseado na identidade pesquisada do Centro Veterinário Guarapiranga e no logo licenciado fornecido, usando OpenDesign, ComfyUI e Blender sem regredir funcionalidades.",
+  "sources": [
+    {
+      "type": "USER",
+      "location": "Current user request and supplied logo",
+      "version": "user-current",
+      "snapshot_sha256": "6509dabbf54b9441f4b9b39edaaa78cb82df2795d8eb938ac918b4ddc84dac8a",
+      "license_notes": "User states the supplied mark is registered/licensed and explicitly authorizes its use."
+    },
+    {
+      "type": "REFERENCE",
+      "location": "https://www.cevetguarapiranga.com.br/",
+      "version": "accessed-2026-09-12",
+      "snapshot_sha256": null,
+      "license_notes": "Used for visual observation and product truth; public photography is not copied."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "BRAND-01",
+      "source_type": "REFERENCE",
+      "source": "docs/design/cvg-visual-brief.md; https://www.cevetguarapiranga.com.br/",
+      "version": "2026-09-12",
+      "snapshot_sha256": null,
+      "conditions": "light product theme; all primary routes",
+      "license_notes": "The user explicitly authorized the supplied registered/licensed logo on 2026-09-12. Preserve the complete mark; do not invent derivative red-cross emblems.",
+      "dimension": "brand",
+      "target": "Uses the observed CVG blue family and Pulso Operacional territory consistently; uses the supplied authorized logo intact at appropriate identity points; contains no invented institutional claim or new derivative red-cross emblem.",
+      "evidence_method": "Token audit, source inspection, screenshots at login/inbox/dashboard, fresh visual critic.",
+      "required": true,
+      "priority": "critical",
+      "baseline": {"status": "FAIL", "actual": "Generic blue/purple plus WhatsApp-green; emoji identity; no coherent brand system."},
+      "validity_notes": "Palette is observed from the public site; the logo license/ownership is user-attested and the source file was supplied directly."
+    },
+    {
+      "id": "FUNC-01",
+      "source_type": "USER",
+      "source": "Current redesign request and existing public routes in apps/desk-web/src/App.tsx",
+      "version": "user-current",
+      "snapshot_sha256": null,
+      "conditions": "Current frontend route and API contracts",
+      "license_notes": "n/a",
+      "dimension": "functional preservation",
+      "target": "All existing routes and implemented user flows remain wired; frontend unit suite, typecheck and production build pass after integration.",
+      "evidence_method": "Route/source audit plus pnpm --filter @cvg/desk-web test, typecheck and build; applicable Playwright flow when environment permits.",
+      "required": true,
+      "priority": "critical",
+      "baseline": {"status": "PASS", "actual": "47/47 frontend tests pass; typecheck and build pass on 2026-09-12."},
+      "validity_notes": "Existing tests do not cover every route and are supplemented by route inspection."
+    },
+    {
+      "id": "RESP-01",
+      "source_type": "USER",
+      "source": "Requested fluid modern layout; docs/08-frontend-architecture.md",
+      "version": "user-current",
+      "snapshot_sha256": null,
+      "conditions": "375, 390, 768, 1024 and 1440 CSS px; all primary routes, with smartphone and tablet treated as first-class layouts",
+      "license_notes": "n/a",
+      "dimension": "responsive UX",
+      "target": "The web app is multiplatform and purpose-built for smartphone and tablet as well as desktop: no document-level horizontal overflow; safe-area aware navigation and touch targets remain reachable; master/detail routes use a coherent single-panel model below desktop; wide workspaces use contained touch-friendly scrolling; primary operations have touch and keyboard alternatives.",
+      "evidence_method": "Browser measurements and screenshots at every declared viewport, plus interaction with mobile navigation and Inbox panels.",
+      "required": true,
+      "priority": "critical",
+      "baseline": {"status": "FAIL", "actual": "375px Inbox document scrollWidth is 753px; fixed 240px shell plus 380px conversation list."},
+      "validity_notes": "Authenticated baseline used synthetic API responses for layout only."
+    },
+    {
+      "id": "A11Y-01",
+      "source_type": "STANDARD",
+      "source": "WCAG 2.2 AA and docs/08-frontend-architecture.md section 3.5",
+      "version": "WCAG-2.2",
+      "snapshot_sha256": null,
+      "conditions": "Keyboard, visible focus, reduced motion, semantic names, 200% zoom and key contrast pairs",
+      "license_notes": "n/a",
+      "dimension": "accessibility",
+      "target": "Primary redesigned paths are keyboard-operable; form controls have names; status is not color-only; focus is visible; reduced motion removes continuous/decorative motion; key text/control contrast meets AA.",
+      "evidence_method": "Browser keyboard pass, semantic/source inspection, reduced-motion screenshot, contrast report and tests for named controls.",
+      "required": true,
+      "priority": "critical",
+      "baseline": {"status": "FAIL", "actual": "Login has unlabeled fields; clickable div rows; no reduced-motion query; multiple observed contrast failures."},
+      "validity_notes": "Automated/static checks do not replace manual keyboard inspection."
+    },
+    {
+      "id": "VIS-01",
+      "source_type": "USER",
+      "source": "State of Art / Premium / Triplo AAA request",
+      "version": "user-current",
+      "snapshot_sha256": null,
+      "conditions": "Current integrated login, shell, inbox and dashboard renders",
+      "license_notes": "References guide principles only; no protected composition copying.",
+      "dimension": "visual craft",
+      "target": "A coherent product-specific design system with controlled hierarchy, spacing, typography, material, density and SVG iconography; no generic AI styling or emoji-dependent primary navigation/actions; fresh critics identify no Critical or High visual gap.",
+      "evidence_method": "Rendered state matrix, design-token audit, two fresh-context visual critics and final critic.",
+      "required": true,
+      "priority": "high",
+      "baseline": {"status": "FAIL", "actual": "Fragmented global cascade, emoji navigation, inconsistent palettes and generic login styling."},
+      "validity_notes": "AAA is withheld unless independent rendered evidence satisfies this gate."
+    },
+    {
+      "id": "MOTION-01",
+      "source_type": "USER",
+      "source": "Requested fluidity, texture, movement and interaction",
+      "version": "user-current",
+      "snapshot_sha256": null,
+      "conditions": "Pointer, keyboard and prefers-reduced-motion",
+      "license_notes": "n/a",
+      "dimension": "motion and interaction",
+      "target": "Motion communicates hierarchy or state, uses named properties and bounded timing, has no distracting continuous UI animation, and is disabled or simplified under reduced motion.",
+      "evidence_method": "CSS audit and browser inspection in normal/reduced motion modes.",
+      "required": true,
+      "priority": "high",
+      "baseline": {"status": "FAIL", "actual": "38 transition:all usages and three infinite login animations remain active under reduced motion."},
+      "validity_notes": "Short status pulses may remain only when they stop and carry meaning."
+    },
+    {
+      "id": "ASSET-01",
+      "source_type": "USER",
+      "source": "Explicit request to use ComfyUI, Blender and open-design MCPs",
+      "version": "user-current",
+      "snapshot_sha256": null,
+      "conditions": "Local generation/editable concept; assets used only when they improve the product",
+      "license_notes": "Generated assets must avoid third-party identity and embedded text. The supplied authorized logo may be used intact but must not be hallucinated or redrawn by generators.",
+      "dimension": "tool-directed assets",
+      "target": "OpenDesign produces an editable product concept/specification; ComfyUI produces a provenance-tracked texture; Blender produces a provenance-tracked isolated abstract scene/render or records a current connection blocker without false substitution. Final runtime has performant fallbacks.",
+      "evidence_method": "MCP run IDs/status, artifact paths/hashes, asset manifest and runtime source audit.",
+      "required": true,
+      "priority": "high",
+      "baseline": {"status": "FAIL", "actual": "No project-native visual assets. OpenDesign and ComfyUI available; interactive Blender MCP connection initially refused at localhost:9876."},
+      "validity_notes": "A blocker prevents PASS; capability presence alone is insufficient."
+    },
+    {
+      "id": "PERF-01",
+      "source_type": "DERIVED",
+      "source": "Operational workstation UX and design-director frontend gates",
+      "version": "2026-09-12",
+      "snapshot_sha256": null,
+      "conditions": "Production build and representative local route",
+      "license_notes": "n/a",
+      "dimension": "performance",
+      "target": "Production build succeeds; generated visual assets are responsive and budgeted; LCP <= 2500ms and CLS <= 0.10 when measurable; route-level loading does not regress interaction or error visibility.",
+      "evidence_method": "Build sizes, asset audit and browser performance capture when runtime is available.",
+      "required": true,
+      "priority": "high",
+      "baseline": {"status": "NOT_RUN", "actual": "Build size observed at 286.62kB JS / 82.60kB gzip and 59.70kB CSS / 11.28kB gzip; LCP/CLS not run."},
+      "validity_notes": "Unavailable representative runtime is BLOCKED, not PASS."
+    }
+  ],
+  "revision_log": [
+    {
+      "from": "v1",
+      "to": "v2",
+      "date": "2026-09-12",
+      "reason": "The user explicitly confirmed ownership/licensing and authorized use of the supplied logo.",
+      "author": "user",
+      "evidence": "Conversation attachment and authorization statement."
+    },
+    {
+      "from": "v2",
+      "to": "v3",
+      "date": "2026-09-12",
+      "reason": "The user elevated multiplatform delivery, especially smartphone and tablet customization, to an explicit primary requirement.",
+      "author": "user",
+      "evidence": "Conversation instruction: multi platform, principally customized for smartphone and tablet."
+    }
+  ]
+}

@@ -108,7 +108,7 @@ describe('Chat routes integration', () => {
     expect(response.statusCode).toBe(201);
     const body = response.json() as { messageId: string; conversationId: string; status: string };
     expect(body.conversationId).toBe(conversationId);
-    expect(body.status).toBe('pending');
+    expect(body.status).toBe('sent');
 
     const [message] = await db
       .select()
@@ -135,6 +135,32 @@ describe('Chat routes integration', () => {
     });
 
     expect(response.statusCode).toBe(400);
+  });
+
+  it('resolve o recipient pela ultima mensagem inbound quando o cliente nao envia telefone', async () => {
+    await db.insert(schema.messages).values({
+      conversationId,
+      direction: 'inbound',
+      senderType: 'contact',
+      sender: '5511987788770',
+      content: 'Mensagem recebida',
+      status: 'pending',
+      externalMessageId: `inbound-recipient-${Date.now()}`,
+    });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/messages',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { conversationId, recipient: '', content: 'Resposta manual' },
+    });
+
+    expect(response.statusCode).toBe(201);
+    const outbound = (await db
+      .select()
+      .from(schema.messages)
+      .where(and(eq(schema.messages.conversationId, conversationId), eq(schema.messages.direction, 'outbound'))))[0];
+    expect(outbound?.recipient).toBe('5511987788770');
   });
 
   it('GET /conversations/:id/messages retorna a persistencia real', async () => {
@@ -164,5 +190,26 @@ describe('Chat routes integration', () => {
     expect(body.messages.length).toBeGreaterThan(0);
     expect(body.messages[0].content).toBe('Mensagem para leitura');
     expect(body.messages[0].direction).toBe('outbound');
+  });
+
+  it('marca uma conversa como lida para o atendimento humano', async () => {
+    await db
+      .update(schema.conversations)
+      .set({ unreadCount: 3 })
+      .where(eq(schema.conversations.id, conversationId));
+
+    const response = await app.inject({
+      method: 'POST',
+      url: `/conversations/${conversationId}/read`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ conversationId, unreadCount: 0 });
+
+    const conversation = await db.query.conversations.findFirst({
+      where: eq(schema.conversations.id, conversationId),
+    });
+    expect(conversation?.unreadCount).toBe(0);
   });
 });

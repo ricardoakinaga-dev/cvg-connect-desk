@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { handleGatewayInbound, handleGatewayReceipt, handleInstanceStatus, checkGatewayHealth } from '../../application/use-cases';
-import { normalizeEvolutionMessage, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
+import { toWAInboundEvent, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
 import { createWebhookGuard } from '@cvg/shared';
 import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 
@@ -38,7 +38,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
       case 'WA_INBOUND':
       case 'MESSAGES_UPSERT': {
         // Mensagem recebida
-        const waEvent = normalizeEvolutionMessage(event, eventType);
+        const waEvent = toWAInboundEvent(event, eventType);
         if (waEvent) {
           const result = await handleGatewayInbound(waEvent);
           if (result.isErr()) {

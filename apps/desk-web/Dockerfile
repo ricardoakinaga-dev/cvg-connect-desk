@@ -2,10 +2,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 ENV CI=true
-ENV ROLLUP_DISABLE_NATIVE=1
-ENV NPM_CONFIG_OPTIONAL=false
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=${VITE_API_URL}
+ARG VITE_REALTIME_URL=ws://localhost:8080
+ENV VITE_REALTIME_URL=${VITE_REALTIME_URL}
 
 COPY package.json pnpm-lock.yaml* ./
 COPY pnpm-workspace.yaml ./
