@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { hasPermission, Permission, Role } from './rbac';
+import { authzDenialsTotal } from '@cvg/shared';
 import { sectorPermissionService, type AccessLevel } from './sector-permissions';
 
 declare module 'fastify' {
@@ -34,6 +35,12 @@ export function requirePermission(...permissions: Permission[]) {
         userRoles: request.user.roles,
         requiredPermissions: permissions,
       }, 'Access denied - insufficient permissions');
+
+      try {
+        authzDenialsTotal.inc({ reason: 'missing-permission' });
+      } catch {
+        // Métricas nunca quebram a request.
+      }
 
       return reply.status(403).send({
         error: 'FORBIDDEN',
@@ -104,6 +111,11 @@ export function requireSectorAccess(
         sectorId,
         requiredLevel: level,
       }, 'Access denied - no sector membership');
+      try {
+        authzDenialsTotal.inc({ reason: 'sector-denied' });
+      } catch {
+        // Métricas nunca quebram a request.
+      }
       return reply.status(403).send({
         error: 'FORBIDDEN',
         message: 'No access to this sector',

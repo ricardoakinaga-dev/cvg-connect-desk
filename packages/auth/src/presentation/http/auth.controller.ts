@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
+import { authFailuresTotal } from '@cvg/shared';
 import { authRepository, hashSessionToken } from '../../infrastructure/repositories/auth.repository';
 
 interface LoginBody {
@@ -40,6 +41,11 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const user = await authRepository.findUserByEmail(email);
 
         if (!user) {
+          try {
+            authFailuresTotal.inc({ reason: 'invalid_credentials' });
+          } catch {
+            // Métricas nunca quebram o login.
+          }
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid credentials',
@@ -47,6 +53,11 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         }
 
         if (!user.isActive) {
+          try {
+            authFailuresTotal.inc({ reason: 'inactive' });
+          } catch {
+            // Métricas nunca quebram o login.
+          }
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'User account is inactive',
@@ -56,6 +67,11 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         const isValidPassword = await authRepository.verifyPassword(password, user.passwordHash);
 
         if (!isValidPassword) {
+          try {
+            authFailuresTotal.inc({ reason: 'invalid_credentials' });
+          } catch {
+            // Métricas nunca quebram o login.
+          }
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid credentials',

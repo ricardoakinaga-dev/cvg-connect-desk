@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import crypto from 'crypto';
 import { recordWebhookSecurityDecision } from './webhook-security-stats';
+import { webhookRequestsTotal, webhookReplayRejectedTotal } from './metrics';
 import {
   buildWebhookSignaturePayload,
   extractWebhookEventId,
@@ -44,6 +45,11 @@ function denyWebhook(
     signaturePresent: metadata.signaturePresent,
     statusCode,
   });
+  try {
+    webhookRequestsTotal.inc({ decision: reason });
+  } catch {
+    // Métricas nunca quebram o guard.
+  }
   return reply.status(statusCode).send({
     error: statusCode === 500 ? 'CONFIGURATION_ERROR' : 'UNAUTHORIZED',
     reason,
@@ -132,6 +138,12 @@ export function createWebhookGuard() {
         hasSecret: true,
         signaturePresent: true,
       });
+      try {
+        webhookRequestsTotal.inc({ decision: timestampCheck.reason || 'invalid_timestamp' });
+        webhookReplayRejectedTotal.inc({ reason: timestampCheck.reason || 'invalid_timestamp' });
+      } catch {
+        // Métricas nunca quebram o guard.
+      }
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
         reason: timestampCheck.reason,
@@ -153,6 +165,12 @@ export function createWebhookGuard() {
         hasSecret: true,
         signaturePresent: true,
       });
+      try {
+        webhookRequestsTotal.inc({ decision: 'missing_event_id' });
+        webhookReplayRejectedTotal.inc({ reason: 'missing_event_id' });
+      } catch {
+        // Métricas nunca quebram o guard.
+      }
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
         reason: 'missing_event_id',
@@ -205,6 +223,11 @@ export function createWebhookGuard() {
       hasSecret: true,
       signaturePresent: true,
     });
+    try {
+      webhookRequestsTotal.inc({ decision: 'signature_valid' });
+    } catch {
+      // Métricas nunca quebram o guard.
+    }
 
     if (eventId) {
       const store = getDefaultWebhookReplayStore();
@@ -223,6 +246,12 @@ export function createWebhookGuard() {
           hasSecret: true,
           signaturePresent: true,
         });
+        try {
+          webhookRequestsTotal.inc({ decision: 'duplicate_event_id' });
+          webhookReplayRejectedTotal.inc({ reason: 'duplicate_event_id' });
+        } catch {
+          // Métricas nunca quebram o guard.
+        }
         return reply.status(409).send({
           error: 'CONFLICT',
           reason: 'duplicate_event_id',

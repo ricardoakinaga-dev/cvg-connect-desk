@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { receiveInboundMessage } from '../../application/use-cases/receive-inbound-message.use-case';
-import { AppError, createWebhookGuard } from '@cvg/shared';
+import { AppError, createWebhookGuard, messagesInboundTotal } from '@cvg/shared';
 
 interface InboundWebhookBody {
   messageId?: string;
@@ -93,6 +93,11 @@ export async function registerInboundWebhook(app: FastifyInstance) {
           });
         }
 
+        try {
+          messagesInboundTotal.inc();
+        } catch {
+          // Métricas nunca quebram o webhook.
+        }
         return reply.status(200).send({
           success: true,
           messageId: result.value.messageId,

@@ -53,6 +53,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   const app = Fastify({
     logger: {
       level: process.env.LOG_LEVEL || 'info',
+      redact: (await import('@cvg/shared').then((m) => m.PINO_REDACT_PATHS).catch(() => [])) as string[],
       transport: process.env.NODE_ENV === 'development'
         ? { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss', ignore: 'pid,hostname' } }
         : undefined,
@@ -60,6 +61,48 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     trustProxy: true,
     bodyLimit: 1048576,
   }).withTypeProvider<ZodTypeProvider>();
+
+  const { metrics, httpRequestsTotal, httpRequestDuration, rateLimitHitsTotal } = await import('@cvg/shared');
+
+  app.addHook('onRequest', async (request) => {
+    (request as unknown as { metricsStartMs: number }).metricsStartMs = Date.now();
+  });
+
+  app.addHook('onResponse', async (request, reply) => {
+    try {
+      const route = request.routeOptions?.url || request.url.split('?')[0];
+      const method = request.method;
+      const status = reply.statusCode;
+      const started = (request as unknown as { metricsStartMs?: number }).metricsStartMs;
+      const durationS = started ? (Date.now() - started) / 1000 : 0;
+      httpRequestsTotal.inc({ method, route, status });
+      httpRequestDuration.observe(durationS, { method, route });
+      if (status === 429) {
+        rateLimitHitsTotal.inc({ route });
+      }
+    } catch {
+      // Métricas nunca quebram requests.
+    }
+  });
+
+  app.get('/metrics', {
+    schema: {
+      description: 'Exposição Prometheus (Phase 6). Protegido por METRICS_TOKEN quando configurado.',
+      tags: ['Observability'],
+      response: { 200: { type: 'string' } },
+    },
+  }, async (request, reply) => {
+    const token = process.env.METRICS_TOKEN;
+    if (token) {
+      const header = request.headers.authorization;
+      if (header !== `Bearer ${token}`) {
+        return reply.status(401).send({ error: 'UNAUTHORIZED', message: 'Invalid metrics token' });
+      }
+    } else if (isProduction()) {
+      request.log.warn('[Metrics] METRICS_TOKEN não configurado em produção — exposição aberta (restringir via rede/VPC)');
+    }
+    return reply.type('text/plain; version=0.0.4').send(metrics.render());
+  });
 
   // Captura rawBody para HMAC sem consumir o stream antes do parse:
   // parser customizado preserva bytes exatos e entrega objeto parseado ao Fastify.

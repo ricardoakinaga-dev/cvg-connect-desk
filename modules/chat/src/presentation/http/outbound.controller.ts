@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { sendOutboundMessage } from '../../application/use-cases/send-outbound-message.use-case';
 import { conversationRepository, Conversation } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
-import { AppError } from '@cvg/shared';
+import { AppError, messagesOutboundTotal } from '@cvg/shared';
 import { authenticate, authorize, requirePermission, sectorPermissionService } from '@cvg/auth';
 import { inArray } from 'drizzle-orm';
 
@@ -75,14 +75,18 @@ export async function registerOutboundController(app: FastifyInstance) {
           });
         }
 
+        try {
+          messagesOutboundTotal.inc({ deduplicated: result.value.deduplicated });
+        } catch {
+          // Métricas nunca quebram o envio.
+        }
         return reply.status(result.value.deduplicated ? 200 : 201).send({
           messageId: result.value.messageId,
           conversationId: result.value.conversationId,
           status: result.value.status,
           deduplicated: result.value.deduplicated,
         });
-      } catch (error) {
-        request.log.error(error);
+      } catch (error) {        request.log.error(error);
         return reply.status(500).send({
           error: 'INTERNAL_ERROR',
           message: 'Failed to send message',

@@ -5,3 +5,5 @@ export * from './webhook-guard';
 export * from './webhook-security-stats';
 export * from './webhook-anti-replay';
 export * from './retry-policy';
+export * from './redact';
+export * from './metrics';
