@@ -154,7 +154,7 @@ describe('RealtimeClient', () => {
     expect(parseSentMessages(sockets[0])).toContainEqual({ type: 'subscribe', channel: 'conversation:conv_1' });
 
     sockets[0].close();
-    vi.advanceTimersByTime(50);
+    vi.advanceTimersByTime(100);
 
     expect(sockets).toHaveLength(2);
 
@@ -175,8 +175,7 @@ describe('RealtimeClient', () => {
     ]);
   });
 
-  it('routes realtime payloads to subscribed handlers after auth', () => {
-    const { client, sockets } = createHarness();
+  it('routes realtime payloads to subscribed handlers after auth', () => {    const { client, sockets } = createHarness();
     const handler = vi.fn();
 
     client.subscribe('message.persisted', handler);
@@ -213,5 +212,113 @@ describe('RealtimeClient', () => {
       occurred_at: '2026-04-10T12:00:00Z',
       correlation_id: 'corr_123',
     });
+  });
+
+  it('backs off exponentially with cap across attempts', () => {
+    vi.useFakeTimers();
+    const sockets: MockWebSocket[] = [];
+    const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
+    const client = new RealtimeClient({
+      baseUrl: 'ws://realtime.test',
+      baseReconnectDelayMs: 100,
+      maxReconnectDelayMs: 250,
+      logger,
+      socketFactory: (url) => {
+        const socket = new MockWebSocket(url);
+        sockets.push(socket);
+        return socket as unknown as WebSocket;
+      },
+    });
+
+    client.connect('jwt-123');
+    // attempt 1: ~100ms (jitter ±20% → 80..120)
+    sockets[0].close();
+    vi.advanceTimersByTime(80);
+    expect(sockets).toHaveLength(1);
+    vi.advanceTimersByTime(40);
+    expect(sockets).toHaveLength(2);
+
+    // attempt 2: ~200ms (160..240)
+    sockets[1].close();
+    vi.advanceTimersByTime(160);
+    expect(sockets).toHaveLength(2);
+    vi.advanceTimersByTime(80);
+    expect(sockets).toHaveLength(3);
+
+    // attempt 3+: capped at ~250ms (200..300)
+    sockets[2].close();
+    vi.advanceTimersByTime(200);
+    expect(sockets).toHaveLength(3);
+    vi.advanceTimersByTime(100);
+    expect(sockets).toHaveLength(4);
+  });
+
+  it('does not reconnect after auth rejection', () => {
+    vi.useFakeTimers();
+    const { client, sockets } = createHarness(25);
+
+    client.connect('jwt-123');
+    sockets[0].open();
+    sockets[0].receive({ event: 'auth.error', data: { type: 'auth.error', payload: {} } });
+
+    vi.advanceTimersByTime(10_000);
+    expect(sockets).toHaveLength(1);
+  });
+
+  it('sends heartbeat pings and ignores pongs', () => {
+    vi.useFakeTimers();
+    const sockets: MockWebSocket[] = [];
+    const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
+    const client = new RealtimeClient({
+      baseUrl: 'ws://realtime.test',
+      heartbeatIntervalMs: 1000,
+      staleTimeoutMs: 60_000,
+      logger,
+      socketFactory: (url) => {
+        const socket = new MockWebSocket(url);
+        sockets.push(socket);
+        return socket as unknown as WebSocket;
+      },
+    });
+
+    client.connect('jwt-123');
+    sockets[0].open();
+    sockets[0].receive({ event: 'auth.success', data: { type: 'auth.success', payload: {} } });
+
+    vi.advanceTimersByTime(1000);
+    const sent = parseSentMessages(sockets[0]);
+    expect(sent).toContainEqual({ type: 'ping', at: expect.any(String) });
+
+    sockets[0].receive({ event: 'pong', data: { type: 'pong' } });
+    expect(sockets[0].readyState).toBe(MockWebSocket.OPEN);
+  });
+
+  it('reconnects on stale connection without recent messages', () => {
+    vi.useFakeTimers();
+    const sockets: MockWebSocket[] = [];
+    const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
+    const client = new RealtimeClient({
+      baseUrl: 'ws://realtime.test',
+      baseReconnectDelayMs: 50,
+      heartbeatIntervalMs: 1000,
+      staleTimeoutMs: 3000,
+      logger,
+      socketFactory: (url) => {
+        const socket = new MockWebSocket(url);
+        sockets.push(socket);
+        return socket as unknown as WebSocket;
+      },
+    });
+
+    client.connect('jwt-123');
+    sockets[0].open();
+    sockets[0].receive({ event: 'auth.success', data: { type: 'auth.success', payload: {} } });
+
+    // 4 heartbeats sem resposta contam como staleness apenas pelo relógio:
+    // lastMessageAt foi atualizado no auth.success; avançar além do stale.
+    vi.advanceTimersByTime(4000);
+    // Stale fecha o socket e agenda reconnect (backoff 50ms).
+    vi.advanceTimersByTime(100);
+    expect(sockets).toHaveLength(2);
   });
 });

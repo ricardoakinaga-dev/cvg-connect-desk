@@ -19,7 +19,12 @@ interface RealtimeSocketLike {
 
 interface RealtimeClientOptions {
   baseUrl?: string;
+  /** Base do backoff de reconexão (alias legado: reconnectDelayMs). */
   reconnectDelayMs?: number;
+  baseReconnectDelayMs?: number;
+  maxReconnectDelayMs?: number;
+  heartbeatIntervalMs?: number;
+  staleTimeoutMs?: number;
   socketFactory?: (url: string) => RealtimeSocketLike;
   logger?: Pick<Console, 'log' | 'warn' | 'error' | 'debug'>;
 }
@@ -42,16 +47,25 @@ export class RealtimeClient {
   private authToken: string | null = null;
   private authenticated = false;
   private handlers: Map<string, RealtimeHandler[]> = new Map();
-  private reconnectInterval: ReturnType<typeof setInterval> | null = null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
   private subscribedChannels: Set<string> = new Set();
   private shouldReconnect = true;
-  private readonly reconnectDelayMs: number;
+  private reconnectAttempt = 0;
+  private lastMessageAt = 0;
+  private readonly baseReconnectDelayMs: number;
+  private readonly maxReconnectDelayMs: number;
+  private readonly heartbeatIntervalMs: number;
+  private readonly staleTimeoutMs: number;
   private readonly socketFactory: (url: string) => RealtimeSocketLike;
   private readonly logger: Pick<Console, 'log' | 'warn' | 'error' | 'debug'>;
 
   constructor(options: RealtimeClientOptions = {}) {
     this.url = options.baseUrl || import.meta.env.VITE_REALTIME_URL || 'ws://localhost:8080';
-    this.reconnectDelayMs = options.reconnectDelayMs ?? 5000;
+    this.baseReconnectDelayMs = options.baseReconnectDelayMs ?? options.reconnectDelayMs ?? 5000;
+    this.maxReconnectDelayMs = options.maxReconnectDelayMs ?? 30000;
+    this.heartbeatIntervalMs = options.heartbeatIntervalMs ?? 25000;
+    this.staleTimeoutMs = options.staleTimeoutMs ?? 60000;
     this.socketFactory = options.socketFactory ?? ((url: string) => new WebSocket(url) as unknown as RealtimeSocketLike);
     this.logger = options.logger ?? defaultLogger;
   }
@@ -63,6 +77,7 @@ export class RealtimeClient {
     }
 
     this.shouldReconnect = true;
+    this.reconnectAttempt = 0;
     this.authToken = token;
     this.attemptConnect();
   }
@@ -92,6 +107,7 @@ export class RealtimeClient {
 
       this.ws.onmessage = (event) => {
         try {
+          this.lastMessageAt = Date.now();
           const message = JSON.parse(event.data) as RealtimeWireMessage;
           this.handleServerMessage(message);
         } catch (error) {
@@ -103,6 +119,7 @@ export class RealtimeClient {
         this.logger.log('[Realtime] Disconnected');
         this.ws = null;
         this.authenticated = false;
+        this.stopHeartbeat();
 
         if (this.shouldReconnect) {
           this.scheduleReconnect();
@@ -124,24 +141,44 @@ export class RealtimeClient {
     }
   }
 
+  /** Backoff exponencial limitado + jitter (bounded, sem thundering herd). */
+  private nextReconnectDelayMs(): number {
+    const exponential = this.baseReconnectDelayMs * 2 ** this.reconnectAttempt;
+    const capped = Math.min(exponential, this.maxReconnectDelayMs);
+    const jitter = capped * 0.2 * (Math.random() * 2 - 1);
+    return Math.max(0, Math.round(capped + jitter));
+  }
+
   private scheduleReconnect() {
     this.clearReconnectTimer();
-    this.reconnectInterval = setInterval(() => {
-      this.logger.log('[Realtime] Reconnecting...');
+    const delay = this.nextReconnectDelayMs();
+    this.reconnectAttempt += 1;
+    this.logger.log(`[Realtime] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempt})...`);
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
       this.attemptConnect();
-    }, this.reconnectDelayMs);
+    }, delay);
   }
 
   private handleServerMessage(message: RealtimeWireMessage) {
+    if (message.event === 'pong' || message.data?.type === 'pong') {
+      return;
+    }
+
     if (message.event === 'auth.success' || message.data?.type === 'auth.success') {
       this.authenticated = true;
+      this.reconnectAttempt = 0;
       this.logger.log('[Realtime] Authenticated via message-based auth');
+      this.startHeartbeat();
       this.resubscribe();
       return;
     }
 
     if (message.event === 'auth.error' || message.data?.type === 'auth.error') {
-      this.logger.warn('[Realtime] Authentication rejected by realtime service');
+      // Token rejeitado: reconectar não adianta (evita loop infinito).
+      this.logger.warn('[Realtime] Authentication rejected by realtime service — not reconnecting');
+      this.shouldReconnect = false;
+      this.clearReconnectTimer();
       return;
     }
 
@@ -215,15 +252,46 @@ export class RealtimeClient {
   }
 
   private clearReconnectTimer() {
-    if (this.reconnectInterval) {
-      clearInterval(this.reconnectInterval);
-      this.reconnectInterval = null;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+  }
+
+  private startHeartbeat() {
+    this.stopHeartbeat();
+    this.heartbeatTimer = setInterval(() => {
+      if (this.ws?.readyState !== WebSocket.OPEN || !this.authenticated) {
+        return;
+      }
+      if (Date.now() - this.lastMessageAt > this.staleTimeoutMs) {
+        this.logger.warn('[Realtime] Stale connection detected — reconnecting');
+        try {
+          this.ws.close(4000, 'stale connection');
+        } catch {
+          // Fechamento best-effort; onclose dispara o reconnect.
+        }
+        return;
+      }
+      try {
+        this.ws.send(JSON.stringify({ type: 'ping', at: new Date().toISOString() }));
+      } catch (error) {
+        this.logger.error('[Realtime] Heartbeat ping failed:', error);
+      }
+    }, this.heartbeatIntervalMs);
+  }
+
+  private stopHeartbeat() {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
     }
   }
 
   disconnect() {
     this.shouldReconnect = false;
     this.clearReconnectTimer();
+    this.stopHeartbeat();
     this.authenticated = false;
     this.authToken = null;
     this.ws?.close();

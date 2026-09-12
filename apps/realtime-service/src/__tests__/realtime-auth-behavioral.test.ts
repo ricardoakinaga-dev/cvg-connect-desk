@@ -236,8 +236,7 @@ describe('RealtimeServer behavioral auth flow', () => {
     await closeClient(client);
   });
 
-  it('accepts message-based auth and allows subscribe after auth.success', async () => {
-    authServer.setTokenStatus('message-token', 'user-message', 200);
+  it('accepts message-based auth and allows subscribe after auth.success', async () => {    authServer.setTokenStatus('message-token', 'user-message', 200);
     const client = await connectClient(realtimeBaseUrl);
 
     await waitForMessage(client, (message) => message.event === 'auth.required');
@@ -251,6 +250,23 @@ describe('RealtimeServer behavioral auth flow', () => {
     await waitForMessage(client, (message) => message.event === 'subscribed');
 
     expect(client.messages.find((message) => message.event === 'auth.success')?.data?.payload?.userId).toBe('user-message');
+
+    await closeClient(client);
+  });
+
+  it('answers app-level ping with pong (heartbeat)', async () => {
+    authServer.setTokenStatus('message-token', 'user-message', 200);
+    const client = await connectClient(realtimeBaseUrl);
+
+    await waitForMessage(client, (message) => message.event === 'auth.required');
+
+    client.ws.send(JSON.stringify({ type: 'auth', token: 'message-token' }));
+
+    await waitForMessage(client, (message) => message.event === 'auth.success');
+
+    client.ws.send(JSON.stringify({ type: 'ping', at: new Date().toISOString() }));
+
+    await waitForMessage(client, (message) => message.event === 'pong');
 
     await closeClient(client);
   });

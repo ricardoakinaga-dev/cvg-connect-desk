@@ -330,6 +330,19 @@ class RealtimeServer {
       const message = JSON.parse(data.toString());
 
       switch (message.type) {
+        case 'ping':
+          // Heartbeat app-level (Phase 10): responde pong para detecção de stale.
+          this.sendToClient(clientId, {
+            event: 'pong',
+            data: {
+              type: 'pong' as any,
+              aggregateType: 'Client',
+              aggregateId: clientId,
+              occurredAt: new Date().toISOString(),
+              payload: {},
+            },
+          });
+          break;
         case 'subscribe':
           this.handleSubscribe(clientId, message);
           break;
