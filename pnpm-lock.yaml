@@ -253,6 +253,9 @@ importers:
 
   modules/admin:
     dependencies:
+      '@cvg/audit':
+        specifier: workspace:*
+        version: link:../audit
       '@cvg/auth':
         specifier: workspace:*
         version: link:../../packages/auth

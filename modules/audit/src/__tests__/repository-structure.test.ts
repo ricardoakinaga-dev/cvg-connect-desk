@@ -38,4 +38,12 @@ describe('Audit Module Structure', () => {
     expect(content).toContain('and');
     expect(content).toContain('desc(');
   });
+
+  it('is append-only: exposes no update/delete/remove methods', () => {
+    expect(content).not.toMatch(/async\s+update\s*\(/);
+    expect(content).not.toMatch(/async\s+delete\s*\(/);
+    expect(content).not.toMatch(/async\s+remove\s*\(/);
+    expect(content).not.toMatch(/\.update\(schema\.auditLogs/);
+    expect(content).not.toMatch(/\.delete\(\s*schema\.auditLogs/);
+  });
 });

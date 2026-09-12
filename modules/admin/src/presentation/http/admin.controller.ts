@@ -9,6 +9,7 @@ import {
 import { adminRepository } from '../../infrastructure/repositories/admin.repository.ts';
 import { AppError } from '@cvg/shared';
 import { authenticate, requirePermission } from '@cvg/auth';
+import { createAuditLog } from '@cvg/audit';
 import { deadLetterStore, publishToOutbox } from '@cvg/events';
 import { getWebhookSecurityStats } from '@cvg/shared';
 import type {
@@ -368,6 +369,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       await publishToOutbox(entry.sourceEvent);
       deadLetterStore.resolve(id);
+      await createAuditLog({
+        userId: request.user?.id,
+        action: 'dlq.replay',
+        entityType: 'dead-letter',
+        metadata: { entryId: id },
+      });
       return reply.status(200).send({
         success: true,
         replayed: true,
@@ -398,6 +405,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
 
     deadLetterStore.resolve(id);
+    await createAuditLog({
+      userId: request.user?.id,
+      action: 'dlq.resolve',
+      entityType: 'dead-letter',
+      metadata: { entryId: id },
+    });
     return reply.status(200).send({
       success: true,
       replayed: false,
@@ -471,6 +484,14 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.setUserSectors(id, sectorPerms);
+      await createAuditLog({
+        userId: request.user?.id,
+        action: 'sector.membership.change',
+        entityType: 'user',
+        entityId: id,
+        newValue: { sectors: sectorPerms },
+        metadata: { mode: 'replace' },
+      });
       return { success: true, count: sectorPerms.length };
     } catch (error) {
       request.log.error(error);
@@ -500,6 +521,14 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.addSectorPermission(id, sectorId, accessLevel || 'read');
+      await createAuditLog({
+        userId: request.user?.id,
+        action: 'sector.membership.change',
+        entityType: 'user',
+        entityId: id,
+        newValue: { sectorId, accessLevel: accessLevel || 'read' },
+        metadata: { mode: 'grant' },
+      });
       return { success: true };
     } catch (error) {
       request.log.error(error);
@@ -520,6 +549,14 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.removeSectorPermission(id, sectorId);
+      await createAuditLog({
+        userId: request.user?.id,
+        action: 'sector.membership.change',
+        entityType: 'user',
+        entityId: id,
+        oldValue: { sectorId },
+        metadata: { mode: 'revoke' },
+      });
       return { success: true };
     } catch (error) {
       request.log.error(error);

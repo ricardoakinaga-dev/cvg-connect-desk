@@ -15,6 +15,7 @@
     "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/auth": "workspace:*",
+    "@cvg/audit": "workspace:*",
     "bcryptjs": "^2.4.3"
   },
   "devDependencies": {

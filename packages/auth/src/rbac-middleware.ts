@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { hasPermission, Permission, Role } from './rbac';
+import { sectorPermissionService, type AccessLevel } from './sector-permissions';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -63,6 +64,49 @@ export function requireRole(...roles: Role[]) {
       return reply.status(403).send({
         error: 'FORBIDDEN',
         message: 'Required role not present',
+      });
+    }
+  };
+}
+
+/**
+ * Exige membership no setor alvo (Phase 4 — §7.2).
+ * Admin global (role Admin) tem override. Sem sectorId resolvido → 400.
+ */
+export function requireSectorAccess(
+  resolveSectorId: (request: FastifyRequest) => string | undefined,
+  level: AccessLevel = 'read',
+) {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    if (!request.user) {
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      });
+    }
+
+    const sectorId = resolveSectorId(request);
+    if (!sectorId) {
+      return reply.status(400).send({
+        error: 'BAD_REQUEST',
+        message: 'Sector scope is required for this resource',
+      });
+    }
+
+    if (request.user.roles.includes('Admin')) {
+      return;
+    }
+
+    const allowed = await sectorPermissionService.hasAccess(request.user.id, sectorId, level);
+    if (!allowed) {
+      request.log.warn({
+        userId: request.user.id,
+        sectorId,
+        requiredLevel: level,
+      }, 'Access denied - no sector membership');
+      return reply.status(403).send({
+        error: 'FORBIDDEN',
+        message: 'No access to this sector',
       });
     }
   };

@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { authenticate, requirePermission } from '@cvg/auth';
+import { authenticate, requirePermission, requireSectorAccess } from '@cvg/auth';
 import { AppError } from '@cvg/shared';
 import * as useCases from '../../application/use-cases';
 
@@ -94,7 +94,7 @@ export async function registerSectorRoutes(app: FastifyInstance) {
 
   // Conversas do setor
   app.get('/sectors/:id/conversations', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requireSectorAccess((req) => (req.params as { id?: string })?.id)],
     schema: {
       description: 'Conversas de um setor',
       tags: ['Sectors'],
@@ -114,7 +114,7 @@ export async function registerSectorRoutes(app: FastifyInstance) {
 
   // Estatísticas do setor
   app.get('/sectors/:id/stats', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requireSectorAccess((req) => (req.params as { id?: string })?.id)],
     schema: {
       description: 'Estatísticas de um setor',
       tags: ['Sectors'],

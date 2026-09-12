@@ -3,7 +3,7 @@ import { sendOutboundMessage } from '../../application/use-cases/send-outbound-m
 import { conversationRepository, Conversation } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { AppError } from '@cvg/shared';
-import { authenticate, requirePermission } from '@cvg/auth';
+import { authenticate, authorize, requirePermission, sectorPermissionService } from '@cvg/auth';
 import { inArray } from 'drizzle-orm';
 
 interface SendMessageBody {
@@ -150,6 +150,26 @@ export async function registerOutboundController(app: FastifyInstance) {
       try {
         const { status, queueId, teamId, sectorId } = request.query;
         const userId = (request.user as any)?.id;
+        const roles = (request.user?.roles ?? []) as string[];
+
+        // Zero-trust (§7.2): filtro explícito de setor exige membership;
+        // sem setores atribuídos, não-admin não enxerga nada (default-deny).
+        if (sectorId) {
+          const decision = await authorize(
+            { id: userId, roles },
+            'chat:read',
+            { type: 'conversation', sectorId },
+          );
+          if (!decision.allowed) {
+            return reply.status(403).send({ error: 'FORBIDDEN', message: 'No access to this sector' });
+          }
+        } else if (!roles.includes('Admin')) {
+          const memberOf = await sectorPermissionService.getUserSectorIds(userId);
+          if (memberOf.length === 0) {
+            return reply.status(200).send({ conversations: [] });
+          }
+        }
+
         const conversations = await conversationRepository.findAll({ status, queueId, teamId, sectorId, userId });
         
         // Buscar contatos para resolver nomes
