@@ -19,6 +19,7 @@
     "@cvg/realtime": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*",
+    "redis": "^4.7.0",
     "ws": "^8.21.3"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import type { EventEnvelope } from './envelope';
 import { db, schema } from '@cvg/database';
+import { publishRealtimeHint } from './realtime-bus';
 
 export interface OutboxEventPublisher {
   publish<T>(event: EventEnvelope<T>): Promise<void>;
@@ -24,6 +25,10 @@ export async function publishToOutbox<T>(event: EventEnvelope<T>): Promise<void>
     lastError: null,
     createdAt: new Date(),
   });
+
+  // Fast path realtime (Final-8): hint via Redis Pub/Sub. Best-effort —
+  // o polling do outbox continua como path durável.
+  void publishRealtimeHint(event).catch(() => {});
 }
 
 export class DatabaseEventPublisher implements OutboxEventPublisher {

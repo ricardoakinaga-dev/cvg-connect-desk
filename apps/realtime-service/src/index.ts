@@ -10,6 +10,8 @@ import {
   type RealtimeProjection
 } from '@cvg/realtime';
 import { ConsumerAwareOutboxReader, CONSUMER_IDS } from '@cvg/events';
+import { RedisRealtimeBus, NoopRealtimeBus, REALTIME_BUS_CHANNEL, type RealtimeBus } from '@cvg/events';
+import { randomUUID } from 'node:crypto';
 
 interface Client {
   id: string;
@@ -35,10 +37,19 @@ class RealtimeServer {
   private authTimeout: number = 5000;
   private pendingAuth: Map<string, NodeJS.Timeout> = new Map();
   private revalidateIntervalMs: number;
+  private readonly instanceId: string;
+  private bus: RealtimeBus;
+  private busUnsubscribe: (() => void) | null = null;
+  private recentlyBroadcast = new Map<string, number>();
+  private static readonly DEDUP_WINDOW_MS = 60_000;
+  private static readonly DEDUP_MAX = 2000;
 
   constructor(private port: number = 8080) {
     this.deskApiUrl = process.env.DESK_API_URL || 'http://localhost:3000';
     this.revalidateIntervalMs = Number(process.env.REALTIME_AUTH_REVALIDATE_MS) || 300000; // 5 minutes default
+    this.instanceId = `rt-${randomUUID().slice(0, 8)}`;
+    const redisUrl = process.env.REDIS_URL || '';
+    this.bus = redisUrl ? new RedisRealtimeBus({ url: redisUrl, channel: REALTIME_BUS_CHANNEL, instanceId: this.instanceId }) : new NoopRealtimeBus();
   }
 
   start(): void {
@@ -72,6 +83,7 @@ class RealtimeServer {
     });
 
     this.startEventPolling();
+    this.startRealtimeBus().catch(() => {});
     console.info(JSON.stringify({
       msg: '[Realtime] Event polling started',
       level: 'info',
@@ -721,6 +733,43 @@ class RealtimeServer {
     }));
   }
 
+  /** Fast path (Final-8): hints via Redis; polling continua como path durável. */
+  private async startRealtimeBus(): Promise<void> {
+    try {
+      await this.bus.start();
+    } catch {
+      return;
+    }
+    this.busUnsubscribe = this.bus.onEnvelope((envelope) => {
+      try {
+        this.processEvent(envelope);
+      } catch {
+        // Broadcast nunca derruba o subscriber.
+      }
+    });
+    console.info(JSON.stringify({
+      msg: '[Realtime] Redis bus subscribed',
+      instance_id: this.instanceId,
+      channel: REALTIME_BUS_CHANNEL,
+      level: 'info',
+    }));
+  }
+
+  /** Dedup de broadcast: poll + bus podem entregar o mesmo evento. */
+  private markBroadcasted(eventId: string): boolean {
+    const now = Date.now();
+    const seenAt = this.recentlyBroadcast.get(eventId);
+    if (seenAt !== undefined && now - seenAt < RealtimeServer.DEDUP_WINDOW_MS) {
+      return false;
+    }
+    this.recentlyBroadcast.set(eventId, now);
+    if (this.recentlyBroadcast.size > RealtimeServer.DEDUP_MAX) {
+      const oldest = [...this.recentlyBroadcast.entries()].sort((a, b) => a[1] - b[1])[0];
+      if (oldest) this.recentlyBroadcast.delete(oldest[0]);
+    }
+    return true;
+  }
+
   private processEvent(event: EventEnvelope): boolean {
     if (!shouldProject(event)) {
       return false;
@@ -738,9 +787,14 @@ class RealtimeServer {
 
     // Span síncrona de publicação (Final-2): broadcast é fan-out local;
     // correlação preservada via event/correlation ids.
+    // Dedup (Final-8): poll + bus podem entregar o mesmo evento; só o
+    // primeiro faz broadcast (o ack do outbox continua no path de poll).
     void withSpan(
       'realtime.publish',
       async () => {
+        if (!this.markBroadcasted(event.event_id)) {
+          return;
+        }
         const aggregateId = projection.aggregateId;
         const aggregateType = projection.aggregateType.toLowerCase();
 
@@ -772,10 +826,22 @@ class RealtimeServer {
   }
 
   stop(): void {
+    // Graceful shutdown (Final-8): parar polling, unsubscribe do bus,
+    // fechar timers, drenar sockets.
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
       this.pollInterval = null;
     }
+
+    if (this.busUnsubscribe) {
+      try {
+        this.busUnsubscribe();
+      } catch {
+        // best-effort
+      }
+      this.busUnsubscribe = null;
+    }
+    void this.bus.stop().catch(() => {});
 
     for (const timeout of this.pendingAuth.values()) {
       clearTimeout(timeout);

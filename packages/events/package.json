@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@cvg/database": "workspace:*"
+    "@cvg/database": "workspace:*",
+    "redis": "^4.7.0"
   }
 }
