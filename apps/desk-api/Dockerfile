@@ -36,7 +36,17 @@ COPY tsconfig*.json ./
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate \
   && pnpm install --frozen-lockfile --prod --filter @cvg/desk-api... \
   && corepack cache clean \
-  && rm -rf /root/.cache/node/corepack /root/.local/share/pnpm/store /root/.pnpm-store
+  && rm -rf \
+    /root/.cache/node/corepack \
+    /root/.local/share/pnpm/store \
+    /root/.pnpm-store \
+    /usr/local/lib/node_modules/npm \
+    /usr/local/lib/node_modules/corepack \
+    /usr/local/bin/npm \
+    /usr/local/bin/npx \
+    /usr/local/bin/corepack \
+    /usr/local/bin/pnpm \
+    /usr/local/bin/pnpx
 
 USER appuser
 EXPOSE 3000
