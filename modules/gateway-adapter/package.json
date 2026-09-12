@@ -18,7 +18,7 @@
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*",
     "axios": "^1.20.0",
-    "uuid": "^9.0.1"
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^3.2.7",

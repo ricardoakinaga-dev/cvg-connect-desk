@@ -359,8 +359,8 @@ importers:
         specifier: ^5.12.4
         version: 5.12.4
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.2
+        version: 14.0.2
     devDependencies:
       '@types/bcryptjs':
         specifier: ^2.4.6
@@ -499,8 +499,8 @@ importers:
         specifier: ^1.20.0
         version: 1.20.0
       uuid:
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^14.0.2
+        version: 14.0.2
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^3.2.7
@@ -711,8 +711,8 @@ importers:
         specifier: ^5.12.4
         version: 5.12.4
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.2
+        version: 14.0.2
     devDependencies:
       '@types/bcryptjs':
         specifier: ^2.4.6
@@ -4211,12 +4211,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  uuid@11.1.0:
-    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
-    hasBin: true
-
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+  uuid@14.0.2:
+    resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
     hasBin: true
 
   vite-node@3.2.4:
@@ -7647,9 +7643,7 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  uuid@11.1.0: {}
-
-  uuid@9.0.1: {}
+  uuid@14.0.2: {}
 
   vite-node@3.2.4(@types/node@20.19.37)(tsx@4.23.13)(yaml@2.9.1):
     dependencies:
