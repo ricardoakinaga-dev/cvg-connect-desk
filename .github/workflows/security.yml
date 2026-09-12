@@ -23,21 +23,21 @@ jobs:
       actions: read
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: github/codeql-action/init@c29f4eedf1fb43be1c9b9611f2e861ca03ad0008
         with:
           languages: javascript-typescript
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@c29f4eedf1fb43be1c9b9611f2e861ca03ad0008
 
   gitleaks:
     name: Secret scan (Gitleaks)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@83373cf2f8c4db6e24b41c1a9b086bb9619e9cd3
 
   trivy:
     name: Container scan (Trivy)
@@ -45,9 +45,9 @@ jobs:
     timeout-minutes: 20
     needs: []
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - run: docker build -f apps/desk-api/Dockerfile -t cvg-desk-api:scan .
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
         with:
           image-ref: 'cvg-desk-api:scan'
           format: 'sarif'
@@ -56,7 +56,7 @@ jobs:
           # Policy explícita (Final-6): HIGH/CRITICAL quebram o job.
           exit-code: '1'
           ignore-unfixed: true
-      - uses: github/codeql-action/upload-sarif@v3
+      - uses: github/codeql-action/upload-sarif@c29f4eedf1fb43be1c9b9611f2e861ca03ad0008
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
@@ -67,8 +67,8 @@ jobs:
     timeout-minutes: 10
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/dependency-review-action@3b139cfc5fae8b618d3eae3675e383bb1769c019
         with:
           fail-on-severity: high
 
@@ -77,8 +77,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
@@ -93,16 +93,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
-      - uses: anchore/sbom-action@v0
+      - uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0
         with:
           path: ./
           format: cyclonedx-json
           output-file: sbom.cyclonedx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: sbom-cyclonedx
           path: sbom.cyclonedx.json
