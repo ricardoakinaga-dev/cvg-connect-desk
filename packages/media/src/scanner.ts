@@ -90,6 +90,9 @@ export class ClamAVScanner implements MalwareScanner {
     const timeoutMs = getTimeoutMs();
     const socket = net.connect(this.port, this.host);
     const reply = readClamdReply(socket, timeoutMs);
+    // Evita unhandled rejection: o mesmo 'error' rejeita o connect abaixo;
+    // o consumo real acontece no await mais adiante.
+    reply.catch(() => {});
 
     try {
       await new Promise<void>((resolve, reject) => {

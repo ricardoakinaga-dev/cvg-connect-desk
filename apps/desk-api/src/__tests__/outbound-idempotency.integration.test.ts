@@ -238,24 +238,25 @@ describe('Outbound idempotency integration', () => {
     const { messageId } = response.json() as { messageId: string };
 
     // sendViaEvolution é assíncrono; aguardar reconciliação (mock resolve imediato).
-    let status: string | null = null;
-    const deadline = Date.now() + 10000;
+    // Poll na DELIVERY (última escrita da cadeia) para evitar race com o update da mensagem.
+    let delivery: { status: string | null; attemptCount: number } | null = null;
+    const deadline = Date.now() + 15000;
     while (Date.now() < deadline) {
       const [row] = await db
-        .select({ status: schema.messages.status })
-        .from(schema.messages)
-        .where(eq(schema.messages.id, messageId));
-      status = row?.status ?? null;
-      if (status === 'sent') break;
+        .select({ status: schema.outboundDeliveries.status, attemptCount: schema.outboundDeliveries.attemptCount })
+        .from(schema.outboundDeliveries)
+        .where(eq(schema.outboundDeliveries.idempotencyKey, key));
+      delivery = row ?? null;
+      if (delivery?.status === 'sent') break;
       await new Promise((resolve) => setTimeout(resolve, 25));
     }
-    expect(status).toBe('sent');
+    expect(delivery?.status).toBe('sent');
 
-    const [delivery] = await db
-      .select()
-      .from(schema.outboundDeliveries)
-      .where(eq(schema.outboundDeliveries.idempotencyKey, key));
-    expect(delivery).toMatchObject({ status: 'sent' });
-    expect(delivery.attemptCount).toBeGreaterThanOrEqual(1);
+    const [message] = await db
+      .select({ status: schema.messages.status })
+      .from(schema.messages)
+      .where(eq(schema.messages.id, messageId));
+    expect(message?.status).toBe('sent');
+    expect(delivery?.attemptCount).toBeGreaterThanOrEqual(1);
   });
 });

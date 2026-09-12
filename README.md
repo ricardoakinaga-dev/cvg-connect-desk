@@ -177,6 +177,18 @@ pnpm --filter @cvg/shared test
 pnpm --filter @cvg/shared test --coverage
 ```
 
+## Verificação e certificação
+
+```bash
+# Master gate (lint, typecheck, testes, postgres-real, migrations, build, audit)
+pnpm triple-aaa:verify
+# → artifacts/triple-aaa-report.json
+```
+
+Estado atual: `docs/TRIPLE_AAA_CERTIFICATION.md` (AAA-1 VERIFIED; AAA-2/AAA-3
+CONDITIONAL até evidência de CI). Matriz de testes: `docs/TEST_MATRIX.md`.
+Métricas Prometheus: `GET /metrics`. Tracing OTEL: `OTEL_ENABLED=true`.
+
 ## Documentação
 
 - [Docs do Projeto](./docs/) — Arquitetura, modelo de dados, roadmap

@@ -20,7 +20,8 @@
     "pretypecheck": "pnpm --filter @cvg/database db:types",
     "typecheck": "turbo run typecheck",
     "db:migrate": "pnpm --filter @cvg/database db:migrate",
-    "db:seed": "pnpm --filter @cvg/database db:seed"
+    "db:seed": "pnpm --filter @cvg/database db:seed",
+    "triple-aaa:verify": "node scripts/triple-aaa-verify.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

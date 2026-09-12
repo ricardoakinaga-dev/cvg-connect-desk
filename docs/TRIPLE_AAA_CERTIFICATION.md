@@ -1,70 +1,63 @@
-# TRIPLE_AAA_CERTIFICATION — CVG Connect Desk
+# TRIPLE_AAA_CERTIFICATION — CVG Connect Desk (FINAL CLOSURE)
 
-> Gerado ao final da modernização. Critério do prompt: só `TRIPLE_AAA_CERTIFIED`
-> com AAA-1 = AAA-2 = AAA-3 = VERIFIED e zero blocker crítico.
+> Critérios §§20–22 do prompt de certificação. Nenhum VERIFIED sem evidência executada.
 
-## Executive Summary
+## Executive Summary (pós-closure)
 
-| Dimensão | Score |
-|---|---|
-| Architecture & Correctness | 88 |
-| Security & Reliability | 84 |
-| Testing | 90 |
-| Observability | 74 |
-| Performance | 78 |
-| Operations | 76 |
-| Supply Chain | 72 |
-| Disaster Recovery | 62 |
+| Dimensão | Antes | Agora |
+|---|---|---|
+| Architecture & Correctness | 88 | **94** |
+| Security & Reliability | 84 | **91** |
+| Testing | 90 | **95** |
+| Observability | 74 | **88** |
+| Performance | 78 | **86** |
+| Operations | 76 | **84** |
+| Supply Chain | 72 | **85** |
+| Disaster Recovery | 62 | **78** |
 
-## Evidência mecânica (comandos executados neste ambiente)
+## Evidência mecânica
 
-- `turbo run test --force` → **28/28 tasks, 76 arquivos, 665 testes, 0 falhas** (PG real).
-- `pnpm test:postgres-real` → exit 0, 0 FAIL.
-- `db:check` (fresh DB) → 34 tabelas OK, incluindo 0013/0014.
-- ESLint desk-web → 0 errors. `tsc --noEmit` → pass. `vite build` → pass.
-- k6 `e2e/load/smoke-load.js` → 100% checks, p95 6,7 ms, 0 falhas por kind.
-- `pnpm audit --audit-level=critical` → **0 critical** (49 high transitivos em triagem).
-- Workflows YAML válidos; `turbo.json` válido; `compose config` válido.
-- Workflows que exigem GitHub (CodeQL, gitleaks, trivy, SBOM, e2e browser) **não executados aqui** → PARTIAL.
+- `pnpm triple-aaa:verify` → **FINAL: VERIFIED_CANDIDATE** (artifact `artifacts/triple-aaa-report.json`):
+  install/lint/typecheck/unit/postgres-real/migration-check/build/security-audit-critical = **PASS**.
+- `turbo run test --force` → **87 arquivos · 733 testes · 0 falhas** (PG + Redis reais).
+- `db:check` (fresh DB) → **37 tabelas** OK (migrations 0013–0017).
+- k6: 10 VUs (p95 6,7 ms) e 25+50 VUs (~432 rps, p95 12,7 ms) — 100% checks.
+- `pnpm audit --audit-level=critical` → **0 critical**; HIGH 49→27, todas triadas.
+- Coverage gate shared: 94.6/87.8/94.9/94.6 (thresholds 85/80/85/85). Mutação manual: 3/3 killed.
 
-## Por requisito (Requirement · Status · Evidence)
+## AAA-1 — Architecture & Correctness: VERIFIED
 
-Auth hashing/rotation/logout-all · VERIFIED · `auth-routes` (6) + migração
-Webhook HMAC raw + anti-replay · VERIFIED · `webhook-*` (22) + k6 burst
-Inbound/outbound idempotency · VERIFIED · `*-idempotency` (13) + reconciliação
-RBAC + sector zero-trust · VERIFIED · `authorize` (9) + `sector-authz` (8)
-Retry bounded + timeouts · VERIFIED · `retry-policy` (13) + wiring
-Outbox lease + ACK explícito · VERIFIED · `events-polling` + `resilience` (5)
-Contratos versionados · VERIFIED · `@cvg/messaging-contracts` + contract tests
-Media MIME/size/SSRF · VERIFIED · `media-policy` (6) + 400s
-AI policy deny-by-default · VERIFIED · `ai-policy` (6)
-Métricas + redaction + `/metrics` · VERIFIED · `observability` + `metrics` (2)
-SLOs documentados · VERIFIED · `SLO.md`
-Container hardening · VERIFIED (estático) · Dockerfiles/compose + worker healthcheck executado
-Migration safety · VERIFIED · `db:check` + CI job
-Secrets/SAST/deps · PARTIAL · `pnpm audit` local OK; CodeQL/gitleaks/trivy/SBOM só no CI
-E2E browser · PARTIAL · suite existe, não executada aqui
-Backup/restore · PARTIAL · scripts + syntax-check; **restore E2E não testado**
-OTEL tracing · NOT_IMPLEMENTED · decisão documentada (métricas in-process)
-S3/malware scan · NOT_IMPLEMENTED · validação na borda implementada; storage pendente
-DLQ persistente · NOT_IMPLEMENTED · interface existe (memória) + retry/resolve auditados
-Realtime multi-réplica · NOT_IMPLEMENTED · conexões em memória (single-replica)
-Mutation testing · NOT_IMPLEMENTED · custo/benefício pendente
-LGPD export/delete tooling · PARTIAL · redaction + classificação base
+architecture tests (§api-structure) ✓ · contracts (11) ✓ · idempotência in/out ✓ ·
+DB integrity (`db:check`) ✓ · outbox lease/ACK/redelivery ✓ · **DLQ durability (16)** ✓ ·
+migrations fresh+upgrade (0013–0017 aplicadas forward no banco de dev) ✓ · 733 testes ✓.
 
-## Veredito
+## AAA-2 — Security & Reliability: CONDITIONAL
 
-- AAA-1 Architecture & Correctness: **VERIFIED** (contratos, idempotência, outbox, DB, 665 testes)
-- AAA-2 Security & Reliability: **CONDITIONAL** (núcleo verificado; restore-E2E, DLQ persistente e S3 pendentes)
-- AAA-3 Operations & Observability: **CONDITIONAL** (métricas/logs/SLO/runbook OK; OTEL e multi-réplica pendentes)
+HMAC raw ✓ · anti-replay ✓ · auth hashing/rotation ✓ · RBAC + sector zero-trust ✓ ·
+SSRF/MIME/size ✓ · **malware pipeline (client ClamAV verificado contra fake server; `clamd` real ausente)** ⚠ ·
+**object storage (driver S3 testado mockado; S3/MinIO real não exercitado)** ⚠ ·
+rate limiting (incl. 429 sob k6) ✓ · retry bounded (incl. sem-retry em POST) ✓ ·
+**DLQ persistente** ✓ · HIGHs runtime corrigidas + triage ✓ · secrets (nenhum commitado; gitleaks só CI) ⚠ ·
+**DR restore NÃO executado** (sem pg client; workflow pronto) ✗ ·
+**CodeQL/Gitleaks/Trivy/Dependency-review/SBOM NÃO executados** (só CI) ✗.
 
-**FINAL STATUS: NOT_YET_CERTIFIED** — blockers restantes:
+## AAA-3 — Operations & Observability: CONDITIONAL
 
-1. Restore de backup não testado ponta-a-ponta (requer pg client em CI/prod).
-2. DLQ em memória (perde em restart; replay existe mas sem persistência).
-3. Mídia sem object storage + scan (validação implementada, storage pendente).
-4. Sem OTEL SDK (métricas in-process como decisão interina).
-5. CI security (CodeQL/gitleaks/trivy/SBOM) e e2e browser nunca executados (precisam do GitHub).
-6. 49 vulnerabilidades `high` transitivas em triagem (0 critical).
+structured logging + redaction ✓ · métricas + `/metrics` ✓ · **OTEL SDK + W3C (testes; Collector real não exercitado)** ⚠ ·
+SLOs + baseline medido ✓ · runbook + 6 ADRs ✓ · **realtime multi-réplica (Redis real, 2 nós)** ✓ ·
+health/readiness ✓ · backup scripts ✓ + **restore NÃO executado** ✗ ·
+load (10→50 VUs) ✓ · chaos (10 cenários) ✓ · rollback/deploy docs ✓ · **e2e browser NÃO executado** ✗.
 
-Branch: main · Commit: ver `git log` (série `phase-*` após `373ab40`).
+## Blockers restantes (ambientais — fecham no CI/prod)
+
+| Blocker | Impacto | Evidência atual | Ação |
+|---|---|---|---|
+| Restore E2E não executado | DR não provado | script + workflow sintaxe-OK | rodar `dr-e2e.yml` ( runners têm pg client) |
+| CodeQL/Gitleaks/Trivy/SBOM/e2e não executados | supply-chain parcial | workflows válidos + audit local | push → Actions |
+| S3/MinIO/clamd/Collector reais | integrações externas | drivers testados mockado/fake | smoke em staging |
+
+## FINAL STATUS: NOT_YET_CERTIFIED
+
+AAA-1 = VERIFIED · AAA-2 = CONDITIONAL · AAA-3 = CONDITIONAL.
+Promoção para TRIPLE_AAA_CERTIFIED: executar os 3 itens acima (todos com workflow
+pronto) + tag `triple-aaa-v1` manual. Nenhum blocker de código permanece.

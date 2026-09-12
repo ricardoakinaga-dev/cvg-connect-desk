@@ -6,6 +6,13 @@
 `WEBHOOK_SECRET` (webhook rejeita tudo sem ele), `ADMIN_BOOTSTRAP_EMAIL/PASSWORD` (seed fail-secure),
 `METRICS_TOKEN` (recomendado), `DATABASE_URL`, `REDIS_URL`.
 
+## Observabilidade e mídia em produção
+
+- `OTEL_ENABLED=true` + `OTEL_EXPORTER_OTLP_ENDPOINT` para traces no Collector (noop fora isso).
+- `MEDIA_STORAGE_DRIVER=s3` + `S3_*` (MinIO/R2/S3); `MALWARE_SCANNER=clamav` + `CLAMAV_HOST/PORT`;
+  `MEDIA_PIPELINE_ENABLED=true` para scan de data-URLs; documentos exigem CLEAN.
+- `MEDIA_REQUIRE_SCAN` default `documents` (fail-secure).
+
 ## Subir
 
 ```bash

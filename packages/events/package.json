@@ -14,5 +14,8 @@
   "dependencies": {
     "@cvg/database": "workspace:*",
     "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.7"
   }
 }

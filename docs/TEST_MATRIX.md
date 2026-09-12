@@ -1,38 +1,43 @@
 # TEST MATRIX — CVG Connect Desk
 
-Estados: `VERIFIED` (teste/gate executado com evidência) · `PARTIAL` (parcial/manual) · `NOT_TESTED`.
+Estados: `VERIFIED` (teste/gate executado com evidência) · `PARTIAL` (parcial/CI-externo) · `NOT_TESTED`.
 
 | Área | Requisito | Teste/Gate | Evidência | Status |
 |---|---|---|---|---|
-| Auth | login/logout/me/rotate/logout-all | `auth-routes.integration` (6) | turbo 28/28 | VERIFIED |
-| Auth | tokens só hash, idle+absoluto | integração + migration 0013 | `db:check`, testes | VERIFIED |
-| Webhook | HMAC raw-body | `webhook-guard` (12) + inbound (8) | turbo | VERIFIED |
-| Webhook | anti-replay (old/future/dup/sem ts/sem id/malformed) | guard + inbound + stats | turbo | VERIFIED |
-| RBAC | `authorize()` central + negativos | `authorize` (9) + `sector-authz` (8) | turbo | VERIFIED |
-| Setores | escopo + default-deny + override admin | `sector-authz` (8) | turbo | VERIFIED |
-| Mensageria | idempotência inbound | `receive-inbound-idempotency` (6) | postgres-real | VERIFIED |
-| Mensageria | idempotência outbound + reconciliação | `outbound-idempotency` (7) | turbo | VERIFIED |
-| Outbox | fan-out, lease+ACK, redelivery, malformed | `outbox-*` (133 eventos) + `events-polling` + `resilience` (5) | turbo/pg-real | VERIFIED |
-| Contratos | gateway→chat via zod | `gateway-contracts` (4) + `contracts` (7) | turbo | VERIFIED |
-| Retry | classificação/backoff/Retry-After | `retry-policy` (13) | turbo | VERIFIED |
-| Gateway | contract + retry bounded | contracts + `gatewayService` | turbo | VERIFIED |
-| Mídia | MIME/size/SSRF/sha256 | `media-policy` (6) + outbound 400 (2) | turbo | VERIFIED |
-| IA | policy deny-by-default + budgets | `ai-policy` (6) | turbo | VERIFIED |
-| Observabilidade | redaction + métricas + `/metrics` | `observability` (8→) + `metrics` (2) | turbo | VERIFIED |
-| Realtime | backoff/heartbeat/stale/pong | web `realtime` (9) + service (70) | turbo | VERIFIED |
-| Frontend | páginas + store + api-client | 7 arquivos (45) | turbo | VERIFIED |
-| DB | migrations fresh + constraints | `db:check` (34 tabelas) + `schema` (27) | local+CI | VERIFIED |
-| Segurança deps | 0 critical | `pnpm audit --audit-level=critical` | 0 critical | VERIFIED |
-| SAST/secrets/container/SBOM | CodeQL, gitleaks, trivy, SBOM | workflows `security.yml` | CI (não executado aqui) | PARTIAL |
-| Carga | smoke 10VUs + burst assinado | `e2e/load/smoke-load.js` | 100% checks, p95 6,7ms | VERIFIED |
-| Caos | fallback sem Secretary, degraded, crash worker | `resilience` (5) | turbo | VERIFIED |
-| E2E browser | smoke login/inbox/kanban/task | playwright `smoke-e2e.yml` | CI (não executado aqui) | PARTIAL |
-| Backup/restore | scripts + validação | `pg-backup/restore.sh` | syntax-check (restore E2E pendente) | PARTIAL |
-| OTEL tracing | SDK distribuído | — | decisão: métricas in-process | NOT_TESTED |
-| S3 mídia / malware scan | storage externo | — | lacuna documentada | NOT_TESTED |
-| Mutação | componentes críticos | — | custo/benefício pendente | NOT_TESTED |
-| LGPD export/delete | DSAR tooling | redaction + retention docs | parcial | PARTIAL |
-| `pnpm test` (turbo) | env propagation | `globalPassThroughEnv` | 28/28, 76 arquivos, 665 testes | VERIFIED |
+| Auth | login/logout/me/rotate/logout-all | `auth-routes` (6) | gate local | VERIFIED |
+| Auth | tokens só hash, idle+absoluto | integração + migration 0013 | `db:check` | VERIFIED |
+| Webhook | HMAC raw-body | `webhook-guard` (12) + inbound (8) | gate | VERIFIED |
+| Webhook | anti-replay (8 cenários) | guard + inbound + stats | gate | VERIFIED |
+| RBAC | `authorize()` central + negativos | `authorize` (9) + `sector-authz` (9) | gate | VERIFIED |
+| Setores | escopo + default-deny + override | `sector-authz` (9) | gate | VERIFIED |
+| Inbound | idempotência + canonical ID | `receive-inbound-idempotency` (6) | postgres-real | VERIFIED |
+| Outbound | idempotência + reconciliação + pipeline EICAR | `outbound-idempotency` (8) | gate | VERIFIED |
+| Outbox | fan-out, lease+ACK, redelivery, malformed | events (148) + `events-polling` + `resilience` (5) | gate/pg-real | VERIFIED |
+| Contratos | gateway→chat via zod | `gateway-contracts` (4) + `contracts` (7) | gate | VERIFIED |
+| Retry | classificação/backoff/Retry-After | `retry-policy` (13) | gate | VERIFIED |
+| Gateway | retry bounded + caos 500/reset/429 | `provider-chaos` (4) | gate | VERIFIED |
+| Mídia | MIME/size/SSRF/sha256 | `media-policy` (6) + outbound 400s | gate | VERIFIED |
+| Storage | S3/memory drivers + quarentena | `media-pipeline` (12) + `s3-storage` (8) | gate | VERIFIED |
+| Malware | clean/infected/timeout/unavailable | `media-pipeline` (ClamAV fake server) | gate | VERIFIED |
+| IA | policy deny-by-default + budgets | `ai-policy` (6) | gate | VERIFIED |
+| IA tools | 5 classes + approval flow | `ai-tools` (6) | gate | VERIFIED |
+| Observabilidade | redaction + métricas + `/metrics` | `observability` (8) + `metrics` (2) | gate | VERIFIED |
+| Tracing | propagação/child/erro/correlação | `tracing` (7) | gate | VERIFIED |
+| Realtime | backoff/heartbeat/stale/pong | web `realtime` (9) + service (72) | gate | VERIFIED |
+| Realtime multi | bus A↔B + fanout 2-nós + dedup | `realtime-bus` (4) + `realtime-fanout` (2) | gate (Redis real) | VERIFIED |
+| Frontend | páginas + store + api-client | 7 arquivos (45) | gate | VERIFIED |
+| DLQ persistente | 11 repo + 5 API | `persistent-dead-letter*` (16) | gate (PG real) | VERIFIED |
+| LGPD | export/anonymize + API + audit | privacy (4) + `privacy-dsar` (3) | gate | VERIFIED |
+| DB | migrations fresh + constraints | `db:check` (37 tabelas) + `schema` (27) | gate | VERIFIED |
+| Deps críticas | 0 critical | `pnpm audit --audit-level=critical` | gate | VERIFIED |
+| HIGHs | triage formal | `SECURITY_VULNERABILITY_TRIAGE.md` | 0 critical, 27 triadas | VERIFIED |
+| Carga | 10→50 VUs + burst assinado | `e2e/load/smoke-load.js` | 100%, p95 12,7ms@50VUs | VERIFIED |
+| Caos | 10 cenários, nenhum silêncio | `resilience` + `provider-chaos` + bus/redis-down | gate | VERIFIED |
+| Coverage gate | shared ≥85/80/85/85 | vitest `--coverage` | 94.6/87.8/94.9/94.6 | VERIFIED |
+| Mutação | 3 mutantes críticos mortos | experimento manual | 3/3 killed | VERIFIED |
+| SAST/secrets/container/SBOM | CodeQL, gitleaks, trivy, SBOM | workflows | CI (não executado aqui) | PARTIAL |
+| E2E browser | smoke | playwright `smoke-e2e.yml` | CI | PARTIAL |
+| DR E2E | backup→restore→smoke | `dr-e2e.sh` + workflow | CI (sintaxe OK) | PARTIAL |
 
-Totais finais (turbo `--force`): **28 tasks OK · 76 arquivos · 665 testes · 0 falhas**.
-ESLint web: 0 errors. `tsc` web: pass. Build web: pass. k6: thresholds verdes.
+Totais finais (`turbo run test --force`, PG+Redis reais): **87 arquivos · 733 testes · 0 falhas**.
+ESLint web: 0 errors. `tsc`: pass. Build: pass. Master gate: `pnpm triple-aaa:verify` → VERIFIED_CANDIDATE.

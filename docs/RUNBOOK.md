@@ -9,8 +9,8 @@
 
 ## Fila parada (worker)
 
-1. `GET /readiness` (database ok?). 2. Logs do worker (`correlation_id`). 3. `GET /admin/dead-letters/stats`.
-4. Replay: `POST /admin/dead-letters/:id/retry` (idempotente, auditado). 5. Descarte consciente: `.../resolve`.
+1. `GET /readiness` (database ok?). 2. Logs do worker (`correlation_id`). 3. `GET /dead-letter` (persistente) e `GET /admin/dead-letters/stats` (legado em memória).
+4. Replay persistente: `POST /dead-letter/:id/replay` (409 em duplicata) ou `POST /dead-letter/replay-batch`; descarte consciente: `POST /dead-letter/:id/discard`. Tudo auditado.
 
 ## Login em massa 401
 

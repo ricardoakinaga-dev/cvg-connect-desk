@@ -21,6 +21,10 @@ Redis; Postgres; workers; WebSocket.
 | T14 | Vazamento PII em logs | todos os runtimes | redaction + mask + pino redact paths | `observability.test.ts` |
 | T15 | Supply chain | deps, imagens | CodeQL, gitleaks, trivy, audit, SBOM, pinagens | workflows + `pnpm audit` |
 | T16 | Perda de dados (DR) | PG | backup+checksum+retenção, restore validado | scripts (restore E2E pendente) |
+| T17 | DLQ volátil | restart do worker | DLQ persistente + claim atômico + replay auditado | `persistent-dead-letter*` (16) |
+| T18 | Mídia infectada/vazada | anexos inbound | scan/quarentena, CLEAN gate, presigned exíproco | `media-pipeline` + ClamAV tests |
+| T19 | Abuso de IA | tools da Secretary | registry 5 classes + aprovação humana persistente | `ai-tools` (6) |
+| T20 | Exposição em realtime multirréplica | bus Redis | canal interno, sem PII nova, dedup | `realtime-fanout` (2) |
 
 Riscos residuais: mídia sem object storage/scan; realtime em memória (single-replica);
 DLQ em memória; sem OTEL SDK. Ver `TRIPLE_AAA_CERTIFICATION.md`.

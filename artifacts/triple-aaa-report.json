@@ -1,0 +1,59 @@
+{
+  "commit": "e1abc20052bf9989f93e0daf3252bd62807a1164",
+  "timestamp": "2026-09-12T03:00:07.520Z",
+  "gates": {
+    "install": {
+      "status": "PASS",
+      "durationMs": 667
+    },
+    "lint": {
+      "status": "PASS",
+      "durationMs": 1774
+    },
+    "typecheck": {
+      "status": "PASS",
+      "durationMs": 2179
+    },
+    "unit": {
+      "status": "PASS",
+      "durationMs": 30259
+    },
+    "postgres-real": {
+      "status": "PASS",
+      "durationMs": 19045
+    },
+    "migration-check": {
+      "status": "PASS",
+      "durationMs": 824
+    },
+    "build": {
+      "status": "PASS",
+      "durationMs": 3186
+    },
+    "security-audit-critical": {
+      "status": "PASS"
+    },
+    "external-codeql": {
+      "status": "NOT_RUN"
+    },
+    "external-gitleaks": {
+      "status": "NOT_RUN"
+    },
+    "external-trivy": {
+      "status": "NOT_RUN"
+    },
+    "external-sbom": {
+      "status": "NOT_RUN"
+    },
+    "external-e2e": {
+      "status": "NOT_RUN"
+    },
+    "external-dr": {
+      "status": "NOT_RUN"
+    }
+  },
+  "aaa1": "VERIFIED",
+  "aaa2": "CONDITIONAL",
+  "aaa3": "CONDITIONAL",
+  "final": "VERIFIED_CANDIDATE"
+}
