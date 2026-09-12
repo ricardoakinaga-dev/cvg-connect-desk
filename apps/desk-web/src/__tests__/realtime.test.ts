@@ -70,6 +70,7 @@ function createHarness(reconnectDelayMs = 25) {
 describe('RealtimeClient', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('connects without token in the WebSocket URL and authenticates via message', () => {
@@ -216,6 +217,7 @@ describe('RealtimeClient', () => {
 
   it('backs off exponentially with cap across attempts', () => {
     vi.useFakeTimers();
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
     const sockets: MockWebSocket[] = [];
     const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
     const client = new RealtimeClient({

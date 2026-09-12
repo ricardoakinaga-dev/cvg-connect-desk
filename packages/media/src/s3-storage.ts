@@ -16,6 +16,7 @@ export interface S3StorageConfig {
   accessKeyId: string;
   secretAccessKey: string;
   forcePathStyle?: boolean;
+  serverSideEncryption?: 'AES256' | false;
   client?: S3Client;
 }
 
@@ -35,6 +36,9 @@ export function s3ConfigFromEnv(): S3StorageConfig {
     accessKeyId: requireEnv('S3_ACCESS_KEY_ID'),
     secretAccessKey: requireEnv('S3_SECRET_ACCESS_KEY'),
     forcePathStyle: (process.env.S3_FORCE_PATH_STYLE || 'true').toLowerCase() === 'true',
+    serverSideEncryption: ['none', 'off', 'false'].includes(
+      (process.env.S3_SERVER_SIDE_ENCRYPTION || 'AES256').toLowerCase(),
+    ) ? false : 'AES256',
   };
 }
 
@@ -46,9 +50,13 @@ export class S3MediaStorage implements MediaStorage {
   readonly driver = 's3';
   private readonly client: S3Client;
   private readonly bucket: string;
+  private readonly serverSideEncryption?: 'AES256';
 
   constructor(config: S3StorageConfig) {
     this.bucket = config.bucket;
+    this.serverSideEncryption = config.serverSideEncryption === false
+      ? undefined
+      : config.serverSideEncryption ?? 'AES256';
     this.client =
       config.client ||
       new S3Client({
@@ -70,7 +78,7 @@ export class S3MediaStorage implements MediaStorage {
         Body: input.body as Uint8Array,
         ContentType: input.contentType,
         Metadata: input.metadata,
-        ServerSideEncryption: 'AES256',
+        ...(this.serverSideEncryption ? { ServerSideEncryption: this.serverSideEncryption } : {}),
       }),
     );
     return { etag: out.ETag };

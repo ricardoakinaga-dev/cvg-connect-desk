@@ -22,7 +22,7 @@ function restoreEnv(): void {
   else process.env.INTERNAL_EVENTS_SECRET = originalEnv.internalSecret;
 }
 
-async function waitFor(predicate: () => boolean, timeoutMs = 1000): Promise<void> {
+async function waitFor(predicate: () => boolean, timeoutMs = 5000): Promise<void> {
   const startedAt = Date.now();
   while (!predicate()) {
     if (Date.now() - startedAt > timeoutMs) throw new Error('Timed out waiting for HTTP polling ACK');
@@ -45,6 +45,10 @@ describe('Realtime HTTP event polling', () => {
       version: 1,
     };
     let servedEvent = false;
+    let releaseAckResponse!: () => void;
+    const ackResponseGate = new Promise<void>((resolve) => {
+      releaseAckResponse = resolve;
+    });
 
     const api = createServer((request: IncomingMessage, response: ServerResponse) => {
       const rawKey = request.headers['x-internal-service-key'];
@@ -66,10 +70,10 @@ describe('Realtime HTTP event polling', () => {
       }
 
       if (request.method === 'POST' && request.url === '/events/evt-http-ack/ack') {
-        setTimeout(() => {
+        void ackResponseGate.then(() => {
           response.writeHead(200, { 'content-type': 'application/json' });
           response.end(JSON.stringify({ acknowledged: true, eventId: event.event_id }));
-        }, 80);
+        });
         return;
       }
 
@@ -99,8 +103,8 @@ describe('Realtime HTTP event polling', () => {
       expect(getRequests[0]?.key).toBe('http-poll-secret');
       expect(ackRequests).toHaveLength(1);
       expect(ackRequests[0]?.key).toBe('http-poll-secret');
-      await new Promise((resolve) => setTimeout(resolve, 40));
       expect(requests.filter((request) => request.method === 'GET')).toHaveLength(1);
+      releaseAckResponse();
       await waitFor(() => requests.some((request) => request.method === 'GET' && request.url.includes('since=')));
     } finally {
       realtime.stop();

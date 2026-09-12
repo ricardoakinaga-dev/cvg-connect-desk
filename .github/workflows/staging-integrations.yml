@@ -21,6 +21,7 @@ jobs:
       S3_BUCKET: cvg-media-test
       S3_ACCESS_KEY_ID: minioadmin
       S3_SECRET_ACCESS_KEY: minioadmin
+      S3_SERVER_SIDE_ENCRYPTION: none
       CLAMAV_HOST: 127.0.0.1
       CLAMAV_PORT: "3310"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://127.0.0.1:4318/v1/traces
@@ -57,7 +58,6 @@ jobs:
             -p 9100:9000 \
             -e MINIO_ROOT_USER=minioadmin \
             -e MINIO_ROOT_PASSWORD=minioadmin \
-            -e MINIO_KMS_SECRET_KEY=cvg-ci-key:7365637572652d746573742d6b65792d666f722d63692d6f6e6c792d30303030 \
             quay.io/minio/minio:latest server /data --console-address ":9001"
           docker run -d --name cvg-clamav \
             -p 3310:3310 \

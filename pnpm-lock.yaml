@@ -24,6 +24,9 @@ importers:
       '@types/node':
         specifier: ^25.5.0
         version: 25.5.0
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       eslint:
         specifier: ^9.0.0
         version: 9.39.4

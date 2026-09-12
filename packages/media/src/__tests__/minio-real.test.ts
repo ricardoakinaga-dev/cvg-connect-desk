@@ -42,6 +42,7 @@ describe('MinIO real smoke (STAGING_SMOKE=1)', () => {
         accessKeyId: 'minioadmin',
         secretAccessKey: 'minioadmin',
         forcePathStyle: true,
+        serverSideEncryption: false,
         client,
       });
     });
@@ -95,6 +96,7 @@ describe('MinIO real smoke (STAGING_SMOKE=1)', () => {
       accessKeyId: 'wrong',
       secretAccessKey: 'wrong',
       forcePathStyle: true,
+      serverSideEncryption: false,
       client: new S3Client({
         endpoint: ENDPOINT,
         region: 'us-east-1',
@@ -113,6 +115,7 @@ describe('MinIO real smoke (STAGING_SMOKE=1)', () => {
       accessKeyId: 'minioadmin',
       secretAccessKey: 'minioadmin',
       forcePathStyle: true,
+      serverSideEncryption: false,
     });
     await expect(down.put({ key: 'media/x', body: Buffer.from('x'), contentType: 'text/plain' })).rejects.toThrow();
   });

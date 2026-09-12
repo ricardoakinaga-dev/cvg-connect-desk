@@ -26,7 +26,7 @@ test.describe('Login Flow', () => {
     expect(authStorage).toContain(ADMIN_EMAIL);
     await page.goto('/inbox');
     await expect(page.locator('.layout')).toBeVisible();
-    await expect(page.getByText('Inbox')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Inbox', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Conversas/ })).toBeVisible();
   });
 

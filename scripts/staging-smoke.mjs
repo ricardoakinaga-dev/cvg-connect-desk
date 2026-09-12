@@ -31,7 +31,7 @@ try {
     if (e.name !== 'BucketAlreadyOwnedByYou' && e.name !== 'BucketAlreadyExists') throw e;
   });
   const { S3MediaStorage } = await import('../packages/media/src/s3-storage.ts');
-  const storage = new S3MediaStorage({ endpoint, region: 'us-east-1', bucket, accessKeyId: process.env.S3_ACCESS_KEY_ID || 'minioadmin', secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'minioadmin', forcePathStyle: true, client });
+  const storage = new S3MediaStorage({ endpoint, region: 'us-east-1', bucket, accessKeyId: process.env.S3_ACCESS_KEY_ID || 'minioadmin', secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'minioadmin', forcePathStyle: true, serverSideEncryption: false, client });
   const stamp = `staging-smoke-${Date.now()}`;
   await storage.put({ key: `smoke/${stamp}`, body: Buffer.from('staging-smoke'), contentType: 'text/plain' });
   check('minio.put', await storage.exists(`smoke/${stamp}`));

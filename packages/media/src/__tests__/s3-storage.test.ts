@@ -46,7 +46,28 @@ describe('S3MediaStorage (mocked client)', () => {
       Bucket: 'cvg-media',
       Key: 'media/x',
       ContentType: 'image/jpeg',
+      ServerSideEncryption: 'AES256',
     });
+  });
+
+  it('can omit the SSE-S3 header for compatible stores without a configured KMS', async () => {
+    const calls: unknown[] = [];
+    const client = stubClient((command) => {
+      calls.push(command);
+      return {};
+    });
+    const storage = new S3MediaStorage({
+      region: 'us-east-1',
+      bucket: 'cvg-media',
+      accessKeyId: 'test',
+      secretAccessKey: 'test',
+      serverSideEncryption: false,
+      client,
+    });
+
+    await storage.put({ key: 'media/x', body: Buffer.from('data'), contentType: 'text/plain' });
+
+    expect((calls[0] as PutObjectCommand).input.ServerSideEncryption).toBeUndefined();
   });
 
   it('get concatenates streaming body', async () => {

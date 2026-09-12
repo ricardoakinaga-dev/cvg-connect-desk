@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 ENV CI=true
 
@@ -19,7 +19,7 @@ COPY tsconfig*.json ./
 RUN pnpm --filter @cvg/desk-api exec tsc --noEmit || true
 
 # Stage 2: Production
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 

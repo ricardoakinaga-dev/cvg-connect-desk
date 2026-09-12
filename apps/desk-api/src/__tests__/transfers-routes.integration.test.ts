@@ -15,7 +15,6 @@ describe('Transfers routes integration', () => {
   const sectorAId = randomUUID();
   const sectorBId = randomUUID();
   const testConversationId = randomUUID();
-  let createdAdminRole = false;
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
   let token = '';
 
@@ -36,7 +35,6 @@ describe('Transfers routes integration', () => {
         name: 'Admin',
         description: 'Admin role for transfer integration tests',
       });
-      createdAdminRole = true;
     }
 
     await db.insert(schema.users).values({
@@ -115,9 +113,6 @@ describe('Transfers routes integration', () => {
     await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
     await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
     await db.delete(schema.users).where(eq(schema.users.id, userId));
-    if (createdAdminRole) {
-      await db.delete(schema.roles).where(eq(schema.roles.id, adminRoleId));
-    }
     await app.close();
   });
 

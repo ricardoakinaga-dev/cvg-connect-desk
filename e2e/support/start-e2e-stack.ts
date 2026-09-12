@@ -14,6 +14,7 @@ const rootEnv = {
   VITE_API_URL: process.env.VITE_API_URL || 'http://localhost:4330',
   VITE_REALTIME_URL: process.env.VITE_REALTIME_URL || 'ws://localhost:4930',
   EVOLUTION_API_URL: process.env.EVOLUTION_API_URL || 'http://localhost:8082',
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:4173',
 };
 
 const children: ReturnType<typeof spawn>[] = [];
