@@ -46,8 +46,8 @@ jobs:
           echo "Waiting for smoke stack to be healthy..."
           for i in $(seq 1 30); do
             echo "Health attempt $i/30"
-            pg_health=$(docker compose -f docker-compose.smoke.yml ps postgres --format json 2>/dev/null | jq -r '.[0].Health // ""')
-            rd_health=$(docker compose -f docker-compose.smoke.yml ps redis --format json 2>/dev/null | jq -r '.[0].Health // ""')
+            pg_health=$(docker compose -f docker-compose.smoke.yml ps postgres --format json 2>/dev/null | jq -r '.Health // ""')
+            rd_health=$(docker compose -f docker-compose.smoke.yml ps redis --format json 2>/dev/null | jq -r '.Health // ""')
             if [ "$pg_health" = "healthy" ] && [ "$rd_health" = "healthy" ]; then
               echo "Smoke stack is healthy"
               exit 0

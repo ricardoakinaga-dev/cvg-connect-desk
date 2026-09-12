@@ -73,9 +73,9 @@ jobs:
             sleep 2
           done
 
-          for attempt in {1..90}; do
-            if timeout 1 bash -c '</dev/tcp/127.0.0.1/3310' 2>/dev/null; then break; fi
-            if (( attempt == 90 )); then docker logs cvg-clamav; exit 1; fi
+          for attempt in {1..180}; do
+            if docker exec cvg-clamav clamdcheck.sh >/dev/null 2>&1; then break; fi
+            if (( attempt == 180 )); then docker logs cvg-clamav; exit 1; fi
             sleep 2
           done
 
