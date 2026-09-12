@@ -23,6 +23,7 @@ describe('Metrics endpoint integration', () => {
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toContain('text/plain');
     const body = response.body;
+    expect(body.startsWith('# HELP')).toBe(true);
     expect(body).toContain('# HELP http_requests_total');
     expect(body).toContain('http_requests_total{');
     expect(body).toContain('http_request_duration_seconds_bucket{');

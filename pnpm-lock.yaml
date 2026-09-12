@@ -679,6 +679,12 @@ importers:
 
   packages/shared:
     dependencies:
+      '@cvg/database':
+        specifier: workspace:*
+        version: link:../database
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)
       fastify:
         specifier: ^5.0.0
         version: 5.8.4

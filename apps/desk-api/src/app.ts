@@ -86,10 +86,11 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   });
 
   app.get('/metrics', {
+    // Sem schema de resposta: corpo é texto Prometheus puro (serialização
+    // JSON corromperia a exposição com aspas).
     schema: {
       description: 'Exposição Prometheus (Phase 6). Protegido por METRICS_TOKEN quando configurado.',
       tags: ['Observability'],
-      response: { 200: { type: 'string' } },
     },
   }, async (request, reply) => {
     const token = process.env.METRICS_TOKEN;
@@ -242,7 +243,18 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     schema: {
       description: 'Readiness check — verifica se o serviço está apto a operar',
       tags: ['Health'],
-      response: { 200: { type: 'object' } },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            ready: { type: 'boolean' },
+            degraded: { type: 'boolean' },
+            checks: { type: 'object', additionalProperties: true },
+            version: { type: 'string' },
+            timestamp: { type: 'string' },
+          },
+        },
+      },
     },
   }, async () => {
     const checks: Record<string, { status: 'ok' | 'error' | 'degraded'; latencyMs?: number; error?: string }> = {};

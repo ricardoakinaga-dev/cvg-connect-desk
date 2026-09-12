@@ -1,4 +1,6 @@
 import { FastifyRequest } from 'fastify';
+import { db, schema } from '@cvg/database';
+import { eq } from 'drizzle-orm';
 
 /**
  * Anti-replay para webhooks (Phase 1 — §4.2).
@@ -93,8 +95,6 @@ export class InMemoryWebhookReplayStore implements WebhookReplayStore {
 
 export class PostgresWebhookReplayStore implements WebhookReplayStore {
   async has(eventId: string): Promise<boolean> {
-    const { db, schema } = await import('@cvg/database');
-    const { eq } = await import('drizzle-orm');
     const rows = await db
       .select({ eventId: schema.webhookReplayLog.eventId })
       .from(schema.webhookReplayLog)
@@ -104,7 +104,6 @@ export class PostgresWebhookReplayStore implements WebhookReplayStore {
   }
 
   async add(eventId: string, signatureHash: string, ttlSeconds = WEBHOOK_EVENT_ID_TTL_SECONDS): Promise<boolean> {
-    const { db, schema } = await import('@cvg/database');
     try {
       await db.insert(schema.webhookReplayLog).values({
         eventId,
