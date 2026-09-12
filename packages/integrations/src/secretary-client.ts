@@ -1,6 +1,7 @@
 import { ok, err, type Result } from '@cvg/shared';
 import { AppError } from '@cvg/shared';
 import { withRetry, classifyRetryError } from '@cvg/shared';
+import { withSpan, injectTraceContext, correlationAttributes } from '@cvg/tracing';
 
 export interface SecretaryConfig {
   baseUrl: string;
@@ -35,6 +36,17 @@ export class SecretaryClient {
   }
 
   async invoke(request: SecretaryRequest): Promise<Result<SecretaryResponse, Error>> {
+    return withSpan(
+      'secretary.invoke',
+      () => this.invokeWithRetry(request),
+      correlationAttributes({
+        conversation_id: request.conversationId,
+        message_id: request.messageId,
+      }),
+    );
+  }
+
+  private async invokeWithRetry(request: SecretaryRequest): Promise<Result<SecretaryResponse, Error>> {
     // Retry limitado a falhas pré-resposta (network/timeout) ou 429/5xx.
     // idempotent:false — nunca retenta após resposta 4xx/auth/schema.
     const outcome = await withRetry(
@@ -45,10 +57,10 @@ export class SecretaryClient {
         try {
           const response = await fetch(`${this.baseUrl}/invoke`, {
             method: 'POST',
-            headers: {
+            headers: injectTraceContext({
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.apiKey}`,
-            },
+              Authorization: `Bearer ${this.apiKey}`,
+            }),
             body: JSON.stringify({
               action: request.action,
               conversation_id: request.conversationId,

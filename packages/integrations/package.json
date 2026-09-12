@@ -14,6 +14,7 @@
     "vitest": "^3.2.7"
   },
   "dependencies": {
-    "@cvg/shared": "workspace:*"
+    "@cvg/shared": "workspace:*",
+    "@cvg/tracing": "workspace:*"
   }
 }

@@ -17,6 +17,7 @@
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
+    "@cvg/tracing": "workspace:*",
     "pg": "^8.20.0"
   },
   "devDependencies": {

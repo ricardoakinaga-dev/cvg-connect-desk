@@ -18,6 +18,7 @@
     "@cvg/events": "workspace:*",
     "@cvg/realtime": "workspace:*",
     "@cvg/shared": "workspace:*",
+    "@cvg/tracing": "workspace:*",
     "ws": "^8.16.0"
   },
   "devDependencies": {

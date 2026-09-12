@@ -16,6 +16,7 @@
     "@cvg/database": "workspace:*",
     "@cvg/messaging-contracts": "workspace:*",
     "@cvg/shared": "workspace:*",
+    "@cvg/tracing": "workspace:*",
     "axios": "^1.6.0",
     "uuid": "^9.0.1"
   },

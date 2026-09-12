@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { receiveInboundMessage } from '../../application/use-cases/receive-inbound-message.use-case';
 import { AppError, createWebhookGuard, messagesInboundTotal } from '@cvg/shared';
+import { withSpan, withExtractedContext, correlationAttributes } from '@cvg/tracing';
 
 interface InboundWebhookBody {
   messageId?: string;
@@ -69,15 +70,25 @@ export async function registerInboundWebhook(app: FastifyInstance) {
           });
         }
 
-        const result = await receiveInboundMessage({
-          externalMessageId: messageId,
-          externalConversationId: conversationId,
-          content: messageContent,
-          sender: from,
-          senderType: 'contact',
-          contactPhone: from,
-          sentAt,
-        });
+        const result = await withExtractedContext(request.headers, () =>
+          withSpan(
+            'webhook.receive',
+            () =>
+              receiveInboundMessage({
+                externalMessageId: messageId,
+                externalConversationId: conversationId,
+                content: messageContent,
+                sender: from,
+                senderType: 'contact',
+                contactPhone: from,
+                sentAt,
+              }),
+            correlationAttributes({
+              event_id: messageId,
+              conversation_id: conversationId,
+            }),
+          ),
+        );
 
         if (result.isErr()) {
           const error = result.error;

@@ -30,6 +30,7 @@
     "@cvg/sectors": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tasks": "workspace:*",
+    "@cvg/tracing": "workspace:*",
     "@cvg/transfers": "workspace:*",
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.1",

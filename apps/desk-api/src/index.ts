@@ -1,7 +1,9 @@
 import 'dotenv/config';
+import { initTracing } from '@cvg/tracing';
 import { buildDeskApiApp } from './app.ts';
 
 async function bootstrap() {
+  const tracing = await initTracing();
   const app = await buildDeskApiApp();
 
   const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
@@ -9,6 +11,7 @@ async function bootstrap() {
     process.on(signal, async () => {
       app.log.info(`Recebido ${signal}, encerrando graciosamente...`);
       await app.close();
+      await tracing.shutdown();
       process.exit(0);
     });
   }

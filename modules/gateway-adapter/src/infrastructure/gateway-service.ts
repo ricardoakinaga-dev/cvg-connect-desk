@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { withRetry } from '@cvg/shared';
+import { withSpan, injectTraceContext, correlationAttributes } from '@cvg/tracing';
 import type { CWOutboundEvent } from '../types/gateway-contracts';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -52,26 +53,32 @@ export const gatewayService = {
 
       // Enviar para o endpoint outbound do gateway (retry limitado a falhas
       // pré-resposta/retryable; idempotent:false — POST sem idempotency key).
-      const outcome = await withRetry(
-        async () => {
-          await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': GATEWAY_API_KEY,
+      // Trace W3C propagado nos headers (Final-2).
+      const outcome = await withSpan(
+        'gateway.send',
+        () =>
+          withRetry(
+            async () => {
+              await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
+                headers: injectTraceContext({
+                  'Content-Type': 'application/json',
+                  'x-api-key': GATEWAY_API_KEY,
+                }),
+                timeout: 10000,
+              });
             },
-            timeout: 10000,
-          });
-        },
-        {
-          maxRetries: Number(process.env.GATEWAY_MAX_RETRIES) || 2,
-          idempotent: false,
-          onRetry: (info) => {
-            console.error(
-              `[GatewayService] retry attempt=${info.attempt} classification=${info.classification} event=${event.event_id}`,
-            );
-          },
-        },
-        (error) => (error as { response?: { headers?: Record<string, string> } }).response?.headers?.['retry-after'],
+            {
+              maxRetries: Number(process.env.GATEWAY_MAX_RETRIES) || 2,
+              idempotent: false,
+              onRetry: (info) => {
+                console.error(
+                  `[GatewayService] retry attempt=${info.attempt} classification=${info.classification} event=${event.event_id}`,
+                );
+              },
+            },
+            (error) => (error as { response?: { headers?: Record<string, string> } }).response?.headers?.['retry-after'],
+          ),
+        correlationAttributes({ event_id: event.event_id }),
       );
 
       if (outcome.error) {

@@ -17,7 +17,8 @@
     "@cvg/gateway-adapter": "workspace:*",
     "@cvg/integrations": "workspace:*",
     "@cvg/secretary-adapter": "workspace:*",
-    "@cvg/shared": "workspace:*"
+    "@cvg/shared": "workspace:*",
+    "@cvg/tracing": "workspace:*"
   },
   "devDependencies": {
     "vitest": "^3.2.7"

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { EventEnvelope } from '@cvg/events';
+import { initTracing, withSpan, correlationAttributes } from '@cvg/tracing';
 import {
   projectEvent,
   shouldProject,
@@ -735,15 +736,30 @@ class RealtimeServer {
       data: projection,
     };
 
-    const aggregateId = projection.aggregateId;
-    const aggregateType = projection.aggregateType.toLowerCase();
+    // Span síncrona de publicação (Final-2): broadcast é fan-out local;
+    // correlação preservada via event/correlation ids.
+    void withSpan(
+      'realtime.publish',
+      async () => {
+        const aggregateId = projection.aggregateId;
+        const aggregateType = projection.aggregateType.toLowerCase();
 
-    this.broadcast('global', message);
-    this.broadcast(`${aggregateType}:${aggregateId}`, message);
+        this.broadcast('global', message);
+        this.broadcast(`${aggregateType}:${aggregateId}`, message);
 
-    if (event.correlation_id) {
-      this.broadcast(`correlation:${event.correlation_id}`, message);
-    }
+        if (event.correlation_id) {
+          this.broadcast(`correlation:${event.correlation_id}`, message);
+        }
+      },
+      correlationAttributes({
+        event_id: event.event_id,
+        event_type: event.event_type,
+        correlation_id: event.correlation_id,
+        causation_id: event.causation_id,
+      }),
+    ).catch(() => {
+      // Broadcast nunca falha o polling por causa de tracing.
+    });
 
     console.info(JSON.stringify({
       msg: '[Realtime] Projected event',
@@ -793,6 +809,10 @@ const shouldAutoStart =
   process.env.NODE_ENV !== 'test';
 
 if (shouldAutoStart) {
+  void initTracing().then(() => {
+    server.start();
+  });
+
   process.on('SIGTERM', () => {
     console.info(JSON.stringify({
       msg: '[Realtime] Received SIGTERM, shutting down',
@@ -810,8 +830,6 @@ if (shouldAutoStart) {
     server.stop();
     process.exit(0);
   });
-
-  server.start();
 }
 
 export { RealtimeServer };

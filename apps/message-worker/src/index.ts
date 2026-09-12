@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { initTracing, withSpan, correlationAttributes } from '@cvg/tracing';
 import {
   shouldRetry,
   calculateNextDelay,
@@ -165,8 +166,23 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
 
   let attempt = 0;
 
-  while (true) {
-    try {
+  await withSpan(
+    'worker.process',
+    async () => {
+      await runHandlerWithRetry();
+    },
+    correlationAttributes({
+      event_id: event.event_id,
+      event_type: event.event_type,
+      correlation_id: event.correlation_id,
+      causation_id: event.causation_id,
+    }),
+  );
+
+  async function runHandlerWithRetry(): Promise<void> {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      try {
       await handler(event);
       console.info(JSON.stringify({
         msg: '[Worker] Successfully processed event',
@@ -252,6 +268,7 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
 }
 
 async function startWorker(): Promise<void> {
+  await initTracing();
   const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS) || 500;
 
   console.info(JSON.stringify({
