@@ -13,6 +13,7 @@
   "dependencies": {
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
+    "@cvg/messaging-contracts": "workspace:*",
     "@cvg/chat": "workspace:*",
     "@cvg/alerts": "workspace:*",
     "axios": "^1.6.0",

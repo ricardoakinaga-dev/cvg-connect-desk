@@ -1,5 +1,6 @@
 import { ok, err, type Result } from '@cvg/shared';
 import { AppError } from '@cvg/shared';
+import { withRetry, classifyRetryError } from '@cvg/shared';
 
 export interface SecretaryConfig {
   baseUrl: string;
@@ -34,44 +35,69 @@ export class SecretaryClient {
   }
 
   async invoke(request: SecretaryRequest): Promise<Result<SecretaryResponse, Error>> {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+    // Retry limitado a falhas pré-resposta (network/timeout) ou 429/5xx.
+    // idempotent:false — nunca retenta após resposta 4xx/auth/schema.
+    const outcome = await withRetry(
+      async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
-      const response = await fetch(`${this.baseUrl}/invoke`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+        try {
+          const response = await fetch(`${this.baseUrl}/invoke`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.apiKey}`,
+            },
+            body: JSON.stringify({
+              action: request.action,
+              conversation_id: request.conversationId,
+              message_id: request.messageId,
+              context: request.context,
+            }),
+            signal: controller.signal,
+          });
+
+          if (!response.ok) {
+            const status = response.status;
+            const retryable = status === 429 || status >= 500;
+            const errorBody = retryable ? await response.text().catch(() => '') : '';
+            void errorBody;
+            throw Object.assign(new Error(`Secretary API error: ${status}`), { status });
+          }
+
+          return (await response.json()) as SecretaryResponse;
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      },
+      {
+        maxRetries: Number(process.env.SECRETARY_MAX_RETRIES) || 2,
+        idempotent: false,
+        onRetry: (info) => {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[SecretaryClient] retry attempt=${info.attempt} classification=${info.classification} delayMs=${info.delayMs} action=${request.action}`,
+          );
         },
-        body: JSON.stringify({
-          action: request.action,
-          conversation_id: request.conversationId,
-          message_id: request.messageId,
-          context: request.context,
-        }),
-        signal: controller.signal,
-      });
+      },
+      (error) => (error as { response?: { headers?: Record<string, string> } }).response?.headers?.['retry-after'],
+    );
 
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const errorBody = await response.text();
-        return err(new AppError(
-          `Secretary API error: ${response.status}`,
-          response.status,
-          'SECRETARY_ERROR'
-        ));
-      }
-
-      const data = await response.json() as SecretaryResponse;
-      return ok(data);
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
+    if (outcome.error) {
+      const error = outcome.error;
+      if (error instanceof Error && (error.name === 'AbortError' || classifyRetryError(error) === 'timeout')) {
         return err(new AppError('Secretary request timed out', 504, 'SECRETARY_TIMEOUT'));
+      }
+      if (error instanceof AppError) return err(error);
+      if (error instanceof Error && error.message.startsWith('Secretary API error')) {
+        const status = (error as Error & { status?: number }).status ?? 502;
+        return err(new AppError(error.message, status, 'SECRETARY_ERROR'));
       }
       return err(error as Error);
     }
+
+    return ok(outcome.value as SecretaryResponse);
   }
 
   async checkHealth(): Promise<Result<boolean, Error>> {

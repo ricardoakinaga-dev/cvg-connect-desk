@@ -15,6 +15,7 @@ interface SendMessageBody {
   mediaType?: string;
   mediaMimetype?: string;
   mediaFilename?: string;
+  clientMessageId?: string;
 }
 
 export async function registerOutboundController(app: FastifyInstance) {
@@ -34,6 +35,7 @@ export async function registerOutboundController(app: FastifyInstance) {
             mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document'] },
             mediaMimetype: { type: 'string' },
             mediaFilename: { type: 'string' },
+            clientMessageId: { type: 'string', maxLength: 128 },
           },
           required: ['conversationId', 'recipient'],
         },
@@ -41,8 +43,10 @@ export async function registerOutboundController(app: FastifyInstance) {
     },
     async (request: FastifyRequest<{ Body: SendMessageBody }>, reply: FastifyReply) => {
       try {
-        const { conversationId, content, recipient, sender, mediaUrl, mediaType, mediaMimetype, mediaFilename } = request.body;
+        const { conversationId, content, recipient, sender, mediaUrl, mediaType, mediaMimetype, mediaFilename, clientMessageId } = request.body;
         const userId = request.user?.id;
+        const headerKey = request.headers['idempotency-key'];
+        const idempotencyKey = (typeof headerKey === 'string' && headerKey.trim()) || clientMessageId;
 
         const result = await sendOutboundMessage({
           conversationId,
@@ -54,6 +58,7 @@ export async function registerOutboundController(app: FastifyInstance) {
           mediaMimetype,
           mediaFilename,
           userId,
+          idempotencyKey,
         });
 
         if (result.isErr()) {
@@ -70,10 +75,11 @@ export async function registerOutboundController(app: FastifyInstance) {
           });
         }
 
-        return reply.status(201).send({
+        return reply.status(result.value.deduplicated ? 200 : 201).send({
           messageId: result.value.messageId,
           conversationId: result.value.conversationId,
           status: result.value.status,
+          deduplicated: result.value.deduplicated,
         });
       } catch (error) {
         request.log.error(error);

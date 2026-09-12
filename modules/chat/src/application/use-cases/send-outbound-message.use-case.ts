@@ -1,5 +1,6 @@
 import { conversationRepository } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
+import { outboundDeliveryRepository } from '../../infrastructure/repositories/outbound-delivery.repository';
 import { ok, err, type Result } from '@cvg/shared';
 import { NotFoundError, BadRequestError } from '@cvg/shared';
 import { publishMessagePersisted } from '../events/chat-publisher';
@@ -17,12 +18,15 @@ export interface SendOutboundMessageInput {
   mediaFilename?: string;
   metadata?: Record<string, unknown>;
   userId?: string;
+  /** Idempotency-Key (header) ou clientMessageId (body). Sem chave, cada request é nova. */
+  idempotencyKey?: string;
 }
 
 export interface SendOutboundMessageOutput {
   messageId: string;
   conversationId: string;
   status: string;
+  deduplicated: boolean;
 }
 
 export async function sendOutboundMessage(
@@ -47,6 +51,24 @@ export async function sendOutboundMessage(
       return err(new BadRequestError('Cannot send message to closed conversation'));
     }
 
+    const idempotencyKey = input.idempotencyKey?.trim() || undefined;
+
+    // Dedup prévio: chave já vista retorna a mensagem original (sem side effects).
+    if (idempotencyKey) {
+      const existing = await outboundDeliveryRepository.findByKey(idempotencyKey);
+      if (existing) {
+        const original = await messageRepository.findById(existing.internalMessageId);
+        if (original) {
+          return ok({
+            messageId: original.id,
+            conversationId: original.conversationId,
+            status: original.status,
+            deduplicated: true,
+          });
+        }
+      }
+    }
+
     // Criar mensagem no banco
     const message = await messageRepository.create({
       conversationId: input.conversationId,
@@ -63,8 +85,29 @@ export async function sendOutboundMessage(
       metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
     });
 
-    // Enviar via Evolution API (assíncrono)
-    sendViaEvolution(input.recipient, input).catch(err => {
+    let deliveryId: string | undefined;
+    if (idempotencyKey) {
+      const { delivery, isDuplicate } = await outboundDeliveryRepository.createMapping({
+        internalMessageId: message.id,
+        idempotencyKey,
+      });
+      deliveryId = delivery.id;
+      if (isDuplicate) {
+        // Corrida perdida: outro request venceu; retornar o original.
+        const original = await messageRepository.findById(delivery.internalMessageId);
+        if (original) {
+          return ok({
+            messageId: original.id,
+            conversationId: original.conversationId,
+            status: original.status,
+            deduplicated: true,
+          });
+        }
+      }
+    }
+
+    // Enviar via Evolution API (assíncrono) com reconciliação de status.
+    sendViaEvolution(input.recipient, input, { messageId: message.id, deliveryId }).catch(err => {
       console.error('[sendOutboundMessage] Erro ao enviar via Evolution:', err);
     });
 
@@ -86,6 +129,7 @@ export async function sendOutboundMessage(
       messageId: message.id,
       conversationId: message.conversationId,
       status: message.status,
+      deduplicated: false,
     });
   } catch (error) {
     return err(error as Error);
@@ -93,9 +137,15 @@ export async function sendOutboundMessage(
 }
 
 /**
- * Envia mensagem via Evolution API de forma assíncrona.
+ * Envia mensagem via Evolution API de forma assíncrona, com reconciliação:
+ * atualiza messages.status (sent/failed) e o mapping de idempotência, de modo
+ * que a mensagem nunca fique em `pending` para sempre sem explicação.
  */
-async function sendViaEvolution(recipient: string, input: SendOutboundMessageInput) {
+async function sendViaEvolution(
+  recipient: string,
+  input: SendOutboundMessageInput,
+  ids: { messageId: string; deliveryId?: string },
+) {
   try {
     // Extrair telefone do recipient (pode ser JID ou telefone puro)
     const phone = recipient.replace(/@.*$/, '').replace(/\D/g, '');
@@ -117,11 +167,41 @@ async function sendViaEvolution(recipient: string, input: SendOutboundMessageInp
     }
 
     if (result.success) {
+      try {
+        await messageRepository.update(ids.messageId, {
+          status: 'sent',
+          ...(result.messageId ? { externalMessageId: result.messageId } : {}),
+        });
+      } catch {
+        // Provider confirmou o envio mas o ID externo colidiu (unique):
+        // marcar como enviada sem o ID para não ficar `pending` para sempre.
+        await messageRepository.update(ids.messageId, { status: 'sent' });
+      }
+    } else {
+      await messageRepository.update(ids.messageId, { status: 'failed' });
+    }
+
+    if (ids.deliveryId) {
+      await outboundDeliveryRepository.recordAttempt(ids.deliveryId, {
+        success: result.success,
+        providerMessageId: result.messageId,
+      });
+    }
+
+    if (result.success) {
       console.log(`[sendViaEvolution] Mensagem enviada: ${result.messageId}`);
     } else {
       console.error(`[sendViaEvolution] Falha: ${result.error}`);
     }
   } catch (error) {
+    try {
+      await messageRepository.update(ids.messageId, { status: 'failed' });
+      if (ids.deliveryId) {
+        await outboundDeliveryRepository.recordAttempt(ids.deliveryId, { success: false });
+      }
+    } catch {
+      // Reconciliação é best-effort; o erro original prevalece no log.
+    }
     console.error('[sendViaEvolution] Erro:', error);
   }
 }

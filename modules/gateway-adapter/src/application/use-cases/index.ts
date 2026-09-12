@@ -1,6 +1,7 @@
 import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 import { normalizeGatewayInbound } from '../../infrastructure/gateway-normalizer';
 import { gatewayService } from '../../infrastructure/gateway-service';
+import { parseInboundMessageV1 } from '@cvg/messaging-contracts';
 import { ok, err } from '@cvg/shared';
 
 /**
@@ -20,6 +21,25 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
 
     // Normalizar para formato interno
     const normalized = normalizeGatewayInbound(event);
+
+    // Contrato de fronteira: domínio nunca recebe payload fora de InboundMessageV1.
+    const contract = parseInboundMessageV1({
+      specVersion: '1.0.0',
+      externalMessageId: normalized.externalMessageId,
+      externalConversationId: normalized.externalConversationId,
+      content: normalized.content,
+      sender: normalized.sender,
+      senderType: normalized.senderType,
+      contactPhone: normalized.contactPhone,
+      contactName: normalized.contactName,
+      sentAt: normalized.sentAt,
+      mediaUrl: normalized.mediaUrl,
+      mediaMimetype: normalized.mediaMimetype,
+      mediaFilename: normalized.mediaFilename,
+    });
+    if (!contract.ok) {
+      return err(new Error(`Inbound contract violation: ${contract.issues}`));
+    }
 
     // Ignorar mensagens enviadas por nós (fromMe=true)
     if (event.payload.fromMe) {

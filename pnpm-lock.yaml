@@ -259,6 +259,9 @@ importers:
       '@cvg/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@cvg/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@cvg/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -438,6 +441,9 @@ importers:
       '@cvg/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@cvg/messaging-contracts':
+        specifier: workspace:*
+        version: link:../../packages/messaging-contracts
       '@cvg/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -634,6 +640,16 @@ importers:
       '@cvg/shared':
         specifier: workspace:*
         version: link:../shared
+    devDependencies:
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@25.5.0)(jsdom@24.1.3)
+
+  packages/messaging-contracts:
+    dependencies:
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       vitest:
         specifier: ^3.0.0

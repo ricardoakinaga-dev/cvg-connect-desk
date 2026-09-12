@@ -99,6 +99,13 @@
       "when": 1786723200000,
       "tag": "0013_security_correctness",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1786809600000,
+      "tag": "0014_outbound_idempotency",
+      "breakpoints": true
     }
   ]
 }

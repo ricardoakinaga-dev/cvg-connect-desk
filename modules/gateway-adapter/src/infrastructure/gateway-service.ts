@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { withRetry } from '@cvg/shared';
 import type { CWOutboundEvent } from '../types/gateway-contracts';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,14 +50,35 @@ export const gatewayService = {
         },
       };
 
-      // Enviar para o endpoint outbound do gateway
-      const response = await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': GATEWAY_API_KEY,
+      // Enviar para o endpoint outbound do gateway (retry limitado a falhas
+      // pré-resposta/retryable; idempotent:false — POST sem idempotency key).
+      const outcome = await withRetry(
+        async () => {
+          await axios.post(`${GATEWAY_URL}/webhook/outbound`, event, {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': GATEWAY_API_KEY,
+            },
+            timeout: 10000,
+          });
         },
-        timeout: 10000,
-      });
+        {
+          maxRetries: Number(process.env.GATEWAY_MAX_RETRIES) || 2,
+          idempotent: false,
+          onRetry: (info) => {
+            console.error(
+              `[GatewayService] retry attempt=${info.attempt} classification=${info.classification} event=${event.event_id}`,
+            );
+          },
+        },
+        (error) => (error as { response?: { headers?: Record<string, string> } }).response?.headers?.['retry-after'],
+      );
+
+      if (outcome.error) {
+        const message = outcome.error instanceof Error ? outcome.error.message : String(outcome.error);
+        console.error('[GatewayService] Erro ao enviar outbound:', message);
+        return { success: false, error: message };
+      }
 
       return { success: true, messageId: event.event_id };
     } catch (error: any) {

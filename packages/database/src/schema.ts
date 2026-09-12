@@ -505,3 +505,27 @@ export const outboxConsumerAcks = pgTable('outbox_consumer_acks', {
 // Outbox lease/ACK explícito (Phase 2) + Anti-replay webhook (Phase 1).
 // Tabelas complementares declaradas em webhook-replay.ts e outbox-lease.ts
 // para manter este arquivo legível. Migrations correspondentes: 0013/0014.
+
+// ============================================
+// Outbound Deliveries — idempotência outbound (Phase 2 §5.4)
+// Mapeia idempotency_key -> mensagem interna para nunca duplicar envio
+// ao provider após crash/retry. Migration 0014.
+// ============================================
+
+export const outboundDeliveryStatusEnum = pgEnum('outbound_delivery_status', ['pending', 'sent', 'failed']);
+
+export const outboundDeliveries = pgTable('outbound_deliveries', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  internalMessageId: uuid('internal_message_id').references(() => messages.id).notNull(),
+  idempotencyKey: text('idempotency_key').notNull(),
+  provider: text('provider').notNull().default('evolution'),
+  providerMessageId: text('provider_message_id'),
+  attemptCount: integer('attempt_count').notNull().default(0),
+  lastAttemptAt: timestamp('last_attempt_at'),
+  status: outboundDeliveryStatusEnum('status').notNull().default('pending'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  keyIdx: uniqueIndex('idx_outbound_deliveries_key').on(t.idempotencyKey),
+  messageIdx: index('idx_outbound_deliveries_message').on(t.internalMessageId),
+  statusIdx: index('idx_outbound_deliveries_status').on(t.status),
+}));
