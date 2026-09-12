@@ -8,7 +8,7 @@
  *
  * Uso: pnpm staging:smoke (env S3 e CLAMAV e OTEL herdados do compose)
  */
-const { S3Client, CreateBucketCommand, HeadObjectCommand } = await import('@aws-sdk/client-s3');
+const { S3Client, CreateBucketCommand, DeleteObjectCommand, HeadObjectCommand } = await import('@aws-sdk/client-s3');
 const net = await import('node:net');
 
 const results = [];

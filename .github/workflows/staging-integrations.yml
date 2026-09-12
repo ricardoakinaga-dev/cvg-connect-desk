@@ -48,43 +48,42 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 20
-      minio:
-        image: minio/minio:latest
-        command: server /data --console-address ":9001"
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-        ports:
-          - 9100:9000
-        options: >-
-          --health-cmd "curl -f http://localhost:9000/minio/health/live"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 20
-      clamav:
-        image: clamav/clamav:stable
-        ports:
-          - 3310:3310
-        options: >-
-          --health-cmd "nc -z 127.0.0.1 3310 || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 20
-      otel-collector:
-        image: otel/opentelemetry-collector-contrib:latest
-        command: ["--config=/etc/otelcol/otelcol-config.yaml"]
-        volumes:
-          - ./infra/otel/otelcol-config.yaml:/etc/otelcol/otelcol-config.yaml:ro
-        ports:
-          - 4318:4318
-        options: >-
-          --health-cmd "wget -qO- http://localhost:13133/ || exit 1"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 20
-
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Start MinIO, ClamAV and OTel Collector
+        shell: bash
+        run: |
+          docker run -d --name cvg-minio \
+            -p 9100:9000 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            minio/minio:latest server /data --console-address ":9001"
+          docker run -d --name cvg-clamav \
+            -p 3310:3310 \
+            clamav/clamav:stable
+          docker run -d --name cvg-otel-collector \
+            -p 4318:4318 \
+            -v "$GITHUB_WORKSPACE/infra/otel/otelcol-config.yaml:/etc/otelcol/otelcol-config.yaml:ro" \
+            otel/opentelemetry-collector-contrib:latest \
+            --config=/etc/otelcol/otelcol-config.yaml
+
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:9100/minio/health/live >/dev/null; then break; fi
+            if (( attempt == 60 )); then docker logs cvg-minio; exit 1; fi
+            sleep 2
+          done
+
+          for attempt in {1..90}; do
+            if timeout 1 bash -c '</dev/tcp/127.0.0.1/3310' 2>/dev/null; then break; fi
+            if (( attempt == 90 )); then docker logs cvg-clamav; exit 1; fi
+            sleep 2
+          done
+
+          for attempt in {1..30}; do
+            if timeout 1 bash -c '</dev/tcp/127.0.0.1/4318' 2>/dev/null; then break; fi
+            if (( attempt == 30 )); then docker logs cvg-otel-collector; exit 1; fi
+            sleep 2
+          done
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
