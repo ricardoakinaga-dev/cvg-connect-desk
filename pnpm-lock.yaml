@@ -93,6 +93,9 @@ importers:
       '@cvg/notes':
         specifier: workspace:*
         version: link:../../modules/notes
+      '@cvg/privacy':
+        specifier: workspace:*
+        version: link:../../modules/privacy
       '@cvg/sectors':
         specifier: workspace:*
         version: link:../../modules/sectors
@@ -522,6 +525,25 @@ importers:
 
   modules/notes:
     dependencies:
+      '@cvg/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@cvg/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/node@25.5.0)(jsdom@24.1.3)(tsx@4.21.0)(yaml@2.9.1)
+
+  modules/privacy:
+    dependencies:
+      '@cvg/audit':
+        specifier: workspace:*
+        version: link:../audit
+      '@cvg/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@cvg/database':
         specifier: workspace:*
         version: link:../../packages/database

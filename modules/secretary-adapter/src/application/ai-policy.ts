@@ -80,13 +80,19 @@ export function clearAIDecisions(): void {
 export function sanitizeAIArgs(args: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(args)) {
+    const lowered = key.toLowerCase();
     if (key === 'content' && typeof value === 'string') {
       out.contentPreview = value.slice(0, 200);
       out.contentChars = value.length;
     } else if (key === 'conversationHistory' && Array.isArray(value)) {
       out.historyItems = value.length;
-    } else if (key === 'contactPhone' || key === 'sender') {
+    } else if (
+      lowered === 'contactphone' || lowered === 'sender' || lowered === 'phone' ||
+      lowered === 'recipient' || lowered.endsWith('phone') || lowered.endsWith('telefone')
+    ) {
       out[key] = '[PHONE]';
+    } else if (lowered === 'email' || lowered.endsWith('email')) {
+      out[key] = '[EMAIL]';
     } else if (key === 'context' || key === 'prompt') {
       out[key] = '[OMITTED]';
     } else if (typeof value === 'string' && value.length > 500) {

@@ -67,6 +67,8 @@ export const SENSITIVE_ACTIONS: Record<string, Permission> = {
   'session.revoke': 'admin:write',
   'sector.membership.change': 'admin:write',
   'ai.privileged': 'admin:write',
+  'lgpd.export': 'admin:read',
+  'lgpd.anonymize': 'admin:write',
 };
 
 function requiredSectorLevel(action: Permission, context?: AuthzContext): 'read' | 'write' | 'admin' {

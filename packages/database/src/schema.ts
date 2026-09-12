@@ -593,3 +593,28 @@ export const mediaAssets = pgTable('media_assets', {
   shaIdx: index('idx_media_assets_sha').on(t.sha256),
   scanIdx: index('idx_media_assets_scan').on(t.scanStatus),
 }));
+
+// ============================================
+// AI Action Approvals — aprovações humanas (Final-10)
+// Ações SENSITIVE_WRITE/HUMAN_APPROVAL da IA. Migration 0017.
+// ============================================
+
+export const aiApprovalStatusEnum = pgEnum('ai_approval_status', ['PENDING', 'APPROVED', 'REJECTED', 'EXPIRED']);
+
+export const aiActionApprovals = pgTable('ai_action_approvals', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  invocationId: text('invocation_id').notNull(),
+  tool: text('tool').notNull(),
+  argsHash: text('args_hash').notNull(),
+  argsSanitized: jsonb('args_sanitized').notNull().default({}),
+  requestedBy: text('requested_by').notNull().default('secretary-agent'),
+  status: aiApprovalStatusEnum('status').notNull().default('PENDING'),
+  reviewerId: uuid('reviewer_id').references(() => users.id),
+  decidedAt: timestamp('decided_at'),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => ({
+  uniqueIdx: uniqueIndex('ai_approvals_unique_tool_call').on(t.invocationId, t.tool, t.argsHash),
+  statusIdx: index('idx_ai_approvals_status').on(t.status),
+  invocationIdx: index('idx_ai_approvals_invocation').on(t.invocationId),
+}));

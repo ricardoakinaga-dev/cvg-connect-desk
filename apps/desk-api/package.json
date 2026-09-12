@@ -27,6 +27,7 @@
     "@cvg/kanban": "workspace:*",
     "@cvg/labels": "workspace:*",
     "@cvg/notes": "workspace:*",
+    "@cvg/privacy": "workspace:*",
     "@cvg/sectors": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tasks": "workspace:*",

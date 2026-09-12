@@ -46,6 +46,7 @@ import { registerContactGroupRoutes } from '@cvg/contact-groups';
 import { registerKanbanRoutes } from '@cvg/kanban';
 import { registerGatewayRoutes } from '@cvg/gateway-adapter';
 import { registerContactRoutes } from '@cvg/contacts';
+import { registerPrivacyRoutes } from '@cvg/privacy';
 
 export async function buildDeskApiApp(): Promise<FastifyInstance> {
   warnOnProductionWebhookMisconfiguration();
@@ -425,6 +426,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   await registerKanbanRoutes(app);
   await registerGatewayRoutes(app);
   await registerContactRoutes(app);
+  await registerPrivacyRoutes(app);
 
   return app;
 }
