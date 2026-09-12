@@ -62,7 +62,7 @@ function readClamdReply(socket: net.Socket, timeoutMs: number): Promise<string> 
     });
     socket.on('end', () => {
       clearTimeout(timer);
-      resolve(data.trim());
+      resolve(data.replace(/\0+$/u, '').trim());
     });
     socket.on('error', (error) => {
       clearTimeout(timer);

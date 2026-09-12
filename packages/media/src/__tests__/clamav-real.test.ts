@@ -35,7 +35,7 @@ async function startTcpServer(reply: string, delayMs = 0) {
 
 describe('ClamAV scanner (protocolo)', () => {
   it('clean file → CLEAN (mock TCP)', async () => {
-    const { port, server } = await startTcpServer('stream: OK\n');
+    const { port, server } = await startTcpServer('stream: OK\0');
     try {
       const scanner = new ClamAVScanner('127.0.0.1', port);
       const result = await scanner.scan(Buffer.from('clean bytes'));
@@ -47,7 +47,7 @@ describe('ClamAV scanner (protocolo)', () => {
 
   it('EICAR → INFECTED com assinatura (mock TCP)', async () => {
     const infectedName = 'Eicar-Test-Signature';
-    const { port, server } = await startTcpServer(`stream: ${infectedName} FOUND\n`);
+    const { port, server } = await startTcpServer(`stream: ${infectedName} FOUND\0`);
     try {
       const scanner = new ClamAVScanner('127.0.0.1', port);
       const result = await scanner.scan(Buffer.from('dummy'));
