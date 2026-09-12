@@ -81,7 +81,9 @@ jobs:
           cache: 'pnpm'
       - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
+      # Gate em critical (highs passam por triagem via dependency-review em PRs;
+      # ver docs/TRIPLE_AAA_CERTIFICATION.md para o estado atual).
+      - run: pnpm audit --audit-level=critical
 
   sbom:
     name: SBOM (CycloneDX)

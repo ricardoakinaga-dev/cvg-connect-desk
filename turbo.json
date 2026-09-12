@@ -1,6 +1,33 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalPassThroughEnv": [
+    "DATABASE_URL",
+    "REDIS_URL",
+    "NODE_ENV",
+    "DESK_ENV",
+    "LOG_LEVEL",
+    "PORT",
+    "WEBHOOK_SECRET",
+    "CORS_ORIGIN",
+    "JWT_SECRET",
+    "SECRETARY_URL",
+    "SECRETARY_API_KEY",
+    "SECRETARY_TIMEOUT_MS",
+    "SECRETARY_MAX_RETRIES",
+    "GATEWAY_URL",
+    "GATEWAY_API_KEY",
+    "GATEWAY_MAX_RETRIES",
+    "EVOLUTION_API_URL",
+    "METRICS_TOKEN",
+    "RATE_LIMIT_*",
+    "SESSION_IDLE_TIMEOUT_MS",
+    "MAX_WEBHOOK_CLOCK_SKEW_SECONDS",
+    "WEBHOOK_EVENT_ID_TTL_SECONDS",
+    "MEDIA_MAX_BYTES",
+    "ADMIN_BOOTSTRAP_*",
+    "MIGCHECK_DB"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -15,6 +42,9 @@
     },
     "test": {
       "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
     }
   }
 }
