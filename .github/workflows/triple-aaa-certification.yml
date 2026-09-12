@@ -1,0 +1,54 @@
+name: Triple AAA Certification (aggregator)
+
+# Aggregator único de promoção (§3–4, §28):
+# quando TODOS os workflows de gate concluem no SHA, avalia o estado real de
+# cada required check e publica artifacts/triple-aaa-report.json + check-run.
+# Estado: FAILED | CONDITIONAL | VERIFIED_CANDIDATE.
+# TRIPLE_AAA_CERTIFIED exige tag manual (release approval) — nunca automática.
+
+on:
+  workflow_run:
+    workflows:
+      - CI Quality Gate
+      - Supply Chain Security
+      - Triple AAA Gate
+      - DR End-to-End (backup/restore proof)
+      - E2E Browser Smoke
+      - PostgreSQL Real Tests
+    types:
+      - completed
+
+permissions:
+  checks: read
+  actions: read
+  contents: write
+  statuses: write
+
+jobs:
+  aggregate:
+    name: Aggregate required checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ github.event.workflow_run.head_branch == 'main' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Collect workflow evidence for SHA
+        id: evidence
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: node .github/scripts/certification-aggregator.mjs
+      - name: Publish certification report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: triple-aaa-report
+          path: artifacts/triple-aaa-report.*
+          if-no-files-found: warn
+      - name: Fail job if state is not VERIFIED_CANDIDATE+
+        if: steps.evidence.outputs.state != 'VERIFIED_CANDIDATE' && steps.evidence.outputs.state != 'TRIPLE_AAA_CERTIFIED'
+        run: |
+          echo "CERTIFICATION STATE: ${{ steps.evidence.outputs.state }}"
+          echo "gates: ${{ steps.evidence.outputs.summary }}"
+          exit 1
