@@ -2,16 +2,31 @@ import 'dotenv/config';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { EventEnvelope } from '@cvg/events';
-import { initTracing, withSpan, correlationAttributes } from '@cvg/tracing';
-import {
-  projectEvent,
-  shouldProject,
-  type RealtimeMessage,
-  type RealtimeProjection
-} from '@cvg/realtime';
-import { ConsumerAwareOutboxReader, CONSUMER_IDS } from '@cvg/events';
-import { RedisRealtimeBus, NoopRealtimeBus, REALTIME_BUS_CHANNEL, type RealtimeBus } from '@cvg/events';
+import * as tracingNamespace from '@cvg/tracing';
+import * as realtimeNamespace from '@cvg/realtime';
+import type { RealtimeMessage, RealtimeProjection } from '@cvg/realtime';
+import * as eventsNamespace from '@cvg/events';
+import type { RealtimeBus } from '@cvg/events';
 import { randomUUID } from 'node:crypto';
+
+// Internal workspace packages are currently published as CommonJS. This
+// service is ESM, so runtime exports can arrive through the default namespace.
+function unwrapCommonJs<T>(namespace: T): T {
+  return ((namespace as unknown as { default?: T }).default ?? namespace) as T;
+}
+
+const eventsModule = unwrapCommonJs(eventsNamespace);
+const realtimeModule = unwrapCommonJs(realtimeNamespace);
+const tracingModule = unwrapCommonJs(tracingNamespace);
+const {
+  ConsumerAwareOutboxReader,
+  CONSUMER_IDS,
+  RedisRealtimeBus,
+  NoopRealtimeBus,
+  REALTIME_BUS_CHANNEL,
+} = eventsModule;
+const { projectEvent, shouldProject } = realtimeModule;
+const { initTracing, withSpan, correlationAttributes } = tracingModule;
 
 interface Client {
   id: string;
@@ -36,6 +51,7 @@ class RealtimeServer {
   private deskApiUrl: string;
   private authTimeout: number = 5000;
   private pendingAuth: Map<string, NodeJS.Timeout> = new Map();
+  private httpPollingConfigWarned = false;
   private revalidateIntervalMs: number;
   private readonly instanceId: string;
   private bus: RealtimeBus;
@@ -635,7 +651,11 @@ class RealtimeServer {
       level: 'info',
     }));
 
+    let pollInFlight = false;
     this.pollInterval = setInterval(async () => {
+      if (pollInFlight) return;
+      pollInFlight = true;
+
       try {
         const pendingEvents = await reader.fetchPendingEvents();
 
@@ -670,6 +690,8 @@ class RealtimeServer {
           error: error instanceof Error ? error.message : String(error),
           level: 'error',
         }));
+      } finally {
+        pollInFlight = false;
       }
     }, intervalMs);
 
@@ -682,8 +704,12 @@ class RealtimeServer {
   private startHttpPolling(): void {
     const intervalMs = Number(process.env.REALTIME_POLL_INTERVAL_MS) || 500;
     let lastServerTime: string | null = null;
+    let pollInFlight = false;
 
     this.pollInterval = setInterval(async () => {
+      if (pollInFlight) return;
+      pollInFlight = true;
+
       try {
         const url = new URL(`${this.deskApiUrl}/events`);
         if (lastServerTime) {
@@ -691,7 +717,21 @@ class RealtimeServer {
         }
         url.searchParams.set('limit', '50');
 
-        const response = await fetch(url.toString());
+        const internalEventsSecret = (process.env.INTERNAL_EVENTS_SECRET || process.env.EVENTS_API_KEY)?.trim();
+        if (!internalEventsSecret) {
+          if (!this.httpPollingConfigWarned) {
+            console.error(JSON.stringify({
+              msg: '[Realtime] INTERNAL_EVENTS_SECRET is not configured; HTTP event polling disabled',
+              level: 'error',
+            }));
+            this.httpPollingConfigWarned = true;
+          }
+          return;
+        }
+
+        const response = await fetch(url.toString(), {
+          headers: { 'x-internal-service-key': internalEventsSecret },
+        });
 
         if (!response.ok) {
           console.warn(JSON.stringify({
@@ -703,7 +743,11 @@ class RealtimeServer {
           return;
         }
 
-        const data = await response.json() as { events: EventEnvelope[]; serverTime: string };
+        const data = await response.json() as {
+          events: EventEnvelope[];
+          serverTime: string;
+          ackEndpoint?: string;
+        };
 
         if (data.events.length > 0) {
           console.info(JSON.stringify({
@@ -711,11 +755,14 @@ class RealtimeServer {
             count: data.events.length,
             level: 'info',
           }));
-          lastServerTime = data.serverTime;
-
           for (const event of data.events) {
             this.processEvent(event);
+            await this.acknowledgeHttpEvent(event.event_id, internalEventsSecret, data.ackEndpoint);
           }
+
+          // Só avança o cursor depois de confirmar todos os eventos. Se um
+          // ACK falhar, o lease poderá ser recuperado no próximo ciclo.
+          lastServerTime = data.serverTime;
         }
       } catch (error) {
         console.error(JSON.stringify({
@@ -723,6 +770,8 @@ class RealtimeServer {
           error: error instanceof Error ? error.message : String(error),
           level: 'error',
         }));
+      } finally {
+        pollInFlight = false;
       }
     }, intervalMs);
 
@@ -731,6 +780,20 @@ class RealtimeServer {
       api_url: this.deskApiUrl,
       level: 'info',
     }));
+  }
+
+  private async acknowledgeHttpEvent(eventId: string, secret: string, ackEndpoint?: string): Promise<void> {
+    const path = ackEndpoint?.replace(':eventId', encodeURIComponent(eventId))
+      || `/events/${encodeURIComponent(eventId)}/ack`;
+    const ackUrl = new URL(path, `${this.deskApiUrl.replace(/\/$/, '')}/`);
+    const response = await fetch(ackUrl.toString(), {
+      method: 'POST',
+      headers: { 'x-internal-service-key': secret },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Event ACK failed with HTTP ${response.status}`);
+    }
   }
 
   /** Fast path (Final-8): hints via Redis; polling continua como path durável. */

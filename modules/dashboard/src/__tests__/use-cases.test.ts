@@ -9,6 +9,11 @@ const mocks = vi.hoisted(() => ({
   getTasksOverdue: vi.fn(),
   getAlertMetrics: vi.fn(),
   getAlertsActive: vi.fn(),
+  getResponseTimeMetrics: vi.fn(),
+  getHandoffMetrics: vi.fn(),
+  getSectorBacklog: vi.fn(),
+  getAgingConversations: vi.fn(),
+  getAlertsByCriticality: vi.fn(),
 }));
 
 vi.mock('../infrastructure', () => ({
@@ -73,5 +78,27 @@ describe('dashboard use cases', () => {
     if (result.isOk()) {
       expect(result.value).toBe(5);
     }
+  });
+
+  it('composes the premium summary from all operational KPI sources', async () => {
+    mocks.getConversationMetrics.mockResolvedValue({ open: 2, pending: 1, closed: 4, archived: 0, total: 7 });
+    mocks.getTaskMetrics.mockResolvedValue({ total: 3, pending: 1, inProgress: 1, completed: 1, cancelled: 0, overdue: 0 });
+    mocks.getAlertMetrics.mockResolvedValue({ total: 2, active: 1, acknowledged: 0, resolved: 1, bySeverity: { info: 0, warning: 1, error: 0, critical: 0 } });
+    mocks.getResponseTimeMetrics.mockResolvedValue({ avgFirstResponseTime: 42, avgResponseTime: 51, totalConversationsWithResponse: 5 });
+    mocks.getHandoffMetrics.mockResolvedValue({ totalHandoffs: 2, totalConversations: 7, handoffRate: 28.57 });
+    mocks.getSectorBacklog.mockResolvedValue([{ sectorId: 'sector-1', sectorName: 'Recepção', openConversations: 1, pendingConversations: 2, totalBacklog: 3 }]);
+    mocks.getAgingConversations.mockResolvedValue([]);
+    mocks.getAlertsByCriticality.mockResolvedValue({ critical: 0, error: 0, warning: 1, info: 0 });
+
+    const result = await useCases.getPremiumDashboardSummary();
+
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) {
+      expect(result.value.responseTime.avgFirstResponseTime).toBe(42);
+      expect(result.value.handoff.handoffRate).toBe(28.57);
+      expect(result.value.sectorBacklog).toHaveLength(1);
+      expect(result.value.alertsByCriticality.warning).toBe(1);
+    }
+    expect(mocks.getAgingConversations).toHaveBeenCalledWith(20);
   });
 });

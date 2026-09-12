@@ -70,3 +70,53 @@ export interface GetConversationVolumeRequest {
   endDate: Date;
   groupBy?: 'day' | 'week' | 'month';
 }
+
+export interface ResponseTimeMetrics {
+  avgFirstResponseTime: number | null;
+  avgResponseTime: number | null;
+  totalConversationsWithResponse: number;
+}
+
+export interface HandoffMetrics {
+  totalHandoffs: number;
+  totalConversations: number;
+  handoffRate: number | null;
+}
+
+export interface SectorBacklog {
+  sectorId: string;
+  sectorName: string;
+  openConversations: number;
+  pendingConversations: number;
+  totalBacklog: number;
+}
+
+export type ConversationAgingBucket = 'fresh' | 'normal' | 'old' | 'critical';
+
+export interface ConversationAging {
+  conversationId: string;
+  status: 'open' | 'pending';
+  sectorName: string | null;
+  lastMessageAt: string | null;
+  hoursSinceLastMessage: number | null;
+  agingBucket: ConversationAgingBucket;
+}
+
+export interface AlertsByCriticality {
+  critical: number;
+  error: number;
+  warning: number;
+  info: number;
+}
+
+export interface PremiumDashboardSummary {
+  conversations: ConversationMetrics;
+  tasks: TaskMetrics;
+  alerts: AlertMetrics;
+  responseTime: ResponseTimeMetrics;
+  handoff: HandoffMetrics;
+  sectorBacklog: SectorBacklog[];
+  agingConversations: ConversationAging[];
+  alertsByCriticality: AlertsByCriticality;
+  generatedAt: string;
+}

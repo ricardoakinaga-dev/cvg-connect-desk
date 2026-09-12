@@ -105,6 +105,7 @@ export async function sendOutboundMessage(
     const message = await messageRepository.create({
       conversationId: input.conversationId,
       direction: 'outbound',
+      senderType: 'human',
       content: input.content || '',
       recipient: input.recipient,
       sender: input.sender,

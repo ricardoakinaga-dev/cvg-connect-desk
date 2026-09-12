@@ -118,6 +118,7 @@ describe('Chat routes integration', () => {
     expect(message).toBeDefined();
     expect(message.content).toBe('Mensagem outbound via integracao');
     expect(message.recipient).toBe('+5511999999000');
+    expect(message.senderType).toBe('human');
   });
 
   it('validation error e retornado corretamente para input invalido', async () => {

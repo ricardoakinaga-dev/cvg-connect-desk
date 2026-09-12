@@ -11,6 +11,8 @@ import {
 } from '@cvg/events';
 import { createAlert } from '@cvg/alerts';
 import { recordWorkerDeadLetter } from './dead-letter';
+import { startWorkerHealthServer } from './health';
+import { createNoOverlapPoller } from './polling';
 
 const RETRY_CONFIG: RetryConfig = {
   maxRetries: 3,
@@ -24,6 +26,9 @@ const workerReader = new ConsumerAwareOutboxReader({
   batchSize: 50,
   maxRetries: 3,
 });
+
+let workerPoller: ReturnType<typeof createNoOverlapPoller> | null = null;
+let workerHealthServer: ReturnType<typeof startWorkerHealthServer> | null = null;
 
 async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
   const payload = event.payload as {
@@ -183,93 +188,105 @@ async function processEventFromOutbox(eventId: string, event: EventEnvelope): Pr
     // eslint-disable-next-line no-constant-condition
     while (true) {
       try {
-      await handler(event);
-      console.info(JSON.stringify({
-        msg: '[Worker] Successfully processed event',
-        event_type: event.event_type,
-        event_id: event.event_id,
-        correlation_id: event.correlation_id,
-        handler: handler.name || event.event_type,
-        level: 'info',
-      }));
-      await workerReader.acknowledge(eventId);
-      break;
-    } catch (error) {
-      const err = error as Error;
-      const failureCount = attempt + 1;
-      const updatedContext = createRetryContext(event, event.event_type, failureCount, err);
-
-      if (!shouldRetry(updatedContext, RETRY_CONFIG)) {
-        console.error(JSON.stringify({
-          msg: '[Worker] Non-retryable error — sending to dead-letter',
+        await handler(event);
+        console.info(JSON.stringify({
+          msg: '[Worker] Successfully processed event',
           event_type: event.event_type,
           event_id: event.event_id,
           correlation_id: event.correlation_id,
           handler: handler.name || event.event_type,
-          error: err.message,
-          retry_count: failureCount,
-          retry_decision: 'dead-letter',
-          failure_stage: 'worker-terminal',
-          level: 'error',
+          level: 'info',
         }));
-        await workerReader.acknowledgeWithError(eventId, err.message);
-        recordWorkerDeadLetter({
-          event,
-          error: err.message,
-          retryCount: failureCount,
-          handlerName: handler.name || event.event_type,
-        });
+        await workerReader.acknowledge(eventId);
         break;
-      }
+      } catch (error) {
+        const err = error as Error;
+        const failureCount = attempt + 1;
+        const updatedContext = createRetryContext(event, event.event_type, failureCount, err);
 
-      attempt = failureCount;
-      const delay = calculateNextDelay(RETRY_CONFIG, attempt);
+        if (!shouldRetry(updatedContext, RETRY_CONFIG)) {
+          console.error(JSON.stringify({
+            msg: '[Worker] Non-retryable error — sending to dead-letter',
+            event_type: event.event_type,
+            event_id: event.event_id,
+            correlation_id: event.correlation_id,
+            handler: handler.name || event.event_type,
+            error: err.message,
+            retry_count: failureCount,
+            retry_decision: 'dead-letter',
+            failure_stage: 'worker-terminal',
+            level: 'error',
+          }));
+          await workerReader.acknowledgeWithError(eventId, err.message);
+          recordWorkerDeadLetter({
+            event,
+            error: err.message,
+            retryCount: failureCount,
+            handlerName: handler.name || event.event_type,
+          });
+          break;
+        }
 
-      console.warn(JSON.stringify({
-        msg: '[Worker] Retrying event after error',
-        event_type: event.event_type,
-        event_id: event.event_id,
-        correlation_id: event.correlation_id,
-        handler: handler.name || event.event_type,
-        attempt,
-        max_retries: RETRY_CONFIG.maxRetries,
-        delay_ms: delay,
-        error: err.message,
-        level: 'warn',
-      }));
+        attempt = failureCount;
+        const delay = calculateNextDelay(RETRY_CONFIG, attempt);
 
-      if (attempt >= RETRY_CONFIG.maxRetries) {
-        console.error(JSON.stringify({
-          msg: '[Worker] Max retries exceeded — sending to dead-letter',
+        console.warn(JSON.stringify({
+          msg: '[Worker] Retrying event after error',
           event_type: event.event_type,
           event_id: event.event_id,
           correlation_id: event.correlation_id,
           handler: handler.name || event.event_type,
-          error: err.message,
           attempt,
           max_retries: RETRY_CONFIG.maxRetries,
-          retry_decision: 'dead-letter',
-          failure_stage: 'worker-terminal',
-          level: 'error',
-        }));
-        await workerReader.acknowledgeWithError(eventId, err.message);
-        recordWorkerDeadLetter({
-          event,
+          delay_ms: delay,
           error: err.message,
-          retryCount: attempt,
-          handlerName: handler.name || event.event_type,
-        });
-        break;
-      }
+          level: 'warn',
+        }));
 
-      await new Promise(resolve => setTimeout(resolve, delay));
+        if (attempt >= RETRY_CONFIG.maxRetries) {
+          console.error(JSON.stringify({
+            msg: '[Worker] Max retries exceeded — sending to dead-letter',
+            event_type: event.event_type,
+            event_id: event.event_id,
+            correlation_id: event.correlation_id,
+            handler: handler.name || event.event_type,
+            error: err.message,
+            attempt,
+            max_retries: RETRY_CONFIG.maxRetries,
+            retry_decision: 'dead-letter',
+            failure_stage: 'worker-terminal',
+            level: 'error',
+          }));
+          await workerReader.acknowledgeWithError(eventId, err.message);
+          recordWorkerDeadLetter({
+            event,
+            error: err.message,
+            retryCount: attempt,
+            handlerName: handler.name || event.event_type,
+          });
+          break;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
   }
 }
 
 async function startWorker(): Promise<void> {
   await initTracing();
-  const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS) || 500;
+  const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS || process.env.WORKER_POLL_INTERVAL_MS) || 500;
+  const healthPort = Number(process.env.WORKER_HEALTH_PORT) || 9090;
+
+  workerHealthServer = startWorkerHealthServer(healthPort);
+  workerHealthServer.on('error', (error) => {
+    console.error(JSON.stringify({
+      msg: '[Worker] Health server error',
+      error: error instanceof Error ? error.message : String(error),
+      port: healthPort,
+      level: 'error',
+    }));
+  });
 
   console.info(JSON.stringify({
     msg: '[Worker] Starting message worker',
@@ -279,7 +296,7 @@ async function startWorker(): Promise<void> {
     level: 'info',
   }));
 
-  setInterval(async () => {
+  workerPoller = createNoOverlapPoller(async () => {
     try {
       const pendingEvents = await workerReader.fetchPendingEvents();
 
@@ -310,6 +327,13 @@ async function startWorker(): Promise<void> {
   }));
 }
 
+function stopWorker(): void {
+  workerPoller?.stop();
+  workerPoller = null;
+  workerHealthServer?.close();
+  workerHealthServer = null;
+}
+
 startWorker().catch(error => {
   console.error(JSON.stringify({
     msg: '[Worker] Failed to start worker',
@@ -324,6 +348,7 @@ process.on('SIGTERM', () => {
     msg: '[Worker] Received SIGTERM, shutting down gracefully',
     level: 'info',
   }));
+  stopWorker();
   process.exit(0);
 });
 
@@ -332,6 +357,7 @@ process.on('SIGINT', () => {
     msg: '[Worker] Received SIGINT, shutting down gracefully',
     level: 'info',
   }));
+  stopWorker();
   process.exit(0);
 });
 

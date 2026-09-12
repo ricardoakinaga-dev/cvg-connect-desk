@@ -112,11 +112,11 @@ export class DeadLetterStore {
       event_id: fullEntry.eventId,
       handler_name: fullEntry.handlerName,
       retry_count: fullEntry.retryCount,
-      retryable: fullEntry.failureContext.retryable,
-      reason: fullEntry.failureContext.reason,
-      correlation_id: fullEntry.failureContext.correlationId,
-      causation_id: fullEntry.failureContext.causationId,
-      event_version: fullEntry.failureContext.eventVersion,
+      retryable: failureContext.retryable,
+      reason: failureContext.reason,
+      correlation_id: failureContext.correlationId,
+      causation_id: failureContext.causationId,
+      event_version: failureContext.eventVersion,
       level: 'error',
     }));
     return fullEntry;

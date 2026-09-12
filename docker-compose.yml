@@ -68,6 +68,8 @@ services:
       SECRETARY_TIMEOUT_MS: ${SECRETARY_TIMEOUT_MS:-30000}
       WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
       CORS_ORIGIN: ${CORS_ORIGIN:?CORS_ORIGIN obrigatorio em producao - ausente ou * derruba o boot (fail-secure)}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
     ports:
       - "127.0.0.1:3000:3000"
     read_only: true
@@ -134,6 +136,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
       REDIS_URL: redis://redis:6379
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      WORKER_HEALTH_PORT: ${WORKER_HEALTH_PORT:-9090}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
@@ -166,6 +169,7 @@ services:
       REALTIME_PORT: 8080
       REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
       DESK_API_URL: http://desk-api:3000
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:

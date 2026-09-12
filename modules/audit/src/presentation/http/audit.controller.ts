@@ -54,7 +54,7 @@ export async function registerAuditRoutes(app: FastifyInstance) {
   app.get<{ Params: { entityType: string }; Querystring: { entityId: string } }>(
     '/audit/entity/:entityType',
     {
-      preHandler: [authenticate, requirePermission('audit:read')],
+      preHandler: [authenticate, requirePermission('admin:read')],
       schema: {
         params: {
           type: 'object',

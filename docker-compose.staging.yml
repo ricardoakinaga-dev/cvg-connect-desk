@@ -135,6 +135,7 @@ services:
       JWT_SECRET: staging-jwt-only-not-secret
       WEBHOOK_SECRET: staging-webhook-only-not-secret
       CORS_ORIGIN: http://localhost:3001
+      INTERNAL_EVENTS_SECRET: staging-internal-events-only
       METRICS_TOKEN: staging-metrics-token
       OTEL_ENABLED: "true"
       OTEL_SERVICE_NAME: desk-api
@@ -176,6 +177,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
       REDIS_URL: redis://redis:6379
+      WORKER_HEALTH_PORT: 9090
       OTEL_ENABLED: "true"
       OTEL_SERVICE_NAME: message-worker
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
@@ -196,6 +198,7 @@ services:
       REDIS_URL: redis://redis:6379
       DESK_API_URL: http://desk-api:3000
       REALTIME_PORT: 8080
+      INTERNAL_EVENTS_SECRET: staging-internal-events-only
       OTEL_ENABLED: "true"
       OTEL_SERVICE_NAME: realtime-service
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces

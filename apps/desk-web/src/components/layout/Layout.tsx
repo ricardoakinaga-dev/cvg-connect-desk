@@ -20,6 +20,12 @@ export function Layout() {
           <NavLink to="/contacts" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">👤</span><span>Contatos</span>
           </NavLink>
+          <NavLink to="/tutors" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <span className="nav-icon">👨‍👩‍👦</span><span>Tutores</span>
+          </NavLink>
+          <NavLink to="/patients" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <span className="nav-icon">🐾</span><span>Pacientes</span>
+          </NavLink>
           <NavLink to="/kanban" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <span className="nav-icon">📋</span><span>Kanban</span>
           </NavLink>

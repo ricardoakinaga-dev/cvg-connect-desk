@@ -73,8 +73,12 @@ Não faremos dependência de Vercel/Netlify se a clínica preza pela Cloud Local
 - `REDIS_URL` (Redis Cloud, Redis Local)
 - `GATEWAY_URL` (url do serviço externo pre-existente)
 - `WORKER_POLL_INTERVAL_MS` (Intervalo de polling do worker, default: 5000)
+- `WORKER_HEALTH_PORT` (Porta interna de liveness do worker, default: 9090)
 - `REALTIME_PORT` (Porta do servidor WebSocket, default: 8080)
 - `REALTIME_POLL_INTERVAL_MS` (Intervalo de polling de eventos, default: 1000)
+- `USE_DATABASE_OUTBOX` (Use `true` para o caminho durável do outbox; `false` habilita fallback HTTP autenticado)
+- `INTERNAL_EVENTS_SECRET` (Chave compartilhada obrigatória para `/events` e fallback HTTP do realtime)
+- `TRUST_PROXY` (Lista explícita de IPs/CIDRs confiáveis, separada por vírgula; vazio desabilita)
 - `SECRETARY_API_KEY` (Chave da API Secretary)
 - `SECRETARY_URL` (URL do serviço Secretary)
 

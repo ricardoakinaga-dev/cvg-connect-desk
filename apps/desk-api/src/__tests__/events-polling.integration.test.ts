@@ -15,8 +15,11 @@ describe('Events polling integration', () => {
     `${eventPrefix}.3`,
   ];
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
+  const internalHeaders = { 'x-internal-service-key': 'events-polling-test-secret' };
+  const previousInternalSecret = process.env.INTERNAL_EVENTS_SECRET;
 
   beforeAll(async () => {
+    process.env.INTERNAL_EVENTS_SECRET = internalHeaders['x-internal-service-key'];
     app = await buildDeskApiApp();
     await app.ready();
   });
@@ -87,12 +90,27 @@ describe('Events polling integration', () => {
     await db.delete(schema.outboxEvents).where(eq(schema.outboxEvents.eventId, eventIds[1]));
     await db.delete(schema.outboxEvents).where(eq(schema.outboxEvents.eventId, eventIds[2]));
     await app.close();
+    if (previousInternalSecret === undefined) delete process.env.INTERNAL_EVENTS_SECRET;
+    else process.env.INTERNAL_EVENTS_SECRET = previousInternalSecret;
+  });
+
+  it('recusa polling interno sem a chave compartilhada', async () => {
+    const missingKey = await app.inject({ method: 'GET', url: '/events?limit=1' });
+    expect(missingKey.statusCode).toBe(401);
+
+    const invalidKey = await app.inject({
+      method: 'POST',
+      url: `/events/${eventIds[0]}/ack`,
+      headers: { 'x-internal-service-key': 'wrong-secret' },
+    });
+    expect(invalidKey.statusCode).toBe(401);
   });
 
   it('GET aluga eventos sem ACK destrutivo; POST /events/:id/ack confirma', async () => {
     const firstResponse = await app.inject({
       method: 'GET',
       url: '/events?limit=2',
+      headers: internalHeaders,
     });
 
     expect(firstResponse.statusCode).toBe(200);
@@ -144,6 +162,7 @@ describe('Events polling integration', () => {
     const ackResponse = await app.inject({
       method: 'POST',
       url: `/events/${eventIds[0]}/ack`,
+      headers: internalHeaders,
     });
     expect(ackResponse.statusCode).toBe(200);
     expect(ackResponse.json()).toMatchObject({ acknowledged: true, eventId: eventIds[0] });
@@ -167,6 +186,7 @@ describe('Events polling integration', () => {
     const sinceResponse = await app.inject({
       method: 'GET',
       url: `/events?since=${encodeURIComponent(new Date(baseOccurredAt.getTime() + 90_000).toISOString())}&limit=10`,
+      headers: internalHeaders,
     });
 
     expect(sinceResponse.statusCode).toBe(200);
@@ -187,7 +207,7 @@ describe('Events polling integration', () => {
 
     // ACK explícito dos restantes; só então todos aparecem como processados.
     for (const eventId of [eventIds[1], eventIds[2]]) {
-      const ack = await app.inject({ method: 'POST', url: `/events/${eventId}/ack` });
+      const ack = await app.inject({ method: 'POST', url: `/events/${eventId}/ack`, headers: internalHeaders });
       expect(ack.statusCode).toBe(200);
     }
 

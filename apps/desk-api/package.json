@@ -28,9 +28,11 @@
     "@cvg/labels": "workspace:*",
     "@cvg/notes": "workspace:*",
     "@cvg/privacy": "workspace:*",
+    "@cvg/patients": "workspace:*",
     "@cvg/sectors": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tasks": "workspace:*",
+    "@cvg/tutors": "workspace:*",
     "@cvg/tracing": "workspace:*",
     "@cvg/transfers": "workspace:*",
     "@fastify/cors": "^11.2.0",
@@ -41,12 +43,12 @@
     "dotenv": "^17.3.1",
     "fastify": "^5.12.4",
     "fastify-type-provider-zod": "^6.1.0",
+    "tsx": "^4.21.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "fastify-plugin": "^5.1.0",
     "pino-pretty": "^13.0.0",
-    "tsx": "^4.21.0",
     "vitest": "^3.2.7"
   }
 }

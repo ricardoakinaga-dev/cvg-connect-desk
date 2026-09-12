@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, and, gte, lt, inArray, sql, desc } from 'drizzle-orm';
+import { eq, and, gte, lt, inArray, sql, desc, isNull, or } from 'drizzle-orm';
 import type {
   ConversationMetrics,
   ConversationVolume,
@@ -7,7 +7,20 @@ import type {
   AlertMetrics,
   DashboardSummary,
   TimeRange,
+  ResponseTimeMetrics,
+  HandoffMetrics,
+  SectorBacklog,
+  ConversationAging,
+  ConversationAgingBucket,
+  AlertsByCriticality,
 } from '../types';
+
+export function classifyConversationAging(hoursSinceLastMessage: number | null): ConversationAgingBucket {
+  if (hoursSinceLastMessage === null || hoursSinceLastMessage <= 2) return 'fresh';
+  if (hoursSinceLastMessage <= 8) return 'normal';
+  if (hoursSinceLastMessage <= 24) return 'old';
+  return 'critical';
+}
 
 export class DashboardRepository {
   async getConversationMetrics(): Promise<ConversationMetrics> {
@@ -191,6 +204,195 @@ export class DashboardRepository {
       .where(inArray(schema.alerts.status, statuses));
 
     return Number(result[0]?.count || 0);
+  }
+
+  /**
+   * Mede o tempo até a primeira resposta humana. As subconsultas são
+   * correlacionadas por conversation_id para não misturar mensagens de
+   * conversas diferentes.
+   */
+  async getResponseTimeMetrics(): Promise<ResponseTimeMetrics> {
+    const firstInbound = db.select({
+      conversationId: schema.messages.conversationId,
+      firstInbound: sql<Date>`MIN(${schema.messages.createdAt})`.as('first_inbound'),
+    })
+      .from(schema.messages)
+      .where(eq(schema.messages.direction, 'inbound'))
+      .groupBy(schema.messages.conversationId)
+      .as('first_inbound');
+
+    const firstResponse = await db.select({
+      avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${sql.raw('first_response.first_outbound')} - ${firstInbound.firstInbound})))`,
+      count: sql<number>`COUNT(*)`,
+    })
+      .from(firstInbound)
+      .innerJoinLateral(
+        db.select({
+          firstOutbound: sql<Date>`MIN(${schema.messages.createdAt})`.as('first_outbound'),
+        })
+          .from(schema.messages)
+          .where(and(
+            eq(schema.messages.conversationId, firstInbound.conversationId),
+            eq(schema.messages.direction, 'outbound'),
+            or(eq(schema.messages.senderType, 'human'), isNull(schema.messages.senderType)),
+            sql`${schema.messages.createdAt} > ${firstInbound.firstInbound}`,
+          ))
+          .as('first_response'),
+        sql`true`,
+      )
+      .where(and(
+        sql`${sql.raw('first_response.first_outbound')} IS NOT NULL`,
+        sql`${sql.raw('first_response.first_outbound')} > ${firstInbound.firstInbound}`,
+      ));
+
+    const averageResponse = await db.select({
+      avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${sql.raw('response.outbound_at')} - ${sql.raw('inbounds.inbound_at')})))`,
+    })
+      .from(
+        db.select({
+          conversationId: schema.messages.conversationId,
+          inboundAt: schema.messages.createdAt,
+        })
+          .from(schema.messages)
+          .where(eq(schema.messages.direction, 'inbound'))
+          .as('inbounds'),
+      )
+      .innerJoinLateral(
+        db.select({
+          outboundAt: sql<Date>`MIN(${schema.messages.createdAt})`.as('outbound_at'),
+        })
+          .from(schema.messages)
+          .where(and(
+            eq(schema.messages.conversationId, sql.raw('inbounds.conversation_id')),
+            eq(schema.messages.direction, 'outbound'),
+            or(eq(schema.messages.senderType, 'human'), isNull(schema.messages.senderType)),
+            sql`${schema.messages.createdAt} > ${sql.raw('inbounds.inbound_at')}`,
+          ))
+          .as('response'),
+        sql`true`,
+      )
+      .where(and(
+        sql`${sql.raw('response.outbound_at')} IS NOT NULL`,
+        sql`${sql.raw('response.outbound_at')} > ${sql.raw('inbounds.inbound_at')}`,
+      ));
+
+    const avgFirstResponseTime = firstResponse[0]?.avgSeconds == null
+      ? null
+      : Math.round(Number(firstResponse[0].avgSeconds));
+    const avgResponseTime = averageResponse[0]?.avgSeconds == null
+      ? null
+      : Math.round(Number(averageResponse[0].avgSeconds));
+
+    return {
+      avgFirstResponseTime,
+      avgResponseTime,
+      totalConversationsWithResponse: Number(firstResponse[0]?.count || 0),
+    };
+  }
+
+  async getHandoffMetrics(): Promise<HandoffMetrics> {
+    const [handoffs, conversations] = await Promise.all([
+      db.select({ count: sql<number>`COUNT(DISTINCT ${schema.auditLogs.entityId})` })
+        .from(schema.auditLogs)
+        .where(and(
+          eq(schema.auditLogs.entityType, 'conversation'),
+          inArray(schema.auditLogs.action, ['conversation.handoff', 'handoff.completed']),
+        )),
+      db.select({ count: sql<number>`COUNT(*)` }).from(schema.conversations),
+    ]);
+
+    const totalHandoffs = Number(handoffs[0]?.count || 0);
+    const totalConversations = Number(conversations[0]?.count || 0);
+
+    return {
+      totalHandoffs,
+      totalConversations,
+      handoffRate: totalConversations > 0
+        ? Math.round((totalHandoffs / totalConversations) * 10000) / 100
+        : null,
+    };
+  }
+
+  async getSectorBacklog(): Promise<SectorBacklog[]> {
+    const rows = await db.select({
+      sectorId: schema.sectors.id,
+      sectorName: schema.sectors.name,
+      openConversations: sql<number>`COUNT(*) FILTER (WHERE ${schema.conversations.status} = 'open')`,
+      pendingConversations: sql<number>`COUNT(*) FILTER (WHERE ${schema.conversations.status} = 'pending')`,
+    })
+      .from(schema.sectors)
+      .leftJoin(schema.conversations, and(
+        eq(schema.conversations.sectorId, schema.sectors.id),
+        eq(schema.conversations.isActive, true),
+        inArray(schema.conversations.status, ['open', 'pending']),
+      ))
+      .where(eq(schema.sectors.isActive, true))
+      .groupBy(schema.sectors.id, schema.sectors.name)
+      .orderBy(sql`COUNT(*) FILTER (WHERE ${schema.conversations.status} IN ('open', 'pending')) DESC`, schema.sectors.name);
+
+    return rows.map((row) => {
+      const openConversations = Number(row.openConversations || 0);
+      const pendingConversations = Number(row.pendingConversations || 0);
+      return {
+        sectorId: row.sectorId,
+        sectorName: row.sectorName,
+        openConversations,
+        pendingConversations,
+        totalBacklog: openConversations + pendingConversations,
+      };
+    });
+  }
+
+  async getAgingConversations(limit = 20): Promise<ConversationAging[]> {
+    const safeLimit = Math.min(100, Math.max(1, Math.floor(limit)));
+    const rows = await db.select({
+      id: schema.conversations.id,
+      status: schema.conversations.status,
+      sectorName: schema.sectors.name,
+      lastMessageAt: sql<Date | null>`MAX(${schema.messages.createdAt})`,
+    })
+      .from(schema.conversations)
+      .leftJoin(schema.sectors, eq(schema.conversations.sectorId, schema.sectors.id))
+      .leftJoin(schema.messages, eq(schema.messages.conversationId, schema.conversations.id))
+      .where(and(
+        eq(schema.conversations.isActive, true),
+        inArray(schema.conversations.status, ['open', 'pending']),
+      ))
+      .groupBy(schema.conversations.id, schema.conversations.status, schema.sectors.name)
+      .orderBy(sql`MAX(${schema.messages.createdAt}) ASC NULLS FIRST`)
+      .limit(safeLimit);
+
+    const now = Date.now();
+    return rows.map((row) => {
+      const lastMessageAt = row.lastMessageAt instanceof Date ? row.lastMessageAt : null;
+      const hoursSinceLastMessage = lastMessageAt
+        ? Math.max(0, Math.round(((now - lastMessageAt.getTime()) / 3_600_000) * 10) / 10)
+        : null;
+      const agingBucket = classifyConversationAging(hoursSinceLastMessage);
+
+      return {
+        conversationId: row.id,
+        status: row.status as 'open' | 'pending',
+        sectorName: row.sectorName,
+        lastMessageAt: lastMessageAt?.toISOString() || null,
+        hoursSinceLastMessage,
+        agingBucket,
+      };
+    });
+  }
+
+  async getAlertsByCriticality(): Promise<AlertsByCriticality> {
+    const rows = await db.select({
+      severity: schema.alerts.severity,
+      count: sql<number>`COUNT(*)`,
+    })
+      .from(schema.alerts)
+      .where(eq(schema.alerts.status, 'active'))
+      .groupBy(schema.alerts.severity);
+
+    const result: AlertsByCriticality = { critical: 0, error: 0, warning: 0, info: 0 };
+    for (const row of rows) result[row.severity] = Number(row.count);
+    return result;
   }
 }
 

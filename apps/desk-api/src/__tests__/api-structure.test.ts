@@ -72,6 +72,7 @@ describe('Events Endpoint', () => {
 
   it('registers /events endpoint', () => {
     expect(content).toContain("app.get('/events'");
+    expect(content).toContain('preHandler: createInternalEventsGuard()');
   });
 
   it('registers /admin/dead-letters endpoint', () => {

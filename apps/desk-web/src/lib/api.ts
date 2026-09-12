@@ -289,6 +289,75 @@ export interface DashboardSummary {
   generatedAt: string;
 }
 
+export interface Tutor {
+  id: string;
+  externalId: string | null;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  createdAt: string;
+  updatedAt: string;
+  patients?: Array<{
+    id: string;
+    name: string;
+    species: string | null;
+    breed: string | null;
+  }>;
+  conversationCount?: number;
+  taskCount?: number;
+}
+
+export interface Patient {
+  id: string;
+  externalId: string | null;
+  name: string;
+  species: string | null;
+  breed: string | null;
+  tutorId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tutor?: {
+    id: string;
+    name: string;
+    phone: string | null;
+  } | null;
+  conversationCount?: number;
+  taskCount?: number;
+}
+
+export interface PremiumDashboardSummary {
+  conversations: DashboardSummary['conversations'];
+  tasks: DashboardSummary['tasks'];
+  alerts: DashboardSummary['alerts'];
+  responseTime: {
+    avgFirstResponseTime: number | null;
+    avgResponseTime: number | null;
+    totalConversationsWithResponse: number;
+  };
+  handoff: {
+    totalHandoffs: number;
+    totalConversations: number;
+    handoffRate: number | null;
+  };
+  sectorBacklog: Array<{
+    sectorId: string;
+    sectorName: string;
+    openConversations: number;
+    pendingConversations: number;
+    totalBacklog: number;
+  }>;
+  agingConversations: Array<{
+    conversationId: string;
+    status: 'open' | 'pending';
+    sectorName: string | null;
+    lastMessageAt: string | null;
+    hoursSinceLastMessage: number | null;
+    agingBucket: 'fresh' | 'normal' | 'old' | 'critical';
+  }>;
+  alertsByCriticality: { critical: number; error: number; warning: number; info: number };
+  generatedAt: string;
+}
+
 export const conversationApi = {
   list: (filters?: { status?: string; queueId?: string; teamId?: string }) => {
     const params = new URLSearchParams();
@@ -382,6 +451,33 @@ export const dashboardApi = {
   getActiveAlertsCount: () => {
     return api.get<{ count: number }>('/metrics/alerts/active');
   },
+
+  getPremium: () => api.get<PremiumDashboardSummary>('/metrics/premium'),
+};
+
+export const tutorApi = {
+  list: (search?: string) => api.get<Tutor[]>(`/tutors${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+  get: (id: string) => api.get<Tutor>(`/tutors/${id}`),
+  create: (data: { name: string; phone?: string; email?: string }) => api.post<Tutor>('/tutors', data),
+  update: (id: string, data: { name: string; phone?: string | null; email?: string | null }) => api.put<Tutor>(`/tutors/${id}`, data),
+  delete: (id: string) => api.delete<{ deleted: boolean }>(`/tutors/${id}`),
+  stats: () => api.get<{ total: number }>('/tutors/stats/overview'),
+};
+
+export const patientApi = {
+  list: (filters?: { search?: string; tutorId?: string; species?: string }) => {
+    const params = new URLSearchParams();
+    if (filters?.search) params.set('search', filters.search);
+    if (filters?.tutorId) params.set('tutorId', filters.tutorId);
+    if (filters?.species) params.set('species', filters.species);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return api.get<Patient[]>(`/patients${query}`);
+  },
+  get: (id: string) => api.get<Patient>(`/patients/${id}`),
+  create: (data: { name: string; species?: string; breed?: string; tutorId?: string }) => api.post<Patient>('/patients', data),
+  update: (id: string, data: { name: string; species?: string | null; breed?: string | null; tutorId?: string | null }) => api.put<Patient>(`/patients/${id}`, data),
+  delete: (id: string) => api.delete<{ deleted: boolean }>(`/patients/${id}`),
+  stats: () => api.get<{ total: number; bySpecies: Array<{ species: string; count: number }> }>('/patients/stats/overview'),
 };
 
 export const deadLetterApi = {

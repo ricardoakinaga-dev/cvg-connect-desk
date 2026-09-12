@@ -6,11 +6,13 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "lint": "echo lint",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
     "fastify": "^5.12.4"

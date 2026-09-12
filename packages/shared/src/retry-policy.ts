@@ -34,7 +34,7 @@ const DEFAULTS = {
   baseDelayMs: 1000,
   maxDelayMs: 30000,
   jitterRatio: 0.2,
-} as const;
+};
 
 export interface ClassifiableError {
   code?: string;

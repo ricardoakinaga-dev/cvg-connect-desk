@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
     "build": "tsc",
     "lint": "echo lint",
     "test": "vitest run --passWithNoTests",
@@ -18,10 +19,11 @@
     "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "tsx": "^4.0.0"
   },
   "devDependencies": {
-    "tsx": "^4.0.0",
+    "@types/pg": "^8.20.0",
     "typescript": "^5.0.0",
     "vitest": "^3.2.7"
   }

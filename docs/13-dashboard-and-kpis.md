@@ -18,11 +18,11 @@ Este documento estabelece:
 ## 2. Estado Atual do Repositório
 No estado atual do repositório:
 - `modules/dashboard` já possui implementation de use cases para KPIs: getDashboardSummary, getConversationMetrics, getTaskMetrics, getAlertMetrics;
-- `modules/dashboard` já possui endpoints HTTP: /metrics/summary, /metrics/conversations, /metrics/tasks, /metrics/alerts;
+- `modules/dashboard` também expõe `/metrics/premium`, `/metrics/response-time`, `/metrics/handoff`, `/metrics/sector-backlog`, `/metrics/aging` e `/metrics/alerts/criticality`;
 - `apps/desk-web` já possui página de Dashboard que consome KPIs reais do backend;
-- KPIs implementados: conversas abertas, conversas pendentes, tasks vencidas, tasks por status, alertas ativos, alertas por severidade;
-- KPIs NÃO implementados: tempo médio de primeira resposta, tempo médio de resposta, taxa de handoff (sem dados suficientes);
-- este documento reflete o **estado atual** e o **alvo de expansão**.
+- KPIs implementados: conversas abertas, conversas pendentes, tasks vencidas, tasks por status, alertas ativos, alertas por severidade, tempos de resposta, handoff, backlog por setor, aging de conversas e alertas ativos por criticidade;
+- os indicadores premium são uma fotografia operacional atual, sem janela temporal configurável; o backend é o owner do cálculo e o frontend apenas exibe;
+- este documento reflete o **estado atual** e separa os indicadores disponíveis das expansões futuras.
 
 Este documento afirma o que já foi implementado e o que ainda não possui fonte de dados.
 
@@ -105,12 +105,12 @@ Regra:
 Quantidade de conversas com status ativo.
 
 **Fonte**
-- `conversations.current_status`.
+- `conversations.status`.
 
 **Regra**
 
 ```sql
-count(*) where current_status in ('open', 'pending')
+count(*) where status in ('open', 'pending')
 ```
 
 **Atualização**
@@ -124,14 +124,14 @@ count(*) where current_status in ('open', 'pending')
 
 ### 5.2 Tempo Médio de Primeira Resposta
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **Implementado** em `/metrics/response-time` e incluído em `/metrics/premium`.
 
 **Definição**
 
 Tempo entre a primeira mensagem inbound da conversa e a primeira resposta humana.
 
 **Fonte**
-- `messages.occurred_at`;
+- `messages.created_at`;
 - `messages.sender_type`;
 - `messages.direction`.
 
@@ -139,7 +139,7 @@ Tempo entre a primeira mensagem inbound da conversa e a primeira resposta humana
 - identificar a primeira inbound da conversa;
 - identificar a primeira outbound humana;
 - calcular a diferença;
-- agregar a média dentro da janela definida.
+- agregar a média no histórico disponível para a fotografia operacional.
 
 **Fórmula**
 
@@ -151,14 +151,14 @@ avg(first_human_outbound_at - first_inbound_at)
 - bot não conta como resposta humana.
 
 **Janela Temporal**
-- por padrão, deve ser agregada em janela explícita definida pelo backend, como `24h`, `7d` ou período informado pela consulta.
+- fotografia do histórico disponível no banco; o endpoint atual não recebe uma janela temporal.
 
 **Limite**
 - conversas sem resposta humana ainda não entram no denominador como respondidas.
 
 ### 5.3 Tempo Médio de Resposta
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **Implementado** em `/metrics/response-time` e incluído em `/metrics/premium`.
 
 **Definição**
 
@@ -170,7 +170,7 @@ Tempo médio entre mensagens inbound e a resposta humana subsequente.
 **Regra**
 - formar pares inbound → outbound humano;
 - calcular o delta entre os pares válidos;
-- agregar a média dentro da janela definida.
+- agregar a média no histórico disponível para a fotografia operacional.
 
 **Fórmula**
 
@@ -179,7 +179,7 @@ avg(outbound_humano_subsequente_at - inbound_at)
 ```
 
 **Janela Temporal**
-- por padrão, deve ser agregada em janela explícita definida pelo backend, como `24h`, `7d` ou período informado pela consulta.
+- fotografia do histórico disponível no banco; o endpoint atual não recebe uma janela temporal.
 
 **Limite**
 - pares malformados, múltiplas respostas encadeadas ou ausência de resposta exigem regra explícita de exclusão.
@@ -207,15 +207,15 @@ count(*) por janela temporal
 
 ### 5.5 Taxa de Handoff
 
-**Status:** ⏳ **Futuro** — Não implementado no MVP (adiado para fase de analytics)
+**Status:** ✅ **Implementado** em `/metrics/handoff` e incluído em `/metrics/premium`.
 
 **Definição**
 
 Percentual de conversas que passaram de bot para humano.
 
 **Fonte**
-- eventos de handoff;
-- ou registros persistidos equivalentes quando o evento estiver materializado.
+- `audit_logs.action` com ações `conversation.handoff` ou `handoff.completed`;
+- `conversations.id` para o denominador operacional.
 
 **Regra**
 
@@ -224,10 +224,10 @@ conversas com handoff bot->humano / total de conversas na mesma janela
 ```
 
 **Janela Temporal**
-- obrigatória por consulta e idêntica no numerador e denominador.
+- fotografia do histórico disponível no banco; o endpoint atual não recebe uma janela temporal.
 
 **Limite**
-- a janela temporal e a definição do denominador precisam ser explícitas para evitar leituras inconsistentes.
+- o denominador atual é o total de conversas persistidas; comparações por período exigem uma extensão coordenada do contrato.
 
 ### 5.6 Tasks Vencidas
 
@@ -242,7 +242,7 @@ Quantidade de tarefas com prazo expirado e ainda não resolvidas.
 **Regra**
 
 ```sql
-count(*) where due_at < now() and status not in ('resolved', 'done', 'cancelled')
+count(*) where due_at < now() and status not in ('completed', 'cancelled')
 ```
 
 **Observação**
@@ -258,12 +258,12 @@ count(*) where due_at < now() and status not in ('resolved', 'done', 'cancelled'
 Quantidade de alerts não resolvidos.
 
 **Fonte**
-- `alerts.current_status`.
+- `alerts.status`.
 
 **Regra**
 
 ```sql
-count(*) where current_status != 'resolved'
+count(*) where status = 'active'
 ```
 
 **Atualização**
@@ -271,6 +271,26 @@ count(*) where current_status != 'resolved'
 
 **Janela Temporal**
 - fotografia do momento atual no timezone operacional configurado.
+
+### 5.8 Backlog por Setor
+
+**Status:** ✅ **Implementado** em `/metrics/sector-backlog` e incluído em `/metrics/premium`.
+
+Conta conversas `open` e `pending` ativas por setor, incluindo setores ativos sem backlog para a leitura operacional ficar completa.
+
+**Fonte:** `sectors.is_active`, `conversations.sector_id`, `conversations.is_active` e `conversations.status`.
+
+### 5.9 Aging de Conversas
+
+**Status:** ✅ **Implementado** em `/metrics/aging` e incluído em `/metrics/premium`.
+
+Lista conversas ativas `open`/`pending`, ordenadas pela última mensagem (`messages.created_at`), com limite validado entre 1 e 100. A classificação é: `fresh` até 2 horas, `normal` acima de 2 até 8 horas, `old` acima de 8 até 24 horas e `critical` acima de 24 horas. Conversas sem mensagem entram como `fresh` com idade nula.
+
+### 5.10 Alertas Ativos por Criticidade
+
+**Status:** ✅ **Implementado** em `/metrics/alerts/criticality` e incluído em `/metrics/premium`.
+
+Agrega alertas com `status = 'active'` por `severity`, sem incluir alertas reconhecidos ou resolvidos.
 
 ## 6. Regras de Cálculo
 
@@ -286,7 +306,7 @@ count(*) where current_status != 'resolved'
 
 ### 6.3 Consistência Temporal
 Toda métrica deve declarar:
-- janela, por exemplo últimos 5 minutos, 24 horas ou 7 dias;
+- uma janela, por exemplo últimos 5 minutos, 24 horas ou 7 dias, ou declarar explicitamente que é uma fotografia do histórico atual;
 - timezone;
 - regra de arredondamento quando aplicável.
 

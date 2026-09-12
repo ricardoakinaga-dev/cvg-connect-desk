@@ -54,6 +54,8 @@ services:
       PORT: 3000
       REALTIME_PORT: ${REALTIME_PORT:-8080}
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      TRUST_PROXY: ${TRUST_PROXY:-}
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:-dev-internal-events-secret}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
@@ -102,6 +104,7 @@ services:
       DATABASE_URL: postgresql://connect_desk:root@postgres:5432/connect_desk_db
       REDIS_URL: redis://redis:6379
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      WORKER_HEALTH_PORT: ${WORKER_HEALTH_PORT:-9090}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
@@ -128,6 +131,9 @@ services:
       REALTIME_PORT: 8080
       REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
+      DESK_API_URL: http://desk-api:3000
+      USE_DATABASE_OUTBOX: ${USE_DATABASE_OUTBOX:-true}
+      INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:-dev-internal-events-secret}
     volumes:
       - .:/app
       - /app/node_modules

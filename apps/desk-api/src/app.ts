@@ -8,10 +8,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import 'dotenv/config';
 import { registerInboundWebhook, registerOutboundController } from '@cvg/chat';
 
-function isProduction(): boolean {
-  const env = (process.env.NODE_ENV || process.env.DESK_ENV || '').toLowerCase();
-  return env === 'production' || env === 'prod';
-}
+import { isProduction, resolveTrustedProxies } from './runtime-config';
 
 function warnOnProductionWebhookMisconfiguration(): void {
   const webhookSecret = process.env.WEBHOOK_SECRET;
@@ -30,6 +27,7 @@ function assertProductionEnv(): void {
     throw new Error('[API] FATAL: CORS_ORIGIN ausente ou "*" em produção (fail-secure). Defina origens explícitas.');
   }
 }
+
 import { registerTaskRoutes } from '@cvg/tasks';
 import { registerNoteRoutes } from '@cvg/notes';
 import { registerAlertRoutes } from '@cvg/alerts';
@@ -47,6 +45,9 @@ import { registerKanbanRoutes } from '@cvg/kanban';
 import { registerGatewayRoutes } from '@cvg/gateway-adapter';
 import { registerContactRoutes } from '@cvg/contacts';
 import { registerPrivacyRoutes } from '@cvg/privacy';
+import { registerPatientRoutes } from '@cvg/patients';
+import { registerTutorRoutes } from '@cvg/tutors';
+import { createInternalEventsGuard } from './internal-auth';
 
 export async function buildDeskApiApp(): Promise<FastifyInstance> {
   warnOnProductionWebhookMisconfiguration();
@@ -60,7 +61,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
         ? { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss', ignore: 'pid,hostname' } }
         : undefined,
     },
-    trustProxy: true,
+    trustProxy: resolveTrustedProxies(),
     bodyLimit: 1048576,
   }).withTypeProvider<ZodTypeProvider>();
 
@@ -338,6 +339,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   });
 
   app.get('/events', {
+    preHandler: createInternalEventsGuard(),
     schema: {
       description: 'Polling endpoint for events - reads from database outbox',
       tags: ['Internal'],
@@ -388,6 +390,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   });
 
   app.post('/events/:eventId/ack', {
+    preHandler: createInternalEventsGuard(),
     schema: {
       description: 'Explicit ACK for a leased outbox event (http-poll consumer)',
       tags: ['Internal'],
@@ -426,6 +429,8 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   await registerKanbanRoutes(app);
   await registerGatewayRoutes(app);
   await registerContactRoutes(app);
+  await registerTutorRoutes(app);
+  await registerPatientRoutes(app);
   await registerPrivacyRoutes(app);
 
   return app;

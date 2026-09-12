@@ -118,6 +118,8 @@ modules/
   tasks/             # Tarefas operacionais
   notes/             # Notas internas
   alerts/            # Alertas operacionais
+  tutors/            # Responsáveis e vínculos com pacientes
+  patients/          # Pacientes veterinários
   admin/             # CRUD de usuários, filas, times
   audit/             # Trilha de auditoria
   dashboard/         # Métricas e KPIs
@@ -149,9 +151,14 @@ packages/
 - `POST /tasks`, `GET /tasks`, `PATCH /tasks/:id/status`
 - `POST /notes`, `GET /notes`
 - `POST /alerts`, `GET /alerts`, `POST /alerts/:id/acknowledge`, `POST /alerts/:id/resolve`
+- `GET/POST/PUT/DELETE /tutors` — Cadastro e vínculos de tutores
+- `GET/POST/PUT/DELETE /patients` — Cadastro e vínculos de pacientes
 
 ### Dashboard
 - `GET /metrics/summary` — Resumo geral
+- `GET /metrics/premium` — KPIs operacionais consolidados
+- `GET /metrics/response-time`, `/metrics/handoff`, `/metrics/sector-backlog`
+- `GET /metrics/aging`, `/metrics/alerts/criticality`
 - `GET /metrics/conversations` — Métricas de conversas
 - `GET /metrics/tasks` — Métricas de tarefas
 - `GET /metrics/alerts` — Métricas de alertas
@@ -206,6 +213,8 @@ Veja [.env.example](./.env.example) para todas as variáveis disponíveis.
 | `REDIS_URL` | ⚡ | URL do Redis (rate limiting) |
 | `SECRETARY_URL` | ❌ | URL do Agent Secretary |
 | `WEBHOOK_SECRET` | ❌ | HMAC para validação de webhook |
+| `INTERNAL_EVENTS_SECRET` | ✅ em produção | Chave interna entre API e realtime para polling de eventos |
+| `TRUST_PROXY` | ❌ | IPs/CIDRs explícitos dos proxies confiáveis |
 
 ## License
 

@@ -16,6 +16,8 @@ import { Sectors } from './pages/Sectors';
 import { ContactGroups } from './pages/ContactGroups';
 import { Kanban } from './pages/Kanban';
 import { Contacts } from './pages/Contacts';
+import { Tutors } from './pages/Tutors';
+import { Patients } from './pages/Patients';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -33,6 +35,8 @@ function App() {
             <Route index element={<Navigate to="/inbox" replace />} />
             <Route path="inbox" element={<Inbox />} />
             <Route path="contacts" element={<Contacts />} />
+            <Route path="tutors" element={<Tutors />} />
+            <Route path="patients" element={<Patients />} />
             <Route path="kanban" element={<Kanban />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="notes" element={<Notes />} />
