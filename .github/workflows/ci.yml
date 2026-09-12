@@ -13,11 +13,13 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
 
   lint-typecheck:
@@ -27,11 +29,13 @@ jobs:
     needs: install
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
       - run: pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json
@@ -43,11 +47,13 @@ jobs:
     needs: install
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @cvg/shared test
       - run: pnpm --filter @cvg/messaging-contracts test
@@ -76,11 +82,13 @@ jobs:
           --health-retries 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres pnpm --filter @cvg/database db:check
 
@@ -91,11 +99,13 @@ jobs:
     needs: [lint-typecheck, unit]
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @cvg/desk-web build
 

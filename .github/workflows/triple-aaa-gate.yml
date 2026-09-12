@@ -45,11 +45,13 @@ jobs:
       REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - name: Lint (0 errors)
         run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
@@ -75,11 +77,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'pnpm'
-      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - name: pnpm audit (critical blocks merge)
         run: pnpm audit --audit-level=critical
