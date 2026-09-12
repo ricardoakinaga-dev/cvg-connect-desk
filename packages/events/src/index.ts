@@ -5,5 +5,6 @@ export * from './publisher';
 export * from './consumer';
 export * from './retry';
 export * from './dead-letter';
+export * from './persistent-dead-letter';
 export * from './outbox-publisher';
 export * from './outbox-reader';

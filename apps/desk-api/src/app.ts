@@ -37,6 +37,7 @@ import { registerDashboardRoutes } from '@cvg/dashboard';
 import { registerAuthRoutes } from '@cvg/auth';
 import { registerAuditRoutes } from '@cvg/audit';
 import { registerAdminRoutes } from '@cvg/admin';
+import { registerPersistentDeadLetterRoutes } from '@cvg/admin';
 import { initializeSecretaryClient } from '@cvg/integrations';
 import { registerLabelRoutes } from '@cvg/labels';
 import { registerSectorRoutes } from '@cvg/sectors';
@@ -416,6 +417,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   await registerAuthRoutes(app);
   await registerAuditRoutes(app);
   await registerAdminRoutes(app);
+  await registerPersistentDeadLetterRoutes(app);
   await registerLabelRoutes(app);
   await registerSectorRoutes(app);
   await registerTransferRoutes(app);

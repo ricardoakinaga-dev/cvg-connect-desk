@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, boolean, pgEnum, index, uniqueIndex, integer, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, timestamp, boolean, pgEnum, index, uniqueIndex, integer, varchar, jsonb } from 'drizzle-orm/pg-core';
 
 export const conversationStatusEnum = pgEnum('conversation_status', ['open', 'pending', 'closed', 'archived']);
 export const conversationStatusV2Enum = pgEnum('conversation_status_v2', ['novo', 'em_atendimento', 'pendente', 'em_espera', 'finalizado', 'arquivado']);
@@ -528,4 +528,38 @@ export const outboundDeliveries = pgTable('outbound_deliveries', {
   keyIdx: uniqueIndex('idx_outbound_deliveries_key').on(t.idempotencyKey),
   messageIdx: index('idx_outbound_deliveries_message').on(t.internalMessageId),
   statusIdx: index('idx_outbound_deliveries_status').on(t.status),
+}));
+
+// ============================================
+// Persistent Dead Letter Queue (Final-1)
+// Eventos com falha terminal, duráveis a restart. Migration 0015.
+// ============================================
+
+export const deadLetterStatusEnum = pgEnum('dead_letter_status', ['PENDING', 'REPLAYING', 'RESOLVED', 'DISCARDED']);
+
+export const deadLetterEvents = pgTable('dead_letter_events', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  originalEventId: text('original_event_id').notNull(),
+  consumerId: text('consumer_id').notNull(),
+  eventType: text('event_type').notNull(),
+  payload: jsonb('payload').notNull(),
+  errorCode: text('error_code'),
+  errorMessage: text('error_message'),
+  attemptCount: integer('attempt_count').notNull().default(0),
+  firstFailedAt: timestamp('first_failed_at').defaultNow().notNull(),
+  lastFailedAt: timestamp('last_failed_at').defaultNow().notNull(),
+  status: deadLetterStatusEnum('status').notNull().default('PENDING'),
+  replayCount: integer('replay_count').notNull().default(0),
+  replayedAt: timestamp('replayed_at'),
+  resolvedAt: timestamp('resolved_at'),
+  resolvedBy: uuid('resolved_by').references(() => users.id),
+  resolutionReason: text('resolution_reason'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  uniqueIdx: uniqueIndex('dead_letter_events_unique_event_consumer').on(t.originalEventId, t.consumerId),
+  statusIdx: index('idx_dlq_status').on(t.status),
+  consumerIdx: index('idx_dlq_consumer').on(t.consumerId),
+  eventTypeIdx: index('idx_dlq_event_type').on(t.eventType),
+  createdIdx: index('idx_dlq_created').on(t.createdAt),
 }));

@@ -20,6 +20,7 @@ const REQUIRED_TABLES = [
   'tasks', 'internal_notes', 'alerts', 'audit_logs', 'labels', 'sectors',
   'contact_sectors', 'contact_groups', 'contact_transfers', 'user_sectors',
   'outbox_events', 'outbox_consumer_acks', 'webhook_replay_log', 'outbound_deliveries',
+  'dead_letter_events',
 ];
 
 const REQUIRED_INDEXES = [

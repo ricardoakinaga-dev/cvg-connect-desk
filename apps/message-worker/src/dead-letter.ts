@@ -1,5 +1,5 @@
 import type { EventEnvelope, DeadLetterEntry, DeadLetterFailureContext } from '@cvg/events';
-import { deadLetterStore } from '@cvg/events';
+import { deadLetterStore, persistentDeadLetterStore } from '@cvg/events';
 
 function buildFailureContext(params: {
   event: EventEnvelope;
@@ -28,7 +28,7 @@ export function recordWorkerDeadLetter(params: {
   retryCount: number;
   handlerName: string;
 }): DeadLetterEntry {
-  return deadLetterStore.add({
+  const entry = deadLetterStore.add({
     eventType: params.event.event_type,
     eventId: params.event.event_id,
     payload: params.event.payload,
@@ -38,4 +38,29 @@ export function recordWorkerDeadLetter(params: {
     sourceEvent: params.event,
     failureContext: buildFailureContext(params),
   });
+
+  // Durabilidade (Final-1): espelha no PostgreSQL. Best-effort e nunca
+  // bloqueia o worker — a entrada em memória já foi registrada acima.
+  void persistentDeadLetterStore
+    .persist({
+      originalEventId: params.event.event_id,
+      consumerId: 'worker',
+      eventType: params.event.event_type,
+      payload: params.event,
+      errorCode: 'WORKER_TERMINAL',
+      errorMessage: params.error,
+      attemptCount: params.retryCount,
+    })
+    .catch((error) => {
+      console.error(
+        JSON.stringify({
+          msg: '[Worker] Failed to persist dead-letter to PostgreSQL',
+          event_id: params.event.event_id,
+          error: error instanceof Error ? error.message : String(error),
+          level: 'error',
+        }),
+      );
+    });
+
+  return entry;
 }
