@@ -41,13 +41,14 @@ jobs:
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: node .github/scripts/certification-aggregator.mjs
       - name: Publish certification report artifact
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: triple-aaa-report
           path: artifacts/triple-aaa-report.*
           if-no-files-found: warn
       - name: Fail job if state is not VERIFIED_CANDIDATE+
-        if: steps.evidence.outputs.state != 'VERIFIED_CANDIDATE' && steps.evidence.outputs.state != 'TRIPLE_AAA_CERTIFIED'
+        if: always() && steps.evidence.outputs.state != 'VERIFIED_CANDIDATE' && steps.evidence.outputs.state != 'TRIPLE_AAA_CERTIFIED'
         run: |
           echo "CERTIFICATION STATE: ${{ steps.evidence.outputs.state }}"
           echo "gates: ${{ steps.evidence.outputs.summary }}"

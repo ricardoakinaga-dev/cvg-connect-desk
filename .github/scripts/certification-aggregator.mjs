@@ -39,7 +39,7 @@ const REQUIRED = [
   { gate: 'migrations-fresh', match: /Migration check/i, wf: 'CI Quality Gate', jobs: ['migration-check'] },
   { gate: 'migrations-upgrade', match: /Migration check/i, wf: 'CI Quality Gate', jobs: ['migration-check'] },
   { gate: 'build', match: /Build/i, wf: 'CI Quality Gate', jobs: ['build'] },
-  { gate: 'e2e-browser', match: /Playwright|E2E/i, wf: 'E2E Browser Smoke', jobs: ['smoke'] },
+  { gate: 'e2e-browser', match: /Playwright|E2E/i, wf: 'Smoke E2E', jobs: ['smoke-e2e'] },
   { gate: 'dr-e2e', match: /DR end-to-end/i, wf: 'DR End-to-End (backup/restore proof)', jobs: ['dr-e2e'] },
   { gate: 'codeql', match: /CodeQL/i, wf: 'Supply Chain Security', jobs: ['codeql'] },
   { gate: 'gitleaks', match: /Gitleaks|Secret scan/i, wf: 'Supply Chain Security', jobs: ['gitleaks'] },
@@ -50,12 +50,16 @@ const REQUIRED = [
   { gate: 'coverage', match: /Coverage|coverage/i, wf: 'CI Quality Gate', jobs: ['lint-typecheck'] },
 ];
 
-const runs = gh(`/repos/ricardoakinaga-dev/cvg-connect-desk/actions/runs?head_sha=${SHA}&per_page=100`);
+const runPayload = gh(`/repos/ricardoakinaga-dev/cvg-connect-desk/actions/runs?head_sha=${SHA}&per_page=100`);
+const runs = Array.isArray(runPayload) ? runPayload : (runPayload.workflow_runs || []);
 const byWorkflow = new Map();
 for (const run of runs) {
   const key = run.name || run.workflow_name;
   if (!byWorkflow.has(key)) byWorkflow.set(key, []);
   byWorkflow.get(key).push(run);
+}
+for (const workflowRuns of byWorkflow.values()) {
+  workflowRuns.sort((a, b) => (b.run_number || 0) - (a.run_number || 0));
 }
 
 const gates = {};
@@ -71,7 +75,8 @@ for (const req of REQUIRED) {
     missing += 1;
     continue;
   }
-  const jobs = gh(`/repos/ricardoakinaga-dev/cvg-connect-desk/actions/runs/${latest.id}/jobs`);
+  const jobPayload = gh(`/repos/ricardoakinaga-dev/cvg-connect-desk/actions/runs/${latest.id}/jobs?per_page=100`);
+  const jobs = Array.isArray(jobPayload) ? jobPayload : (jobPayload.jobs || []);
   const relevant = jobs.filter((j) => req.match.test(`${j.name} ${j.labels?.join(' ')}`));
   if (relevant.length === 0) {
     gates[req.gate] = { status: 'NOT_VERIFIED', reason: `job não encontrado (${req.wf} / ${req.match})` };
@@ -118,4 +123,3 @@ console.log(`SUMMARY=${summary}`);
 
 // Outputs para o workflow.
 writeFileSync(process.env.GITHUB_OUTPUT || '/dev/null', `state=${state}\nsummary=${summary}\n`, { flag: 'a' });
-process.exit(state === 'VERIFIED_CANDIDATE' || state === 'TRIPLE_AAA_CERTIFIED' ? 0 : 1);
