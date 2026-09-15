@@ -112,9 +112,9 @@ describe('Consumers Use Consumer-Aware Reader', () => {
         expect(content).toContain('CONSUMER_IDS.WORKER');
       });
 
-      it('calls acknowledge() and acknowledgeWithError()', () => {
+      it('calls acknowledge() with fencing token and nack() for terminal failure', () => {
         expect(content).toContain('workerReader.acknowledge(');
-        expect(content).toContain('acknowledgeWithError');
+        expect(content).toContain('workerReader.nack(');
       });
     } catch {
       it('worker file exists', () => { expect(true).toBe(true); });

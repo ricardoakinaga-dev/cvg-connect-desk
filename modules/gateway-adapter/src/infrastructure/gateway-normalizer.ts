@@ -13,7 +13,7 @@ export function toWAInboundEvent(event: unknown, eventType: string): WAInboundEv
       ? candidate as WAInboundEvent
       : null;
   }
-  return normalizeEvolutionMessage(event, eventType);
+  return normalizeEvolutionMessage(event);
 }
 
 /**
@@ -91,7 +91,7 @@ export function formatPhone(phone: string): string {
  * Normaliza mensagem do formato Evolution API para WA_INBOUND do gateway.
  * O Evolution envia em formato diferente do contrato do gateway.
  */
-export function normalizeEvolutionMessage(rawEvent: any, eventType: string): WAInboundEvent | null {
+export function normalizeEvolutionMessage(rawEvent: any): WAInboundEvent | null {
   try {
     // Evolution API v2 envia: { event, instance, data: { key, message, ... } }
     const data = rawEvent.data || rawEvent;

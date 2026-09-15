@@ -1,0 +1,2 @@
+import react from '/home/ricardo/cvg-connect-desk/node_modules/.pnpm/@vitejs+plugin-react@4.7.0_vite@7.3.6_@types+node@25.5.0_tsx@4.23.13_yaml@2.9.1_/node_modules/@vitejs/plugin-react/dist/index.cjs';
+export default {root:'/home/ricardo/cvg-connect-desk/apps/desk-web',envDir:'/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/empty-env',cacheDir:'/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache',plugins:[react()],define:{'import.meta.env.VITE_API_URL':JSON.stringify('/mock-api')},server:{host:'127.0.0.1',port:32893,strictPort:true}};

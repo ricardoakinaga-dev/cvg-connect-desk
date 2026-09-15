@@ -1,0 +1,135 @@
+{
+  "baseUrl": "http://127.0.0.1:5199",
+  "routes": 16,
+  "failures": 0,
+  "report": [
+    {
+      "target": "login",
+      "url": "http://127.0.0.1:5199/login",
+      "violations": [],
+      "passes": 33,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "inbox",
+      "url": "http://127.0.0.1:5199/inbox",
+      "violations": [],
+      "passes": 40,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "dashboard",
+      "url": "http://127.0.0.1:5199/dashboard",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "tasks",
+      "url": "http://127.0.0.1:5199/tasks",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "alerts",
+      "url": "http://127.0.0.1:5199/alerts",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "notes",
+      "url": "http://127.0.0.1:5199/notes",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "kanban",
+      "url": "http://127.0.0.1:5199/kanban",
+      "violations": [],
+      "passes": 36,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "sectors",
+      "url": "http://127.0.0.1:5199/sectors",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "labels",
+      "url": "http://127.0.0.1:5199/labels",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "contact-groups",
+      "url": "http://127.0.0.1:5199/contact-groups",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "admin",
+      "url": "http://127.0.0.1:5199/admin",
+      "violations": [],
+      "passes": 35,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "audit",
+      "url": "http://127.0.0.1:5199/audit",
+      "violations": [],
+      "passes": 38,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "settings",
+      "url": "http://127.0.0.1:5199/settings",
+      "violations": [],
+      "passes": 34,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "contacts",
+      "url": "http://127.0.0.1:5199/contacts",
+      "violations": [],
+      "passes": 37,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "tutors",
+      "url": "http://127.0.0.1:5199/tutors",
+      "violations": [],
+      "passes": 38,
+      "incomplete": 1,
+      "consoleErrors": []
+    },
+    {
+      "target": "patients",
+      "url": "http://127.0.0.1:5199/patients",
+      "violations": [],
+      "passes": 39,
+      "incomplete": 1,
+      "consoleErrors": []
+    }
+  ]
+}

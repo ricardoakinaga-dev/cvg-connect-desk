@@ -1,30 +1,20 @@
 /**
- * Healthcheck real do message-worker (Phase 7).
- * Verifica a dependência crítica (PostgreSQL) com SELECT 1.
- * Exit 0 = saudável; exit 1 = não saudável.
+ * Healthcheck do processo real do message-worker.
+ * Consulta o endpoint do próprio processo, que inclui progresso do loop e
+ * idade da fila; um processo novo fazendo apenas SELECT 1 não é suficiente.
  */
 async function main(): Promise<void> {
-  const { Pool } = await import('pg');
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 3000,
-  });
+  const port = Number(process.env.WORKER_HEALTH_PORT) || 9090;
   try {
-    const client = await pool.connect();
-    try {
-      await client.query('SELECT 1');
-    } finally {
-      client.release();
+    const response = await fetch(`http://127.0.0.1:${port}/readiness`, {
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!response.ok) {
+      throw new Error(`worker readiness returned HTTP ${response.status}`);
     }
-    await pool.end();
     process.exit(0);
   } catch (error) {
     console.error('[worker-healthcheck] unhealthy:', error instanceof Error ? error.message : error);
-    try {
-      await pool.end();
-    } catch {
-      // ignorar
-    }
     process.exit(1);
   }
 }

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "task": "prod-14",
+  "runId": "r3-prod14-20260914-a1",
+  "attempt": 1,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-14/r3-prod14-20260914-a1/runtime CVG_EVIDENCE_SEGMENT=r3-prod14-20260914-a1 AAA_RUN_ID=r3-prod14-20260914-a1 AAA_WORKER_INDEX=23 AAA_ATTEMPT=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-14.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T02:07:30.566Z",
+  "finishedAt": "2026-09-14T02:07:44.356Z",
+  "durationMs": 13790,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "774c6f05bf456908ad23b8a7c6c31f3f111ede1200a7f6d2e907b1581aa770d4",
+    "sourceFileCount": 1452,
+    "imageDigest": null,
+    "runId": "r3-prod14-20260914-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-14T02:07:30.066Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-14.test.log",
+      "sha256": "2e01d818615aaaad605ba8494bc0f4083350658fe2fce03e7906056512a205ff"
+    },
+    {
+      "path": "prod-14-evidence.json",
+      "sha256": "8e52338e45001db7cd5bb254a08694976b494986cf2e7c96cc23c0ba7817556e"
+    },
+    {
+      "path": "prod-14-ac4-dry-run.json",
+      "sha256": "0725872af0aeec058125ac8b5482eb86543f07f1c6e0b8e45c404d5a05029165"
+    },
+    {
+      "path": "prod-14-ac4-migration.json",
+      "sha256": "6cb4ef8f8bed2dcea1e07675f1df1a4173807c5d497618a3fd2e2ac924c27317"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "9a15f18824706ab6cc78f97d3c6eef7f0b159c01c8ade24e88a9c37215cbc626"
+    },
+    {
+      "path": "logs/moto-server.log",
+      "sha256": "0e9c66280fd3fd08d19540571f5a8726bbb2ef036ffe91cf97fcff127d063529"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis locais isolados, moto S3-compatible real e ClamAV real com EICAR; nenhum provider externo ou dado de produção.",
+    "Revisão independente, staging externo e D05 permanecem pendentes."
+  ]
+}

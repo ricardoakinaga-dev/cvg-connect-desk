@@ -1,0 +1,84 @@
+{
+  "generatedAt": "2026-09-14T07:39:09.479Z",
+  "runId": "prod06-20260913",
+  "database": "cvg_aaa_prod06_20260913_w8",
+  "counts": {
+    "declaredColumns": 393,
+    "realColumns": 393
+  },
+  "knownDrift": {
+    "enumDeclaredTextInDdl": [
+      "ai_action_approvals.status",
+      "dead_letter_events.status",
+      "media_assets.scan_status",
+      "media_assets.storage_status",
+      "outbound_deliveries.status"
+    ],
+    "timestampDeclaredWithoutTimezone": [
+      "webhook_replay_log.expires_at",
+      "webhook_replay_log.processed_at"
+    ]
+  },
+  "timestampMismatches": [
+    {
+      "table": "webhook_replay_log",
+      "column": "processed_at",
+      "declared": "timestamp without time zone",
+      "real": "timestamp with time zone"
+    },
+    {
+      "table": "webhook_replay_log",
+      "column": "expires_at",
+      "declared": "timestamp without time zone",
+      "real": "timestamp with time zone"
+    }
+  ],
+  "enumTextMismatches": [
+    {
+      "table": "outbound_deliveries",
+      "column": "status",
+      "declared": "outbound_delivery_status",
+      "real": "text"
+    },
+    {
+      "table": "dead_letter_events",
+      "column": "status",
+      "declared": "dead_letter_status",
+      "real": "text"
+    },
+    {
+      "table": "media_assets",
+      "column": "scan_status",
+      "declared": "media_scan_status",
+      "real": "text"
+    },
+    {
+      "table": "media_assets",
+      "column": "storage_status",
+      "declared": "media_storage_status",
+      "real": "text"
+    },
+    {
+      "table": "ai_action_approvals",
+      "column": "status",
+      "declared": "ai_approval_status",
+      "real": "text"
+    }
+  ],
+  "mismatchedKeys": [
+    "ai_action_approvals.status",
+    "dead_letter_events.status",
+    "media_assets.scan_status",
+    "media_assets.storage_status",
+    "outbound_deliveries.status",
+    "webhook_replay_log.expires_at",
+    "webhook_replay_log.processed_at"
+  ],
+  "sessions": {
+    "last_seen_at": "timestamp with time zone",
+    "absolute_expires_at": "timestamp with time zone",
+    "revoked_at": "timestamp with time zone",
+    "expires_at": "timestamp with time zone",
+    "created_at": "timestamp with time zone"
+  }
+}

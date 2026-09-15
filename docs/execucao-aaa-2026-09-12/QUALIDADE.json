@@ -1,0 +1,503 @@
+{
+  "id": "CVG-AAA-BAR",
+  "version": 1,
+  "frozen_for_planning": "2026-09-12",
+  "status": "TARGET_NOT_CERTIFIED",
+  "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571",
+  "overall_minimum": 95,
+  "area_minimum": 90,
+  "technical_axes": {
+    "AAA-1": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      14
+    ],
+    "AAA-2": [
+      2,
+      3,
+      6,
+      8,
+      11,
+      16,
+      17
+    ],
+    "AAA-3": [
+      8,
+      12,
+      13,
+      15,
+      18
+    ]
+  },
+  "visual_crosscutting": [
+    9,
+    10,
+    12
+  ],
+  "score_policy": "Reauditoria das 18 dimensões com evidência; média aritmética. Gates obrigatórios binários se sobrepõem à nota. Pontuação visual segue fórmula própria DESIGN_QA.",
+  "criteria": [
+    {
+      "id": "QA01",
+      "area_id": 1,
+      "dimension": "Arquitetura e modularidade",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "DAG acíclico; limites e portas explícitos; todos os módulos verificáveis sem imports bidirecionais de domínio.",
+      "evidence_method": "Turbo dry-run, análise de imports estáticos/dinâmicos e fluxos Gateway/Chat.",
+      "baseline": {
+        "score": 65,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-02",
+        "AAA-14",
+        "AAA-16",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA02",
+      "area_id": 2,
+      "dimension": "Autenticação e sessões",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P0",
+      "target": "Nenhuma sessão expirada/idle/revogada/desativada é aceita; rotação concorrente tem um vencedor e não estende prazo absoluto.",
+      "evidence_method": "HTTP real + PostgreSQL para relógio/concorrência, incluindo /me e realtime.",
+      "baseline": {
+        "score": 45,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-03",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA03",
+      "area_id": 3,
+      "dimension": "Autorização e isolamento por setor",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P0",
+      "target": "Zero conteúdo/efeito de recurso não autorizado em HTTP e WS; matriz A/B/admin/sem-role/sem-setor e revogação em sessão ativa.",
+      "evidence_method": "Testes negativos por rota/recurso, sockets reais e transferência de setor.",
+      "baseline": {
+        "score": 25,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-04",
+        "AAA-05",
+        "AAA-19",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA04",
+      "area_id": 4,
+      "dimension": "API, validação e proteção de webhooks",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Schemas, limites e contratos reais de erro; HMAC bytes exatos, timestamp e antirreplay rejeitam adulteração/reuso; CORS/proxy com configuração explícita.",
+      "evidence_method": "HTTP público com payloads inválidos/adulterados, rate/proxy e replay; sem mocks da guarda julgada.",
+      "baseline": {
+        "score": 75,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-04",
+        "AAA-09",
+        "AAA-10",
+        "AAA-23",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA05",
+      "area_id": 5,
+      "dimension": "Banco de dados e integridade",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Migrations vazias/upgrade corretas; mensagem/estado/outbox atomicamente; nenhuma linha órfã em corridas e falhas.",
+      "evidence_method": "PostgreSQL real com falha entre escritas e verificação de integridade/rollback.",
+      "baseline": {
+        "score": 60,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-07",
+        "AAA-08",
+        "AAA-11",
+        "AAA-12",
+        "AAA-17",
+        "AAA-24",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA06",
+      "area_id": 6,
+      "dimension": "Eventos, filas e idempotência",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Lease fenced por consumidor; recuperação após crash; intenção outbound idempotente, sem perda nem duplicação de efeito nos cenários definidos.",
+      "evidence_method": "Múltiplos processos, crash/lease expiry/stale ACK e reconciliação de aceite externo.",
+      "baseline": {
+        "score": 45,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-07",
+        "AAA-08",
+        "AAA-12",
+        "AAA-25",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA07",
+      "area_id": 7,
+      "dimension": "Integrações Gateway e Secretary",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Gateway/Secretary usam contratos compatíveis, timeout/retry limitado e fallback humano; mock não é declarado integração real.",
+      "evidence_method": "Sandbox/serviço de teste isolado, falhas parciais, versionamento e idempotência.",
+      "baseline": {
+        "score": 65,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-02",
+        "AAA-08",
+        "AAA-12",
+        "AAA-23",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA08",
+      "area_id": 8,
+      "dimension": "Atualizações em tempo real",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P0",
+      "target": "WS remoto HTTPS/WSS autorizado, reconnect/revalidação e fanout 3 réplicas sem vazamento ou efeito duplicado. Revogação de membership/sessão interrompe entrega em até 5 s no perfil C00.",
+      "evidence_method": "Navegador de outro host, sockets reais, Redis e falha de nó no candidato integrado.",
+      "baseline": {
+        "score": 35,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-03",
+        "AAA-05",
+        "AAA-06",
+        "AAA-23",
+        "AAA-25",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA09",
+      "area_id": 9,
+      "dimension": "Frontend e fluxos operacionais",
+      "source_type": "USER",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Todas 16 rotas e shell executam tarefas implementadas com feedback verdadeiro, rascunho/retry/contexto preservados; score visual >=95.",
+      "evidence_method": "Matriz DESIGN_QA, E2E real, revisão visual cega e final independente.",
+      "baseline": {
+        "score": 70,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-11",
+        "AAA-13",
+        "AAA-20",
+        "AAA-21",
+        "AAA-22",
+        "AAA-28",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA10",
+      "area_id": 10,
+      "dimension": "Acessibilidade técnica",
+      "source_type": "STANDARD",
+      "source": "https://www.w3.org/TR/WCAG22/",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "WCAG 2.2 AA aplicável sem barreira essencial; todos controles críticos nomeados/operáveis; teclado/foco/zoom/reflow/reduced motion observados.",
+      "evidence_method": "Automação + leitor de tela/teclado/contraste real; matriz de critérios e limitações.",
+      "baseline": {
+        "score": 65,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-20",
+        "AAA-21",
+        "AAA-22",
+        "AAA-28",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA11",
+      "area_id": 11,
+      "dimension": "Anexos e segurança de mídia",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Limite 16 MiB coerente de ponta a ponta; rejeição excedente; arquivos entregues apenas conforme scanner/política; SSRF/MIME/storage privados.",
+      "evidence_method": "Upload real em fronteiras de tamanho, MinIO/ClamAV reais com clean/EICAR/timeout/infectado.",
+      "baseline": {
+        "score": 45,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-10",
+        "AAA-13",
+        "AAA-23",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA12",
+      "area_id": 12,
+      "dimension": "Desempenho e escalabilidade",
+      "source_type": "REPO",
+      "source": "docs/SLO.md; docs/design/cvg-quality-bar.json; https://web.dev/articles/vitals",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Perfil 10k conversas/100k mensagens/100 sessões/10min warmup+30min medição×3; p95 inbound<250ms e realtime<500ms; erros inesperados<0,1%; browser LCP<=2,5s INP<=200ms CLS<=0,1.",
+      "evidence_method": "Hardware/rede/versões/seed fixos, carga de leitura+envio registrada antes, EXPLAIN, memória, percentis; campo separado de laboratório.",
+      "baseline": {
+        "score": 50,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-07",
+        "AAA-11",
+        "AAA-25",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA13",
+      "area_id": 13,
+      "dimension": "Observabilidade e disponibilidade",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Readiness503 em dependência crítica/schema; métricas sem cardinalidade por URL e protegidas; traces correlacionados chegam; alertas disparam/recuperam.",
+      "evidence_method": "Fault injection, 10k URLs, scrape real, collector e teste de alerta, sem inferir SLO mensal de ensaio curto.",
+      "baseline": {
+        "score": 60,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-09",
+        "AAA-18",
+        "AAA-25",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA14",
+      "area_id": 14,
+      "dimension": "Testes e evidência de qualidade",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Build/type/lint/test por pacote reais, suítes críticas sem skip; novos negativos rejeitam conhecido ruim; cobertura efetiva das fronteiras, não só linhas.",
+      "evidence_method": "Inventário de suítes e mocks; CI/raw logs por candidato; cobertura >=85 linhas/funções/statements e >=80 branches como piso existente, incluindo novo código crítico.",
+      "baseline": {
+        "score": 65,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-00",
+        "AAA-14",
+        "AAA-16",
+        "AAA-23",
+        "AAA-26",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA15",
+      "area_id": 15,
+      "dimension": "Build, CI e implantação",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Lock e runtime fixos, sem echo/||true; imagens reproduzíveis e iniciáveis; CI agregado falha com erro/ausência/SHA errado.",
+      "evidence_method": "Checkout limpo, adulterar fixture de gate, imagem por digest+scan+smoke, checks por SHA.",
+      "baseline": {
+        "score": 30,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-02",
+        "AAA-06",
+        "AAA-09",
+        "AAA-14",
+        "AAA-16",
+        "AAA-26",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA16",
+      "area_id": 16,
+      "dimension": "Dependências e cadeia de fornecimento",
+      "source_type": "DERIVED",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Zero High/Critical explorável ou sem triagem; alvo zero High/Critical na imagem; exceção não autoriza vulnerabilidade comprovada de acesso/dados.",
+      "evidence_method": "Audit prod/dev, CodeQL/Gitleaks/Trivy/SBOM/dependency-review por SHA/digest; alcance/configuração e prazo por exceção.",
+      "baseline": {
+        "score": 40,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-15",
+        "AAA-26",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA17",
+      "area_id": 17,
+      "dimension": "Privacidade e rastreabilidade",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Autor vem de principal; política de dados cobre cópias e backups, export/anonimização com escopo verdadeiro e rastreável sem PII excessiva.",
+      "evidence_method": "Fixtures com cópias, spoof de autor e falha parcial; aprovação D02 e reaplicação da política após restore.",
+      "baseline": {
+        "score": 50,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-01",
+        "AAA-17",
+        "AAA-19",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    },
+    {
+      "id": "QA18",
+      "area_id": 18,
+      "dimension": "Documentação e recuperação",
+      "source_type": "REPO",
+      "source": "docs/auditorias/2026-09-12/RELATORIO.md; pedido atual do usuário; CONTRATOS.md",
+      "reference_version": "2026-09-12/v1",
+      "required": true,
+      "priority": "P1",
+      "target": "Docs refletem SHA/contratos; backup e restore reais dentro de RPO<=24h/RTO<=2h; runbooks praticáveis e alegações históricas identificadas.",
+      "evidence_method": "Ensaio descartável cronometrado+integridade+boot/smoke e revisão do procedimento por outro operador.",
+      "baseline": {
+        "score": 65,
+        "source_audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571"
+      },
+      "current_status": "NOT_VERIFIED",
+      "task_ids": [
+        "AAA-00",
+        "AAA-24",
+        "AAA-27",
+        "AAA-28"
+      ],
+      "validity_notes": "Alvo futuro. Verificação exige candidato/hash, ambiente e observação atual. Mocks não provam serviço real; ausência de evidência não aprova. Perfil/contrato muda apenas com decisão versionada e justificativa, nunca para esconder falha."
+    }
+  ],
+  "change_control": "Somente requisito alterado ou medição provadamente inválida autoriza revisão; preservar v1, motivo, evidência, autor e tarefas stale. Não reduzir por falha do candidato.",
+  "production_observation": "99,9% API/99,95% webhook são objetivos operacionais existentes; janela de campo deve ser observada separadamente. Ensaio local não comprova disponibilidade mensal."
+}

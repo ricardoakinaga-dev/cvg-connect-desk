@@ -1,0 +1,65 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - text: Pulso operacional
+  - heading "Dashboard" [level=1]
+  - paragraph: Visão geral da operação
+  - text: Atualizado hoje às 05:23
+  - button "Atualizar dados do dashboard": Atualizar
+  - text: 2 Conversas abertas 1 Conversas pendentes 3 Total de conversas 0 Tarefas pendentes 0 Tarefas vencidas 0 Tarefas concluídas 0 Alertas ativos 0 Alertas críticos
+  - heading "Conversas" [level=2]
+  - text: Abertas 2 Pendentes 1 Fechadas 0
+  - heading "Tarefas" [level=2]
+  - text: Pendentes 0 Em Andamento 0 Concluídas 0
+  - heading "Alertas por severidade" [level=2]
+  - text: 0 Crítico 0 Erro 0 Aviso 0 Info
+  - alert:
+    - text: Internal server error. O resumo acima permanece disponível.
+    - button "Recarregar indicadores"

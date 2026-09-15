@@ -1,0 +1,30 @@
+{
+  "runId": "review-prod05",
+  "workerIndex": 30,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59432/cvg_aaa_review_prod05_w30",
+  "redisUrl": "redis://127.0.0.1:56980",
+  "startedAt": "2026-09-13T16:43:33.575Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-05.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ✓ src/__tests__/production/prod-05.test.ts (17 tests) 6959ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > sessão que fica idle além de 24h é cortada no socket em <=5s (mesma mensagem do HTTP)  424ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > usuário desativado durante a conexão derruba o socket em <=5s  437ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > revogação de sessão derruba o socket em <=5s e não vaza para outra sessão  489ms\n\n Test Files  1 passed (1)\n      Tests  17 passed (17)\n   Start at  13:43:25\n   Duration  7.65s (transform 935ms, setup 0ms, collect 323ms, tests 6.96s, environment 0ms, prepare 95ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-09-13T16:31:47.135Z",
+  "externalMessageId": "prod14-repro-9fa94a03-50cf-4ea9-87bb-b699f54c7bfb",
+  "rawUrlPersisted": "http://provider.evil.invalid/raw/payload.png",
+  "rawUrlMatchesProvider": true,
+  "assetsLinked": 0,
+  "scanPerformed": false,
+  "dtoBefore": {
+    "mediaUrl": "http://provider.evil.invalid/raw/payload.png",
+    "mediaType": "image",
+    "metadata": null
+  },
+  "dtoAfterSanitization": {
+    "mediaUrl": null,
+    "mediaAssetId": null,
+    "mediaState": null
+  }
+}

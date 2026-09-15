@@ -1,0 +1,30 @@
+{
+  "runId": "review-migidem",
+  "workerIndex": 21,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58532/cvg_aaa_review_migidem_w21",
+  "redisUrl": "redis://127.0.0.1:56890",
+  "startedAt": "2026-09-13T15:35:17.943Z",
+  "command": "pnpm --filter @cvg/database exec tsx /tmp/opencode/migration-idempotency.mts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\n  \"afterRunnerSeed\": {\n    \"builtinRoles\": [\n      {\n        \"name\": \"Admin\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Manager\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Receptionist\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Veterinarian\",\n        \"n\": 1\n      }\n    ],\n    \"duplicatePermissionNames\": [],\n    \"rolePermissionsPerRole\": [\n      {\n        \"role\": \"Admin\",\n        \"n\": 15\n      },\n      {\n        \"role\": \"Manager\",\n        \"n\": 9\n      },\n      {\n        \"role\": \"Receptionist\",\n        \"n\": 8\n      },\n      {\n        \"role\": \"Veterinarian\",\n        \"n\": 9\n      }\n    ],\n    \"totalRolePermissions\": 41,\n    \"duplicateRolePermissions\": []\n  },\n  \"afterSqlTwice\": {\n    \"builtinRoles\": [\n      {\n        \"name\": \"Admin\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Manager\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Receptionist\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Veterinarian\",\n        \"n\": 1\n      }\n    ],\n    \"duplicatePermissionNames\": [],\n    \"rolePermissionsPerRole\": [\n      {\n        \"role\": \"Admin\",\n        \"n\": 15\n      },\n      {\n        \"role\": \"Manager\",\n        \"n\": 9\n      },\n      {\n        \"role\": \"Receptionist\",\n        \"n\": 8\n      },\n      {\n        \"role\": \"Veterinarian\",\n        \"n\": 9\n      }\n    ],\n    \"totalRolePermissions\": 41,\n    \"duplicateRolePermissions\": []\n  },\n  \"secondSeedExit\": 0,\n  \"afterSecondSeed\": {\n    \"builtinRoles\": [\n      {\n        \"name\": \"Admin\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Manager\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Receptionist\",\n        \"n\": 1\n      },\n      {\n        \"name\": \"Veterinarian\",\n        \"n\": 1\n      }\n    ],\n    \"duplicatePermissionNames\": [],\n    \"rolePermissionsPerRole\": [\n      {\n        \"role\": \"Admin\",\n        \"n\": 15\n      },\n      {\n        \"role\": \"Manager\",\n        \"n\": 9\n      },\n      {\n        \"role\": \"Receptionist\",\n        \"n\": 8\n      },\n      {\n        \"role\": \"Veterinarian\",\n        \"n\": 9\n      }\n    ],\n    \"totalRolePermissions\": 41,\n    \"duplicateRolePermissions\": []\n  },\n  \"webhookReplayColumns\": [\n    {\n      \"column_name\": \"event_id\",\n      \"data_type\": \"text\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": null\n    },\n    {\n      \"column_name\": \"signature_hash\",\n      \"data_type\": \"text\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": null\n    },\n    {\n      \"column_name\": \"processed_at\",\n      \"data_type\": \"timestamp with time zone\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": \"now()\"\n    },\n    {\n      \"column_name\": \"expires_at\",\n      \"data_type\": \"timestamp with time zone\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": \"(now() + '24:00:00'::interval)\"\n    },\n    {\n      \"column_name\": \"state\",\n      \"data_type\": \"text\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": \"'pending'::text\"\n    },\n    {\n      \"column_name\": \"payload_hash\",\n      \"data_type\": \"text\",\n      \"is_nullable\": \"YES\",\n      \"column_default\": null\n    },\n    {\n      \"column_name\": \"completed_at\",\n      \"data_type\": \"timestamp with time zone\",\n      \"is_nullable\": \"YES\",\n      \"column_default\": null\n    },\n    {\n      \"column_name\": \"attempts\",\n      \"data_type\": \"integer\",\n      \"is_nullable\": \"NO\",\n      \"column_default\": \"0\"\n    }\n  ]\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

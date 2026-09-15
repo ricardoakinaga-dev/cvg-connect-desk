@@ -1,0 +1,24 @@
+{
+  "runId": "review-prod09",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59632/cvg_aaa_review_prod09_w32",
+  "databaseName": "cvg_aaa_review_prod09_w32",
+  "databasePort": 59632,
+  "redisUrl": "redis://127.0.0.1:57000",
+  "redisPort": 57000,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "already-ours",
+    "pid": 2814843,
+    "dataDir": "/tmp/cvg-aaa-runs/review-prod09/pg/data"
+  },
+  "redis": {
+    "status": "already-ours",
+    "pid": 2814863,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-prod09",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:45:05.143462-03"
+  }
+}

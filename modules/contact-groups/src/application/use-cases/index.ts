@@ -1,8 +1,10 @@
 import { ContactGroupRepository } from '../../infrastructure/repositories/contact-group.repository';
-import { ok, err, NotFoundError } from '@cvg/shared';
+import { ok, err, NotFoundError, type Result } from '@cvg/shared';
 import type { CreateGroupInput } from '../../types';
 
 const repo = new ContactGroupRepository();
+
+type ContactGroupRow = Awaited<ReturnType<ContactGroupRepository['create']>>;
 
 export async function listGroups() {
   const groups = await repo.findAll();
@@ -15,7 +17,7 @@ export async function getGroup(id: string) {
   return ok(group);
 }
 
-export async function createGroup(input: CreateGroupInput, userId?: string) {
+export async function createGroup(input: CreateGroupInput, userId?: string): Promise<Result<ContactGroupRow, Error>> {
   const group = await repo.create(input, userId);
   return ok(group);
 }

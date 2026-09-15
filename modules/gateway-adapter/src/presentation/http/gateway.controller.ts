@@ -2,10 +2,35 @@ import { FastifyInstance } from 'fastify';
 import { handleGatewayInbound, handleGatewayReceipt, handleInstanceStatus, checkGatewayHealth } from '../../application/use-cases';
 import { toWAInboundEvent, normalizeConnectionUpdate, normalizeMessageUpdate } from '../../infrastructure/gateway-normalizer';
 import { createWebhookGuard } from '@cvg/shared';
-import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
+import type { GatewayHandlerPorts } from '@cvg/messaging-contracts';
+import type { WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 
-export async function registerGatewayRoutes(app: FastifyInstance) {
+export async function registerGatewayRoutes(app: FastifyInstance, ports: GatewayHandlerPorts) {
   const webhookGuard = createWebhookGuard();
+
+  // G-C02-1: rotas internas de outbound exigem credencial de serviço (C02 D-C02-8),
+  // separada da sessão de usuário. Fail-closed quando o segredo não está configurado.
+  function createServiceCredentialGuard() {
+    const secrets = [process.env.GATEWAY_API_KEY, process.env.INTERNAL_EVENTS_SECRET]
+      .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      .map((value) => value.trim());
+
+    return async function serviceCredentialGuard(request: any, reply: any) {
+      const raw = request.headers?.['x-api-key'];
+      const provided = Array.isArray(raw) ? raw[0] : raw;
+      const valid = typeof provided === 'string'
+        && provided.trim().length > 0
+        && secrets.length > 0
+        && secrets.includes(provided.trim());
+
+      if (!valid) {
+        request.log?.warn?.({ hasCredential: typeof provided === 'string' && provided.length > 0 }, '[Gateway] Service credential rejected');
+        return reply.status(401).send({ error: 'UNAUTHORIZED', message: 'Service credential required' });
+      }
+    };
+  }
+
+  const serviceGuard = createServiceCredentialGuard();
 
   // ============================================
   // WEBHOOK: Inbound do Gateway (WA_INBOUND)
@@ -40,7 +65,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
         // Mensagem recebida
         const waEvent = toWAInboundEvent(event, eventType);
         if (waEvent) {
-          const result = await handleGatewayInbound(waEvent);
+          const result = await handleGatewayInbound(waEvent, ports);
           if (result.isErr()) {
             return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
           }
@@ -68,7 +93,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
         // Status de mensagem atualizado (entrega, leitura)
         const receipt = normalizeMessageUpdate(event);
         if (receipt) {
-          await handleGatewayReceipt(receipt);
+          await handleGatewayReceipt(receipt, ports);
         }
         return reply.status(200).send({ processed: true });
       }
@@ -98,7 +123,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
     const event = request.body as WAReceiptEvent;
     request.log.info({ event_id: event.event_id, status: event.payload?.status }, '[Gateway] Receipt recebido');
 
-    const result = await handleGatewayReceipt(event);
+    const result = await handleGatewayReceipt(event, ports);
 
     if (result.isErr()) {
       return reply.status(500).send({ error: 'PROCESSING_ERROR', message: result.error.message });
@@ -138,7 +163,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
       description: 'Verifica conectividade com o gateway',
       tags: ['Gateway'],
     },
-  }, async (request, reply) => {
+  }, async () => {
     const result = await checkGatewayHealth();
     return result.value;
   });
@@ -147,6 +172,7 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // OUTBOUND: Gateway busca mensagens pendentes
   // ============================================
   app.get('/gateway/outbound/pending', {
+    preHandler: serviceGuard,
     schema: {
       description: 'Gateway busca mensagens outbound pendentes para enviar via Evolution',
       tags: ['Gateway'],
@@ -158,14 +184,11 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
         },
       },
     },
-  }, async (request, reply) => {
-    const { instance, limit = 10 } = request.query as { instance?: string; limit?: number };
+  }, async (request) => {
+    const { limit = 10 } = request.query as { instance?: string; limit?: number };
 
-    const { messageRepository } = await import('@cvg/chat');
-    const { conversations } = await import('@cvg/database');
-
-    // Buscar mensagens outbound pendentes
-    const pendingMessages = await messageRepository.findPendingOutbound(limit);
+    // Buscar mensagens outbound pendentes pela porta injetada (C02 §5).
+    const pendingMessages = await ports.messageRead.listPendingOutbound(limit);
 
     // Mapear para formato do gateway
     const outboundEvents = pendingMessages.map(msg => ({
@@ -197,17 +220,17 @@ export async function registerGatewayRoutes(app: FastifyInstance) {
   // OUTBOUND: Marcar mensagem como enviada
   // ============================================
   app.post('/gateway/outbound/:id/sent', {
+    preHandler: serviceGuard,
     schema: {
       description: 'Gateway confirma que mensagem foi enviada',
       tags: ['Gateway'],
     },
-  }, async (request, reply) => {
+  }, async (request) => {
     const { id } = request.params as { id: string };
     const { messageId } = request.body as { messageId?: string };
 
-    const { messageRepository } = await import('@cvg/chat');
-    await messageRepository.update(id, {
-      status: 'sent',
+    await ports.confirmation.markOutboundSent({
+      internalMessageId: id,
       externalMessageId: messageId,
     });
 

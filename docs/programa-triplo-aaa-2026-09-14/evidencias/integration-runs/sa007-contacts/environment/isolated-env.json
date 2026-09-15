@@ -1,0 +1,24 @@
+{
+  "runId": "sa007-contacts",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59332/cvg_aaa_sa007_contacts_w29",
+  "databaseName": "cvg_aaa_sa007_contacts_w29",
+  "databasePort": 59332,
+  "redisUrl": "redis://127.0.0.1:56970",
+  "redisPort": 56970,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1279706,
+    "dataDir": "/tmp/cvg-aaa-runs/sa007-contacts/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1279741,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa007-contacts",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 23:05:05.848164-03"
+  }
+}

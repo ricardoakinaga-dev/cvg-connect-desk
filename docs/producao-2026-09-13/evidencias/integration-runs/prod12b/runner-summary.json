@@ -1,0 +1,25 @@
+{
+  "runId": "prod12b",
+  "workerIndex": 40,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60432/cvg_aaa_prod12b_w40",
+  "redisUrl": "redis://127.0.0.1:57080",
+  "startedAt": "2026-09-13T18:12:16.430Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-12.test.ts -t AC1b",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ✓ src/__tests__/production/prod-12.test.ts (13 tests | 12 skipped) 15054ms\n   ✓ PROD-12 AC1 — lease/owner/generation entre processos > AC1b — claim concorrente de 4 processos: partição exclusiva e generation 1  12296ms\n\n Test Files  1 passed (1)\n      Tests  1 passed | 12 skipped (13)\n   Start at  15:12:00\n   Duration  15.66s (transform 244ms, setup 0ms, collect 114ms, tests 15.05s, environment 0ms, prepare 157ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

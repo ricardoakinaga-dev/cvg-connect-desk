@@ -1,0 +1,24 @@
+{
+  "runId": "prod09-regressao-worker",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58632/cvg_aaa_prod09_regressao_worker_w22",
+  "databaseName": "cvg_aaa_prod09_regressao_worker_w22",
+  "databasePort": 58632,
+  "redisUrl": "redis://127.0.0.1:56900",
+  "redisPort": 56900,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2613928,
+    "dataDir": "/tmp/cvg-aaa-runs/prod09-regressao-worker/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2613965,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod09-regressao-worker",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:20:39.649689-03"
+  }
+}

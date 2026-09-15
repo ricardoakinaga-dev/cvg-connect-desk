@@ -1,0 +1,98 @@
+[
+  {
+    "route": "login",
+    "path": "/login",
+    "bytes": 897,
+    "lines": 24
+  },
+  {
+    "route": "inbox",
+    "path": "/inbox",
+    "bytes": 2330,
+    "lines": 79
+  },
+  {
+    "route": "contacts",
+    "path": "/contacts",
+    "bytes": 1615,
+    "lines": 60
+  },
+  {
+    "route": "tutors",
+    "path": "/tutors",
+    "bytes": 2172,
+    "lines": 77
+  },
+  {
+    "route": "patients",
+    "path": "/patients",
+    "bytes": 2339,
+    "lines": 83
+  },
+  {
+    "route": "kanban",
+    "path": "/kanban",
+    "bytes": 3012,
+    "lines": 89
+  },
+  {
+    "route": "tasks",
+    "path": "/tasks",
+    "bytes": 2009,
+    "lines": 73
+  },
+  {
+    "route": "notes",
+    "path": "/notes",
+    "bytes": 1705,
+    "lines": 66
+  },
+  {
+    "route": "alerts",
+    "path": "/alerts",
+    "bytes": 1920,
+    "lines": 70
+  },
+  {
+    "route": "dashboard",
+    "path": "/dashboard",
+    "bytes": 1943,
+    "lines": 65
+  },
+  {
+    "route": "sectors",
+    "path": "/sectors",
+    "bytes": 2301,
+    "lines": 70
+  },
+  {
+    "route": "labels",
+    "path": "/labels",
+    "bytes": 2105,
+    "lines": 76
+  },
+  {
+    "route": "contact-groups",
+    "path": "/contact-groups",
+    "bytes": 1435,
+    "lines": 55
+  },
+  {
+    "route": "admin",
+    "path": "/admin",
+    "bytes": 3808,
+    "lines": 113
+  },
+  {
+    "route": "audit",
+    "path": "/audit",
+    "bytes": 1766,
+    "lines": 62
+  },
+  {
+    "route": "settings",
+    "path": "/settings",
+    "bytes": 2032,
+    "lines": 68
+  }
+]

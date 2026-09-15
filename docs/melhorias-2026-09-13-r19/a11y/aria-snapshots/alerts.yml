@@ -1,0 +1,70 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - text: Central de atenção
+  - heading "Alertas" [level=1]
+  - paragraph: Monitore alertas operacionais do sistema
+  - group "Resumo dos alertas": 0 Total 0 Ativos 0 Reconhecidos 0 Resolvidos
+  - group "Filtrar alertas por status":
+    - text: "Status:"
+    - button "Todos" [pressed]
+    - button "Ativos"
+    - button "Reconhecidos"
+    - button "Resolvidos"
+  - group "Filtrar alertas por severidade":
+    - text: "Severidade:"
+    - button "Todas" [pressed]
+    - button "Crítico"
+    - button "Erro"
+    - button "Aviso"
+    - button "Info"
+  - status: 0 alertas exibidos
+  - paragraph: Nenhum alerta encontrado
+  - paragraph: Quando o sistema registrar um alerta operacional, ele aparecerá aqui.

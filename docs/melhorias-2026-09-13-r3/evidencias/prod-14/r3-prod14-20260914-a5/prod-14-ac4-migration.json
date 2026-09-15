@@ -1,0 +1,82 @@
+{
+  "conversationId": "fba0e289-9ad0-4fdf-ab85-20090ef0a66e",
+  "first": {
+    "published": [
+      {
+        "messageId": "a5ec58cb-6910-449d-b6da-bdf9b37a9be2",
+        "conversationId": "fba0e289-9ad0-4fdf-ab85-20090ef0a66e",
+        "assetId": "560d5493-2a79-45cf-9c70-7506f9c7fc27",
+        "storageKey": "media/fba0e289-9ad0-4fdf-ab85-20090ef0a66e/a5ec58cb-6910-449d-b6da-bdf9b37a9be2/a5ec58cb-6910-449d-b6da-bdf9b37a9be2-1c2cc43521f55249",
+        "sha256": "1c2cc43521f5524982747cb9b083e71eb5c1353e13d30a8fc1efc76a15d9574b",
+        "mimetype": "image/png"
+      }
+    ],
+    "blocked": [
+      {
+        "messageId": "2a7a8c0c-10c5-476b-93f2-623681492319",
+        "assetId": "bfb83cb4-1e99-4b04-bbf6-c4edb3178a98",
+        "scanStatus": "INFECTED",
+        "reasonCode": "infected"
+      }
+    ],
+    "pending": [
+      {
+        "messageId": "51d31a69-0abc-4750-92fe-24840f22ae04",
+        "reasonCode": "fetch_failed"
+      },
+      {
+        "messageId": "ee0262f2-db1a-4d3f-abb9-1d420bf13e87",
+        "reasonCode": "awaiting_revalidation"
+      },
+      {
+        "messageId": "509d5461-a4a1-40f5-9cc7-868ee5530ce1",
+        "reasonCode": "awaiting_revalidation"
+      },
+      {
+        "messageId": "d3444594-6592-4c0f-a409-6fd7cec84076",
+        "reasonCode": "awaiting_revalidation"
+      },
+      {
+        "messageId": "df479e15-7e52-462e-8edd-a9c6681233f8",
+        "reasonCode": "awaiting_revalidation"
+      }
+    ],
+    "unavailable": [
+      {
+        "messageId": "348c3ae9-fc43-47cb-9b39-559ca50f730f",
+        "reasonCode": "asset_unavailable",
+        "reason": "asset:// sem asset CLEAN+STORED"
+      }
+    ],
+    "skipped": [
+      {
+        "messageId": "51d31a69-0abc-4750-92fe-24840f22ae04",
+        "assetId": "2fd29d66-8cf9-4ab6-bad2-81e76c3de6e6",
+        "reason": "duplicate_candidate"
+      }
+    ],
+    "revalidated": 5
+  },
+  "second": {
+    "published": 0,
+    "blocked": 0,
+    "pending": 3,
+    "unavailable": 0,
+    "skipped": 0,
+    "revalidated": 0
+  },
+  "http": {
+    "cleanRead": 200,
+    "eicarRead": 422,
+    "brokenRead": 404,
+    "pendingRead": 409,
+    "anonymousS3": 403
+  },
+  "idempotent": {
+    "assetsBefore": 14,
+    "assetsAfter": 14,
+    "messagesBefore": 20,
+    "messagesAfter": 20
+  },
+  "revalidated": 0
+}

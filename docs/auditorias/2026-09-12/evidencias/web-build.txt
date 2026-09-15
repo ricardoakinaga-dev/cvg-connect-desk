@@ -1,0 +1,13 @@
+
+> @cvg/desk-web@0.0.0 build /home/ricardo/cvg-connect-desk/apps/desk-web
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 88 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.55 kB │ gzip:  0.34 kB
+dist/assets/index-BdSbjOcR.css   98.34 kB │ gzip: 18.41 kB
+dist/assets/index-Bzlz8Qq_.js   312.07 kB │ gzip: 89.59 kB
+✓ built in 1.02s

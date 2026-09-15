@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-07",
+  "runId": "r3-prod07-20260914-a2",
+  "attempt": 2,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-07/r3-prod07-20260914-a2/runtime CVG_EVIDENCE_SEGMENT=r3-prod07-20260914-a2 AAA_RUN_ID=r3-prod07-20260914-a2 AAA_WORKER_INDEX=11 AAA_ATTEMPT=2 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-07.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T00:29:14.340Z",
+  "finishedAt": "2026-09-14T00:30:10.391Z",
+  "durationMs": 56051,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "63196d218aa1e1f45bd11a338384896be632e74193ec1246dae5587292c64eac",
+    "sourceFileCount": 1451,
+    "imageDigest": null,
+    "runId": "r3-prod07-20260914-a2",
+    "attempt": "2",
+    "sealedAt": "2026-09-14T00:29:14.340Z"
+  },
+  "artifacts": [
+    {
+      "path": "webhook-replay-evidence.json",
+      "sha256": "e8e9c5da7a0876e218885de4014ad2d4f32028638b12d92df5ec7309cefaa543"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "04c9ba7ccd4ac01d260c75e6b6df7a027a908920cccca3daa333fc24e6f2e00b"
+    },
+    {
+      "path": "prod-07.test.log",
+      "sha256": "c2d64ca9658120a04876966ab2e5e8951c4e64523f1594209fbb2296a1365bda"
+    }
+  ],
+  "limitations": [
+    "Suite local cobre HTTP/app + PostgreSQL/Redis isolados; provider Gateway/Evolution e sua politica de redelivery permanecem sem sandbox.",
+    "Nenhuma prova de dados de producao ou revisao independente."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "version": "deliveries-v1",
+  "frozen_at": "2026-09-13T19:35:01.717007+00:00",
+  "authorization": "audit product; update documentation; author follow-up plan; no product implementation/deploy",
+  "sources": [
+    {
+      "path": "docs/producao-2026-09-13/BACKLOG.json",
+      "sha256": "179d74d8a28355446d008af36c2568b6ecb12f857af622375d752daf62939056"
+    },
+    {
+      "path": "docs/producao-2026-09-13/CRITERIOS.md",
+      "sha256": "7c040cab0fbb5bd2f28621b86e522bd6849a8447b5c8319a070bedb4e4dbd2ec"
+    },
+    {
+      "path": "docs/producao-2026-09-13/CONTRATOS.md",
+      "sha256": "ba3e1e72cc35423c8a6a9c4f9c0ddaa4563e145c47dae7a29a4bbf774409b6b1"
+    },
+    {
+      "path": "docs/producao-2026-09-13/DECISOES.md",
+      "sha256": "3c3fad2c782c955a5cb957776f8fc00c703e600682539ba8c0ada459dd239c64"
+    }
+  ],
+  "acceptance": [
+    "Evaluate 44 task deliveries against stated acceptance, distinguishing observed, static, submitted and not-run evidence.",
+    "Reassess G01-G12 without lowering targets or fabricating production approval.",
+    "Document findings with path/line, severity, confidence and reproducible evidence.",
+    "Preserve product-source fingerprint and historical audit.",
+    "Update canonical documentation and create executable executive plan/roadmap/backlog with full lineage, dependencies, evidence and decision boundaries."
+  ],
+  "execution_profile": "T2 audit/replanning, brownfield; three read-only lanes; lead documentation writer; fresh final critic when capacity available; no product implementation runtime initialized."
+}

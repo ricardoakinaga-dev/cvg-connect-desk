@@ -1,24 +1,27 @@
 # Stage 1: builder
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 ENV CI=true
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=${VITE_API_URL}
-ARG VITE_REALTIME_URL=ws://localhost:8080
+ARG VITE_REALTIME_URL=/ws/
 ENV VITE_REALTIME_URL=${VITE_REALTIME_URL}
 
-COPY package.json pnpm-lock.yaml* ./
-COPY pnpm-workspace.yaml ./
-COPY turbo.json ./
+# All workspace manifests must be present so the frozen lockfile can be validated.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY apps/desk-api/package.json apps/desk-api/
 COPY apps/desk-web/package.json apps/desk-web/
+COPY apps/message-worker/package.json apps/message-worker/
+COPY apps/realtime-service/package.json apps/realtime-service/
 COPY packages/ packages/
 COPY modules/ modules/
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
-RUN pnpm install -r --no-lockfile
+RUN pnpm install -r --frozen-lockfile
 
 COPY apps/desk-web/ apps/desk-web/
-RUN pnpm --filter @cvg/desk-web exec vite build
+# Real build (tsc typecheck + vite build), same script as local/CI.
+RUN pnpm --filter @cvg/desk-web build
 
 # Stage 2: nginx
 FROM nginx:1.25-alpine AS runner

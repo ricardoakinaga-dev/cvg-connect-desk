@@ -10,7 +10,7 @@
  * migrated. If the database is not available, tests are skipped.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 
 vi.mock('@cvg/audit', () => ({
   createAuditLog: vi.fn().mockResolvedValue(undefined),
@@ -28,12 +28,16 @@ vi.mock('../events/chat-publisher', () => ({
 }));
 
 import { receiveInboundMessage } from '../application/use-cases/receive-inbound-message.use-case';
-import { messageRepository } from '../infrastructure/repositories/message.repository';
 import { conversationRepository } from '../infrastructure/repositories/conversation.repository';
-import { db, schema } from '@cvg/database';
+import { schema } from '@cvg/database';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import { eq } from 'drizzle-orm';
+import type { Ok, Result } from '@cvg/shared';
+
+function assertOk<T, E>(result: Result<T, E>): asserts result is Ok<T, E> {
+  expect(result.isOk()).toBe(true);
+}
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://connect_desk:root@localhost:5432/connect_desk_db';
 
@@ -108,10 +112,10 @@ if (realDbAvailable) {
         const result3 = await receiveInboundMessage(input);
         const result4 = await receiveInboundMessage(input);
 
-        expect(result1.isOk()).toBe(true);
-        expect(result2.isOk()).toBe(true);
-        expect(result3.isOk()).toBe(true);
-        expect(result4.isOk()).toBe(true);
+        assertOk(result1);
+        assertOk(result2);
+        assertOk(result3);
+        assertOk(result4);
 
         expect(result1.value.messageId).toBe(result2.value.messageId);
         expect(result2.value.messageId).toBe(result3.value.messageId);
@@ -167,7 +171,7 @@ if (realDbAvailable) {
           sentAt: new Date(),
         });
 
-        expect(result.isOk()).toBe(true);
+        assertOk(result);
 
         await receiveInboundMessage({
           externalMessageId: externalMsgId,
@@ -204,6 +208,9 @@ if (realDbAvailable) {
           senderType: 'contact',
           sentAt: new Date(),
         });
+
+        assertOk(result1);
+        assertOk(result2);
 
         expect(result1.value.isNewConversation).toBe(true);
         expect(result2.value.isNewConversation).toBe(false);
@@ -245,8 +252,8 @@ if (realDbAvailable) {
           sentAt: new Date(),
         });
 
-        expect(result1.isOk()).toBe(true);
-        expect(result2.isOk()).toBe(true);
+        assertOk(result1);
+        assertOk(result2);
         expect(result1.value.messageId).not.toBe(result2.value.messageId);
         expect(result1.value.conversationId).toBe(result2.value.conversationId);
         expect(result1.value.isNewConversation).toBe(true);

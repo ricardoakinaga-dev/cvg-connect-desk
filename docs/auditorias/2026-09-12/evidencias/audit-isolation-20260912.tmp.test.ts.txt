@@ -1,0 +1,12 @@
+import { it, expect, vi } from 'vitest';
+import { RealtimeServer } from '../index';
+it('audit: message payload broadcasts globally to users of distinct sectors', async()=>{
+ const server:any=new RealtimeServer(0);
+ const sendA=vi.fn(),sendB=vi.fn();
+ server.clients.set('a',{id:'a',userId:'sector-a-user',authenticated:true,subscriptions:new Set(['global']),ws:{readyState:1,send:sendA}});
+ server.clients.set('b',{id:'b',userId:'sector-b-user',authenticated:true,subscriptions:new Set(['global']),ws:{readyState:1,send:sendB}});
+ server.processEvent({event_id:'synthetic-event',event_type:'message.persisted',event_version:1,aggregate_type:'Message',aggregate_id:'synthetic-message',occurred_at:new Date().toISOString(),payload:{id:'synthetic-message',conversationId:'sector-a-conversation',content:'synthetic restricted content',sectorId:'sector-a',direction:'inbound'}});
+ await vi.waitFor(()=>expect(sendB).toHaveBeenCalled());
+ expect(JSON.parse(sendB.mock.calls[0][0]).data.payload.content).toBe('synthetic restricted content');
+ expect(sendA).toHaveBeenCalled();
+});

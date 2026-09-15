@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-001",
+  "run_id": "sa001-r3-a2-20260915",
+  "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "command": "python3 -m unittest -v scripts/programa-triplo-aaa/test_candidate_manifest.py",
+  "exit_status": 0,
+  "result": "PASS",
+  "tests_run": 8,
+  "tests_failed": 0,
+  "tests": [
+    "test_known_good_is_stable_and_separates_product_from_ledger",
+    "test_same_size_versioned_env_mutation_changes_product_seal",
+    "test_audit_and_program_mutations_change_only_ledger",
+    "test_mode_symlink_and_add_remove_mutations_change_product_seal",
+    "test_staged_addition_is_visible_in_diff_and_inventory",
+    "test_unstaged_change_and_tracked_removal_are_visible",
+    "test_git_failure_is_closed",
+    "test_inventory_collection_is_closed_on_missing_entry"
+  ],
+  "source_hashes": {
+    "candidate_manifest.py": "1b27c102da808956cb1153be75f91acdd2cdd411c161db5aa693d5a921c0c688",
+    "test_candidate_manifest.py": "631d629e5f0a9cad1caadc2bd012978cc60cdce1228b5d56a3716a49efa052b3"
+  },
+  "candidate_artifact": "evidencias/SA-001/candidate-manifest-r3.json",
+  "limitations": [
+    "Fixture Git sintético; não substitui os gates funcionais G01/G12 nem a crítica I1.",
+    "A suíte verifica o gerador e o contrato de identidade, não o mérito de A01–A10.",
+    "O teste de remoção staged verifica tombstone, status D e presença no diff."
+  ]
+}

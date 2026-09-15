@@ -1,0 +1,66 @@
+
+> @cvg/desk-web@0.0.0 lint /home/ricardo/cvg-connect-desk/apps/desk-web
+> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
+
+(node:2552430) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/ricardo/cvg-connect-desk/eslint.config.js?mtime=1789171273388 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/ricardo/cvg-connect-desk/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Admin.tsx
+  248:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  259:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  275:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  314:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Alerts.tsx
+  16:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/ContactGroups.tsx
+  62:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Contacts.tsx
+   36:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   91:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  227:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Inbox.tsx
+   28:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   52:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  198:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  413:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  413:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  414:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  416:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  416:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  417:94  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Labels.tsx
+  66:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Notes.tsx
+  47:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Sectors.tsx
+  45:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Settings.tsx
+  71:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Tasks.tsx
+  16:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 31 problems (0 errors, 31 warnings)
+
+ESLint found too many warnings (maximum: 0).
+/home/ricardo/cvg-connect-desk/apps/desk-web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @cvg/desk-web@0.0.0 lint: `eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0`
+Exit status 1

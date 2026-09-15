@@ -1,0 +1,73 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - text: Fluxo de trabalho
+  - heading "Tarefas" [level=1]
+  - paragraph: Crie, vincule e acompanhe tarefas com contexto operacional.
+  - button "Nova tarefa"
+  - group "Resumo das tarefas": 0 Total 0 Pendentes 0 Em andamento 0 Concluídas
+  - group "Filtrar tarefas por status":
+    - text: "Status:"
+    - button "Todas" [pressed]
+    - button "Pendente"
+    - button "Em andamento"
+    - button "Concluída"
+    - button "Cancelada"
+  - group "Filtrar tarefas por prioridade":
+    - text: "Prioridade:"
+    - button "Todas" [pressed]
+    - button "Urgente"
+    - button "Alta"
+    - button "Média"
+    - button "Baixa"
+  - status: 0 tarefas exibidas
+  - paragraph: Nenhuma tarefa encontrada
+  - paragraph: Crie a primeira tarefa para acompanhar o fluxo da operação.
+  - button "Nova tarefa"

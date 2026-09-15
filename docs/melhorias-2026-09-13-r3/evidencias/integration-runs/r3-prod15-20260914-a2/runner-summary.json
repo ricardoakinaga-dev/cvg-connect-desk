@@ -1,0 +1,30 @@
+{
+  "runId": "r3-prod15-20260914-a2",
+  "workerIndex": 35,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59932/cvg_aaa_r3_prod15_20260914_a2_w35",
+  "redisUrl": "redis://127.0.0.1:57030",
+  "startedAt": "2026-09-14T03:23:44.626Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-15.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 1,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ❯ src/__tests__/production/prod-15.test.ts (12 tests | 12 skipped) 737ms\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC1 — limite 16 MiB exato; +1 com e sem Content-Length → 413 recuperável; objeto com tamanho exato\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC1 — EICAR real → 422 fail-closed: quarentena privada, sem cópia pública\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC1 — scanner ausente/timeout e storage fora → 503 recuperável, fail-closed sem publicação\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC1 — abort de upload parcial não persiste asset/objeto e não afeta assets do run\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC2 — leitura do CLEAN: bytes proxiados, cache privado com TTL e sem URL pública\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC2 — negativos 401/404/409/422/503 e adulteração/revogação negadas\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC2 — TTL assinado coerente e objeto acessível apenas com assinatura\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC3 — ciclo completo upload→CLEAN→envio por asset→entrega e retry idempotente\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC3 — INFECTED/PENDING/SCAN_FAILED indisponíveis no envio; URL arbitrária nunca encaminhada\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC4 — mídia inbound do PROD-14 entra no fluxo e é entregue por asset no outbound\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC4 — legado: dry-run read-only, migração publica CLEAN e entrega; nenhum caminho serve URL crua\n   ↓ PROD-15 — upload validado e resolução autorizada de assets (G04/C06) > AC1/AC4 — configuração implantada mantém 16 MiB úteis consistentes (proxy/API/storage)\n\n Test Files  1 failed (1)\n      Tests  12 skipped (12)\n   Start at  00:23:43\n   Duration  1.21s (transform 121ms, setup 0ms, collect 94ms, tests 737ms, environment 0ms, prepare 107ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/production/prod-15.test.ts\n\n\n⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/production/prod-15.test.ts [ src/__tests__/production/prod-15.test.ts ]\nError: BLOCKED (PROD-15): clamd real não respondeu zPING em 127.0.0.1:53110. Provisione ClamAV local antes de executar; a prova de scanner real NÃO pode ser simulada.\n ❯ src/__tests__/production/prod-15.test.ts:641:11\n    639|   // Scanner real (clamd com EICAR). Ausência = BLOCKED explícito, nun…\n    640|   if (!(await clamdPing())) {\n    641|     throw new Error(\n       |           ^\n    642|       `BLOCKED (PROD-15): clamd real não respondeu zPING em ${CLAMAV_H…\n    643|       + 'Provisione ClamAV local antes de executar; a prova de scanner…\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "exitCode": 1
+}

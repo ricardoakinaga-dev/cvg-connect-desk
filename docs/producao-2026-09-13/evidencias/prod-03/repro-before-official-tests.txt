@@ -1,0 +1,31 @@
+ok - mapping 'lint' -> CI Quality Gate / /Lint \(real/i
+ok - mapping 'typecheck' -> CI Quality Gate / /Typecheck \(real/i
+ok - mapping 'unit' -> CI Quality Gate / /Unit tests/i
+ok - mapping 'integration' -> CI Quality Gate / /Integration tests/i
+ok - mapping 'contracts' -> CI Quality Gate / /Contract tests/i
+ok - mapping 'coverage' -> CI Quality Gate / /Coverage \(shared/i
+ok - mapping 'postgres-real' -> PostgreSQL Real Tests / /PostgreSQL Real Suites/i
+ok - mapping 'migrations-fresh' -> CI Quality Gate / /Migration check/i
+ok - mapping 'migrations-upgrade' -> CI Quality Gate / /Migration check/i
+ok - mapping 'build' -> CI Quality Gate / /^Build \(real/i
+ok - mapping 'e2e-browser' -> Smoke E2E / /Smoke E2E/i
+ok - mapping 'dr-e2e' -> DR End-to-End (backup/restore proof) / /Backup, destroy, restore, validate, smoke/i
+ok - mapping 'codeql' -> Supply Chain Security / /CodeQL/i
+ok - mapping 'gitleaks' -> Supply Chain Security / /Gitleaks|Secret scan/i
+ok - mapping 'trivy' -> Supply Chain Security / /Container scan/i
+ok - mapping 'dependency-review' -> Supply Chain Security / /Dependency review/i
+ok - mapping 'sbom' -> Supply Chain Security / /SBOM/i
+ok - mapping 'security-audit' -> Triple AAA Gate / /Security gate/i
+ok - all required jobs success -> every gate PASS and VERIFIED_CANDIDATE
+ok - one failed required job -> FAILED (and that gate FAIL)
+ok - one skipped required job -> FAILED
+ok - missing workflow run -> CONDITIONAL with NOT_VERIFIED
+ok - missing job in a present run -> NOT_VERIFIED (not a silent PASS)
+ok - latest run per workflow wins (old failure does not mask new success)
+ok - asArray unwraps workflow_runs (the original defect) and rejects junk
+ok - runs payload as a raw array (legacy shape) still evaluates
+ok - malformed runs payload -> all NOT_VERIFIED, no crash
+ok - malformed jobs payload -> NOT_VERIFIED for that workflow, no crash
+ok - pickLatest prefers higher run_number
+
+29 passed, 0 failed

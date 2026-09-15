@@ -1,0 +1,4518 @@
+{
+  "schema_version": 1,
+  "program_id": "cvg-triplo-aaa-2026-09-14",
+  "created_at": "2026-09-14",
+  "status": "EM_EXECUCAO",
+  "authorization": "Auditoria, documentação e execução local autorizadas pelo usuário; ações externas e SA-061 continuam dependentes da autoridade vigente e de D06.",
+  "source_report": "../auditorias/2026-09-14/RELATORIO.md",
+  "source_notes_sha256": "8f86d0c8d0fe76cd252fd9fdb597a152cd2ff84901737f14d404d36cd0f54f90",
+  "first_task": "SA-001",
+  "tasks": [
+    {
+      "id": "SA-001",
+      "title": "Congelar candidato e reconciliar a auditoria",
+      "status": "DONE",
+      "priority": "P0",
+      "lane": "LEAD",
+      "milestone": "M0",
+      "estimate_points": 3,
+      "requirements": [
+        "Q02",
+        "OP01"
+      ],
+      "dependencies": [],
+      "ownership": [
+        "docs/programa-triplo-aaa-2026-09-14",
+        "manifesto de candidato e diretório isolado"
+      ],
+      "objective": "Identificar exatamente a versão que será melhorada, incluindo worktree, configurações da raiz, lockfile e arquivos novos.",
+      "acceptance": [
+        {
+          "id": "SA-001-AC1",
+          "criterion": "Inventariar commit, diff, arquivos rastreados/não rastreados, modos, symlinks e hashes; incluir package.json, lockfile, turbo, Docker e fontes, sem ler/publicar segredos.",
+          "required": true
+        },
+        {
+          "id": "SA-001-AC2",
+          "criterion": "Revalidar A01–A10 contra a fonte atual; distinguir corrigido, parcial e aberto; qualquer divergência altera a tarefa com justificativa, não elimina aceites.",
+          "required": true
+        },
+        {
+          "id": "SA-001-AC3",
+          "criterion": "Capturar ambiente/ferramentas e dono da execução; relatório anterior preservado e resultados antigos marcados BASELINE, nunca PASS do candidato novo.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Existente: git status --short; git rev-parse HEAD.",
+        "Criar manifesto completo e comparação com evidencias/source-manifest.json da auditoria; registrar diferenças esperadas/inesperadas."
+      ],
+      "gates": [
+        "G01",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "CURRENT",
+      "evidence_dir": "evidencias/SA-001/",
+      "next_action": {
+        "id": "SA-001-R3-A2-CLOSE",
+        "instruction": "Preservar os selos e a prova I1 aprovados; iniciar SA-002, próxima tarefa elegível por dependência."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/SA-001-R3-A3-I1-approve.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest-r3-a2.json",
+          "sha256": "92d8350cc80155840b155146a506b97b62f557bb4f10b41875bf9af3597841e3"
+        },
+        {
+          "path": "evidencias/SA-001/source-manifest-comparison-r3-a2.json",
+          "sha256": "b86bd8fd817ef6a8905ae3d4ee171e134f37d8246eb220591c851eb04035b9eb"
+        },
+        {
+          "path": "evidencias/SA-001/findings-revalidation-r3.md",
+          "sha256": "a1f6d256221ca8dcd189d40354f18a6faebf9695bf56dbeb6966f5069e54802a"
+        },
+        {
+          "path": "evidencias/SA-001/environment-r3-a2.json",
+          "sha256": "efa3cebe6aafd70b9db8146e8f139c8282bc7c535efb2034da4ac512fb8f35c3"
+        },
+        {
+          "path": "evidencias/SA-001/manifest-scope-r3.md",
+          "sha256": "ad8637c4da3662e8531c175c2d2d543d905466bc7f458bf83c1a47c393931401"
+        },
+        {
+          "path": "evidencias/SA-001/quality-bar-r3.json",
+          "sha256": "27fb1bef042814488d706eafc834fb6c846114d0ff7784989b49cd9ed51a9d5f"
+        },
+        {
+          "path": "evidencias/SA-001/test-summary-r3-a2.json",
+          "sha256": "a82922060c7cacaefec76d1b4741cbd145c2ef68126b4ce45f1ab6b424b60dda"
+        },
+        {
+          "path": "evidencias/SA-001/evidence-r3.jsonl",
+          "sha256": "ade8ccf536ec0f7da6a8db4991ac577f7d95d93a1a1a00a447de193284d4a278"
+        },
+        {
+          "path": "evidencias/revisoes/SA-001-R3-A2-I1-approve.md",
+          "sha256": "28f70cf05314835f52cca80322bad3c2f6cb6689061461c1127a481122b97ac0"
+        }
+      ]
+    },
+    {
+      "id": "SA-002",
+      "title": "Fixar contratos, critérios e decisões com alcance preciso",
+      "status": "DONE",
+      "priority": "P1",
+      "lane": "LEAD",
+      "milestone": "M0",
+      "estimate_points": 5,
+      "requirements": [
+        "B03",
+        "B13",
+        "B14",
+        "B21",
+        "B22",
+        "Q02"
+      ],
+      "dependencies": [
+        "SA-001"
+      ],
+      "ownership": [
+        "docs/programa-triplo-aaa-2026-09-14/CONTRATOS.md",
+        "docs/programa-triplo-aaa-2026-09-14/DECISOES.md"
+      ],
+      "objective": "Transformar ambiguidades em contratos executáveis sem bloquear correções independentes.",
+      "acceptance": [
+        {
+          "id": "SA-002-AC1",
+          "criterion": "C01–C10 e G01–G12 têm versão, proprietário, entradas/saídas, exemplos de sucesso/erro e consumidores identificados.",
+          "required": true
+        },
+        {
+          "id": "SA-002-AC2",
+          "criterion": "D01–D06 registram proposta, alternativa, impacto e subações afetadas; decisão aberta não impede preparativos nem conta como aprovada.",
+          "required": true
+        },
+        {
+          "id": "SA-002-AC3",
+          "criterion": "Congelar denominadores de coverage, workload, matriz visual e método de nota; nenhuma redução de meta após falha.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Revisão de contrato por backend/frontend/ops com exemplos concretos.",
+        "Validar o DAG e a cobertura dos 59 requisitos pelo programa.py."
+      ],
+      "gates": [
+        "G01",
+        "G05",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "CURRENT",
+      "evidence_dir": "evidencias/SA-002/",
+      "next_action": {
+        "id": "SA-002-R3-A2-CLOSE",
+        "instruction": "Preservar C-1/G-1/D-1/QB-1 e iniciar SA-003, próxima tarefa elegível; decisões D01–D06 continuam OPEN."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/SA-002-R3-A2-I1-approve.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-002/revalidation-r3-a2.md",
+          "sha256": "2c1bfd7cbafb4237eb1f21d0224117f98b2fca4d5b328c5b3b9c115cab43b72b"
+        },
+        {
+          "path": "evidencias/SA-002/test-summary-r3-a2.json",
+          "sha256": "1cd2d36150732a47c5920d61c907af872d1db291a9916fae6d97973e91b353b2"
+        },
+        {
+          "path": "evidencias/SA-002/validation-summary-r3.json",
+          "sha256": "4876d9d66118444fb682828c63d9fdefdf093795eb4d33e9828b8a12b014f435"
+        }
+      ]
+    },
+    {
+      "id": "SA-003",
+      "title": "Preparar runner e dependências de teste realmente isolados",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "OPS",
+      "milestone": "M0",
+      "estimate_points": 8,
+      "requirements": [
+        "OP05",
+        "OP07",
+        "OP02"
+      ],
+      "dependencies": [
+        "SA-001"
+      ],
+      "ownership": [
+        "scripts/production/run-integration-isolated.mjs",
+        "docker-compose.smoke.yml",
+        "docker-compose.staging.yml",
+        "playwright.production.config.ts"
+      ],
+      "objective": "Executar verificações reproduzíveis sem usar banco/portas/processos compartilhados.",
+      "acceptance": [
+        {
+          "id": "SA-003-AC1",
+          "criterion": "Postgres, Redis, storage, scanner e serviços de teste recebem projeto/nomes/portas/volumes exclusivos e credenciais sintéticas; abortar se alvo não pertencer à execução.",
+          "required": true
+        },
+        {
+          "id": "SA-003-AC2",
+          "criterion": "Runner registra comandos, ambiente permitido, stdout/stderr sanitizado, exits e cleanup em sucesso/falha; não usa fuser genérico nem nomes fixos para destruir recursos.",
+          "required": true
+        },
+        {
+          "id": "SA-003-AC3",
+          "criterion": "Um teste de falha de inicialização encerra apenas recursos próprios; setup de banco aplica migração/fixture na URL isolada comprovada.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Inspecionar runner existente antes de executar; exercitar falha de serviço e interrupção.",
+        "Adaptar test:ci/test:postgres-real e Playwright para URLs explícitas; nenhuma credencial real nos artefatos."
+      ],
+      "gates": [
+        "G01",
+        "G08",
+        "G09",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-003/",
+      "next_action": {
+        "id": "SA-003-R3-A1",
+        "instruction": "Eliminar teardown genérico por fuser/porta fixa, provar ownership por run e reexecutar os self-tests de provisionamento, falha e cleanup no candidato R3."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-003/README.md",
+          "sha256": "44011c58680a87721c996cda146f365756e4b12e51d3bea3ebd542600131cb8e"
+        },
+        {
+          "path": "evidencias/SA-003/evidence.jsonl",
+          "sha256": "3b2d7c89b50e1b202f0ea3397ef3520fa018d4fff27cfde2336f05a37c8942be"
+        },
+        {
+          "path": "evidencias/SA-003/provision-failure-selfcheck.json",
+          "sha256": "8de1184d252cde83afcef858cc9972053e54f364db8491048723bd62ca6c7eae"
+        },
+        {
+          "path": "evidencias/SA-003/runner-migrate-cleanup.json",
+          "sha256": "8304af5704544f5a028b943d1aeda4095ce00924541f6985ae40e829b9d36530"
+        },
+        {
+          "path": "evidencias/SA-003/runner-migrate-summary.json",
+          "sha256": "63ad8f456dda8276094d887176682253125d7d73af9eb30b6b6c9765a7ff96cf"
+        },
+        {
+          "path": "evidencias/SA-003/runner-selftest-cleanup.json",
+          "sha256": "8e4814cc324e742c9b5dec3794ac2affa158f2f69f7b6f8178b314dabb15289c"
+        },
+        {
+          "path": "evidencias/SA-003/runner-selftest-summary.json",
+          "sha256": "063a72ab56bc6770beea75b02d9032d0aa82c112bf088b07c9c54bb59fb0638f"
+        },
+        {
+          "path": "evidencias/SA-003/storage-scanner-selfcheck.json",
+          "sha256": "2c35d8fce51e9499893d34a4eb9d1643266a8a93442962797615c962cd47b847"
+        }
+      ]
+    },
+    {
+      "id": "SA-004",
+      "title": "Eliminar hash e dados privados dos DTOs de usuários",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "BACKEND",
+      "milestone": "M1",
+      "estimate_points": 3,
+      "requirements": [
+        "B04",
+        "UI14"
+      ],
+      "dependencies": [
+        "SA-001",
+        "SA-003"
+      ],
+      "ownership": [
+        "modules/admin/src/presentation/http",
+        "modules/admin/src/types",
+        "apps/desk-api/src/__tests__"
+      ],
+      "objective": "GET/POST/PUT de usuário devolvem apenas os campos públicos autorizados.",
+      "acceptance": [
+        {
+          "id": "SA-004-AC1",
+          "criterion": "Definir DTO/response schema comum para lista, detalhe, criação e atualização; passwordHash, senha, token e outros campos privados nunca chegam ao JSON.",
+          "required": true
+        },
+        {
+          "id": "SA-004-AC2",
+          "criterion": "Requisições autenticadas com admin:read/write exercitam todas as rotas com fixture contendo hash; assertiva negativa falha na versão anterior.",
+          "required": true
+        },
+        {
+          "id": "SA-004-AC3",
+          "criterion": "RBAC, códigos HTTP e campos consumidos pela interface continuam compatíveis; logs/erro também não serializam os segredos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Existente: pnpm --filter @cvg/admin test.",
+        "Criar teste HTTP real de GET/POST/PUT e negativos de permissão no banco isolado."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G08"
+      ],
+      "findings": [
+        "A01"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-004/",
+      "next_action": {
+        "id": "SA-004-R3-A1",
+        "instruction": "Reexecutar todos os aceites no candidato R3, incluindo teste negativo de segredo em resposta, logs e erro; obter crítica I1 depois da última correção."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-004/evidence.jsonl",
+          "sha256": "c452a06588a00aac404c2ec022aa6ee01c9b8ba62b66e19d7580bd66344a358a"
+        },
+        {
+          "path": "evidencias/SA-004/runner-cleanup.json",
+          "sha256": "9b06c6b1aacd1c919c34512c34ae4451fed15c6bf899a116345fde52688df41a"
+        },
+        {
+          "path": "evidencias/SA-004/runner-summary.json",
+          "sha256": "83a29c7a1c81c61a459d2b4f8f004ca8672a7fff6af5d6ff5deb9f79975d5355"
+        }
+      ]
+    },
+    {
+      "id": "SA-005",
+      "title": "Unificar movimento/reabertura Kanban com operação transacional",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "BACKEND",
+      "milestone": "M1",
+      "estimate_points": 8,
+      "requirements": [
+        "B07",
+        "B05",
+        "B15",
+        "UI07"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-003"
+      ],
+      "ownership": [
+        "modules/kanban/src",
+        "modules/chat/src/application/use-cases/conversation-operations.use-case.ts",
+        "modules/chat/src/infrastructure/repositories/conversation.repository.ts",
+        "apps/desk-api/src/__tests__"
+      ],
+      "objective": "Reabrir conversa restaura atividade e o movimento inteiro tem um único resultado durável.",
+      "acceptance": [
+        {
+          "id": "SA-005-AC1",
+          "criterion": "HTTP finalizado/arquivado→novo/em_atendimento restaura isActive=true e closedAt=null, coerente com board, Inbox e KPIs; fechar define inverso.",
+          "required": true
+        },
+        {
+          "id": "SA-005-AC2",
+          "criterion": "Status/setor/responsável/histórico/audit/outbox são atômicos; falha injetada na última escrita não deixa alteração parcial.",
+          "required": true
+        },
+        {
+          "id": "SA-005-AC3",
+          "criterion": "Atualização stale recebe 409 com versão/estado atual; operador executor não vira responsável implicitamente; autorização do setor origem/destino é preservada.",
+          "required": true
+        },
+        {
+          "id": "SA-005-AC4",
+          "criterion": "Evento pós-commit atualiza outro operador; teste público reproduz e elimina A02/A03, incluindo concorrência e retry.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar teste HTTP autenticado baseado no probe kanban-probe.ts da auditoria, sem copiar teste só de repository.",
+        "Executar suíte Kanban/chat PostgreSQL e cenário browser de fechar/reabrir."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [
+        "A02",
+        "A03"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-005/",
+      "next_action": {
+        "id": "SA-005-R3-A1",
+        "instruction": "Reexecutar atomicidade, CAS, reabertura, histórico/audit/outbox e fechar a prova de UI/navegação exigida por AC4; obter I1 atual."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-005/evidence.jsonl",
+          "sha256": "183224a43cfef8e31255e7ce0cdaa7edb07f024421512bca1e65f942a2d959c4"
+        },
+        {
+          "path": "evidencias/SA-005/runner-summary.json",
+          "sha256": "4fc1f6321b49aa5cee4399b85894644fca48504bef82f6775bd81c69438988b1"
+        }
+      ]
+    },
+    {
+      "id": "SA-006",
+      "title": "Tornar operações administrativas atômicas e auditáveis",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M1",
+      "estimate_points": 5,
+      "requirements": [
+        "B04",
+        "B15"
+      ],
+      "dependencies": [
+        "SA-004"
+      ],
+      "ownership": [
+        "modules/admin/src/application",
+        "modules/admin/src/infrastructure",
+        "modules/admin/src/presentation/http"
+      ],
+      "objective": "Usuário/papéis/memberships/auditoria não persistem parcialmente.",
+      "acceptance": [
+        {
+          "id": "SA-006-AC1",
+          "criterion": "Criar/editar usuário e substituir papéis em uma transação; falha de FK não apaga vínculos prévios nem cria usuário parcial.",
+          "required": true
+        },
+        {
+          "id": "SA-006-AC2",
+          "criterion": "Auditoria mínima sem PII sensível participa do commit; falha de audit aborta a ação ou contrato explícito preserva garantia durável equivalente.",
+          "required": true
+        },
+        {
+          "id": "SA-006-AC3",
+          "criterion": "Revogação altera permissões das sessões ativas conforme C02; repetição/concorrência não produz duplicação ou resposta 500 após sucesso oculto.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Adicionar falhas de insert/audit e corrida de edição via HTTP + PG.",
+        "Rodar testes admin, auth e consumidores da UI."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [
+        "A07"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-006/",
+      "next_action": {
+        "id": "SA-006-R3-A1",
+        "instruction": "Reexecutar falhas intermediárias de administração e auditoria atômica no candidato R3; vincular todos os ACs e obter I1 atual."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-006/evidence.jsonl",
+          "sha256": "2dc4661c63175f34ca9b1a88a33269397dbade7aa02929c6bdfc8e15bfebdc46"
+        },
+        {
+          "path": "evidencias/SA-006/runner-summary.json",
+          "sha256": "1a4e8e14119be82ea8c5d1806a14d14735323e4a96f89713193b68923f3f195f"
+        }
+      ]
+    },
+    {
+      "id": "SA-007",
+      "title": "Consolidar início de conversa a partir de contato",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M1",
+      "estimate_points": 5,
+      "requirements": [
+        "B06",
+        "B05",
+        "B15"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-003"
+      ],
+      "ownership": [
+        "modules/contacts/src/application",
+        "modules/contacts/src/presentation/http",
+        "modules/chat/src/infrastructure/repositories"
+      ],
+      "objective": "A ação de contato cria/reutiliza conversa com histórico, outbox e auditoria consistentes.",
+      "acceptance": [
+        {
+          "id": "SA-007-AC1",
+          "criterion": "Conversa+histórico+audit+outbox são transacionais; falha final deixa estado anterior intacto.",
+          "required": true
+        },
+        {
+          "id": "SA-007-AC2",
+          "criterion": "Duas requisições concorrentes de iniciar atendimento respeitam política de conversa ativa e não criam duplicatas/órfãos.",
+          "required": true
+        },
+        {
+          "id": "SA-007-AC3",
+          "criterion": "Resultado retorna ID canônico autorizado e navegável; retries não geram efeito adicional; listagem paginada não perde o contato/criação.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testar rota pública startConversation contra PG com concorrência e fault injection.",
+        "Preservar testes inbound/outbound e GET de contato autorizado."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [
+        "A07"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-007/",
+      "next_action": {
+        "id": "SA-007-R3-A1",
+        "instruction": "Reexecutar concorrência, fault injection, idempotência e paginação no candidato R3; atualizar a ação canônica e obter I1 final."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/SA-001/candidate-manifest-r2-wave2.json",
+          "sha256": "a5eee518dac353c5a1c4a670f131282b259c00df3ae8c0927f5992813949b403"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+          "sha256": "61853488ee1a0b90880da59002f6975d12413aed8388c1ae8f11a23bda65a6e0"
+        },
+        {
+          "path": "evidencias/SA-007/evidence.jsonl",
+          "sha256": "44f429cb6f950250156830fe28239448ba2e0383dc6c8d3fef10a3c386a5f451"
+        },
+        {
+          "path": "evidencias/SA-007/rework/REWORK-R2.md",
+          "sha256": "081c746c0c2d2cda71ab031686cb676a55c0ba58b7473a63b8fc02e43eff0fba"
+        },
+        {
+          "path": "evidencias/SA-007/rework/runner-summary.json",
+          "sha256": "491fd530ae744adb836690e341f3e321c6111a56ec0442d44b66a400760dfc9b"
+        },
+        {
+          "path": "evidencias/SA-007/rework/runner-cleanup.json",
+          "sha256": "c3b17a9fb52c7ad1c45ab210d2195762a59a07467eb845e2d829a7574568c20f"
+        },
+        {
+          "path": "evidencias/SA-007/rework/typecheck.log",
+          "sha256": "e3a88fe589ddad4d42d003fef5cd829571dc35432b9e7e9f0ee8adeb6d41b357"
+        },
+        {
+          "path": "evidencias/SA-007/rework/typecheck-final.log",
+          "sha256": "c1caa5e8fcae24840180936137cc49077fb8fd44b1561e7fb1c4c087d400d397"
+        }
+      ]
+    },
+    {
+      "id": "SA-008",
+      "title": "Preservar contexto da conversa nos atalhos operacionais",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "FULLSTACK",
+      "milestone": "M1",
+      "estimate_points": 5,
+      "requirements": [
+        "UI02",
+        "UI04",
+        "UI05",
+        "UI06",
+        "UX04",
+        "UX11",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-003"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/pages/Tasks.tsx",
+        "apps/desk-web/src/pages/Notes.tsx",
+        "apps/desk-web/src/pages/Alerts.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/tasks/src/presentation/http e consultas de listagem",
+        "modules/notes/src/presentation/http e consultas de listagem",
+        "modules/alerts/src/presentation/http e consultas de listagem"
+      ],
+      "objective": "Abrir tarefas/notas/alertas pela Inbox conserva a conversa e permite retornar ao atendimento.",
+      "acceptance": [
+        {
+          "id": "SA-008-AC1",
+          "criterion": "Ler conversationId validado da URL; enviá-lo ao endpoint autorizado conforme C04 e preencher vínculos de criação, sem filtrar apenas a página já carregada.",
+          "required": true
+        },
+        {
+          "id": "SA-008-AC2",
+          "criterion": "Fixture com duas conversas prova em browser+API que somente recursos da selecionada são exibidos; back/refresh/deep-link mantêm seleção.",
+          "required": true
+        },
+        {
+          "id": "SA-008-AC3",
+          "criterion": "Contexto inválido/inacessível tem erro claro sem vazar título/conteúdo; remover filtro é ação explícita; corrigir o teste que hoje reproduz requisição sem filtro.",
+          "required": true
+        },
+        {
+          "id": "SA-008-AC4",
+          "criterion": "Se o filtro contextual estiver ausente na API, implementar a consulta autorizada e paginada nessa mesma fatia antes de concluir a UI; backend e frontend usam o contrato C04 com testes reais.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar teste de regressão com base no visual-context.json.",
+        "Prova integrada com API real; mock de render serve só para os estados isolados."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G12"
+      ],
+      "findings": [
+        "A06"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-008/",
+      "next_action": {
+        "id": "SA-008-R3-A1",
+        "instruction": "Reexecutar browser+API real com duas conversas, back/forward, refresh, deep-link e negativos no candidato R3; obter I1 posterior ao run."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/SA-001/candidate-manifest-r2-wave2.json",
+          "sha256": "a5eee518dac353c5a1c4a670f131282b259c00df3ae8c0927f5992813949b403"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+          "sha256": "61853488ee1a0b90880da59002f6975d12413aed8388c1ae8f11a23bda65a6e0"
+        },
+        {
+          "path": "evidencias/SA-008/evidence.jsonl",
+          "sha256": "98905bf3a06db09f33b384331cf99b4a7a02c89b3a96af30254af985f839b4d5"
+        },
+        {
+          "path": "evidencias/SA-008/rework/REWORK-R2.md",
+          "sha256": "6f1beec7a49cc64e088bf510ff607530a58859ce50bfee4a37832ae2857e352e"
+        },
+        {
+          "path": "evidencias/SA-008/rework/playwright-report-run1.json",
+          "sha256": "4b81e497d9646e3f6d661fadd1b134e5a1e30510c8fa0ae74e06996590bd6527"
+        },
+        {
+          "path": "evidencias/SA-008/rework/playwright-report-run2.json",
+          "sha256": "b386d4aa6590a81faa9e6ec5f9ab527fe4befff3fe346932d94af17e90f5153f"
+        },
+        {
+          "path": "evidencias/SA-008/rework/sa006-role-permissions-runner.json",
+          "sha256": "00dcc642e84256283041a077baf5d49837357a5acd232268268f9e22f64ed37e"
+        },
+        {
+          "path": "evidencias/SA-008/screenshots/sa-008-inbox-contexto-desktop-1440.png",
+          "sha256": "b860fe8a7ea8e5a366302cf62f2eda9628fc194c887f04250b91b9eee2aea7da"
+        },
+        {
+          "path": "evidencias/SA-008/screenshots/sa-008-tarefas-contexto-desktop-1440.png",
+          "sha256": "30ddadcf3b2a61208accebe40aa2b990ff8125d68a68ff639ae2a5746a82364c"
+        },
+        {
+          "path": "evidencias/SA-008/screenshots/sa-008-notas-contexto-mobile-390.png",
+          "sha256": "93418ba5b7b460a06e72bf14fa288cc363f408f22a241da56f5f2d7f5b11a9fc"
+        },
+        {
+          "path": "evidencias/SA-008/screenshots/sa-008-contexto-inacessivel-desktop-1440.png",
+          "sha256": "624cfa36625d6489b59943faa0d40ea7d1a07734244bc8e07ed2048a026983d7"
+        }
+      ]
+    },
+    {
+      "id": "SA-009",
+      "title": "Configurar e provar banco no realtime produtivo",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "OPS",
+      "milestone": "M1",
+      "estimate_points": 3,
+      "requirements": [
+        "B19",
+        "OP02"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-003"
+      ],
+      "ownership": [
+        "docker-compose.yml",
+        "docker-compose.staging.yml",
+        "apps/realtime-service/Dockerfile",
+        "scripts/production/prod-36.test.mjs"
+      ],
+      "objective": "A imagem realtime entregue inicia e autoriza conteúdo com sua configuração real.",
+      "acceptance": [
+        {
+          "id": "SA-009-AC1",
+          "criterion": "Compose passa DATABASE_URL correta e define explicitamente modo de outbox; configuração ausente falha cedo com mensagem sem segredo.",
+          "required": true
+        },
+        {
+          "id": "SA-009-AC2",
+          "criterion": "Subir imagem por identidade registrada: health/readiness, polling de evento e subscrição/delivery autorizada funcionam; acesso cruzado é recusado.",
+          "required": true
+        },
+        {
+          "id": "SA-009-AC3",
+          "criterion": "Banco indisponível degrada readiness, recuperação retoma sem perda/duplicação; encerramento deixa recursos próprios limpos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Teste de Compose renderizado com env sintético e teste real da imagem em rede isolada.",
+        "Não usar apenas teste unitário ou boot tsx como prova da imagem."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G09"
+      ],
+      "findings": [
+        "A04"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-009/",
+      "next_action": {
+        "id": "SA-009-R3-A1",
+        "instruction": "Reconstruir a imagem por digest, repetir boot/WS/degradação/recuperação e vincular código, imagem e resultados ao candidato R3 com I1."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-009/evidence.jsonl",
+          "sha256": "3c6f01e696d4383c7798fe88f910c56f29e9ece34c863c6d988d9073e11f4100"
+        },
+        {
+          "path": "evidencias/SA-009/sa-009-boot.json",
+          "sha256": "84c8105f50e892e335540bf314fc2e4fed26ddd08b9e2edc0c65170d3c097002"
+        },
+        {
+          "path": "evidencias/SA-009/sa-009-desk-api.log",
+          "sha256": "bcd05cc82d47085b5623276b6cb23654af0a000c033825fec7e4d8fc1190b5b8"
+        }
+      ]
+    },
+    {
+      "id": "SA-010",
+      "title": "Fazer verificador de DR rejeitar restauração parcial",
+      "status": "REWORK",
+      "priority": "P0",
+      "lane": "OPS",
+      "milestone": "M1",
+      "estimate_points": 3,
+      "requirements": [
+        "OP07"
+      ],
+      "dependencies": [
+        "SA-003"
+      ],
+      "ownership": [
+        "infra/scripts/dr-e2e.sh",
+        "infra/scripts/dr-e2e-node.mjs"
+      ],
+      "objective": "O check só passa quando todas as entidades e relações necessárias foram restauradas.",
+      "acceptance": [
+        {
+          "id": "SA-010-AC1",
+          "criterion": "Comparar mensagem, outbox, DLQ, audit, contagens e vínculos esperados individualmente; nenhum grep por ocorrência genérica aprova.",
+          "required": true
+        },
+        {
+          "id": "SA-010-AC2",
+          "criterion": "Casos sem mensagem, sem evento, sem DLQ, com valor trocado e backup vazio retornam exit não zero; fixture completa passa.",
+          "required": true
+        },
+        {
+          "id": "SA-010-AC3",
+          "criterion": "Configuração/cleanup é isolada pelo runner e contém identidade inequívoca do banco; tempos/checksums entram em evidência estruturada.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Reproduzir input adversarial de evidencias/dr-predicate.json e executar testes positivos/negativos do verificador.",
+        "Restore destrutivo somente em recurso criado por SA-003."
+      ],
+      "gates": [
+        "G01",
+        "G11"
+      ],
+      "findings": [
+        "A05"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-010/",
+      "next_action": {
+        "id": "SA-010-R3-A1",
+        "instruction": "Reexecutar o verificador DR estrito no candidato R3, preservar limites de mesmo host e obter I1 atual para o escopo local."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "review_ref": "evidencias/revisoes/M1-critic.md; evidencias/revisoes/M1-corrections.md",
+      "evidence": [
+        {
+          "path": "evidencias/SA-010/artifacts/dr-e2e-app.log",
+          "sha256": "785ca188b331caca5ad8631da359a5d7cfa5ed573e27d0e1ff76f0a26303a334"
+        },
+        {
+          "path": "evidencias/SA-010/artifacts/dr-fixture-20260915T014510Z.result.json",
+          "sha256": "e95814c95a69cea0a5ffbc85bea1df3e8de1b9ac350febdf37edd5a935ed3207"
+        },
+        {
+          "path": "evidencias/SA-010/artifacts/dr-fixture-20260915T014510Z.verify.json",
+          "sha256": "325fedc68dd9a65fd57985fbf197376e9ba48bc633b1ff21a7e097079ddfd137"
+        },
+        {
+          "path": "evidencias/SA-010/dr-verify-adversarial.json",
+          "sha256": "0a742986689ed715c007fc48c2be508c409b0bdbe7421e26864f0148a16049ea"
+        },
+        {
+          "path": "evidencias/SA-010/evidence.jsonl",
+          "sha256": "f9bab66366a1f8698085bea3c9f441adde1f6b1a14bce8dd25a210497e13b147"
+        },
+        {
+          "path": "evidencias/SA-010/sa-010-dr-run.json",
+          "sha256": "1914d16304e49fbd0b8ae8569a5841022f9038ac1c1ecd8185ea64bfa4003480"
+        }
+      ]
+    },
+    {
+      "id": "SA-011",
+      "title": "Consolidar fronteiras da API e contratos de erro",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B01",
+        "B14",
+        "Q01"
+      ],
+      "dependencies": [
+        "SA-005",
+        "SA-006",
+        "SA-007"
+      ],
+      "ownership": [
+        "apps/desk-api/src/app.ts",
+        "modules/*/src/presentation/http",
+        "packages/shared/src"
+      ],
+      "objective": "Controllers compõem casos de uso com schemas e erros estáveis, preservando todos os fluxos.",
+      "acceptance": [
+        {
+          "id": "SA-011-AC1",
+          "criterion": "Inventariar rotas públicas/consumidores e remover caminho alternativo que contorna regras transacionais; extração por domínio, sem reescrever stack.",
+          "required": true
+        },
+        {
+          "id": "SA-011-AC2",
+          "criterion": "Campos inválidos, datas/UUID, enums, paginação e payload excedente têm 4xx previsível; erros internos não vazam detalhes.",
+          "required": true
+        },
+        {
+          "id": "SA-011-AC3",
+          "criterion": "Regressão HTTP valida contratos existentes; referências cruzadas estão tipadas e teste de fronteira captura importação proibida justificável.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "pnpm --filter @cvg/desk-api test em ambiente isolado, com seleção explícita das suites; inventariar efeitos antes.",
+        "Testes de contrato consumidor API/desk-web e typecheck sem cache."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06",
+        "G08"
+      ],
+      "findings": [
+        "A08"
+      ],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-011/",
+      "next_action": {
+        "id": "SA-011-R3-A1",
+        "instruction": "Atualizar o inventário de 147/119 para a realidade atual de 148/120, provar o controle negativo e obter I1 no candidato R3."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md",
+          "sha256": "f3053bd6940c4802735d3320ece39758778e081d5da4b09de8e3577467eaddae"
+        },
+        {
+          "path": "evidencias/SA-011/evidence.jsonl",
+          "sha256": "f03c3e83fd0ffd797a76cee2a7b89d49c7aee5aba1a7f5e43e5f0ce494bb363d"
+        },
+        {
+          "path": "evidencias/SA-011/route-audit.json",
+          "sha256": "ad5ab5e90b7c6d6f2a9b281b89401e8ef46d593889d7d1665a960a97856c228b"
+        },
+        {
+          "path": "evidencias/SA-011/runs/sa011-fix-runner.json",
+          "sha256": "ccd47f61683a258debad6e278189c3e020b14160719b2999bf5f1d77d24f5a4f"
+        },
+        {
+          "path": "evidencias/SA-011/runs/sa011-selftest-runner.json",
+          "sha256": "bb112fedaf6660ed5829d50dadcf4e8dd09cbb1002a9534b6324a491f0fb2cef"
+        },
+        {
+          "path": "evidencias/regressoes/r2-wave7/runner-summary.json",
+          "sha256": "e8674d9e6aa2dc3125b4708505467c08ceee44bf4ec2e4f30b51f8493387cbfa"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md"
+    },
+    {
+      "id": "SA-012",
+      "title": "Provar lifecycle completo de sessão HTTP/WS",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B02",
+        "UI01",
+        "UI16"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-003"
+      ],
+      "ownership": [
+        "packages/auth/src",
+        "apps/realtime-service/src/__tests__",
+        "apps/desk-api/src/__tests__"
+      ],
+      "objective": "Sessão expira/rotaciona/revoga de modo consistente nos processos e clientes.",
+      "acceptance": [
+        {
+          "id": "SA-012-AC1",
+          "criterion": "Expiração normal/absoluta/idle, logout, conta desativada e troca de credencial são provados em HTTP e WS nativos, com janela de revogação ≤5s.",
+          "required": true
+        },
+        {
+          "id": "SA-012-AC2",
+          "criterion": "Token antigo deixa de funcionar após rotação/revogação, concorrência entre abas não reanima sessão expirada; armazenamento mantém hash e logs não mostram token.",
+          "required": true
+        },
+        {
+          "id": "SA-012-AC3",
+          "criterion": "Brute force/rate limit, erro de rede e bootstrap auth/me têm respostas corretas sem enumeração e sem consulta antecipada de dados protegidos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar testes auth existentes e acrescentar processo nativo, múltiplas abas e relógio controlado."
+      ],
+      "gates": [
+        "G02",
+        "G08"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-012/",
+      "next_action": {
+        "id": "SA-012-R3-A1",
+        "instruction": "Executar AC3 de erro de rede/bootstrap, reconciliar timestamps e provar lifecycle HTTP/WS completo no mesmo candidato/run antes de I1."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/SA-001/candidate-manifest-r2-wave2.json",
+          "sha256": "a5eee518dac353c5a1c4a670f131282b259c00df3ae8c0927f5992813949b403"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+          "sha256": "61853488ee1a0b90880da59002f6975d12413aed8388c1ae8f11a23bda65a6e0"
+        },
+        {
+          "path": "evidencias/SA-012/evidence.jsonl",
+          "sha256": "76633802f4250365d08c7593c426b63a8be0d2857df9aed54cfedadf17ad465b"
+        },
+        {
+          "path": "evidencias/SA-012/runtime/sa-012/sa-012-session.json",
+          "sha256": "39b29f5c9c7aae1271563e9ebfd0d689e99b32f35e54cf52bfea13b5cd81a0da"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md"
+    },
+    {
+      "id": "SA-013",
+      "title": "Completar matriz de autorização e visão gerencial",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B03",
+        "B12",
+        "B14",
+        "B19"
+      ],
+      "dependencies": [
+        "SA-002",
+        "SA-006",
+        "SA-012"
+      ],
+      "ownership": [
+        "packages/auth/src",
+        "modules/dashboard/src",
+        "modules/*/src/presentation/http",
+        "apps/realtime-service/src/authorization.ts"
+      ],
+      "objective": "Permissão de ação e escopo são consistentes em leitura, escrita e projeção.",
+      "acceptance": [
+        {
+          "id": "SA-013-AC1",
+          "criterion": "Matriz role×ação×setor×recurso cobre ausência de vínculo, papel customizado, revogação, memberships e recursos órfãos; negativos em HTTP/WS não revelam existência.",
+          "required": true
+        },
+        {
+          "id": "SA-013-AC2",
+          "criterion": "Contrato de visão gerencial global/seletiva explicita quais campos podem sair por aging e diretórios; alterar política apenas após D01, sem inventar bypass.",
+          "required": true
+        },
+        {
+          "id": "SA-013-AC3",
+          "criterion": "Servidor continua autoridade; UI esconde/explica capacidade, mas negativas independem do cliente; permissões alteradas invalidam cache conforme prazo.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Gerar matriz machine-readable e executar contra endpoints reais e WS por destinatário."
+      ],
+      "gates": [
+        "G02",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D01",
+          "boundary": "Ratificar política gerencial/diretórios e catálogo de produção; matriz e correções da política vigente avançam."
+        }
+      ],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-013/",
+      "next_action": {
+        "id": "SA-013-R3-A1",
+        "instruction": "Vincular prova explícita a AC2, reexecutar matriz HTTP/WS completa no candidato R3 e obter crítica I1 depois de todas as correções."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md",
+          "sha256": "f3053bd6940c4802735d3320ece39758778e081d5da4b09de8e3577467eaddae"
+        },
+        {
+          "path": "evidencias/SA-013/evidence.jsonl",
+          "sha256": "461cfee852661416bf2fcf8abe0e934b4752f436155d1f7bb5714d51a531f45c"
+        },
+        {
+          "path": "evidencias/SA-013/runs/sa013-oracles/runner-summary.json",
+          "sha256": "7ed1c2f4466654f2cb166928a4858d85a98b76aaffffeef3a919f5a6bb9aabe0"
+        },
+        {
+          "path": "evidencias/SA-013/runs/sa013-ws-default/runner-summary.json",
+          "sha256": "09c9b381b06e575bbea7a623ccd3290704347db0a1d8782799058a9978ec5e71"
+        },
+        {
+          "path": "evidencias/SA-013/runs/sa013-ws-default/runner-output.log",
+          "sha256": "d12713dad7f379706fa8d1db6d1745576d046eadf54a7e32c73b6ccd10ace2d4"
+        },
+        {
+          "path": "evidencias/SA-013/runs/sa013-ws-default2-runner.json",
+          "sha256": "b8ab64f0e49a4eccf4ce75c5695c8af60f732963bce3ff81bb14ec5769b0cb2c"
+        },
+        {
+          "path": "AUTORIZACAO-MATRIZ.md",
+          "sha256": "dfe19f514de57d37cc178172e46c6d2a8d63922b1e0925237b7ef08b11784d19"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md"
+    },
+    {
+      "id": "SA-014",
+      "title": "Fechar contrato de mensagem durável e reconciliação",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B05",
+        "B20"
+      ],
+      "dependencies": [
+        "SA-005",
+        "SA-007",
+        "SA-003"
+      ],
+      "ownership": [
+        "modules/chat/src",
+        "modules/gateway-adapter/src",
+        "apps/desk-api/src/__tests__"
+      ],
+      "objective": "Ingressos e envios sobrevivem retry, duplicata, concorrência e resultado externo ambíguo.",
+      "acceptance": [
+        {
+          "id": "SA-014-AC1",
+          "criterion": "Primeiro inbound concorrente, assinatura renovada, receipt completed e payload divergente respeitam contrato sem conversa órfã nem efeito duplicado.",
+          "required": true
+        },
+        {
+          "id": "SA-014-AC2",
+          "criterion": "Intenção outbound é persistida antes do efeito; idempotency key/hash têm escopo correto; timeout de aceite desconhecido vai a reconciliação, não reenvio cego.",
+          "required": true
+        },
+        {
+          "id": "SA-014-AC3",
+          "criterion": "Falha/crash antes/depois do commit e aceite do provedor conserva causalidade, status e replay seguro com testes contra limites públicos.",
+          "required": true
+        },
+        {
+          "id": "SA-014-AC4",
+          "criterion": "Receipts e mensagens fora de ordem convergem sem regredir sent/delivered nem criar duplicatas; definir o tratamento de receipt que chega antes da mensagem.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar suites HTTP reais e contratos de reconciliação; fault injection/process kill isolado com ledger de efeitos."
+      ],
+      "gates": [
+        "G02",
+        "G03"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-014/",
+      "next_action": {
+        "id": "SA-014-R3-A1",
+        "instruction": "Executar crash/SIGKILL, restart, replay e convergência exigidos por AC3, além das suítes production citadas, e obter I1 atual."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md",
+          "sha256": "f3053bd6940c4802735d3320ece39758778e081d5da4b09de8e3577467eaddae"
+        },
+        {
+          "path": "evidencias/SA-014/evidence.jsonl",
+          "sha256": "dc4b44087c7deefff94f952d7921f26a4d65e24a7cc1825052961846891f0c7f"
+        },
+        {
+          "path": "evidencias/SA-014/RELATORIO.md",
+          "sha256": "e3f9e1eaa88c709014262f3dc1dfe96d6df3baf5c23e118d8a08bae10881f554"
+        },
+        {
+          "path": "evidencias/SA-014/runner-summary-final.json",
+          "sha256": "d355aea00f474d18dafc262f3898ab5a5fb2adb040a3d803935f3d842c42ef45"
+        },
+        {
+          "path": "evidencias/regressoes/r2-wave7/runner-summary.json",
+          "sha256": "e8674d9e6aa2dc3125b4708505467c08ceee44bf4ec2e4f30b51f8493387cbfa"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa011-sa013-sa014-critic.md"
+    },
+    {
+      "id": "SA-015",
+      "title": "Endurecer tarefas vinculadas e concorrência de estados",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B08",
+        "UI04"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-003",
+        "SA-008"
+      ],
+      "ownership": [
+        "modules/tasks/src"
+      ],
+      "objective": "Tarefas mantêm vínculo/atribuição/prazo/histórico corretos sob ações concorrentes.",
+      "acceptance": [
+        {
+          "id": "SA-015-AC1",
+          "criterion": "Criar a partir de conversa/tutor/paciente valida existência e escopo; atribuir responsável só entre permitidos.",
+          "required": true
+        },
+        {
+          "id": "SA-015-AC2",
+          "criterion": "Transição idempotente e stale 409 preservam estado/histórico/audit/outbox; falha no último efeito reverte todos.",
+          "required": true
+        },
+        {
+          "id": "SA-015-AC3",
+          "criterion": "Prazo/timezone e prioridade são persistidos e consultados consistentemente; paginação e filtro conversationId são canônicos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes HTTP + PG de criar/atribuir/alterar com dois atores e 3 tipos de referência; rollback e repetição."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-015/",
+      "next_action": {
+        "id": "SA-015-R3-A1",
+        "instruction": "Adicionar fault injection na última escrita de AC2, provar rollback total e reexecutar a regressão 12/12 ampliada antes de nova I1."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-015/evidence.jsonl",
+          "sha256": "d166adb4eb178338bb9c9a469b14e09d1c54ce2a0c90ca3b4cf5e9135f8d199e"
+        },
+        {
+          "path": "evidencias/SA-015/RELATORIO.md",
+          "sha256": "fe51337f6016da8326d75c1c49aba212c4429d89f1108b6b5b68d6c90b199921"
+        },
+        {
+          "path": "evidencias/SA-015/runs/sa015-fix-runner.json",
+          "sha256": "5810a87ac55b97caeb46d11cdb0d2a78fee134da3b702935c60ac83ffb86f5b8"
+        },
+        {
+          "path": "evidencias/SA-015/runs/sa015-fix2-runner.json",
+          "sha256": "9834531981d1322323940770b967ed5e98e7a7f3f4123f4f264b354182d861bc"
+        },
+        {
+          "path": "evidencias/regressoes/r2-wave9/runner-summary.json",
+          "sha256": "fea6e5411a14cf28fd2ad69e1eafba5643d2ffa45aec59a2678922fd27d6245c"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa015-sa019-critic.md"
+    },
+    {
+      "id": "SA-016",
+      "title": "Completar referências e leitura contextual de notas",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B09",
+        "UI06"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-008"
+      ],
+      "ownership": [
+        "modules/notes/src"
+      ],
+      "objective": "Notas são legíveis e criáveis no contexto autorizado com autoria inviolável.",
+      "acceptance": [
+        {
+          "id": "SA-016-AC1",
+          "criterion": "Autor sempre vem da sessão; cliente não o substitui; referência válida/permitida é verificada para conversa/tarefa/tutor/paciente.",
+          "required": true
+        },
+        {
+          "id": "SA-016-AC2",
+          "criterion": "Consulta por referência e por autor não se confundem; paginação inclui o conjunto completo e exclui contexto de outro setor.",
+          "required": true
+        },
+        {
+          "id": "SA-016-AC3",
+          "criterion": "Audit/outbox/histórico mínimo preservam transação e minimização; texto malicioso é exibido como texto no cliente.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testar via HTTP autor adulterado, referência inexistente/inacessível, listas contextualizadas e falha de escrita."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-016/",
+      "next_action": {
+        "id": "SA-016-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-017",
+      "title": "Completar alertas automáticos e resolver corrida ack/resolve",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B10",
+        "UI05"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-015"
+      ],
+      "ownership": [
+        "modules/alerts/src",
+        "apps/message-worker/src/handlers"
+      ],
+      "objective": "Alertas acionáveis refletem a situação real e mantêm lifecycle coerente.",
+      "acceptance": [
+        {
+          "id": "SA-017-AC1",
+          "criterion": "Conversa sem resposta/sem responsável e tarefa vencida geram alerta conforme regra/limiar congelados; repetir evento não duplica alerta ativo.",
+          "required": true
+        },
+        {
+          "id": "SA-017-AC2",
+          "criterion": "Ack/resolve concorrentes registram estado anterior correto, ator e instante; versão stale 409 e transição inválida 4xx sem audit enganoso.",
+          "required": true
+        },
+        {
+          "id": "SA-017-AC3",
+          "criterion": "Recurso resolvido/repetição tem comportamento explícito; alertas têm vínculo navegável, escopo e paginação canônicos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Relógio controlado + HTTP/PG e worker real; concorrência ack/resolve e replay do evento."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "PENDING_REVIEW",
+      "evidence_dir": "evidencias/SA-017/",
+      "next_action": {
+        "id": "SA-017-R3-I1",
+        "instruction": "Após requalificar as dependências SA-013/SA-015, validar hashes/candidato da prova R2.3 e obter crítica I1 independente em artefato próprio; corrigir findings e repetir a crítica antes de DONE."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-017/evidence.jsonl",
+          "sha256": "081d2fbd7e7690d51b03e4b032af9fad6914988d9aacb46767f1f01d080e3e37"
+        },
+        {
+          "path": "evidencias/SA-017/runtime/sa-017/sa-017-alerts-worker.json",
+          "sha256": "1c7ad2255f0cd59ccf79658253a66594b5499aa463230306b2943d8f24596343"
+        },
+        {
+          "path": "evidencias/SA-017/runtime/sa-017/scheduler-loop.log",
+          "sha256": "343e5cd17026551f77f22282cc26e2acb9b2e094fc9277479f00dc3507ebaf91"
+        },
+        {
+          "path": "evidencias/SA-017/runtime/sa-017/message-worker.log",
+          "sha256": "2308bd55bd849ecbb03af31f4453e77bf0ab8b55f7da4d8cbdf5791865ab8c12"
+        }
+      ],
+      "review_ref": null
+    },
+    {
+      "id": "SA-018",
+      "title": "Validar transferência ponta a ponta e compensação",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B11",
+        "B15"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-014"
+      ],
+      "ownership": [
+        "modules/transfers/src"
+      ],
+      "objective": "Transferir, aceitar ou rejeitar conserva posse, acesso e trilha sob concorrência.",
+      "acceptance": [
+        {
+          "id": "SA-018-AC1",
+          "criterion": "Dois aceites simultâneos produzem um resultado; rejeição/aceite stale têm 409 ou resultado idempotente conforme contrato.",
+          "required": true
+        },
+        {
+          "id": "SA-018-AC2",
+          "criterion": "Setor origem/destino e responsável respeitam permissão; falha injetada não deixa conversa/contato divergentes.",
+          "required": true
+        },
+        {
+          "id": "SA-018-AC3",
+          "criterion": "Audit/outbox preservam correlação e operador vê feedback; contrato identifica eventos de transferência que consumidores devem invalidar.",
+          "required": true
+        },
+        {
+          "id": "SA-018-AC4",
+          "criterion": "Revogar acesso entre a solicitação e o aceite da transferência impede o aceite pelo ator agora sem permissão, sem persistência parcial.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "HTTP + PG com dois operadores/setores, concorrência, rollback e evento persistido."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-018/",
+      "next_action": {
+        "id": "SA-018-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-019",
+      "title": "Completar memberships de setores, etiquetas e grupos",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B12",
+        "UI11",
+        "UI12",
+        "UI13"
+      ],
+      "dependencies": [
+        "SA-013"
+      ],
+      "ownership": [
+        "modules/sectors/src",
+        "modules/labels/src",
+        "modules/contact-groups/src"
+      ],
+      "objective": "Associação e remoção são consistentes, autorizadas e imediatamente consultáveis.",
+      "acceptance": [
+        {
+          "id": "SA-019-AC1",
+          "criterion": "CRUD, associar/remover membro/etiqueta e listar relações cobrem negativos de ação/escopo e repetição idempotente.",
+          "required": true
+        },
+        {
+          "id": "SA-019-AC2",
+          "criterion": "Exclusão em uso tem política explícita com FK/erro conhecido, não perda silenciosa; associação concorrente não duplica.",
+          "required": true
+        },
+        {
+          "id": "SA-019-AC3",
+          "criterion": "Paginação/busca e retorno canônico sustentam seletores da UI; alteração produz invalidação/evento requerido.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Completar amostragem da auditoria com matriz HTTP + PG de cada operação e relação."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-019/",
+      "next_action": {
+        "id": "SA-019-R3-A1",
+        "instruction": "Cobrir exclusão em uso, busca/paginação, seletor canônico e invalidação/eventos, além da suíte de memberships, e obter I1 atual."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-019/evidence.jsonl",
+          "sha256": "50268aff23565af767e141ab0086b8f5b8417a0dbb17dac4a7098bbcc5a55b3d"
+        },
+        {
+          "path": "evidencias/SA-019/defects.md",
+          "sha256": "87189a08327a058c98e44d0e8243433771fb644aa50ce0fab894acd561fd1d87"
+        },
+        {
+          "path": "evidencias/SA-019/runs/sa019-fix2-runner.json",
+          "sha256": "6fb8c617e3de8f403d7d95cfed5373056a539df8e327bdbf03984b5e5afece6a"
+        },
+        {
+          "path": "evidencias/SA-019/runs/sa019-fix3-runner.json",
+          "sha256": "74cc0c1757ab01b300c8b457ca35c074be893c9907b1ff51a82c9f43f27c4351"
+        },
+        {
+          "path": "evidencias/regressoes/r2-wave9/runner-summary.json",
+          "sha256": "fea6e5411a14cf28fd2ad69e1eafba5643d2ffa45aec59a2678922fd27d6245c"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa015-sa019-critic.md"
+    },
+    {
+      "id": "SA-020",
+      "title": "Inventariar e decidir evolução tutor–paciente",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "DATA",
+      "milestone": "M2",
+      "estimate_points": 3,
+      "requirements": [
+        "B13",
+        "UI09",
+        "UI10"
+      ],
+      "dependencies": [
+        "SA-002"
+      ],
+      "ownership": [
+        "docs/programa-triplo-aaa-2026-09-14/decisoes",
+        "packages/database (leitura)"
+      ],
+      "objective": "Preparar uma decisão revisável N:N com migração e compatibilidade planejadas.",
+      "acceptance": [
+        {
+          "id": "SA-020-AC1",
+          "criterion": "Inventariar todos consumidores de tutorId e relações existentes; documentar cardinalidade atual/alvo e casos de múltiplos tutores.",
+          "required": true
+        },
+        {
+          "id": "SA-020-AC2",
+          "criterion": "Proposta N:N inclui join table, uniqueness/FK, backfill, leitura compatível, contrato da API e ensaio de rollback/rollforward sem perda.",
+          "required": true
+        },
+        {
+          "id": "SA-020-AC3",
+          "criterion": "D03 recebe opções/impacto e responsável; não marcar decisão humana fechada pelo fato de o inventário estar pronto.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Revisão de schema/consumidores e exemplo de migração com fixture sintética; não migra produção."
+      ],
+      "gates": [
+        "G05",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "STALE",
+      "evidence_dir": "evidencias/SA-020/",
+      "next_action": {
+        "id": "SA-020-R3-A1",
+        "instruction": "Tornar rollback/rollforward lossless ou obter mudança formal do requisito; registrar autoridade nominal de D03 e repetir ensaio/I1."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral. Auditoria R3: implementação e histórico foram preservados, mas a promoção anterior foi reaberta por prova incompleta, antiga ou não re-adjudicada no candidato final. Auditoria R3: implementação e histórico preservados; promoção reaberta até prova completa por aceite e nova crítica I1 no candidato final.",
+      "kind": "delivery",
+      "evidence": [
+        {
+          "path": "evidencias/SA-001/candidate-manifest.json",
+          "sha256": "8c58d3653ab92f6e913f9fec982e2801bc7cc325a4a80fcb0ed68b8a1433c91b"
+        },
+        {
+          "path": "evidencias/SA-001/candidate-manifest-r2-wave2.json",
+          "sha256": "a5eee518dac353c5a1c4a670f131282b259c00df3ae8c0927f5992813949b403"
+        },
+        {
+          "path": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md",
+          "sha256": "61853488ee1a0b90880da59002f6975d12413aed8388c1ae8f11a23bda65a6e0"
+        },
+        {
+          "path": "evidencias/SA-020/evidence.jsonl",
+          "sha256": "872d4d19d735f272fdaaed3965c51554ea78ce62a105d18baf2b28ab70fa706f"
+        },
+        {
+          "path": "evidencias/SA-020/rehearsal.json",
+          "sha256": "b0783df8277aa6e7a6d1d328e27a3a6d874f5734a8cc47cdee146775487ca1a9"
+        },
+        {
+          "path": "decisoes/D03-relacao-tutor-paciente.md",
+          "sha256": "c130c5bbce38f58e6b717fc1132fa2a80342e7bc75050528aecae4589257aa39"
+        },
+        {
+          "path": "decisoes/d03/001_patient_tutor_links.sql",
+          "sha256": "cebedb9353ec5a27428a4e46da4a3348715d4d8534132ca26343861a5d3d705f"
+        },
+        {
+          "path": "decisoes/d03/001_rollback.sql",
+          "sha256": "f6fb70a11f00f732a6b0e7fe0e6c4c308e04ba94b7a1a09c2123dee69b634f8a"
+        },
+        {
+          "path": "decisoes/d03/inventory-tutor-id.txt",
+          "sha256": "c557692b112b980bb5ba0e0df726d30ad3bc25962d06daa0872e6fdc6e140f79"
+        }
+      ],
+      "review_ref": "evidencias/revisoes/R2-sa007-sa008-sa012-sa020-critic.md"
+    },
+    {
+      "id": "SA-021",
+      "title": "Implementar relação tutor–paciente e cadastros robustos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "DATA",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B13",
+        "B16",
+        "UI09",
+        "UI10"
+      ],
+      "dependencies": [
+        "SA-020",
+        "SA-013"
+      ],
+      "ownership": [
+        "packages/database/src/schema.ts",
+        "packages/database/supabase/migrations",
+        "modules/tutors/src",
+        "modules/patients/src"
+      ],
+      "objective": "Entregar o contrato relacional decidido e preservar registros/vínculos existentes.",
+      "acceptance": [
+        {
+          "id": "SA-021-AC1",
+          "criterion": "Após D03, implementar contrato aprovado; alvo vigente N:N preserva relações 1:N no backfill e suporta múltiplos responsáveis por paciente.",
+          "required": true
+        },
+        {
+          "id": "SA-021-AC2",
+          "criterion": "Migração fresh/upgrade e leitura de versão anterior são ensaiadas; repetição não duplica vínculo, FK e uniqueness impedem órfãos.",
+          "required": true
+        },
+        {
+          "id": "SA-021-AC3",
+          "criterion": "CRUD/associar/desassociar com API autorizada retorna vínculos reais; conflito e exclusão em uso têm resposta 4xx estável.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes migração fresh+upgrade e HTTP com múltiplos tutores/pacientes no banco descartável."
+      ],
+      "gates": [
+        "G02",
+        "G05",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D03",
+          "boundary": "Alteração de cardinalidade/contrato e migração; preparar testes e correções independentes antes da decisão."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-021/",
+      "next_action": {
+        "id": "SA-021-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-022",
+      "title": "Consolidar fórmulas, filtros e escopo dos KPIs",
+      "status": "REWORK",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B14",
+        "UI03"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-017",
+        "SA-018"
+      ],
+      "ownership": [
+        "modules/dashboard/src"
+      ],
+      "objective": "Métricas têm fonte, janela, timezone, fórmula e filtros confiáveis.",
+      "acceptance": [
+        {
+          "id": "SA-022-AC1",
+          "criterion": "Data inválida, intervalo invertido e groupBy desconhecido recebem 400; nenhum fallback silencioso para agrupamento diferente.",
+          "required": true
+        },
+        {
+          "id": "SA-022-AC2",
+          "criterion": "Fixtures com eventos na virada de dia/timezone, handoff, reabertura, tarefa e alerta provam contagens/tempos contra SQL independente.",
+          "required": true
+        },
+        {
+          "id": "SA-022-AC3",
+          "criterion": "Aging respeita contrato D01; estado sem dados/degradado é distinto de 0; queries têm plano e índices verificáveis.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes HTTP e comparação de resultados com fixture PG conhecida; EXPLAIN em dataset de SA-056."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G11"
+      ],
+      "findings": [
+        "A08"
+      ],
+      "decisions": [],
+      "evidence_state": "PARTIAL",
+      "evidence_dir": "evidencias/SA-022/",
+      "next_action": {
+        "id": "SA-022-R3-A1",
+        "instruction": "Completar fixtures de handoff, reabertura, tarefas e alertas; resolver o escopo D01, capturar EXPLAIN e obter crítica I1."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-023",
+      "title": "Fechar trilha auditável em todas as ações relevantes",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B15",
+        "UI15"
+      ],
+      "dependencies": [
+        "SA-006",
+        "SA-007",
+        "SA-005",
+        "SA-015",
+        "SA-016",
+        "SA-017",
+        "SA-018",
+        "SA-019"
+      ],
+      "ownership": [
+        "modules/audit/src",
+        "packages/shared/src",
+        "módulos produtores sob lock do lead"
+      ],
+      "objective": "Nenhuma ação importante fica sem ator, correlação e efeito auditável consistente.",
+      "acceptance": [
+        {
+          "id": "SA-023-AC1",
+          "criterion": "Matriz de ações documentais cobre envio, status, atribuição, transferência, tarefa, nota, alerta, admin, privacidade e replay.",
+          "required": true
+        },
+        {
+          "id": "SA-023-AC2",
+          "criterion": "Falha/rollback não registra sucesso; old/new corretos em concorrência; minimização remove hash, token e conteúdo pessoal desnecessário.",
+          "required": true
+        },
+        {
+          "id": "SA-023-AC3",
+          "criterion": "Consulta paginada/autorizada por ator, entidade, ação, janela usa vocabulário estável e os vínculos existem.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Prova HTTP→persistência→consulta de auditoria para cada família; logs negativos de PII e erro injetado."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06",
+        "G10"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-023/",
+      "next_action": {
+        "id": "SA-023-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-024",
+      "title": "Provar schema, migração fresh/upgrade e rollback compatível",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "DATA",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B16",
+        "OP05"
+      ],
+      "dependencies": [
+        "SA-021",
+        "SA-014",
+        "SA-031",
+        "SA-032"
+      ],
+      "ownership": [
+        "packages/database/src",
+        "packages/database/supabase/migrations",
+        ".github/workflows/postgres-real-tests.yml"
+      ],
+      "objective": "Modelo físico, ORM e implantação evoluem sem drift nem perda.",
+      "acceptance": [
+        {
+          "id": "SA-024-AC1",
+          "criterion": "Comparar schema ORM e SQL: FK, unique, PK, índices, timezones, nullable/default; todo drift material tem correção/migração versionada.",
+          "required": true
+        },
+        {
+          "id": "SA-024-AC2",
+          "criterion": "Fresh e upgrade N−1→N em fixtures representativas verificam dados, índices, constraints e aplicação; backfill idempotente.",
+          "required": true
+        },
+        {
+          "id": "SA-024-AC3",
+          "criterion": "Rollforward/rollback compatível é ensaiado com aplicativo anterior quando suportado; operação irreversível tem backup, plano e limite explícito.",
+          "required": true
+        },
+        {
+          "id": "SA-024-AC4",
+          "criterion": "Interromper e retomar a migração/backfill em etapas planejadas não duplica nem perde relações; estado intermediário e recuperação ficam demonstrados.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar db:check/db:migrate apenas via SA-003; comparar catálogo PG, checksums e consultas de integridade."
+      ],
+      "gates": [
+        "G03",
+        "G05",
+        "G08",
+        "G09"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-024/",
+      "next_action": {
+        "id": "SA-024-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-025",
+      "title": "Provar leases, DLQ e fanout sob crash físico",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B17",
+        "B19"
+      ],
+      "dependencies": [
+        "SA-014",
+        "SA-009"
+      ],
+      "ownership": [
+        "packages/events/src",
+        "apps/realtime-service/src/__tests__"
+      ],
+      "objective": "Eventos duráveis não são perdidos ou aplicados em duplicidade com múltiplos processos.",
+      "acceptance": [
+        {
+          "id": "SA-025-AC1",
+          "criterion": "SIGKILL antes/depois de claim, efeito e ACK testa lease expirado, fencing, consumer independente, ordem e reentrega.",
+          "required": true
+        },
+        {
+          "id": "SA-025-AC2",
+          "criterion": "DLQ sobrevive restart; claim/replay por admin é autorizado, auditável e idempotente; payload corrompido não derruba reader.",
+          "required": true
+        },
+        {
+          "id": "SA-025-AC3",
+          "criterion": "Fanout entre ≥3 réplicas com Redis caído/retomado preserva isolamento e convergência; contabilizar publicados/processados/pendentes/DLQ sem resíduos inexplicados.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar processos reais isolados e ledger de efeitos; rodar suites PG/Redis sem skip de crash/fanout."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G09"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-025/",
+      "next_action": {
+        "id": "SA-025-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-026",
+      "title": "Endurecer loop do worker e recuperação de efeitos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B18",
+        "B17"
+      ],
+      "dependencies": [
+        "SA-025",
+        "SA-017"
+      ],
+      "ownership": [
+        "apps/message-worker/src"
+      ],
+      "objective": "Worker continua processando trabalho válido sem perder intenção ou bloquear lote após falha.",
+      "acceptance": [
+        {
+          "id": "SA-026-AC1",
+          "criterion": "Crash no efeito e redelivery têm recibo durável/resultado explícito, sem ACK de processing órfão como sucesso.",
+          "required": true
+        },
+        {
+          "id": "SA-026-AC2",
+          "criterion": "Backoff/jitter, retry budget, evento desconhecido, payload malformado e DLQ mantêm limite/observabilidade; concorrência não sobrepõe o mesmo efeito.",
+          "required": true
+        },
+        {
+          "id": "SA-026-AC3",
+          "criterion": "Readiness considera progresso do loop/atraso/falha; kill e restart retomam backlog; shutdown termina ou conclui o trabalho em andamento conforme contrato.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes de processo+PG e cenários de falha/restart com medição de lag."
+      ],
+      "gates": [
+        "G03",
+        "G09",
+        "G10"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-026/",
+      "next_action": {
+        "id": "SA-026-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-027",
+      "title": "Completar projeções e revalidação do realtime",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B19",
+        "UX11"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-018",
+        "SA-025"
+      ],
+      "ownership": [
+        "packages/realtime/src",
+        "apps/realtime-service/src"
+      ],
+      "objective": "Eventos relevantes atualizam somente os destinatários autorizados com reconciliação após desconexão.",
+      "acceptance": [
+        {
+          "id": "SA-027-AC1",
+          "criterion": "Matriz evento→projeção/invalidação inclui transferências, tarefas, notas, alertas, cadastros e ações administrativas conforme escopo; omissões justificadas têm fallback limitado.",
+          "required": true
+        },
+        {
+          "id": "SA-027-AC2",
+          "criterion": "Assinatura/delivery/revogação consultam autorização vigente; alteração de setor interrompe conteúdo ao antigo operador.",
+          "required": true
+        },
+        {
+          "id": "SA-027-AC3",
+          "criterion": "Reconnect/backoff/resubscribe e cursor/polling reconciliam gaps sem perder estado nem duplicar mensagem.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Dois browsers+API+WS reais e ≥3 réplicas isoladas para transferência/revogação/reconexão."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-027/",
+      "next_action": {
+        "id": "SA-027-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-028",
+      "title": "Validar Gateway e provedor preservando a borda existente",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "INTEGRATION",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B20",
+        "B05"
+      ],
+      "dependencies": [
+        "SA-014",
+        "SA-025"
+      ],
+      "ownership": [
+        "modules/gateway-adapter/src",
+        "packages/messaging-contracts/src",
+        "scripts/staging-smoke.mjs"
+      ],
+      "objective": "Compatibilidade real de payload, aceite, receipt e mídia é demonstrada.",
+      "acceptance": [
+        {
+          "id": "SA-028-AC1",
+          "criterion": "Contratos/versionamento e normalização de inbound/texto/mídia/receipt/error/status validados contra servidor oficial de homologação autorizado.",
+          "required": true
+        },
+        {
+          "id": "SA-028-AC2",
+          "criterion": "Retry 429/5xx/timeout não duplica efeito; aceite ambíguo reconciliado com id externo e idempotency key estável.",
+          "required": true
+        },
+        {
+          "id": "SA-028-AC3",
+          "criterion": "Fluxo mantém Gateway como borda; nenhuma chamada paralela nova contorna Gateway/Evolution; payload real sanitizado vira fixture contratual.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Stub de contrato para falhas controladas + ensaio real autorizado com destinatários sintéticos. Credenciais ausentes=BLOCKED na prova externa, não PASS."
+      ],
+      "gates": [
+        "G03",
+        "G04",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-028/",
+      "next_action": {
+        "id": "SA-028-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-029",
+      "title": "Provar recuperação durável da Secretary e handoff",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "INTEGRATION",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B21",
+        "B18"
+      ],
+      "dependencies": [
+        "SA-014",
+        "SA-026"
+      ],
+      "ownership": [
+        "modules/secretary-adapter/src",
+        "apps/message-worker/src"
+      ],
+      "objective": "Invocação de IA e handoff têm resultado recuperável sob crash/timeout.",
+      "acceptance": [
+        {
+          "id": "SA-029-AC1",
+          "criterion": "Processing órfão, unknown, completed e failed têm reconciliação explícita sem ACK prematuro ou nova chamada indiscriminada.",
+          "required": true
+        },
+        {
+          "id": "SA-029-AC2",
+          "criterion": "Budget/timeout/retry mantêm limites duráveis e isolamento por conversa; resposta de IA inválida/maliciosa não altera estado fora do adapter.",
+          "required": true
+        },
+        {
+          "id": "SA-029-AC3",
+          "criterion": "Bot↔humano retorna controle com contexto, audit e evento corretos; ensaio com Secretary homologada e stub de falhas tem causalidade íntegra.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Matar processo nas fronteiras de admissão/chamada/persistência/ACK; validar banco e verificador de efeitos."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G05",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-029/",
+      "next_action": {
+        "id": "SA-029-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-030",
+      "title": "Completar política e aprovação de ferramentas IA",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "INTEGRATION",
+      "milestone": "M2",
+      "estimate_points": 5,
+      "requirements": [
+        "B21",
+        "UI14"
+      ],
+      "dependencies": [
+        "SA-029",
+        "SA-013"
+      ],
+      "ownership": [
+        "modules/secretary-adapter/src/application/ai-tools.ts",
+        "modules/admin/src",
+        "packages/database (sob lock)"
+      ],
+      "objective": "Ferramentas só executam ação validada sob budget e autorização vinculados ao payload.",
+      "acceptance": [
+        {
+          "id": "SA-030-AC1",
+          "criterion": "Deny-default permanece; allowlist de ferramentas, validação, proteção contra prompt injection e escopo independem da instrução do modelo.",
+          "required": true
+        },
+        {
+          "id": "SA-030-AC2",
+          "criterion": "Aprovação tem ator, hash do payload, expiração, uso único e ação exata; replay/payload alterado/escopo estrangeiro negados.",
+          "required": true
+        },
+        {
+          "id": "SA-030-AC3",
+          "criterion": "Após D05, provar subconjunto habilitado em homologação e fluxo da UI; se política mantém todas desligadas, estado fica explícito e funcionalidade habilitada não é reivindicada.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Negativos HTTP/worker+PG; aprovação expirada/reutilizada/adulterada e orçamento concorrente."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G05"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D05",
+          "boundary": "Habilitar efeitos/ferramentas; implementar guardas e workflow com flag desligada antes."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-030/",
+      "next_action": {
+        "id": "SA-030-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-031",
+      "title": "Validar privacidade por cópia e recuperação pós-desastre",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "BACKEND",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B22",
+        "OP07"
+      ],
+      "dependencies": [
+        "SA-013",
+        "SA-002"
+      ],
+      "ownership": [
+        "modules/privacy/src",
+        "docs/LGPD_DATA_SUBJECT_REQUESTS.md"
+      ],
+      "objective": "Exportação e eliminação controladas cobrem relações, cópias, mídia e resíduos declarados.",
+      "acceptance": [
+        {
+          "id": "SA-031-AC1",
+          "criterion": "Exportação inclui somente grafo autorizado; anonimização legada, núcleo de eliminação e dry-run compartilham política/escopo coerentes.",
+          "required": true
+        },
+        {
+          "id": "SA-031-AC2",
+          "criterion": "Checkpoint de banco/storage/audit/outbox é retomável após crash; inventário por cópia identifica retenção e resíduos necessários sem falso apagamento total.",
+          "required": true
+        },
+        {
+          "id": "SA-031-AC3",
+          "criterion": "Após D02, aplicar política ratificada em fixtures e provar que restore não reintroduz dados eliminados ao serviço; execução real irreversível depende da autoridade já vigente.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "HTTP + PG+storage sintéticos, crash/retomada, dry-run e restore de fixture com tombstone/ledger conforme contrato."
+      ],
+      "gates": [
+        "G02",
+        "G05",
+        "G11"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D02",
+          "boundary": "Ratificar política de dados e executar eliminação/liberação de restore reais; testes sintéticos e inventário avançam."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-031/",
+      "next_action": {
+        "id": "SA-031-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-032",
+      "title": "Fechar mídia privada com storage/scanner reais",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "INTEGRATION",
+      "milestone": "M2",
+      "estimate_points": 8,
+      "requirements": [
+        "B23",
+        "UI02"
+      ],
+      "dependencies": [
+        "SA-003",
+        "SA-014"
+      ],
+      "ownership": [
+        "packages/media/src",
+        "modules/chat/src",
+        "apps/message-worker/src (sob lock)"
+      ],
+      "objective": "Upload, inbound, scan, acesso e recuperação funcionam fail-closed em dependências reais.",
+      "acceptance": [
+        {
+          "id": "SA-032-AC1",
+          "criterion": "Executar os 21 testes antes ignorados e novos cenários com MinIO/ClamAV reais; nenhum teste obrigatório é ignorado no gate correspondente.",
+          "required": true
+        },
+        {
+          "id": "SA-032-AC2",
+          "criterion": "Tamanho, mime/magic, SSRF, URL expirada, asset de outro setor e scanner indisponível negam conteúdo até CLEAN; download recebe autorização no servidor.",
+          "required": true
+        },
+        {
+          "id": "SA-032-AC3",
+          "criterion": "Quarentena, recovery, lease/backoff e pool 10/lote 50 progridem sem deadlock; falha storage/scan não publica asset legível nem perde intenção.",
+          "required": true
+        },
+        {
+          "id": "SA-032-AC4",
+          "criterion": "Cliente exibe imagem/áudio/vídeo/documento com acesso privado, erro/retry e estados claros; destino de exclusão confirmado no storage.",
+          "required": true
+        },
+        {
+          "id": "SA-032-AC5",
+          "criterion": "Download anônimo, URL reutilizada após revogação e asset de outro titular/setor recebem negação sem expor os bytes.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes pipeline e HTTP+storage/scanner reais isolados; arquivo de teste antimalware sintético apropriado, sem malware real."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G04",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-032/",
+      "next_action": {
+        "id": "SA-032-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-033",
+      "title": "Extrair módulos frontend e consolidar sistema visual",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UI02",
+        "UI14",
+        "UX02",
+        "UX06",
+        "UX07",
+        "Q01"
+      ],
+      "dependencies": [
+        "SA-008",
+        "SA-011"
+      ],
+      "ownership": [
+        "apps/desk-web/src/components",
+        "apps/desk-web/src/hooks",
+        "apps/desk-web/src/features",
+        "apps/desk-web/src/index.css",
+        "apps/desk-web/src/premium-surfaces.css",
+        "apps/desk-web/public/assets"
+      ],
+      "objective": "Páginas compõem módulos testáveis e tokens/primitivas cobrem estados recorrentes.",
+      "acceptance": [
+        {
+          "id": "SA-033-AC1",
+          "criterion": "Extrair carga, mutação, contexto, upload, realtime e apresentação de Inbox/Admin por fronteiras verificáveis, preservando rotas e comportamento; não usar contagem de linhas como único aceite.",
+          "required": true
+        },
+        {
+          "id": "SA-033-AC2",
+          "criterion": "Botão, formulário, diálogo, tabela, estado vazio/erro/loading e foco usam contratos comuns; exceções locais têm razão e testes.",
+          "required": true
+        },
+        {
+          "id": "SA-033-AC3",
+          "criterion": "Fonte aprovada é distribuída/carregada com proveniência; fallback testado mantém legibilidade e CLS dentro do orçamento; ícones e cores preservam identidade CVG.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Rodar testes frontend existentes antes/depois; snapshots de estado e testes comportamentais de módulos extraídos.",
+        "Inspecionar render, font loading e fallback nos 5 viewports."
+      ],
+      "gates": [
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "findings": [
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-033/",
+      "next_action": {
+        "id": "SA-033-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-034",
+      "title": "Concluir shell, login e navegação por capacidade",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI01",
+        "UI16",
+        "UX03",
+        "UX08",
+        "UX09",
+        "UX10"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-012",
+        "SA-013"
+      ],
+      "ownership": [
+        "apps/desk-web/src/components/layout",
+        "apps/desk-web/src/pages/Login.tsx",
+        "apps/desk-web/src/store/auth.ts",
+        "apps/desk-web/src/App.tsx"
+      ],
+      "objective": "Entrada, menu e sessão são claros e operáveis em smartphone/tablet/desktop.",
+      "acceptance": [
+        {
+          "id": "SA-034-AC1",
+          "criterion": "Sidebar fechada não pinta sombra/backdrop e não recebe foco; aberta contém foco, inativa fundo e restaura acionador após Escape.",
+          "required": true
+        },
+        {
+          "id": "SA-034-AC2",
+          "criterion": "Login normal, inválido, loading, offline, expirado e revogado têm feedback honesto; só carregar dados protegidos após auth/me válido.",
+          "required": true
+        },
+        {
+          "id": "SA-034-AC3",
+          "criterion": "Rotas por capacidade têm rótulos operacionais, deep-link autorizado e retorno previsível; safe areas, teclado e foco visível preservados.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Testes com API real e perfis distintos; matriz de teclado/toque, menu e estados de sessão."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07"
+      ],
+      "findings": [
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-034/",
+      "next_action": {
+        "id": "SA-034-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-035",
+      "title": "Completar contexto e ações da Inbox",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UI02",
+        "UX01",
+        "UX04",
+        "UX05",
+        "UX11"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-008",
+        "SA-015",
+        "SA-016",
+        "SA-017",
+        "SA-018",
+        "SA-019"
+      ],
+      "ownership": [
+        "apps/desk-web/src/features/inbox",
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/pages/Inbox.css"
+      ],
+      "objective": "Operador vê pendências e atua sobre atendimento sem perder seleção/contexto.",
+      "acceptance": [
+        {
+          "id": "SA-035-AC1",
+          "criterion": "Painel apresenta tarefas, notas, alertas, contato, tutor/paciente e etiquetas reais da conversa com nomes legíveis e links corretos.",
+          "required": true
+        },
+        {
+          "id": "SA-035-AC2",
+          "criterion": "Atribuir, status, transferir, handoff e etiquetas usam versão/resposta persistida; acesso negado/conflito é explicado sem sucesso fictício.",
+          "required": true
+        },
+        {
+          "id": "SA-035-AC3",
+          "criterion": "Busca e contagens usam filtros do servidor e paginação; resposta tardia de conversa A não contamina B; retorno restaura seleção/posição.",
+          "required": true
+        },
+        {
+          "id": "SA-035-AC4",
+          "criterion": "Um painel por vez no smartphone; lista/conversa/contexto adaptam em tablet/desktop e a ação principal permanece acessível.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Browser+API+PG reais com 2 conversas, 2 atores, registros extensos e ações concorrentes."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07",
+        "G12"
+      ],
+      "findings": [
+        "A06"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-035/",
+      "next_action": {
+        "id": "SA-035-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-036",
+      "title": "Fechar timeline, anexos e recuperação de envio",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UI02",
+        "UX10",
+        "UX11"
+      ],
+      "dependencies": [
+        "SA-035",
+        "SA-032",
+        "SA-014"
+      ],
+      "ownership": [
+        "apps/desk-web/src/features/inbox",
+        "apps/desk-web/src/lib/api.ts"
+      ],
+      "objective": "Mensagens e anexos preservam intenção e confirmação ao navegar, falhar ou reconectar.",
+      "acceptance": [
+        {
+          "id": "SA-036-AC1",
+          "criterion": "Paginação de histórico mantém posição, agrupa datas corretamente e concilia chegada concorrente sem duplicatas.",
+          "required": true
+        },
+        {
+          "id": "SA-036-AC2",
+          "criterion": "Texto/imagem/áudio/vídeo/documento têm upload, scan, visualização privada e recuperação; rascunho/intenção por conversa sobrevive remount conforme política definida.",
+          "required": true
+        },
+        {
+          "id": "SA-036-AC3",
+          "criterion": "Envio incerto se distingue de falha; retry conserva idempotency key e não cria outro efeito; status confirmado vem do servidor.",
+          "required": true
+        },
+        {
+          "id": "SA-036-AC4",
+          "criterion": "Em dispositivo móvel real, teclado virtual, safe areas e anexos não cobrem compositor/erro/ação.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E real com storage/scanner/Gateway homologado; timeout, scan failed, revogação de asset e navegação durante envio."
+      ],
+      "gates": [
+        "G03",
+        "G04",
+        "G06",
+        "G07",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-036/",
+      "next_action": {
+        "id": "SA-036-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-037",
+      "title": "Concluir tarefas contextualizadas e prioridade móvel",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI04",
+        "UX04",
+        "UX05",
+        "UX10"
+      ],
+      "dependencies": [
+        "SA-035",
+        "SA-015"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Tasks.tsx",
+        "apps/desk-web/src/pages/Tasks.css",
+        "apps/desk-web/src/features/tasks"
+      ],
+      "objective": "Criar, atribuir e concluir tarefas exige poucos passos e conserva vínculo.",
+      "acceptance": [
+        {
+          "id": "SA-037-AC1",
+          "criterion": "Formulário oferece entidades/responsáveis autorizados por busca legível e contexto pré-preenchido; filtro compartilhável aplicado no servidor.",
+          "required": true
+        },
+        {
+          "id": "SA-037-AC2",
+          "criterion": "Em 375×812 com fixture operacional congelada, primeiro item prioritário e ação principal aparecem no primeiro viewport; resumos/filtros compactos não ocultam urgência.",
+          "required": true
+        },
+        {
+          "id": "SA-037-AC3",
+          "criterion": "Prazo, prioridade, responsável e vínculo são textuais; conflito/erro preserva estado e permite retry; abrir conversa retorna entidade correta.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Browser+API real: 2 atores, tarefa vencida, nomes longos, criação por conversa e falha de mutação."
+      ],
+      "gates": [
+        "G06",
+        "G07",
+        "G12"
+      ],
+      "findings": [
+        "A06",
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-037/",
+      "next_action": {
+        "id": "SA-037-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-038",
+      "title": "Entregar notas sem exigir IDs técnicos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI06",
+        "UX04",
+        "UX10"
+      ],
+      "dependencies": [
+        "SA-035",
+        "SA-016"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Notes.tsx",
+        "apps/desk-web/src/pages/Notes.css",
+        "apps/desk-web/src/features/notes"
+      ],
+      "objective": "Criar e consultar notas por contexto ou entidade selecionada pelo nome.",
+      "acceptance": [
+        {
+          "id": "SA-038-AC1",
+          "criterion": "Substituir entrada UUID obrigatória por contexto/busca autorizada de conversa, tarefa, tutor, paciente; homônimos são distinguíveis.",
+          "required": true
+        },
+        {
+          "id": "SA-038-AC2",
+          "criterion": "Minhas notas e notas da referência são modos explícitos; autoria/data/vínculo corretos e navegáveis, sem perder filtro.",
+          "required": true
+        },
+        {
+          "id": "SA-038-AC3",
+          "criterion": "Erro conserva rascunho e vínculo; submit repetido não duplica ação acidental; referência removida/inacessível tem estado claro.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E real com autores/referências diferentes, homônimos, erro/retry e consulta pelo link da Inbox."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07"
+      ],
+      "findings": [
+        "A06",
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-038/",
+      "next_action": {
+        "id": "SA-038-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-039",
+      "title": "Entregar alertas acionáveis com urgência visível",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI05",
+        "UX04",
+        "UX05",
+        "UX10"
+      ],
+      "dependencies": [
+        "SA-035",
+        "SA-017"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Alerts.tsx",
+        "apps/desk-web/src/pages/Alerts.css"
+      ],
+      "objective": "Reconhecer/resolver alerta no contexto correto com prioridade visível.",
+      "acceptance": [
+        {
+          "id": "SA-039-AC1",
+          "criterion": "Em 375×812, alerta crítico e ação cabem no primeiro viewport da fixture congelada; resumo compacto mantém contagens legíveis.",
+          "required": true
+        },
+        {
+          "id": "SA-039-AC2",
+          "criterion": "Abrir recurso respeita vínculo/escopo; filtros por conversa, severidade, status são persistidos e consultados no servidor.",
+          "required": true
+        },
+        {
+          "id": "SA-039-AC3",
+          "criterion": "Ack/resolve têm estado pendente, erro, conflito e confirmação real; segundo operador não vê sucesso enganoso após ação concorrente.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Browser+API real com geração de alerta, ack/resolve concorrentes e acesso revogado."
+      ],
+      "gates": [
+        "G06",
+        "G07",
+        "G12"
+      ],
+      "findings": [
+        "A06",
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-039/",
+      "next_action": {
+        "id": "SA-039-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-040",
+      "title": "Completar Kanban acessível e sincronizado",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI07",
+        "UX05",
+        "UX08",
+        "UX09"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-005",
+        "SA-019"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Kanban.tsx",
+        "apps/desk-web/src/pages/Kanban.css"
+      ],
+      "objective": "Cartão navegável e movimento por arraste, teclado ou toque refletem o mesmo estado real.",
+      "acceptance": [
+        {
+          "id": "SA-040-AC1",
+          "criterion": "Card abre conversa selecionada e preserva filtros/posição ao voltar; filtros acordados consultam o servidor.",
+          "required": true
+        },
+        {
+          "id": "SA-040-AC2",
+          "criterion": "Arraste possui alternativa nomeada; sucesso só após resposta persistida; rejeição restaura visual e explica recuperação.",
+          "required": true
+        },
+        {
+          "id": "SA-040-AC3",
+          "criterion": "Fechar/reabrir com dois operadores não some/duplica cartão; smartphone tem rolagem contida perceptível, sem gesto de precisão obrigatório.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E com API real, concorrência, 409, rede interrompida e teclado/toque."
+      ],
+      "gates": [
+        "G03",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D04",
+          "boundary": "Customização nova de colunas/filtros além do contrato existente; correções de navegação/movimento seguem."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-040/",
+      "next_action": {
+        "id": "SA-040-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-041",
+      "title": "Concluir jornada de contatos e atendimento",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI08",
+        "UX04",
+        "UX08"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-007",
+        "SA-019"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Contacts.tsx",
+        "apps/desk-web/src/pages/Contacts.css"
+      ],
+      "objective": "Contato tem detalhe útil, relacionamentos e início de atendimento confiáveis.",
+      "acceptance": [
+        {
+          "id": "SA-041-AC1",
+          "criterion": "Busca/paginação/posição sobrevivem lista→detalhe→conversa→retorno; mobile usa painel único.",
+          "required": true
+        },
+        {
+          "id": "SA-041-AC2",
+          "criterion": "Editar/associar etiquetas, setor/grupo e consultar notas reúne todo contexto autorizado, sem limitar à primeira conversa.",
+          "required": true
+        },
+        {
+          "id": "SA-041-AC3",
+          "criterion": "Iniciar conversa respeita contato/setor/resultado existente ou novo; erro não fecha formulário nem perde os dados.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E real com contato de várias conversas, homônimos, lista longa e concorrência de início."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-041/",
+      "next_action": {
+        "id": "SA-041-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-042",
+      "title": "Concluir fichas de tutores e pacientes",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI09",
+        "UI10",
+        "UX04",
+        "UX08"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-021"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Tutors.tsx",
+        "apps/desk-web/src/pages/Patients.tsx",
+        "apps/desk-web/src/pages/EntityPages.css"
+      ],
+      "objective": "Vínculos decididos em D03 são compreensíveis e operáveis na interface.",
+      "acceptance": [
+        {
+          "id": "SA-042-AC1",
+          "criterion": "Lista/detalhe/formulário mostram vínculos reais e permitem ações aprovadas do contrato relacional sem UUID manual.",
+          "required": true
+        },
+        {
+          "id": "SA-042-AC2",
+          "criterion": "Criar/editar/associar/desassociar valida e persiste; conflito/entidade em uso preserva contexto e explica resposta.",
+          "required": true
+        },
+        {
+          "id": "SA-042-AC3",
+          "criterion": "Nomes longos, múltiplos vínculos e ausência de contato não quebram layout; navegação entre tutor/paciente/conversa seleciona entidade correta.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Browser+API real com N:N aprovado, backfill e dados extensos; teclado dos seletores."
+      ],
+      "gates": [
+        "G05",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D03",
+          "boundary": "Interface do contrato relacional novo segue decisão de SA-021."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-042/",
+      "next_action": {
+        "id": "SA-042-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-043",
+      "title": "Concluir gestão de setores, etiquetas e grupos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI11",
+        "UI12",
+        "UI13",
+        "UX06",
+        "UX08"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-019"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Sectors.tsx",
+        "apps/desk-web/src/pages/Labels.tsx",
+        "apps/desk-web/src/pages/ContactGroups.tsx",
+        "CSS correspondentes"
+      ],
+      "objective": "Gestão e associações usam linguagem operacional e feedback verdadeiro.",
+      "acceptance": [
+        {
+          "id": "SA-043-AC1",
+          "criterion": "A nomenclatura de etiquetas é consistente; criar/editar/desativar e associações refletem API/banco e rejeições de uso/permissão.",
+          "required": true
+        },
+        {
+          "id": "SA-043-AC2",
+          "criterion": "Membros são pesquisáveis/adicionáveis/removíveis, com telefone formatado e seleção preservada no mobile.",
+          "required": true
+        },
+        {
+          "id": "SA-043-AC3",
+          "criterion": "Cores configuráveis mantêm contraste/indicação textual; listas grandes, nomes duplicados e empty/error têm comportamento explícito.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E cadastro→associação→reabertura→remoção, 2 perfis e cores extremas."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-043/",
+      "next_action": {
+        "id": "SA-043-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-044",
+      "title": "Concluir administração de permissões, filas, times e DLQ",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UI14",
+        "B04"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-006",
+        "SA-013",
+        "SA-030"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Admin.tsx",
+        "apps/desk-web/src/pages/Admin.css",
+        "apps/desk-web/src/features/admin"
+      ],
+      "objective": "Administrador opera as capacidades entregues sem controles inertes ou detalhes privados.",
+      "acceptance": [
+        {
+          "id": "SA-044-AC1",
+          "criterion": "Usuários/papéis/permissões, memberships, filas/times têm ações e erros consumindo contratos reais; exibir impacto de revogação.",
+          "required": true
+        },
+        {
+          "id": "SA-044-AC2",
+          "criterion": "Diálogos/tabelas têm teclado, foco, seletores autorizados e validação; resposta nunca inclui hash e não expõe código técnico desnecessário.",
+          "required": true
+        },
+        {
+          "id": "SA-044-AC3",
+          "criterion": "Replay da DLQ e aprovação de IA mostram elegibilidade, progresso e resultado efetivo; uso concorrente/expirado é rejeitado sem sucesso falso.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E admin/read-only/sem acesso; mutação de permissão, replay, aprovação de IA com flag conforme D05."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D01",
+          "boundary": "Mudar a política efetiva de permissões, visão global ou catálogo de produção exige a decisão correspondente; implementar a interface da política vigente e negativos já pode avançar."
+        },
+        {
+          "id": "D05",
+          "boundary": "Habilitar ferramentas IA e efeitos exige allowlist/aprovadores ratificados; interface e testes do fluxo com ferramentas desabilitadas podem avançar."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-044/",
+      "next_action": {
+        "id": "SA-044-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-045",
+      "title": "Concluir busca de auditoria e perfil/configurações",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI15",
+        "UI16"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-023",
+        "SA-012"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Audit.tsx",
+        "apps/desk-web/src/pages/Settings.tsx",
+        "CSS correspondentes"
+      ],
+      "objective": "Operador consulta trilha e cuida da sessão sem depender de códigos internos.",
+      "acceptance": [
+        {
+          "id": "SA-045-AC1",
+          "criterion": "Auditoria filtra por rótulos legíveis, ator, entidade, ação e janela; código bruto fica em detalhe útil e acesso é verificado.",
+          "required": true
+        },
+        {
+          "id": "SA-045-AC2",
+          "criterion": "Perfil/senha/logout mostram confirmação persistida, erros e política de sessão; não apresentar /auth/me ou chat:read como linguagem principal.",
+          "required": true
+        },
+        {
+          "id": "SA-045-AC3",
+          "criterion": "Eventos extensos, lista vazia, erro parcial, permissão revogada e busca sem resultado têm estados legíveis e acessíveis.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E ação auditada→consulta, dados longos, alteração de senha e revogação de sessão."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-045/",
+      "next_action": {
+        "id": "SA-045-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-046",
+      "title": "Concluir dashboard acionável e fiel às métricas",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 5,
+      "requirements": [
+        "UI03",
+        "UX04",
+        "UX05"
+      ],
+      "dependencies": [
+        "SA-033",
+        "SA-022"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Dashboard.tsx",
+        "apps/desk-web/src/pages/Dashboard.css"
+      ],
+      "objective": "Cada KPI explica sua janela e permite chegar ao conjunto de trabalho correspondente.",
+      "acceptance": [
+        {
+          "id": "SA-046-AC1",
+          "criterion": "Valores/unidades/denominador/timezone conferem com fixture conhecida; zero, sem dados e parcial são estados distintos.",
+          "required": true
+        },
+        {
+          "id": "SA-046-AC2",
+          "criterion": "Clicar no KPI aplica filtro equivalente e mostra conjunto esperado autorizado; dados desatualizados indicam idade/recuperação.",
+          "required": true
+        },
+        {
+          "id": "SA-046-AC3",
+          "criterion": "Mobile prioriza indicadores acionáveis e reduz repetição de cards sem esconder informação necessária.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "E2E fixture calculável, KPI→lista, extremos, falha parcial e alteração durante uso."
+      ],
+      "gates": [
+        "G06",
+        "G07",
+        "G11"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-046/",
+      "next_action": {
+        "id": "SA-046-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-047",
+      "title": "Completar sincronização entre operadores e páginas",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "FRONTEND",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UI02",
+        "UI03",
+        "UI04",
+        "UI05",
+        "UI07",
+        "UI08",
+        "UX10",
+        "UX11"
+      ],
+      "dependencies": [
+        "SA-027",
+        "SA-035",
+        "SA-036",
+        "SA-037",
+        "SA-038",
+        "SA-039",
+        "SA-040",
+        "SA-041",
+        "SA-042",
+        "SA-043",
+        "SA-044",
+        "SA-045",
+        "SA-046"
+      ],
+      "ownership": [
+        "apps/desk-web/src/lib/realtime.ts",
+        "apps/desk-web/src/hooks",
+        "apps/desk-web/src/features"
+      ],
+      "objective": "Todo estado relevante converge após mutação, reconexão e alteração de acesso.",
+      "acceptance": [
+        {
+          "id": "SA-047-AC1",
+          "criterion": "Catálogo evento→queries afetadas cobre todas as 16 páginas; atualização push respeita P95<500ms e fallback por polling limitado ≤5s no cenário funcional definido.",
+          "required": true
+        },
+        {
+          "id": "SA-047-AC2",
+          "criterion": "Dois browsers com mudanças concorrentes não duplicam registros nem regridem versão; reconectar busca lacunas antes de declarar sincronizado.",
+          "required": true
+        },
+        {
+          "id": "SA-047-AC3",
+          "criterion": "Resposta tardia, cancelamento, mudança de entidade e revogação não mostram dados de outro contexto; usuário vê desatualização/retry honestos.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Prova API+WS+dois browsers reais, corte/restauração de rede, ordem invertida e eventos duplicados."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G06",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-047/",
+      "next_action": {
+        "id": "SA-047-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-048",
+      "title": "Fechar matriz visual e acessibilidade manual",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "DESIGN_QA",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UX01",
+        "UX03",
+        "UX05",
+        "UX06",
+        "UX07",
+        "UX08",
+        "UX09",
+        "UX10"
+      ],
+      "dependencies": [
+        "SA-034",
+        "SA-047"
+      ],
+      "ownership": [
+        "apps/desk-web (ajustes sob lock)",
+        "scripts/capture-design.mjs",
+        "scripts/a11y-axe.mjs"
+      ],
+      "objective": "As 16 superfícies funcionam nos dispositivos, estados e modos assistivos exigidos.",
+      "acceptance": [
+        {
+          "id": "SA-048-AC1",
+          "criterion": "16 rotas×5 viewports obrigatórios capturados com build de produção e dados reais sintéticos; estados mínimos+críticos cobertos segundo CRITERIOS; breakpoints 860/1260 incluídos.",
+          "required": true
+        },
+        {
+          "id": "SA-048-AC2",
+          "criterion": "Zero bloqueador de teclado, nome, foco, contraste ou tarefa; inconclusivos do axe resolvidos por inspeção manual; leitor de tela real e dispositivo móvel com teclado virtual testados.",
+          "required": true
+        },
+        {
+          "id": "SA-048-AC3",
+          "criterion": "Zoom real de 200% e reflow de 400%/320 CSS px preservam função; DPR não é zoom; reduced motion e font fallback com relatório explícito.",
+          "required": true
+        },
+        {
+          "id": "SA-048-AC4",
+          "criterion": "Crítico visual independente pontua 16 superfícies+11 dimensões individualmente ≥95, confiança ALTA, zero Critical/High aberto, sem identificar só logo como especificidade.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar matriz nominal de rota×viewport×estado×capacidade e executar navegação real.",
+        "Mock só para falha isolada, nunca substitui E2E; validar screenshot/render/build/hash."
+      ],
+      "gates": [
+        "G06",
+        "G07",
+        "G12"
+      ],
+      "findings": [
+        "A09"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-048/",
+      "next_action": {
+        "id": "SA-048-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-049",
+      "title": "Construir regressão E2E por jornada e estados",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "QA",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "UX01",
+        "UX10",
+        "UX11",
+        "OP05"
+      ],
+      "dependencies": [
+        "SA-034",
+        "SA-047"
+      ],
+      "ownership": [
+        "e2e",
+        "playwright.production.config.ts",
+        "apps/desk-web/src/__tests__"
+      ],
+      "objective": "Testes rejeitam quebra de contexto, persistência, permissão e recuperação em jornadas completas.",
+      "acceptance": [
+        {
+          "id": "SA-049-AC1",
+          "criterion": "Fluxos de login, inbound, responder, mídia, atribuir, transferir, tarefa, nota, alerta, Kanban, cadastros, admin, audit e perfil exercitam API/PG/WS reais.",
+          "required": true
+        },
+        {
+          "id": "SA-049-AC2",
+          "criterion": "Cada ação verifica UI, requisição e estado persistido; erro 409/403/500, offline e revogação têm recuperação e nenhum sucesso fictício.",
+          "required": true
+        },
+        {
+          "id": "SA-049-AC3",
+          "criterion": "Suites que mockam transportes são nomeadas como unit/visual; gate E2E identifica dependências reais e provas ausentes, sem skip requerido.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar suites Playwright por jornada no runner SA-003 e executar contra build de produção."
+      ],
+      "gates": [
+        "G02",
+        "G06",
+        "G07",
+        "G08",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-049/",
+      "next_action": {
+        "id": "SA-049-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-050",
+      "title": "Fechar CI por escopo e cobertura efetiva",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "QA",
+      "milestone": "M4",
+      "estimate_points": 8,
+      "requirements": [
+        "OP01",
+        "OP05",
+        "Q01"
+      ],
+      "dependencies": [
+        "SA-024",
+        "SA-025",
+        "SA-026",
+        "SA-030",
+        "SA-032",
+        "SA-049",
+        "SA-063"
+      ],
+      "ownership": [
+        "package.json",
+        "turbo.json",
+        "vitest configs",
+        ".github/workflows/ci.yml",
+        ".github/scripts/certification-aggregator.mjs"
+      ],
+      "objective": "CI executa todos os gates exigidos e impede aprovação por cache/skip/coverage incompleta.",
+      "acceptance": [
+        {
+          "id": "SA-050-AC1",
+          "criterion": "Inventariar todas suites, inclusive excluídas por test:ci; cada uma requerida tem job com dependências e zero skips; manter suites offline separadas sem mascarar lacunas.",
+          "required": true
+        },
+        {
+          "id": "SA-050-AC2",
+          "criterion": "Coverage core ≥90, domínio ≥80, API ≥70, web ≥60, global ≥75; shared preserva 85/80/85/85 na ordem confirmada; denominadores sem exclusão conveniente.",
+          "required": true
+        },
+        {
+          "id": "SA-050-AC3",
+          "criterion": "Gates de PR/push/release/schedule por SHA/run/attempt rejeitam ausente, stale, log contraditório, número inválido/futuro e artefato alterado; teste adversarial conhecido falha.",
+          "required": true
+        },
+        {
+          "id": "SA-050-AC4",
+          "criterion": "Executar lint/typecheck/build sem cache no candidato de aceite e verificar descoberta dos pacotes; nenhuma task echo substitui validação.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "pnpm exec turbo run lint --continue --force; pnpm exec turbo run typecheck --continue --force; pnpm build --force.",
+        "Criar gates de coverage globais e juntar resultados completos de PG/storage/scanner; node .github/scripts/certification-aggregator.test.mjs."
+      ],
+      "gates": [
+        "G01",
+        "G08",
+        "G12"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-050/",
+      "next_action": {
+        "id": "SA-050-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-051",
+      "title": "Vincular supply chain às imagens realmente entregues",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M4",
+      "estimate_points": 8,
+      "requirements": [
+        "OP03",
+        "OP02"
+      ],
+      "dependencies": [
+        "SA-050",
+        "SA-052"
+      ],
+      "ownership": [
+        "apps/*/Dockerfile",
+        "services/db-init/Dockerfile",
+        ".github/workflows/security.yml",
+        ".github/workflows/triple-aaa-gate.yml",
+        "pnpm-lock.yaml"
+      ],
+      "objective": "Toda imagem testada, escaneada e entregue tem identidade e dependências rastreáveis.",
+      "acceptance": [
+        {
+          "id": "SA-051-AC1",
+          "criterion": "API, web, worker, realtime e db-init têm SBOM, scan e identidade por manifest digest; mesmo artefato é usado no boot e no release.",
+          "required": true
+        },
+        {
+          "id": "SA-051-AC2",
+          "criterion": "Segredos/SAST/dependências/containers verificados; zero Critical/High explorável ou bloqueador; findings sem correção não são ocultados por ignore-unfixed.",
+          "required": true
+        },
+        {
+          "id": "SA-051-AC3",
+          "criterion": "Build reproduzível, com lockfile fixo e versões de base controladas; teste adulterado/outro SHA/outra digest falha; confidencialidade de env/config preservada.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar scanners disponíveis em ambiente isolado e associar resultados ao manifest OCI; publicação no registry somente se autorizada."
+      ],
+      "gates": [
+        "G01",
+        "G08",
+        "G09"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-051/",
+      "next_action": {
+        "id": "SA-051-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-052",
+      "title": "Provar boot, readiness e rollout de todos os runtimes",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "OP02",
+        "B18",
+        "B19"
+      ],
+      "dependencies": [
+        "SA-009",
+        "SA-024",
+        "SA-026",
+        "SA-032"
+      ],
+      "ownership": [
+        "docker-compose.yml",
+        "docker-compose.staging.yml",
+        "apps/*/Dockerfile",
+        "scripts/production-readiness.mjs",
+        "scripts/production/prod-36.test.mjs"
+      ],
+      "objective": "Configuração entregue inicia todos os serviços e falha de forma observável sob dependências indisponíveis.",
+      "acceptance": [
+        {
+          "id": "SA-052-AC1",
+          "criterion": "API, web, worker, realtime, db-init e dependências sob configuração representativa respondem health/readiness com identidade do artefato.",
+          "required": true
+        },
+        {
+          "id": "SA-052-AC2",
+          "criterion": "Variável de ambiente ausente, banco/Redis/storage/scanner indisponíveis, restart e schema incompatível têm comportamento definido; nenhum healthcheck placebo.",
+          "required": true
+        },
+        {
+          "id": "SA-052-AC3",
+          "criterion": "TLS/proxy, URLs públicas, WebSocket, upload e graceful shutdown ensaiados com rollback/rollforward; portas/segredos não expostos indevidamente.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Boot de arquivo Compose real em ambiente exclusivo, matriz HTTP/WS e checks de container; não só inspeção do YAML."
+      ],
+      "gates": [
+        "G09",
+        "G10"
+      ],
+      "findings": [
+        "A04",
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-052/",
+      "next_action": {
+        "id": "SA-052-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-053",
+      "title": "Entregar tracing e métricas úteis com minimização",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "OP04",
+        "B15",
+        "B18"
+      ],
+      "dependencies": [
+        "SA-023",
+        "SA-026",
+        "SA-029",
+        "SA-032",
+        "SA-052"
+      ],
+      "ownership": [
+        "packages/tracing/src",
+        "packages/shared/src",
+        "apps/*/src (sob locks)",
+        "infra/observability",
+        "scripts/otel-e2e-check.mjs"
+      ],
+      "objective": "Uma jornada e suas falhas são localizáveis sem vazamento de PII/segredos.",
+      "acceptance": [
+        {
+          "id": "SA-053-AC1",
+          "criterion": "Correlation ID e spans propagam ingresso→PG/outbox→worker→Gateway/Secretary→realtime; collector recebe/exporta dados reais identificados.",
+          "required": true
+        },
+        {
+          "id": "SA-053-AC2",
+          "criterion": "Métricas autenticadas e scrape real distinguem lag, backlog, retry, DLQ, falha/latência de dependência; labels têm cardinalidade limitada.",
+          "required": true
+        },
+        {
+          "id": "SA-053-AC3",
+          "criterion": "Logs/spans/metrics não expõem token, passwordHash, corpo pessoal ou URLs sensíveis; injetar erro e provar diagnóstico útil.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar jornada com collector real e consultar trace por correlação; teste negativo de PII escaneia artefatos sanitizados."
+      ],
+      "gates": [
+        "G02",
+        "G10"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-053/",
+      "next_action": {
+        "id": "SA-053-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-054",
+      "title": "Provisionar dashboards, alertas e SLOs operacionais",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M4",
+      "estimate_points": 5,
+      "requirements": [
+        "OP04",
+        "OP06"
+      ],
+      "dependencies": [
+        "SA-053"
+      ],
+      "ownership": [
+        "infra/prometheus",
+        "infra/grafana",
+        "docs/SLO.md",
+        "docs/OBSERVABILITY.md"
+      ],
+      "objective": "Equipe detecta e entende queda, degradação e recuperação com painéis reproduzíveis.",
+      "acceptance": [
+        {
+          "id": "SA-054-AC1",
+          "criterion": "Dashboards JSON e regras de alerta provisionados automaticamente exibem API, webhook, worker, realtime, DLQ, storage e dependências reais.",
+          "required": true
+        },
+        {
+          "id": "SA-054-AC2",
+          "criterion": "Alertas disparam e recuperam em falhas injetadas, com owner/runbook e limiar alinhado ao SLO; roteiro de plantão testado sem mensagens externas não autorizadas.",
+          "required": true
+        },
+        {
+          "id": "SA-054-AC3",
+          "criterion": "Definir availability mensal API 99,9%/webhook 99,95%, janela e error budget; registrar que histórico mensal vem de SA-062, não de ensaio curto.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Provisionar stack e consultar Prometheus/Grafana; simular indisponibilidade, lag e DLQ e observar firing/resolved."
+      ],
+      "gates": [
+        "G10",
+        "G11"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-054/",
+      "next_action": {
+        "id": "SA-054-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-055",
+      "title": "Ensaiar backup durável, restore e privacidade pós-restore",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M4",
+      "estimate_points": 8,
+      "requirements": [
+        "OP07",
+        "B22"
+      ],
+      "dependencies": [
+        "SA-010",
+        "SA-024",
+        "SA-031",
+        "SA-052"
+      ],
+      "ownership": [
+        "infra/scripts/pg-backup.sh",
+        "infra/scripts/pg-restore.sh",
+        "infra/scripts/dr-e2e.sh",
+        ".github/workflows/dr-e2e.yml"
+      ],
+      "objective": "Backup restaurável fora do host recupera estado e respeita a política de dados.",
+      "acceptance": [
+        {
+          "id": "SA-055-AC1",
+          "criterion": "Agendamento, retenção, checksum, cifragem e cópia durável externos ao processo de ensaio demonstrados; baixar backup real de ensaio para restaurar.",
+          "required": true
+        },
+        {
+          "id": "SA-055-AC2",
+          "criterion": "Restore em banco isolado confere todas as entidades/vínculos/eventos e aplicação, com predicados adversariais; erro/corrupção faz o teste falhar.",
+          "required": true
+        },
+        {
+          "id": "SA-055-AC3",
+          "criterion": "Medir RPO≤24h/RTO≤2h com início/fim explícitos; replay de tombstones/política evita reintroduzir dados eliminados; runbook inclui contingência.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Ensaio completo de backup→perda de ambiente sintético→restore→boot→jornadas + consultas determinísticas."
+      ],
+      "gates": [
+        "G05",
+        "G09",
+        "G11"
+      ],
+      "findings": [
+        "A05",
+        "A10"
+      ],
+      "decisions": [
+        {
+          "id": "D02",
+          "boundary": "Retenção/liberação de dados restaurados reais; ensaio sintético independente."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-055/",
+      "next_action": {
+        "id": "SA-055-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-056",
+      "title": "Medir e otimizar carga, queries e web vitals",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "PERFORMANCE",
+      "milestone": "M4",
+      "estimate_points": 13,
+      "requirements": [
+        "OP06",
+        "B14",
+        "UX05"
+      ],
+      "dependencies": [
+        "SA-022",
+        "SA-047",
+        "SA-048",
+        "SA-052",
+        "SA-054"
+      ],
+      "ownership": [
+        "infra/scripts/query-performance.mjs",
+        "scripts/performance (a criar)",
+        "queries afetadas sob locks",
+        "apps/desk-web build"
+      ],
+      "objective": "Cumprir orçamentos com dados e concorrência representativos sem sacrificar correção.",
+      "acceptance": [
+        {
+          "id": "SA-056-AC1",
+          "criterion": "Perfil de 10 mil conversas/100 mil mensagens/100 sessões; 10 min de warmup + 30 min de medição, 3 rodadas com hardware/dataset/config registrados.",
+          "required": true
+        },
+        {
+          "id": "SA-056-AC2",
+          "criterion": "P95 inbound<250ms, realtime<500ms, erro inesperado<0,1%; zero perda/efeito duplicado nos cenários determinísticos; saturação/degradação recuperáveis.",
+          "required": true
+        },
+        {
+          "id": "SA-056-AC3",
+          "criterion": "EXPLAIN/índices/N+1 e cardinalidade medidos; otimizar gargalo comprovado e repetir regressão; nenhuma troca de broker por preferência.",
+          "required": true
+        },
+        {
+          "id": "SA-056-AC4",
+          "criterion": "Build servido mede LCP≤2,5s, INP≤200ms, CLS≤0,1; JS gzip≤120KiB, CSS≤25KiB. Laboratório e percentis de campo separados.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Criar harness representativo e controle known-bad; query script não passa sem medições; rodar 3 rodadas com ledger real."
+      ],
+      "gates": [
+        "G07",
+        "G11"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-056/",
+      "next_action": {
+        "id": "SA-056-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-057",
+      "title": "Reconciliar documentos e runbooks por afirmação",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "DOCS",
+      "milestone": "M4",
+      "estimate_points": 8,
+      "requirements": [
+        "Q02",
+        "B01"
+      ],
+      "dependencies": [
+        "SA-050",
+        "SA-051",
+        "SA-054",
+        "SA-055",
+        "SA-056",
+        "SA-058"
+      ],
+      "ownership": [
+        "docs (fontes normativas)",
+        "README.md",
+        ".env examples",
+        "docs/programa-triplo-aaa-2026-09-14"
+      ],
+      "objective": "O leitor distingue claramente o que é produto, alvo, histórico e procedimento executável.",
+      "acceptance": [
+        {
+          "id": "SA-057-AC1",
+          "criterion": "Inventariar documentos e afirmações contraditórias: stack, sessão, eventos, boot, privacidade, polling, erro de Tasks, relação N:N e estado AAA; resolver no mapa e fontes canônicas.",
+          "required": true
+        },
+        {
+          "id": "SA-057-AC2",
+          "criterion": "Arquitetura, contratos, decisões, setup, teste, operação, DR e acessos correspondem ao candidato final; históricos preservados com status/link sem reescrever fatos.",
+          "required": true
+        },
+        {
+          "id": "SA-057-AC3",
+          "criterion": "Pessoa/agente sem histórico instala/valida em ambiente novo com runbook; links e comandos conferidos; nota/certificação só aparece com evidência de SA-059.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Validar links e executar setup/runbook em checkout novo do candidato isolado; matriz de afirmação→fonte→prova."
+      ],
+      "gates": [
+        "G01",
+        "G12"
+      ],
+      "findings": [
+        "A10"
+      ],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-057/",
+      "next_action": {
+        "id": "SA-057-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-058",
+      "title": "Executar jornada integrada com serviços representativos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "QA",
+      "milestone": "M4",
+      "estimate_points": 13,
+      "requirements": [
+        "OP05",
+        "UX11",
+        "B20",
+        "B21",
+        "B23"
+      ],
+      "dependencies": [
+        "SA-028",
+        "SA-029",
+        "SA-030",
+        "SA-032",
+        "SA-047",
+        "SA-049",
+        "SA-051",
+        "SA-055"
+      ],
+      "ownership": [
+        "e2e/production",
+        "playwright.production.config.ts",
+        "scripts/staging-smoke.mjs"
+      ],
+      "objective": "Demonstrar operação completa com as mesmas imagens/contratos preparados para entrega.",
+      "acceptance": [
+        {
+          "id": "SA-058-AC1",
+          "criterion": "Browser→API→PG/outbox→worker→Gateway/Secretary→WS→browser usa serviços reais de homologação autorizados e usuários/tutores sintéticos.",
+          "required": true
+        },
+        {
+          "id": "SA-058-AC2",
+          "criterion": "Incluir mídia, transferência, tarefa, nota, alerta, Kanban, reabertura, cadastros, admin, audit, logout e recuperação; comparar UI com estado durável.",
+          "required": true
+        },
+        {
+          "id": "SA-058-AC3",
+          "criterion": "Falha de provedor, aceite incerto, restart, revogação e 2 operadores preservam correção; todos os artefatos vinculados ao mesmo SHA/diff/lock/digest.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar Playwright production e contratos reais; registrar traces/screenshots/network sanitizados e ledger de efeitos.",
+        "Sem credencial externa válida: subconjunto local avança, gate externo fica BLOCKED."
+      ],
+      "gates": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G09",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-058/",
+      "next_action": {
+        "id": "SA-058-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    },
+    {
+      "id": "SA-059",
+      "title": "Auditar candidato integrado e pontuar todos os itens",
+      "status": "PLANNED",
+      "priority": "P0",
+      "lane": "CRITIC",
+      "milestone": "M5",
+      "estimate_points": 8,
+      "requirements": [],
+      "dependencies": [
+        "SA-001",
+        "SA-002",
+        "SA-003",
+        "SA-004",
+        "SA-005",
+        "SA-006",
+        "SA-007",
+        "SA-008",
+        "SA-009",
+        "SA-010",
+        "SA-011",
+        "SA-012",
+        "SA-013",
+        "SA-014",
+        "SA-015",
+        "SA-016",
+        "SA-017",
+        "SA-018",
+        "SA-019",
+        "SA-020",
+        "SA-021",
+        "SA-022",
+        "SA-023",
+        "SA-024",
+        "SA-025",
+        "SA-026",
+        "SA-027",
+        "SA-028",
+        "SA-029",
+        "SA-030",
+        "SA-031",
+        "SA-032",
+        "SA-033",
+        "SA-034",
+        "SA-035",
+        "SA-036",
+        "SA-037",
+        "SA-038",
+        "SA-039",
+        "SA-040",
+        "SA-041",
+        "SA-042",
+        "SA-043",
+        "SA-044",
+        "SA-045",
+        "SA-046",
+        "SA-047",
+        "SA-048",
+        "SA-049",
+        "SA-050",
+        "SA-051",
+        "SA-052",
+        "SA-053",
+        "SA-054",
+        "SA-055",
+        "SA-056",
+        "SA-057",
+        "SA-058",
+        "SA-063"
+      ],
+      "ownership": [
+        "docs/programa-triplo-aaa-2026-09-14/evidencias/SA-059",
+        "somente leitura do produto"
+      ],
+      "objective": "Decidir Triplo AAA a partir do artefato atual com críticos sem autoria.",
+      "acceptance": [
+        {
+          "id": "SA-059-AC1",
+          "criterion": "Críticos frescos examinam produto real, matriz de 48 itens+11 UX, A01–A10 e G01–G12; não receber notas desejadas/racional do construtor como prova.",
+          "required": true
+        },
+        {
+          "id": "SA-059-AC2",
+          "criterion": "Cada um dos 48 itens e cada uma das 11 dimensões de UX têm nota ≥95, confiança ALTA e aceites correntes; média não compensa item abaixo; nenhum Critical/High aberto nem skip requerido.",
+          "required": true
+        },
+        {
+          "id": "SA-059-AC3",
+          "criterion": "Recomputar evidências/digests e testes discriminantes; falha reabre tarefa/deltas e invalida provas afetadas, sem marcar DONE ou baixar a barra.",
+          "required": true
+        },
+        {
+          "id": "SA-059-AC4",
+          "criterion": "Emitir relatório de aprovação/reprovação separado da autorização de implantação; humano externo obrigatório quando critério legal/operacional exigir.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Executar regressões finais relevantes sem cache, recalcular manifestos e obter críticos fresh I1+.",
+        "Usar notas iniciais somente na síntese posterior; grade final acompanhada de provas atuais."
+      ],
+      "gates": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G10",
+        "G11",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-059/",
+      "next_action": {
+        "id": "SA-059-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "review"
+    },
+    {
+      "id": "SA-060",
+      "title": "Preparar pacote executivo de release e go/no-go",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "LEAD",
+      "milestone": "M5",
+      "estimate_points": 5,
+      "requirements": [
+        "OP02",
+        "Q02"
+      ],
+      "dependencies": [
+        "SA-059"
+      ],
+      "ownership": [
+        "docs/release do candidato",
+        "manifestos/digests",
+        "runbooks"
+      ],
+      "objective": "Apresentar candidato revisável com condições reais de implantação e reversão.",
+      "acceptance": [
+        {
+          "id": "SA-060-AC1",
+          "criterion": "Pacote contém artefatos/digests, certificação de SA-059, configuração com segredos removidos, diferenças, migrações, rollback/abort e evidências.",
+          "required": true
+        },
+        {
+          "id": "SA-060-AC2",
+          "criterion": "D06 tem ambiente, domínio/TLS, custos, janela, piloto, responsáveis e plantão definidos; riscos residuais explícitos e sem bloqueador de qualidade.",
+          "required": true
+        },
+        {
+          "id": "SA-060-AC3",
+          "criterion": "Validar autorização já existente; se ausente, solicitar somente decisão final vinculada ao pacote pronto. Preparação não aprova deploy.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Checklist com operador; ensaio de procedimento/abort no ambiente isolado usando os artefatos identificados."
+      ],
+      "gates": [
+        "G09",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D06",
+          "boundary": "Preparar pacote, custos, janela e alternativas não exige aprovação prévia adicional; autorização de promoção é verificada ao concluir o pacote e antes de SA-061."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-060/",
+      "next_action": {
+        "id": "SA-060-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "release"
+    },
+    {
+      "id": "SA-061",
+      "title": "Executar implantação controlada quando autorizada",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M6",
+      "estimate_points": 5,
+      "requirements": [
+        "OP02"
+      ],
+      "dependencies": [
+        "SA-060"
+      ],
+      "ownership": [
+        "ambiente e release explicitamente autorizados"
+      ],
+      "objective": "Promover exatamente o candidato comprovado com observação e abort definidos.",
+      "acceptance": [
+        {
+          "id": "SA-061-AC1",
+          "criterion": "Autorização de D06 identifica versão, ambiente, janela e autoridade; nenhuma aprovação nova é inferida do plano.",
+          "required": true
+        },
+        {
+          "id": "SA-061-AC2",
+          "criterion": "Deploy usa os digests aprovados, migração compatível, smoke e canário; health/readiness e jornada externa observados.",
+          "required": true
+        },
+        {
+          "id": "SA-061-AC3",
+          "criterion": "Se limiar de abort falhar, executar rollback/rollforward ensaiado; registrar estado final real sem confundir release com estabilização.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Procedimento SA-060 em ambiente autorizado; capturar health, jornadas, versão implantada e evento de decisão."
+      ],
+      "gates": [
+        "G09",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [
+        {
+          "id": "D06",
+          "boundary": "Promoção, recursos/custos e efeitos externos de produção; requer autoridade vinculada ao pacote."
+        }
+      ],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-061/",
+      "next_action": {
+        "id": "SA-061-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "release"
+    },
+    {
+      "id": "SA-062",
+      "title": "Estabilizar operação e medir SLO de campo",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "OPS",
+      "milestone": "M7",
+      "estimate_points": 8,
+      "requirements": [
+        "OP04",
+        "OP06",
+        "OP07"
+      ],
+      "dependencies": [
+        "SA-061"
+      ],
+      "ownership": [
+        "telemetria/runbooks/relatório operacional"
+      ],
+      "objective": "Comprovar operação sustentada, plantão, backup e experiência real após deploy.",
+      "acceptance": [
+        {
+          "id": "SA-062-AC1",
+          "criterion": "Executar piloto e janela de estabilização definida em D06 com triagem, alertas, backup e recuperação; corrigir falhas com regressão.",
+          "required": true
+        },
+        {
+          "id": "SA-062-AC2",
+          "criterion": "Medir primeira janela mensal completa API 99,9%/webhook 99,95%, vitals de campo quando houver amostra suficiente e indicadores de operação; não comprimir 30 dias num teste curto.",
+          "required": true
+        },
+        {
+          "id": "SA-062-AC3",
+          "criterion": "Encerrar com relatório operacional, donos, rotina de DR/patching e evidências; ausência de amostra mantém condição explícita, não SLO verde inventado.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "Consultas de telemetria fonte, incidentes, backups e auditoria de operação; score de produto não substitui SLO mensal."
+      ],
+      "gates": [
+        "G10",
+        "G11",
+        "G12"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-062/",
+      "next_action": {
+        "id": "SA-062-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "release"
+    },
+    {
+      "id": "SA-063",
+      "title": "Elevar disciplina TypeScript/lint e manutenção",
+      "status": "PLANNED",
+      "priority": "P1",
+      "lane": "QUALITY",
+      "milestone": "M3",
+      "estimate_points": 8,
+      "requirements": [
+        "Q01",
+        "B01",
+        "UX02"
+      ],
+      "dependencies": [
+        "SA-011",
+        "SA-033"
+      ],
+      "ownership": [
+        "eslint.config.js",
+        "tsconfig files",
+        "apps/packages/modules sob locks"
+      ],
+      "objective": "Eliminar avisos materiais e manter contratos tipados sem mascarar falhas.",
+      "acceptance": [
+        {
+          "id": "SA-063-AC1",
+          "criterion": "Triar 105 avisos do baseline e corrigir causas; obter lint zero avisos no escopo congelado, sem desabilitar regra global, ignorar arquivo crítico ou converter para any.",
+          "required": true
+        },
+        {
+          "id": "SA-063-AC2",
+          "criterion": "Tipos de fronteira eliminam usos materiais de any e casts nas operações tocadas; strict/noEmit e tasks por pacote reais preservados.",
+          "required": true
+        },
+        {
+          "id": "SA-063-AC3",
+          "criterion": "Código morto/duplicação só removido com consumidor inexistente comprovado e regressões; nenhuma refatoração altera contrato sem migração/teste.",
+          "required": true
+        }
+      ],
+      "verification": [
+        "pnpm exec turbo run lint --continue --force e typecheck --force; revisar diff de configs contra baseline."
+      ],
+      "gates": [
+        "G06",
+        "G08"
+      ],
+      "findings": [],
+      "decisions": [],
+      "evidence_state": "NOT_RUN",
+      "evidence_dir": "evidencias/SA-063/",
+      "next_action": {
+        "id": "SA-063-A1",
+        "instruction": "Ler fontes e aceites deste cartão; revalidar a lacuna no candidato atual e registrar a reprodução/baseline antes de editar."
+      },
+      "recovery": "Preservar diff e evidências; consultar processo/containers próprios antes de repetir; reconciliar contrato e última ação. Mudanças de código permitem reversão apenas do diff próprio; alterações de dados exigem estratégia forward/restore validada, nunca reset geral.",
+      "kind": "delivery"
+    }
+  ],
+  "updated_at": "2026-09-15"
+}

@@ -1,0 +1,30 @@
+{
+  "runId": "review-prod09",
+  "workerIndex": 32,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59632/cvg_aaa_review_prod09_w32",
+  "redisUrl": "redis://127.0.0.1:57000",
+  "startedAt": "2026-09-13T16:45:07.918Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-09.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ✓ src/__tests__/production/prod-09.test.ts (13 tests) 2696ms\n   ✓ PROD-09 — efeitos idempotentes e falhas observáveis (PG+Redis reais) > AC3 — fencing de lease e crash real de processo > AC3b — processo real: crash após o efeito e antes do ACK; retomada não duplica  1359ms\n\n Test Files  1 passed (1)\n      Tests  13 passed (13)\n   Start at  13:45:04\n   Duration  3.12s (transform 367ms, setup 0ms, collect 75ms, tests 2.70s, environment 0ms, prepare 113ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

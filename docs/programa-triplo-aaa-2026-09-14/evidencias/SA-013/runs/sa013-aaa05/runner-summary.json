@@ -1,0 +1,54 @@
+{
+  "runId": "sa013-aaa05",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa013_aaa05_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:52:14.257Z",
+  "finishedAt": "2026-09-15T03:52:32.418Z",
+  "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/aaa-05-isolation.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa013_aaa05_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa013-aaa05",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa013-aaa05",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:52:14.257Z",
+      "finishedAt": "2026-09-15T03:52:16.012Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:52:16.012Z",
+      "finishedAt": "2026-09-15T03:52:16.699Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/aaa-05-isolation.test.ts",
+      "startedAt": "2026-09-15T03:52:16.699Z",
+      "finishedAt": "2026-09-15T03:52:32.417Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "isolado) > subscribe a setor/conversa sem membership recebe subscribe.error e não registra canal  757ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > entrega por destinatário: A e B só recebem a própria conversa (nós distintos)  778ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > conversa sem setor: somente admin ou vínculo explícito (D-C02-3); legado message:<id> é recusado  871ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > membership sem role ou role sem chat:read não autoriza conteúdo (RBAC do HTTP)  935ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > evento de conteúdo com setor é entregue em sector:<id> somente a membros  851ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > handoff/task/alert roteiam para conversa e responsável (user:<id>) sem vazar para estranhos  895ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > revogação de sessão interrompe entrega e encerra conexão em <= 5 s  2752ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > revogação de membership remove o canal e interrompe entrega em <= 5 s  2764ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > reconexão exige nova autenticação e o socket antigo não recebe nada  549ms\n   ✓ AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > três réplicas: fanout via Redis sem vazamento e sem duplicidade  1679ms\n\n Test Files  1 passed (1)\n      Tests  14 passed (14)\n   Start at  00:52:17\n   Duration  15.04s (transform 348ms, setup 0ms, collect 910ms, tests 13.80s, environment 0ms, prepare 140ms)\n\n",
+      "stderrTail": "sem role ou role sem chat:read não autoriza conteúdo (RBAC do HTTP)\n{\"msg\":\"[Realtime] Subscribe rejected by authorization\",\"client_id\":\"client_1789444341775_9tao086\",\"channel\":\"conversation:0fbee2a0-736e-44c5-b34d-5b75bb4f2a52\",\"reason\":\"missing-permission\",\"level\":\"warn\"}\n\nstderr | src/__tests__/aaa-05-isolation.test.ts > AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > revogação de sessão interrompe entrega e encerra conexão em <= 5 s\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789444344383_tq0hs90\",\"http_status\":401,\"level\":\"warn\"}\n{\"msg\":\"[Realtime] Revalidation failure — closing connection\",\"client_id\":\"client_1789444344383_tq0hs90\",\"reason\":\"Token revoked: 401\",\"close_code\":4002,\"level\":\"warn\"}\n\nstderr | src/__tests__/aaa-05-isolation.test.ts > AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > revogação de membership remove o canal e interrompe entrega em <= 5 s\n{\"msg\":\"[Realtime] Channel revoked after revalidation\",\"client_id\":\"client_1789444347140_74xhuw5\",\"channel\":\"sector:483b5c52-0212-4faa-8cca-e66edf5f3a7e\",\"reason\":\"NOT_FOUND\",\"level\":\"warn\"}\n\nstderr | src/__tests__/aaa-05-isolation.test.ts > AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > revogação de membership remove o canal e interrompe entrega em <= 5 s\n{\"msg\":\"[Realtime] Channel revoked after revalidation\",\"client_id\":\"client_1789444347140_74xhuw5\",\"channel\":\"conversation:4c367c39-17f9-4562-9493-a99c6bd97d30\",\"reason\":\"NOT_FOUND\",\"level\":\"warn\"}\n\nstderr | src/__tests__/aaa-05-isolation.test.ts > AAA-05 — realtime channel/recipient isolation (real PG + real Redis + real sockets do run isolado) > limita inscrições por conexão e payload por mensagem\n{\"msg\":\"[Realtime] Message exceeds payload limit, closing connection\",\"client_id\":\"client_1789444350448_yr33b5l\",\"max_message_bytes\":2048,\"received_bytes\":4124,\"level\":\"warn\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,25 @@
+{
+  "runId": "prod11-contra",
+  "workerIndex": 38,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60232/cvg_aaa_prod11_contra_w38",
+  "redisUrl": "redis://127.0.0.1:57060",
+  "startedAt": "2026-09-13T17:50:56.131Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-11/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "[outbound-reconciliation] receipt resolved delivery=d1efbe7c-113b-4072-bd9e-f9f6830f249e ref=bdaea8990f2c04da status=sent\n{\n  \"runId\": \"prod11-contra\",\n  \"prefix\": \"prod11-repro-prod11-contra-f34e9482\",\n  \"conversationId\": \"148a0d38-bee8-4630-97c8-7026a86f27cf\",\n  \"A_intencao_ambigua_callback\": {\n    \"sendOutcome\": \"unknown_reconciling\",\n    \"deliveryStatusBeforeReceipt\": \"unknown_reconciling\",\n    \"deliveryStatusAfterReceipt\": \"sent\",\n    \"messageStatusAfterReceipt\": \"delivered\",\n    \"receiptUpdated\": true,\n    \"gatewaySends\": 1,\n    \"defect\": false\n  },\n  \"D_retry_sem_reenvio\": {\n    \"retryOutcome\": \"sent\",\n    \"retryDeduplicated\": true,\n    \"gatewaySends\": 1,\n    \"noBlindResend\": true\n  },\n  \"B_orfa_sem_reconciliacao\": {\n    \"messageId\": \"f1ac3314-0cc5-495f-b799-ad8f32c58da1\",\n    \"deliveryStatus\": \"unknown_reconciling\",\n    \"hasReceiptReconciler\": true,\n    \"hasOrphanList\": true,\n    \"hasExplicitResolve\": true,\n    \"defect\": false\n  },\n  \"C_retencao_sem_politica\": {\n    \"messageId\": \"650ad82d-9c92-4b26-a273-7ea8d7d76323\",\n    \"hasExpireStale\": true,\n    \"hasListExpired\": true,\n    \"hasPurge\": true,\n    \"unknownRetainedAfterTtl\": \"unknown_reconciling\",\n    \"defect\": false\n  },\n  \"verdict\": \"NO_DEFECT_OBSERVED\"\n}\n\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): gateway timeout após aceite\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): crash janela\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): ambiguo\n"
+    }
+  ],
+  "exitCode": 0
+}

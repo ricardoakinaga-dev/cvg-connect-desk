@@ -1,0 +1,230 @@
+{
+  "generatedAt": "2026-09-14T02:08:04.761Z",
+  "runId": "r3-prod15-20260914-a1",
+  "workerIndex": 41,
+  "database": "cvg_aaa_r3_prod15_20260914_a1_w41",
+  "postgresPort": 60532,
+  "storage": {
+    "driver": "s3",
+    "endpoint": "http://127.0.0.1:37039",
+    "bucket": "cvg-media-prod15-f365dde6",
+    "backend": "moto real (S3 protocol sandbox)",
+    "minio": "BLOCKED sem binário local; Docker sem permissão no socket; dono: plataforma"
+  },
+  "scanner": {
+    "driver": "clamav",
+    "host": "127.0.0.1",
+    "port": 53110,
+    "real": true
+  },
+  "limitBytes": 16777216,
+  "ttlSeconds": 120,
+  "users": {
+    "operatorUserId": "0b826c57-70aa-4261-a36c-db87f1ff2a73",
+    "outsiderUserId": "44d22ff9-60f2-4989-824d-00ae04e2b530",
+    "adminUserId": "7f1717ae-1770-42ab-91a0-9933244846f2"
+  },
+  "conversations": {
+    "convA": "751f8170-5b1e-4231-9e46-6b9c522ee9f0",
+    "convB": "9068a16b-b3a7-4d3d-8253-6b786d6122ba",
+    "legacyConv": "61c159c8-576b-4a73-8bea-471f850891c7"
+  },
+  "cases": [
+    {
+      "case": "AC1-limite-16MiB-magic",
+      "exact": {
+        "status": 201,
+        "assetId": "33de95fc-1635-4e54-b11b-782341bd2d69",
+        "sizeBytes": 16777216,
+        "objectBytes": 16777216
+      },
+      "overContentLength": {
+        "status": 413,
+        "error": "PAYLOAD_TOO_LARGE",
+        "recoverable": true
+      },
+      "overStream": {
+        "status": 413,
+        "error": "PAYLOAD_TOO_LARGE"
+      },
+      "overHardLimit": {
+        "status": 413,
+        "error": "PAYLOAD_TOO_LARGE",
+        "maxBytes": 16777216
+      },
+      "disallowed": "MEDIA_MIME_NOT_ALLOWED",
+      "mismatch": "MEDIA_MIME_MISMATCH",
+      "executable": "MEDIA_EXECUTABLE_CONTENT",
+      "elf": "MEDIA_EXECUTABLE_CONTENT",
+      "maxBytes": 16777216
+    },
+    {
+      "case": "AC1-eicar-quarentena",
+      "assetId": "dc06d9f2-8962-442f-b383-391d13ce12b6",
+      "scanStatus": "INFECTED",
+      "storageStatus": "QUARANTINED",
+      "storageKey": "quarantine/751f8170-5b1e-4231-9e46-6b9c522ee9f0/0b826c57-70aa-4261-a36c-db87f1ff2a73/275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f-cf722546",
+      "bytesPreserved": 68,
+      "publicTwinExists": false,
+      "anonymousS3": 403
+    },
+    {
+      "case": "AC1-fail-closed-servicos",
+      "scannerMissing": {
+        "status": 503,
+        "scanStatus": "PENDING_SCAN",
+        "storageStatus": "QUARANTINED"
+      },
+      "scannerTimeout": {
+        "status": 503,
+        "error": "SCANNER_UNAVAILABLE",
+        "scanStatus": "SCAN_FAILED",
+        "bytesPreserved": 59
+      },
+      "storageDown": {
+        "status": 503,
+        "error": "MEDIA_STORAGE_UNAVAILABLE",
+        "recoverable": true
+      }
+    },
+    {
+      "case": "AC1-abort-upload",
+      "assetsBefore": 5,
+      "assetsAfter": 5,
+      "publicObjectsBefore": 2,
+      "publicObjectsAfter": 2,
+      "cleanAssetStillReadable": 200
+    },
+    {
+      "case": "AC2-leitura-clean",
+      "assetId": "59ae4dc6-108c-40a5-be8a-bd81c808bd9b",
+      "anonymousS3": 403,
+      "readStatus": 200,
+      "contentType": "image/png",
+      "cacheControl": "private, max-age=120",
+      "sha256": "f00adc3ac662dab70876a69fb1e22a1534278917f16e2ced3d6cd6d749bfa8c2"
+    },
+    {
+      "case": "AC2-negativos",
+      "anonymous": 401,
+      "outsider": 404,
+      "wrongConversation": 404,
+      "unknownAsset": 404,
+      "malformedAsset": 400,
+      "infected": 422,
+      "pending": 409,
+      "scanFailed": 503,
+      "revoked": 409,
+      "removedObject": 503
+    },
+    {
+      "case": "AC2-ttl-assinatura",
+      "signedExpiresSeconds": 2,
+      "cacheControl": "private, max-age=2",
+      "bareObjectStatus": 403,
+      "forgedSignatureStatus": 200,
+      "forgedSignatureEnforcedBySandbox": false,
+      "note": "moto 5.2.3 não aplica expiração por relógio nem valida HMAC de URL assinada; S3/MinIO real são a fonte dessas garantias (MinIO BLOCKED)."
+    },
+    {
+      "case": "AC3-ciclo-completo",
+      "assetId": "8cf5e85d-42c3-4dc9-a0d8-553f70496c2c",
+      "messageId": "a6a9ddbd-da02-4e8f-b534-a382258fd6b0",
+      "uploadStatus": 201,
+      "sendStatus": 201,
+      "outcome": "accepted",
+      "attachmentFetch": {
+        "status": 200,
+        "length": 26,
+        "sha256": "f00adc3ac662dab70876a69fb1e22a1534278917f16e2ced3d6cd6d749bfa8c2"
+      },
+      "persistedMediaUrl": "asset://8cf5e85d-42c3-4dc9-a0d8-553f70496c2c",
+      "retryStatus": 200,
+      "retryDeduplicated": true,
+      "gatewayCalls": 1,
+      "messages": 1,
+      "deliveries": 1,
+      "assets": 11
+    },
+    {
+      "case": "AC3-envio-bloqueado",
+      "infected": 409,
+      "pending": 409,
+      "scanFailed": 409,
+      "arbitraryUrl": 400,
+      "conflicting": "MEDIA_URL_NOT_ALLOWED",
+      "unknownAsset": 404,
+      "wrongConversation": 403,
+      "gatewayCalls": 0
+    },
+    {
+      "case": "AC4-inbound-prod14-outbound",
+      "messageId": "294d8015-77d5-45c6-8acb-88d791c92c25",
+      "conversationId": "f91046c8-d422-4ce1-aa13-84b82c177fbb",
+      "inboundAssetId": "e1808b4e-05e5-4048-92f8-5ac49815d1b1",
+      "storageKey": "media/f91046c8-d422-4ce1-aa13-84b82c177fbb/294d8015-77d5-45c6-8acb-88d791c92c25/294d8015-77d5-45c6-8acb-88d791c92c25-f00adc3ac662dab7",
+      "intakeState": "CLEAN",
+      "readStatus": 200,
+      "sendStatus": 201,
+      "attachmentFetch": {
+        "status": 200,
+        "length": 26,
+        "sha256": "f00adc3ac662dab70876a69fb1e22a1534278917f16e2ced3d6cd6d749bfa8c2"
+      }
+    },
+    {
+      "case": "AC4-legado-integracao",
+      "dryRun": {
+        "readOnly": true,
+        "zeroMutations": true,
+        "scopedCandidates": 3
+      },
+      "migration": {
+        "published": [
+          {
+            "messageId": "c32bdd16-e7b1-48dc-9c8d-69a29de431c2",
+            "assetId": "54ad6727-3a08-42b6-82b1-3ae27a8b204a",
+            "storageKey": "media/61c159c8-576b-4a73-8bea-471f850891c7/c32bdd16-e7b1-48dc-9c8d-69a29de431c2/c32bdd16-e7b1-48dc-9c8d-69a29de431c2-f00adc3ac662dab7"
+          }
+        ],
+        "blocked": [],
+        "pending": [
+          {
+            "messageId": "b4490451-96b4-479f-9728-1e2d26e9def6",
+            "reasonCode": "fetch_failed"
+          }
+        ],
+        "unavailable": [
+          {
+            "messageId": "754f146a-c229-4159-910e-b57d08526bfc",
+            "reasonCode": "asset_unavailable"
+          }
+        ]
+      },
+      "readStatus": 200,
+      "sendStatus": 201,
+      "attachmentFetch": {
+        "status": 200,
+        "length": 26,
+        "sha256": "f00adc3ac662dab70876a69fb1e22a1534278917f16e2ced3d6cd6d749bfa8c2"
+      },
+      "idempotent": {
+        "assetsBefore": 16,
+        "assetsAfter": 16,
+        "messagesBefore": 7,
+        "messagesAfter": 7
+      },
+      "noRawUrlInHttp": true
+    },
+    {
+      "case": "AC1-config-limite",
+      "nginxProxyLimit": "17m",
+      "apiMaxBytes": 16777216,
+      "composeDefaults": {
+        "MEDIA_MAX_BYTES": 16777216,
+        "MEDIA_REQUIRE_SCAN": "all",
+        "MEDIA_PIPELINE_ENABLED": "true"
+      }
+    }
+  ]
+}

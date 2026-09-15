@@ -9,18 +9,22 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "lint": "echo lint",
-    "test": "vitest run --passWithNoTests",
+    "lint": "eslint . --max-warnings 1",
+    "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/alerts": "workspace:*",
+    "@cvg/chat": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
+    "@cvg/gateway-adapter": "workspace:*",
+    "@cvg/secretary-adapter": "workspace:*",
     "@cvg/shared": "workspace:*",
     "@cvg/tracing": "workspace:*",
+    "dotenv": "^17.3.1",
     "pg": "^8.20.0",
-    "tsx": "^4.0.0"
+    "tsx": "^4.23.13"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",

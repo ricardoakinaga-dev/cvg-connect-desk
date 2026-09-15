@@ -28,15 +28,18 @@ describe('Result Pattern', () => {
   });
 
   describe('pattern matching', () => {
+    const match = <T, E>(result: Result<T, E>, fallback: T): T =>
+      result.isOk() ? result.value : fallback;
+
     it('executa caminho de sucesso', () => {
       const result: Result<string, Error> = ok('dados');
-      const value = result.isOk() ? result.value : 'fallback';
+      const value = match(result, 'fallback');
       expect(value).toBe('dados');
     });
 
     it('executa caminho de erro', () => {
       const result: Result<string, Error> = err(new Error('erro'));
-      const value = result.isOk() ? result.value : 'fallback';
+      const value = match(result, 'fallback');
       expect(value).toBe('fallback');
     });
   });

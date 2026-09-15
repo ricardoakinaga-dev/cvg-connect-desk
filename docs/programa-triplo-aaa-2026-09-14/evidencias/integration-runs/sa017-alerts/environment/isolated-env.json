@@ -1,0 +1,24 @@
+{
+  "runId": "sa017-alerts",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59932/cvg_aaa_sa017_alerts_w35",
+  "databaseName": "cvg_aaa_sa017_alerts_w35",
+  "databasePort": 59932,
+  "redisUrl": "redis://127.0.0.1:57030",
+  "redisPort": 57030,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1203738,
+    "dataDir": "/tmp/cvg-aaa-runs/sa017-alerts/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1203756,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa017-alerts",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 22:52:47.962778-03"
+  }
+}

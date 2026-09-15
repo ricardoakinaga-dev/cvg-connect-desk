@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "tasks": 45,
+  "original_tasks_preserved": 44,
+  "original_acceptance_requirements_unchanged": 194,
+  "original_audit_items": 55,
+  "finding_records": 37,
+  "all_findings_have_executor_before_release_review": true,
+  "execution_status": "45 PLANNED",
+  "note": "Structure/content preservation and ordering, not product certification."
+}

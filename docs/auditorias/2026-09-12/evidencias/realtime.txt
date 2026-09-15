@@ -1,0 +1,142 @@
+
+ RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/realtime-service
+
+stdout | src/__tests__/audit-isolation-20260912.tmp.test.ts > audit: message payload broadcasts globally to users of distinct sectors
+{"msg":"[Realtime] Broadcast to channel","channel":"global","recipient_count":2,"level":"info"}
+{"msg":"[Realtime] Projected event","event_type":"message.persisted","aggregate_id":"synthetic-message","aggregate_type":"Message","level":"info"}
+
+ ✓ src/__tests__/audit-isolation-20260912.tmp.test.ts (1 test) 7ms
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > blocks subscribe before auth and emits subscribe.error
+{"msg":"[Realtime] HTTP polling started","api_url":"http://127.0.0.1:32857","level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Redis bus subscribed","instance_id":"rt-8931d2ab","channel":"cvg:realtime","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > blocks subscribe before auth and emits subscribe.error
+{"msg":"[Realtime] WebSocket server listening","port":37961,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > blocks subscribe before auth and emits subscribe.error
+{"msg":"[Realtime] New connection awaiting message-based auth","client_id":"client_1789243440680_j71468v","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > blocks subscribe before auth and emits subscribe.error
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243440680_j71468v","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > blocks subscribe before auth and emits subscribe.error
+{"msg":"[Realtime] Server stopped","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] HTTP polling started","api_url":"http://127.0.0.1:37095","level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Redis bus subscribed","instance_id":"rt-ce63e316","channel":"cvg:realtime","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] WebSocket server listening","port":40473,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] New connection awaiting message-based auth","client_id":"client_1789243440815_xb6eubb","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] Message-based auth","client_id":"client_1789243440815_xb6eubb","auth_method":"message-token","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] Client authenticated","client_id":"client_1789243440815_xb6eubb","user_id":"user-message","level":"info"}
+{"msg":"[Realtime] Starting token revalidation timer","client_id":"client_1789243440815_xb6eubb","interval_ms":50,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] Client subscribed to channel","client_id":"client_1789243440815_xb6eubb","channel":"global","level":"info"}
+{"msg":"[Realtime] Client subscribed to channel","client_id":"client_1789243440815_xb6eubb","channel":"global","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243440815_xb6eubb","level":"info"}
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243440815_xb6eubb","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > accepts message-based auth and allows subscribe after auth.success
+{"msg":"[Realtime] Server stopped","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] HTTP polling started","api_url":"http://127.0.0.1:34949","level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Redis bus subscribed","instance_id":"rt-7fff84ac","channel":"cvg:realtime","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] WebSocket server listening","port":44663,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] New connection awaiting message-based auth","client_id":"client_1789243440969_97ei288","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] Message-based auth","client_id":"client_1789243440969_97ei288","auth_method":"message-token","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] Client authenticated","client_id":"client_1789243440969_97ei288","user_id":"user-message","level":"info"}
+{"msg":"[Realtime] Starting token revalidation timer","client_id":"client_1789243440969_97ei288","interval_ms":50,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243440969_97ei288","level":"info"}
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243440969_97ei288","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > answers app-level ping with pong (heartbeat)
+{"msg":"[Realtime] Server stopped","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] HTTP polling started","api_url":"http://127.0.0.1:37145","level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Redis bus subscribed","instance_id":"rt-f87cde9e","channel":"cvg:realtime","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] WebSocket server listening","port":45819,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] New connection awaiting message-based auth","client_id":"client_1789243441123_7ubst42","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] Message-based auth","client_id":"client_1789243441123_7ubst42","auth_method":"message-token","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] Client authenticated","client_id":"client_1789243441123_7ubst42","user_id":"user-revalidate","level":"info"}
+{"msg":"[Realtime] Starting token revalidation timer","client_id":"client_1789243441123_7ubst42","interval_ms":50,"level":"info"}
+
+stderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] Token revalidation failed","client_id":"client_1789243441123_7ubst42","http_status":401,"level":"warn"}
+{"msg":"[Realtime] Revalidation failure — closing connection","client_id":"client_1789243441123_7ubst42","reason":"Token revoked: 401","close_code":4002,"level":"warn"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243441123_7ubst42","level":"info"}
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243441123_7ubst42","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure
+{"msg":"[Realtime] Server stopped","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] HTTP polling started","api_url":"http://127.0.0.1:39925","level":"info"}
+{"msg":"[Realtime] Event polling started","level":"info"}
+{"msg":"[Realtime] Redis bus subscribed","instance_id":"rt-8fa03f53","channel":"cvg:realtime","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] WebSocket server listening","port":41929,"level":"info"}
+
+stderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] Legacy connection with token in URL","client_id":"client_1789243441302_oiubir5","auth_method":"url-token","level":"warn"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] Client authenticated","client_id":"client_1789243441302_oiubir5","user_id":"user-legacy","level":"info"}
+{"msg":"[Realtime] Starting token revalidation timer","client_id":"client_1789243441302_oiubir5","interval_ms":50,"level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] Client subscribed to channel","client_id":"client_1789243441302_oiubir5","channel":"global","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] Connection closed","client_id":"client_1789243441302_oiubir5","level":"info"}
+
+stdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > keeps legacy URL-token authentication working for compatibility
+{"msg":"[Realtime] Server stopped","level":"info"}
+
+ ✓ src/__tests__/realtime-auth-behavioral.test.ts (5 tests) 793ms
+stderr | unknown test
+{"msg":"[Realtime] Token revalidation error","client_id":"client_1789243441302_oiubir5","error":"fetch failed","level":"error"}
+
+
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  17:03:59
+   Duration  1.96s (transform 230ms, setup 0ms, collect 1.61s, tests 800ms, environment 0ms, prepare 222ms)
+

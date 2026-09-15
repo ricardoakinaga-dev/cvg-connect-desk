@@ -16,8 +16,9 @@ const viewports = [
 
 const results = [];
 const summary = {
+  generatedAt: new Date().toISOString(),
   conversations: { total: 184, open: 27, pending: 9, closed: 148 },
-  tasks: { total: 72, pending: 12, inProgress: 8, completed: 49, overdue: 3 },
+  tasks: { total: 2, pending: 1, inProgress: 1, completed: 0, overdue: 1 },
   alerts: { total: 18, active: 5, acknowledged: 9, resolved: 4, bySeverity: { critical: 1, error: 1, warning: 2, info: 1 } },
 };
 const premium = {
@@ -49,6 +50,23 @@ const demoAdminUsers = [
 const demoAdminRoles = [{ id: 'role-1', name: 'Atendimento', description: 'Acesso ao fluxo operacional e às conversas.' }];
 const demoAdminQueues = [{ id: 'queue-1', name: 'Recepção', description: 'Triagem e primeiro atendimento.', isActive: true }];
 const demoAdminTeams = [{ id: 'team-1', name: 'Equipe Clínica', description: 'Veterinários em atendimento.', isActive: true }];
+const demoAuthUser = {
+  id: 'visual-user',
+  name: 'Equipe CVG',
+  email: 'atendimento@cevetguarapiranga.com.br',
+  isActive: true,
+  createdAt: new Date(Date.now() - 180 * 86400000).toISOString(),
+  roles: ['ADMIN', 'Gestão'],
+  permissions: [
+    'chat:read', 'chat:write', 'chat:delete',
+    'tasks:read', 'tasks:write', 'tasks:delete',
+    'notes:read', 'notes:write', 'notes:delete',
+    'alerts:read', 'alerts:write', 'alerts:delete',
+    'dashboard:read', 'admin:read', 'admin:write', 'audit:read',
+  ],
+  permissionsAuthoritative: true,
+  sectors: demoSectors.map(({ id, name, code }) => ({ id, name, code, accessLevel: 'admin' })),
+};
 const demoConversations = { conversations: [{ id: 'conv-1', contactId: 'contact-1', contactName: 'Ricardo Akinaga', contactPhone: '11999999999', status: 'open', statusV2: 'em_atendimento', sectorId: 'reception', unreadCount: 1, updatedAt: new Date().toISOString(), createdAt: new Date().toISOString(), lastMessage: { content: 'Pode esclarecer um pouco mais sua solicitação?', direction: 'outbound', createdAt: new Date(Date.now() - 780000).toISOString() } }] };
 const demoContacts = [{ id: 'contact-1', name: 'Marina Souza', phone: '11999999999', email: 'marina@example.com', createdAt: new Date().toISOString() }];
 const demoContactGroups = [{ id: 'group-1', name: 'Equipe Retorno', description: 'Acompanhamentos clínicos', groupType: 'internal', color: '#0284c7', icon: '', memberCount: 2 }];
@@ -65,6 +83,7 @@ const demoKanban = { columns: [
 ], filters: { sectors: [{ id: 'reception', name: 'Recepção', icon: '', color: '#0ea5e9' }], labels: [] } };
 const routeApi = async (route) => {
   const path = new URL(route.request().url()).pathname;
+  if (path.endsWith('/auth/me')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ user: demoAuthUser }) });
   if (path.endsWith('/metrics/summary')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(summary) });
   if (path.endsWith('/metrics/premium')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(premium) });
   if (path.endsWith('/kanban/board')) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(demoKanban) });
@@ -111,9 +130,6 @@ for (const viewport of viewports) {
   });
   const page = await context.newPage();
   await page.route('**/*', (route) => ['fetch', 'xhr'].includes(route.request().resourceType()) ? routeApi(route) : route.continue());
-  await page.route('**/api/**', routeApi);
-  await page.route('http://localhost:3000/**', routeApi);
-  await page.route('**/metrics/**', routeApi);
   await page.goto(`${baseUrl}/inbox`, { waitUntil: 'networkidle' });
   await page.screenshot({ path: `${outputDir}/inbox-${viewport.name}.png`, fullPage: true });
   results.push(await page.evaluate((name) => ({
@@ -131,9 +147,7 @@ for (const viewport of viewports) {
   const context = await browser.newContext({ viewport, reducedMotion: 'no-preference' });
   await context.addInitScript(() => localStorage.setItem('auth-storage', JSON.stringify({ state: { token: 'visual-only-token', user: { id: 'visual-user', name: 'Equipe CVG', email: 'visual@local', roles: ['Gestão'] }, isAuthenticated: true }, version: 0 })));
   const page = await context.newPage();
-  await page.route('**/api/**', routeApi);
-  await page.route('http://localhost:3000/**', routeApi);
-  await page.route('**/metrics/**', routeApi);
+  await page.route('**/*', (route) => ['fetch', 'xhr'].includes(route.request().resourceType()) ? routeApi(route) : route.continue());
   await page.goto(`${baseUrl}/dashboard`, { waitUntil: 'networkidle' });
   await page.screenshot({ path: `${outputDir}/dashboard-${viewport.name}.png`, fullPage: true });
   results.push(await page.evaluate((name) => ({ target: `dashboard-${name}`, innerWidth: innerWidth, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight }), viewport.name));
@@ -149,19 +163,25 @@ for (const target of ['tasks', 'alerts', 'notes', 'kanban', 'sectors', 'labels',
     await page.goto(`${baseUrl}/${target}`, { waitUntil: 'networkidle' });
     if (target === 'contacts') {
       await page.getByRole('button', { name: /Marina Souza/ }).click();
-      await page.locator('.contacts-page.has-selection').waitFor();
+      await page.locator('.contacts-col-profile .ui-loading').waitFor({ state: 'hidden' });
+      await page.locator('.contacts-col-profile .profile-header').waitFor();
     }
     if (target === 'contact-groups') {
       await page.getByRole('button', { name: /^Equipe Retorno/ }).click();
       await page.locator('.contact-groups-page.has-selection').waitFor();
+      await page.locator('.group-detail .ui-loading').waitFor({ state: 'hidden' });
     }
     if (target === 'tutors') {
       await page.locator('.entity-table tbody tr').first().click();
       await page.locator('.entity-page.has-selection').waitFor();
+      await page.locator('.entity-detail .ui-loading').waitFor({ state: 'hidden' });
+      await page.locator('.entity-detail-list').waitFor();
     }
     if (target === 'patients') {
       await page.locator('.entity-table tbody tr').first().click();
       await page.locator('.entity-page.has-selection').waitFor();
+      await page.locator('.entity-detail .ui-loading').waitFor({ state: 'hidden' });
+      await page.locator('.entity-detail-list').waitFor();
     }
     await page.screenshot({ path: `${outputDir}/${target}-${viewport.name}.png`, fullPage: true });
     results.push(await page.evaluate(({ target, name }) => {
@@ -183,7 +203,7 @@ for (const target of ['tasks', 'alerts', 'notes', 'kanban', 'sectors', 'labels',
         const bg = lum(parse(bgValue)); return Number(((Math.max(fg, bg) + .05) / (Math.min(fg, bg) + .05)).toFixed(2));
       };
       const singlePanelSelection = target === 'contacts' ? document.querySelector('.contacts-page')?.classList.contains('has-selection') && (innerWidth > 860 || !visible(document.querySelector('.contacts-col-list'))) : target === 'contact-groups' ? document.querySelector('.contact-groups-page')?.classList.contains('has-selection') && (innerWidth > 860 || !visible(document.querySelector('.groups-list'))) : target === 'tutors' || target === 'patients' ? document.querySelector('.entity-page')?.classList.contains('has-selection') && (innerWidth > 900 || !visible(document.querySelector('.entity-layout > section'))) : true;
-      return { target: `${target}-${name}`, innerWidth, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight, unnamedControls, hasTouchMoveAlternative: target !== 'kanban' || !!document.querySelector('.card-move select'), singlePanelSelection, adminTabsVisible: target !== 'admin' || Array.from(document.querySelectorAll('.admin-tab')).every(visible), adminTableScrollable: target !== 'admin' || !!tableScroll && tableScroll.scrollWidth > tableScroll.clientWidth, contrastChecks: target === 'alerts' ? { filterLabel: contrast('.filter-label'), alertTime: contrast('.alert-time'), acknowledgedTime: contrast('.alert-ack') } : target === 'tasks' ? { filterLabel: contrast('.filter-label') } : target === 'kanban' ? { cardTime: contrast('.card-time') } : null };
+      return { target: `${target}-${name}`, innerWidth, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight, unnamedControls, hasTouchMoveAlternative: target !== 'kanban' || !!document.querySelector('.card-move select'), singlePanelSelection, adminTabsVisible: target !== 'admin' || Array.from(document.querySelectorAll('.admin-tab')).every(visible), adminTableScrollable: target !== 'admin' || innerWidth > 720 || (!!tableScroll && tableScroll.scrollWidth > tableScroll.clientWidth), contrastChecks: target === 'alerts' ? { filterLabel: contrast('.filter-label'), alertTime: contrast('.alert-time'), acknowledgedTime: contrast('.alert-ack') } : target === 'tasks' ? { filterLabel: contrast('.filter-label') } : target === 'kanban' ? { cardTime: contrast('.card-time') } : null };
     }, { target, name: viewport.name }));
     await context.close();
   }

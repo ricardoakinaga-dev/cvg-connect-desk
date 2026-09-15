@@ -1,0 +1,561 @@
+{
+  "requirements": [
+    {
+      "id": "B01",
+      "name": "Arquitetura e API",
+      "baseline_score": 79,
+      "target_score": 95,
+      "baseline_observation": "API registra os módulos efetivos; controllers antigos ainda concentram regras e persistência.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 0
+    },
+    {
+      "id": "B02",
+      "name": "Autenticação e sessões",
+      "baseline_score": 89,
+      "target_score": 95,
+      "baseline_observation": "Sessões opacas, hash, expiração/inatividade, rotação e validação de login. Não exigir JWT como sinônimo de segurança.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 1
+    },
+    {
+      "id": "B03",
+      "name": "RBAC e autorização por recurso",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Permissões do banco, ação + recurso/setor e negação por ausência de vínculo; agregados globais precisam de regra explícita.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 2
+    },
+    {
+      "id": "B04",
+      "name": "Administração/IAM",
+      "baseline_score": 57,
+      "target_score": 95,
+      "baseline_observation": "CRUD de usuários, papéis, filas/times; hash exposto nas respostas e alterações parcialmente transacionais.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 3
+    },
+    {
+      "id": "B05",
+      "name": "Chat inbound/outbound",
+      "baseline_score": 89,
+      "target_score": 95,
+      "baseline_observation": "Núcleo transacional com idempotência, locks, outbox e reconciliação; caminhos alternativos não têm as mesmas garantias.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 4
+    },
+    {
+      "id": "B06",
+      "name": "Contatos",
+      "baseline_score": 69,
+      "target_score": 95,
+      "baseline_observation": "CRUD/busca/detalhe e início de conversa; startConversation separa conversa e histórico sem transação/evento.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 5
+    },
+    {
+      "id": "B07",
+      "name": "Kanban — comportamento backend",
+      "baseline_score": 59,
+      "target_score": 95,
+      "baseline_observation": "Board e movimento com autorização; reabertura mantém conversa inativa e movimento faz escritas independentes.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 6
+    },
+    {
+      "id": "B08",
+      "name": "Tarefas — domínio",
+      "baseline_score": 87,
+      "target_score": 95,
+      "baseline_observation": "Criação e transições com vínculo, histórico, controle concorrente, auditoria e outbox.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 7
+    },
+    {
+      "id": "B09",
+      "name": "Notas — domínio",
+      "baseline_score": 86,
+      "target_score": 95,
+      "baseline_observation": "Autoria vem da sessão; referências e persistência com auditoria/outbox transacionais.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 8
+    },
+    {
+      "id": "B10",
+      "name": "Alertas — domínio",
+      "baseline_score": 85,
+      "target_score": 95,
+      "baseline_observation": "Lifecycle de criação/reconhecimento/resolução; histórico anterior pode ficar desatualizado numa corrida ack/resolve.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 9
+    },
+    {
+      "id": "B11",
+      "name": "Transferências",
+      "baseline_score": 88,
+      "target_score": 95,
+      "baseline_observation": "Criação, aceite e rejeição com transações, trilha e controle de concorrência.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 10
+    },
+    {
+      "id": "B12",
+      "name": "Setores, etiquetas e grupos — domínio",
+      "baseline_score": 77,
+      "target_score": 95,
+      "baseline_observation": "Rotas, casos de uso e repositórios reais; inspeção amostral de operações, sem validar toda combinação de membership.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 11
+    },
+    {
+      "id": "B13",
+      "name": "Tutores e pacientes — domínio",
+      "baseline_score": 80,
+      "target_score": 95,
+      "baseline_observation": "CRUD com validação e RBAC; paciente conserva tutorId singular, enquanto o alvo documental prevê N:N.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 12
+    },
+    {
+      "id": "B14",
+      "name": "Dashboard/KPIs — domínio",
+      "baseline_score": 76,
+      "target_score": 95,
+      "baseline_observation": "Consultas reais de fluxo/aging/handoff; validação de datas e agrupamento irregular; escopo global exige decisão.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 13
+    },
+    {
+      "id": "B15",
+      "name": "Auditoria de negócio",
+      "baseline_score": 76,
+      "target_score": 95,
+      "baseline_observation": "Persistência e trilha no núcleo recente; ausente ou posterior ao commit em caminhos antigos de admin/contatos/Kanban.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 14
+    },
+    {
+      "id": "B16",
+      "name": "Banco, integridade e migrações",
+      "baseline_score": 86,
+      "target_score": 95,
+      "baseline_observation": "Schema amplo, FKs/índices e migração fresca executada; upgrade e todos invariantes não foram exercitados nesta rodada.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 15
+    },
+    {
+      "id": "B17",
+      "name": "Eventos, outbox e DLQ",
+      "baseline_score": 90,
+      "target_score": 95,
+      "baseline_observation": "Claims por consumidor, lease/fencing, retry e DLQ persistente; suíte com PG/Redis passou, sem prova integral de crash físico.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 16
+    },
+    {
+      "id": "B18",
+      "name": "Worker",
+      "baseline_score": 88,
+      "target_score": 95,
+      "baseline_observation": "Contrato de eventos, efeito antes de ACK, classificação de falhas, retry e DLQ; não é prova de operação prolongada.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 17
+    },
+    {
+      "id": "B19",
+      "name": "Realtime — implementação",
+      "baseline_score": 88,
+      "target_score": 95,
+      "baseline_observation": "Auth por mensagem, autorização por entrega, revalidação e fanout; boot nativo passou. Falha de configuração Compose é pontuada em operação.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 18
+    },
+    {
+      "id": "B20",
+      "name": "Gateway e compatibilidade de canal",
+      "baseline_score": 86,
+      "target_score": 95,
+      "baseline_observation": "Adapter com timeout, aceite ambíguo e retry condicionado à idempotência; integração com provedor real não foi executada.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 19
+    },
+    {
+      "id": "B21",
+      "name": "Secretary e controles de IA",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Invocação persistida, handoff, policy/budget e aprovação; ferramentas/provedor real e política operacional ainda não certificados.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 20
+    },
+    {
+      "id": "B22",
+      "name": "Privacidade e solicitações de titulares",
+      "baseline_score": 83,
+      "target_score": 95,
+      "baseline_observation": "Exportação por escopo e operação retomável; rota legada já checa escopo. Políticas, resíduos/backup e eliminação real exigem validação própria.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 21
+    },
+    {
+      "id": "B23",
+      "name": "Mídia privada e quarentena",
+      "baseline_score": 81,
+      "target_score": 95,
+      "baseline_observation": "Storage/scanner, CLEAN/INFECTED e retomada implementados; 26 testes passaram e 21 específicos foram ignorados. MinIO/ClamAV reais não validados aqui.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "backend",
+      "source_index": 22
+    },
+    {
+      "id": "UI01",
+      "name": "Login",
+      "baseline_score": 88,
+      "target_score": 95,
+      "baseline_observation": "Identidade, legibilidade e ação principal claras.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 0
+    },
+    {
+      "id": "UI02",
+      "name": "Inbox",
+      "baseline_score": 80,
+      "target_score": 95,
+      "baseline_observation": "Master/detail e ações implementados; atalhos perdem contexto e painel não mostra pendências inline.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 1
+    },
+    {
+      "id": "UI03",
+      "name": "Dashboard",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Métricas e estados parciais explícitos; percurso móvel longo.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 2
+    },
+    {
+      "id": "UI04",
+      "name": "Tarefas",
+      "baseline_score": 78,
+      "target_score": 95,
+      "baseline_observation": "Ações/erros claros; contexto descartado e conteúdo útil abaixo de muitos resumos.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 3
+    },
+    {
+      "id": "UI05",
+      "name": "Alertas",
+      "baseline_score": 77,
+      "target_score": 95,
+      "baseline_observation": "Severidade e ações identificadas; alerta crítico deslocado no celular.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 4
+    },
+    {
+      "id": "UI06",
+      "name": "Notas",
+      "baseline_score": 72,
+      "target_score": 95,
+      "baseline_observation": "Estados claros; exige ID manual e descarta contexto da conversa.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 5
+    },
+    {
+      "id": "UI07",
+      "name": "Kanban — superfície",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Rolagem contida e alternativa de movimento por teclado/toque; nota não valida persistência do movimento.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 6
+    },
+    {
+      "id": "UI08",
+      "name": "Contatos",
+      "baseline_score": 85,
+      "target_score": 95,
+      "baseline_observation": "Lista/detalhe móvel e início de atendimento visíveis.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 7
+    },
+    {
+      "id": "UI09",
+      "name": "Tutores",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Cadastro e vínculos apresentados de forma consistente.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 8
+    },
+    {
+      "id": "UI10",
+      "name": "Pacientes",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Vínculo com tutor claro; modelo N:N continua pendência do domínio.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 9
+    },
+    {
+      "id": "UI11",
+      "name": "Setores",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "Composição, ações e status coerentes.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 10
+    },
+    {
+      "id": "UI12",
+      "name": "Etiquetas/Labels",
+      "baseline_score": 82,
+      "target_score": 95,
+      "baseline_observation": "Estado vazio útil; vocabulário inconsistente.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 11
+    },
+    {
+      "id": "UI13",
+      "name": "Grupos de contatos",
+      "baseline_score": 83,
+      "target_score": 95,
+      "baseline_observation": "Lista/detalhe móvel funcional; apresentação de telefone pouco refinada.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 12
+    },
+    {
+      "id": "UI14",
+      "name": "Admin — superfície",
+      "baseline_score": 83,
+      "target_score": 95,
+      "baseline_observation": "Tabela orienta rolagem e diálogos passaram teclado; não neutraliza exposição de dados na API.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 13
+    },
+    {
+      "id": "UI15",
+      "name": "Audit — superfície",
+      "baseline_score": 79,
+      "target_score": 95,
+      "baseline_observation": "Busca exige códigos técnicos; estados vazios claros.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 14
+    },
+    {
+      "id": "UI16",
+      "name": "Configurações/perfil",
+      "baseline_score": 82,
+      "target_score": 95,
+      "baseline_observation": "Perfil e segurança legíveis; excesso de detalhes internos.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "frontend",
+      "source_index": 15
+    },
+    {
+      "id": "OP01",
+      "name": "CI e gates de qualidade",
+      "baseline_score": 72,
+      "target_score": 95,
+      "baseline_observation": "Checkout por SHA, lockfile e agregação implementados; 51 testes do agregador passaram. Falta evidência integral de release.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 0
+    },
+    {
+      "id": "OP02",
+      "name": "Docker e implantação",
+      "baseline_score": 50,
+      "target_score": 95,
+      "baseline_observation": "Hardening de containers existe, mas realtime não recebe DATABASE_URL no Compose de produção.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 1
+    },
+    {
+      "id": "OP03",
+      "name": "Segurança operacional e cadeia de fornecimento",
+      "baseline_score": 62,
+      "target_score": 95,
+      "baseline_observation": "Scans/SBOM declarados; scan de container cobre apenas API e não comprova identidade de todas imagens entregues.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 2
+    },
+    {
+      "id": "OP04",
+      "name": "Observabilidade",
+      "baseline_score": 49,
+      "target_score": 95,
+      "baseline_observation": "Métricas autenticadas e tracing existem; não há conjunto provisionável completo de dashboards/regras de alerta.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 3
+    },
+    {
+      "id": "OP05",
+      "name": "Testes e cobertura contratual",
+      "baseline_score": 71,
+      "target_score": 95,
+      "baseline_observation": "1209 testes passaram com banco isolado; 21 skips e várias suites excluídas pelo comando. Coverage global não é gate implementado.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 4
+    },
+    {
+      "id": "OP06",
+      "name": "Performance e capacidade demonstrada",
+      "baseline_score": 33,
+      "target_score": 95,
+      "baseline_observation": "Bundle dentro dos limites declarados; sem execução do perfil de carga e sem percentis de produção. A nota mede comprovação, não lentidão observada.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 5
+    },
+    {
+      "id": "OP07",
+      "name": "Backup, restore e continuidade",
+      "baseline_score": 45,
+      "target_score": 95,
+      "baseline_observation": "Scripts de backup/restore existem; verificador aceita fixture parcial e não prova backup externo durável/RPO/RTO.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "operacao",
+      "source_index": 6
+    },
+    {
+      "id": "Q01",
+      "name": "Qualidade TypeScript/lint/build",
+      "baseline_score": 84,
+      "target_score": 95,
+      "baseline_observation": "33 checks lint e 33 typecheck passaram sem cache; 6 builds passaram; 105 avisos e páginas extensas permanecem.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "qualidade_documentacao",
+      "source_index": 0
+    },
+    {
+      "id": "Q02",
+      "name": "Consistência e uso da documentação",
+      "baseline_score": 50,
+      "target_score": 95,
+      "baseline_observation": "Inventário amplo e critérios úteis, mas descrições atuais conflitam com fonte e com outras seções; planos/histórico se misturam.",
+      "source": "../auditorias/2026-09-14/NOTAS.json",
+      "source_group": "qualidade_documentacao",
+      "source_index": 1
+    },
+    {
+      "id": "UX01",
+      "name": "Cobertura de áreas/rotas",
+      "baseline_score": 92,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX02",
+      "name": "Arquitetura frontend",
+      "baseline_score": 75,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX03",
+      "name": "Navegação e shell",
+      "baseline_score": 86,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX04",
+      "name": "Continuidade contextual",
+      "baseline_score": 68,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX05",
+      "name": "Hierarquia/densidade",
+      "baseline_score": 78,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX06",
+      "name": "Identidade/cores/consistência",
+      "baseline_score": 86,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX07",
+      "name": "Tipografia",
+      "baseline_score": 78,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX08",
+      "name": "Responsividade observada",
+      "baseline_score": 84,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX09",
+      "name": "Acessibilidade observada",
+      "baseline_score": 87,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX10",
+      "name": "Estados e recuperação",
+      "baseline_score": 88,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    },
+    {
+      "id": "UX11",
+      "name": "Conexões UI/API inspecionadas",
+      "baseline_score": 76,
+      "target_score": 95,
+      "source": "../auditorias/2026-09-14/RELATORIO.md#3-interface--16-superfícies"
+    }
+  ]
+}

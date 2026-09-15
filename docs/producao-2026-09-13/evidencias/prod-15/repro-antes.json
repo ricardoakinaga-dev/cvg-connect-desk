@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-09-13T18:16:00.000Z",
+  "candidate": {
+    "head": "754f9badac46278e77d21de91c58eedb15e80581",
+    "worktree": "deltas PROD-04..PROD-16 não commitados preservados (este cartão adiciona apenas suíte+evidência)"
+  },
+  "finding": {
+    "id": "BE15",
+    "audit": "docs/auditorias/2026-09-13/RELATORIO.md:58",
+    "score": 82,
+    "observed": "Upload dedicado e entrega asset CLEAN; 6 testes media-security-final PASS. MinIO/ClamAV reais e 16MiB HTTP NOT_RUN.",
+    "task": "docs/producao-2026-09-13/tasks/PROD-15.md (AC1-AC4) — verificação TO_CREATE antes deste cartão."
+  },
+  "before": {
+    "prod15Suite": "apps/desk-api/src/__tests__/production/prod-15.test.ts ausente (TO_CREATE)",
+    "prod15Evidence": "docs/producao-2026-09-13/evidencias/prod-15/ ausente",
+    "realMediaSuite": {
+      "file": "packages/media/src/__tests__/aaa-10-media-boundary.test.ts",
+      "gate": "describe.skip sem AAA10_REAL_SERVICES=1; além disso DATABASE_URL fixo 127.0.0.1:56432 / cvg_aaa_aaa_20260912_a10 com marcador aaa-20260912-a10",
+      "observedWithoutFlag": "8 testes skipped",
+      "command": "node scripts/production/run-integration-isolated.mjs --run-id prod15-reg-media --worker 41 -- pnpm --filter @cvg/media exec vitest run",
+      "result": "26 passed | 21 skipped (47) — aaa-10 (8) e minio-real (7) integralmente skipados; clamav-real 6/12 skipados por gate de serviço"
+    },
+    "httpContractSuite": {
+      "file": "apps/desk-api/src/__tests__/aaa-10.integration.test.ts",
+      "gate": "DATABASE_URL fixo na porta 56432 + marcador aaa-20260912-a10 (namespace AAA-10), não coberto pelo runner prod15",
+      "note": "contrato HTTP 16MiB/413/magic/EICAR/entrega já existia, mas fora do runner isolado do cartão e com mocks de módulo (integration-mocks)."
+    },
+    "minio": {
+      "status": "BLOCKED",
+      "source": "docs/producao-2026-09-13/evidencias/prod-00/environment/availability.json",
+      "detail": "binario minio ausente; Docker sem permissao no socket",
+      "owner": "plataforma"
+    },
+    "clamavAvailabilityJson": {
+      "status": "BLOCKED (clamscan ausente)",
+      "observedNow": "clamd real responde zPING em 127.0.0.1:53110 (reutilizado por PROD-14 e PROD-15)"
+    }
+  },
+  "currentLimitObserved": {
+    "mediaMaxBytes": 16777216,
+    "nginxClientMaxBodySize": "17m",
+    "apiBinaryParserLimit": "16777216 + 4096 (overhead de transporte)",
+    "signedUrlTtlSeconds": 120,
+    "storagePrefixes": ["media/ (CLEAN+STORED, bucket privado)", "quarantine/ (não entregável)"]
+  }
+}

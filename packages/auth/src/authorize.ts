@@ -1,4 +1,4 @@
-import { hasPermission, type Permission } from './rbac';
+import { actorGrantsPermission, hasAuthoritativePermissions, type Permission } from './rbac';
 import { sectorPermissionService } from './sector-permissions';
 
 /**
@@ -15,6 +15,14 @@ import { sectorPermissionService } from './sector-permissions';
 export interface AuthzActor {
   id: string;
   roles: string[];
+  /** Permissões efetivas do banco (D01/PROD-04-AC3); ausente = catálogo estático. */
+  permissions?: string[];
+  /**
+   * true quando `role_permissions` tem linhas (instalação provisionada): o
+   * conjunto resolvido — mesmo vazio — é autoritativo e o override de Admin
+   * do modo legado não se aplica.
+   */
+  permissionsAuthoritative?: boolean;
 }
 
 export interface AuthzResource {
@@ -88,14 +96,16 @@ export async function authorize(
   }
 
   const roles = actor.roles ?? [];
-  if (roles.includes('Admin')) {
+
+  // Fonte efetiva do banco é autoritativa quando a instalação está
+  // provisionada (flag) ou quando o conjunto resolvido veio não vazio; o
+  // override global de Admin permanece apenas no modo legado (sem
+  // `role_permissions`). Built-in/Admin com conjunto vazio = negado.
+  if (!hasAuthoritativePermissions(actor) && roles.includes('Admin')) {
     return { allowed: true, reason: 'global-admin' };
   }
 
-  const granted = roles.some((role) =>
-    hasPermission(role as Parameters<typeof hasPermission>[0], action),
-  );
-  if (!granted) {
+  if (!actorGrantsPermission(actor, action)) {
     return { allowed: false, reason: 'missing-permission' };
   }
 

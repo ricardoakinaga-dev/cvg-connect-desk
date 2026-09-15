@@ -90,12 +90,13 @@ jobs:
           version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: '24.20.0'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      # Gate em critical (highs passam por triagem via dependency-review em PRs;
-      # ver docs/TRIPLE_AAA_CERTIFICATION.md para o estado atual).
-      - run: pnpm audit --audit-level=critical
+      # Hardened per AAA-15 triage (zero High/Critical in delivered scope):
+      # security:audit[:prod] = `pnpm audit --audit-level=high`.
+      - run: pnpm security:audit
+      - run: pnpm security:audit:prod
 
   sbom:
     name: SBOM (CycloneDX)
@@ -105,7 +106,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: '24.20.0'
       - uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0
         with:
           path: ./

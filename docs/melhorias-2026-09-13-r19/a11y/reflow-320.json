@@ -1,0 +1,249 @@
+[
+  {
+    "route": "login",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": []
+  },
+  {
+    "route": "inbox",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup.active (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "contacts",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "tutors",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "patients",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "kanban",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "tasks",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "notes",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "alerts",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "dashboard",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "sectors",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "labels",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "contact-groups",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "admin",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "audit",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  },
+  {
+    "route": "settings",
+    "overflowX": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "offenders": [
+      "aside.sidebar (left=-298, right=-14)",
+      "div.sidebar-header (left=-298, right=-15)",
+      "a.brand-lockup (left=-280, right=-89)",
+      "span.brand-mark (left=-280, right=-226)",
+      "img (left=-280, right=-226)",
+      "span.brand-copy (left=-214, right=-89)",
+      "strong (left=-214, right=-89)",
+      "small (left=-214, right=-89)"
+    ]
+  }
+]

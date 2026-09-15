@@ -27,7 +27,7 @@ describe('gateway → chat message contracts', () => {
   };
 
   it('normalizeEvolutionMessage produz WA_INBOUND com IDs obrigatórios', () => {
-    const waEvent = normalizeEvolutionMessage(evolutionTextPayload, 'MESSAGES_UPSERT');
+    const waEvent = normalizeEvolutionMessage(evolutionTextPayload);
 
     expect(waEvent).not.toBeNull();
     expect(waEvent?.event_type).toBe('WA_INBOUND');
@@ -36,7 +36,7 @@ describe('gateway → chat message contracts', () => {
   });
 
   it('pipeline Evolution → WA_INBOUND → interno satisfaz InboundMessageV1', () => {
-    const waEvent = normalizeEvolutionMessage(evolutionTextPayload, 'MESSAGES_UPSERT');
+    const waEvent = normalizeEvolutionMessage(evolutionTextPayload);
     expect(waEvent).not.toBeNull();
 
     const normalized = normalizeGatewayInbound(waEvent!);
@@ -59,7 +59,7 @@ describe('gateway → chat message contracts', () => {
   });
 
   it('WA_INBOUND canônico não é normalizado novamente como payload Evolution', () => {
-    const canonical = normalizeEvolutionMessage(evolutionTextPayload, 'MESSAGES_UPSERT');
+    const canonical = normalizeEvolutionMessage(evolutionTextPayload);
     expect(canonical).not.toBeNull();
 
     const routed = toWAInboundEvent(canonical, 'WA_INBOUND');
@@ -87,7 +87,6 @@ describe('gateway → chat message contracts', () => {
           messageTimestamp: 1789176300,
         },
       },
-      'MESSAGES_UPSERT',
     );
 
     expect(waEvent?.payload.type).toBe('image');
@@ -115,7 +114,6 @@ describe('gateway → chat message contracts', () => {
           messageTimestamp: 1789176300,
         },
       },
-      'MESSAGES_UPSERT',
     );
 
     // Contrato do gateway preenche event_id transitório...

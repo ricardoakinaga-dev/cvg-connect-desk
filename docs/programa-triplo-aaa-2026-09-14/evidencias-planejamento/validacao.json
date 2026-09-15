@@ -1,0 +1,54 @@
+{
+  "checks": {
+    "valid_original": true,
+    "reject_cycle": true,
+    "reject_unowned_requirement": true,
+    "reject_done_without_evidence": true,
+    "reject_lowered_target": true,
+    "reject_unknown_dependency": true,
+    "links_resolve": true,
+    "product_files_unchanged": true
+  },
+  "missing_links": [],
+  "product_manifest_count": 829,
+  "changed_product_files": [],
+  "summary": {
+    "task_count": 63,
+    "requirement_count": 59,
+    "points": 411,
+    "states": {
+      "PLANNED": 63
+    },
+    "dependency_eligible": [
+      "SA-001"
+    ],
+    "weighted_dependency_path": [
+      145,
+      [
+        "SA-001",
+        "SA-003",
+        "SA-004",
+        "SA-006",
+        "SA-013",
+        "SA-015",
+        "SA-017",
+        "SA-026",
+        "SA-029",
+        "SA-030",
+        "SA-044",
+        "SA-047",
+        "SA-049",
+        "SA-050",
+        "SA-051",
+        "SA-058",
+        "SA-057",
+        "SA-059",
+        "SA-060",
+        "SA-061",
+        "SA-062"
+      ]
+    ],
+    "warning": "Elegibilidade por dependências não verifica decisões, reservas de arquivos, ambiente ou autoridade. Validação do plano não certifica produto."
+  },
+  "scope": "Validation of planning structure only; no product tests rerun or release certification."
+}

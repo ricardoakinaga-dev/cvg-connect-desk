@@ -1,0 +1,30 @@
+{
+  "runId": "prod08-repro2",
+  "workerIndex": 17,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58132/cvg_aaa_prod08_repro2_w17",
+  "redisUrl": "redis://127.0.0.1:56850",
+  "startedAt": "2026-09-13T15:50:03.399Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-08/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\"generatedAt\":\"2026-09-13T15:50:03.011Z\",\"runId\":\"prod08-repro2\",\"database\":\"postgresql://***@127.0.0.1:58132/cvg_aaa_prod08_repro2_w17\",\"scenarioA\":{\"winnerConversationId\":\"a865cc34-da7c-4719-add2-2cade9e55376\",\"loserConversationId\":null,\"messages\":1,\"orphanConversations\":0,\"orphanConversationCreatedEvents\":0,\"orphanStatusHistory\":0,\"winnerUnread\":1},\"scenarioB\":{\"iterations\":8,\"loserErrors\":0,\"bothOk\":8,\"maxConversations\":1,\"maxMessages\":1,\"sampleError\":null},\"defects\":{\"orphanConversationsCommitted\":false,\"orphanOutboxEventsCommitted\":false,\"duplicateLogicalConversations\":false,\"loserNotIdempotent\":false},\"verdict\":\"NO_DEFECT_OBSERVED\"}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

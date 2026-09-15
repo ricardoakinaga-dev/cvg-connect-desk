@@ -1,0 +1,2288 @@
+{
+  "task": "PROD-00",
+  "capturedAt": "2026-09-13T23:01:09.340Z",
+  "execution": {
+    "runId": "r3-prod00-20260913-a1",
+    "attempt": 1,
+    "evidenceSegment": "r3-prod00-20260913-a1"
+  },
+  "criterion": "PROD-00-AC1/AC4 — baseline reproduzivel, sem reset/clean",
+  "repository": "/home/ricardo/cvg-connect-desk",
+  "git": {
+    "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "shortRevision": "754f9bad",
+    "branch": "main",
+    "auditBaselineRevision": null,
+    "headEqualsAuditBaseline": false,
+    "statusPorcelainSha256": "3345f8c69770204d21b7b4cf2e477d19f1b49af76fc98596453049ed7913cd1e",
+    "statusPathspec": [
+      "--",
+      ".",
+      ":(exclude)docs/producao-2026-09-13/evidencias",
+      ":(exclude)docs/melhorias-2026-09-13-r3/evidencias",
+      ":(exclude)docs/execucao-aaa-2026-09-12/runtime"
+    ],
+    "diffTrackedSha256": "20d3822e3b80b2d64704d2a7c92d452154abe9ef07ffadc1e09647bcc06c421e",
+    "diffTrackedBytes": 1828531,
+    "diffStat": ".env.production.example                            |   37 +-\n .github/scripts/certification-aggregator.mjs       |  647 ++++++--\n .github/workflows/ci.yml                           |  268 +++-\n .github/workflows/dr-e2e.yml                       |    2 +-\n .github/workflows/postgres-real-tests.yml          |    2 +-\n .github/workflows/security.yml                     |   11 +-\n .github/workflows/smoke-e2e.yml                    |    2 +-\n .github/workflows/staging-integrations.yml         |    2 +-\n .github/workflows/triple-aaa-certification.yml     |   60 +-\n .github/workflows/triple-aaa-gate.yml              |  244 ++-\n .gitignore                                         |    9 +\n apps/desk-api/Dockerfile                           |   27 +-\n apps/desk-api/package.json                         |    8 +-\n .../src/__tests__/chat-routes.integration.test.ts  |   12 +\n .../contact-groups-routes.integration.test.ts      |    3 +-\n .../__tests__/contacts-routes.integration.test.ts  |   42 +-\n .../dead-letter-routes.integration.test.ts         |    2 +-\n .../__tests__/events-polling.integration.test.ts   |   12 +-\n .../__tests__/kanban-routes.integration.test.ts    |   96 +-\n .../__tests__/labels-routes.integration.test.ts    |    4 +-\n .../outbound-idempotency.integration.test.ts       |   58 +-\n apps/desk-api/src/__tests__/runtime-config.test.ts |   36 +-\n .../__tests__/sectors-routes.integration.test.ts   |    2 +-\n .../__tests__/transfers-routes.integration.test.ts |   16 +-\n .../__tests__/webhook-inbound.integration.test.ts  |    8 +-\n apps/desk-api/src/app.ts                           |  458 ++++--\n apps/desk-api/src/internal-auth.ts                 |   36 +-\n apps/desk-api/src/runtime-config.ts                |  319 ++++\n apps/desk-api/tsconfig.json                        |   18 +-\n apps/desk-web/Dockerfile                           |   17 +-\n apps/desk-web/nginx.conf                           |   14 +\n apps/desk-web/package.json                         |    6 +-\n apps/desk-web/src/App.tsx                          |  124 +-\n apps/desk-web/src/__tests__/realtime.test.ts       |  136 +-\n apps/desk-web/src/components/ErrorBoundary.tsx     |   38 +-\n apps/desk-web/src/components/layout/Layout.css     |   85 +-\n apps/desk-web/src/components/layout/Layout.tsx     |   52 +-\n apps/desk-web/src/index.css                        |  572 +++++--\n apps/desk-web/src/lib/api.ts                       |  280 +++-\n apps/desk-web/src/lib/realtime.ts                  |  165 +-\n apps/desk-web/src/pages/Admin.css                  |  639 +++++---\n apps/desk-web/src/pages/Admin.tsx                  | 1513 ++++++++++++------\n apps/desk-web/src/pages/Alerts.css                 |  106 +-\n apps/desk-web/src/pages/Alerts.tsx                 |  239 ++-\n apps/desk-web/src/pages/Audit.css                  |  186 ++-\n apps/desk-web/src/pages/Audit.tsx                  |  245 ++-\n apps/desk-web/src/pages/ContactGroups.css          |  115 +-\n apps/desk-web/src/pages/ContactGroups.tsx          |  375 ++++-\n apps/desk-web/src/pages/Contacts.css               |  353 +++--\n apps/desk-web/src/pages/Contacts.tsx               |  595 +++++--\n apps/desk-web/src/pages/Dashboard.css              |    7 +\n apps/desk-web/src/pages/Dashboard.tsx              |  178 ++-\n apps/desk-web/src/pages/EntityPages.css            |  104 +-\n apps/desk-web/src/pages/Inbox.css                  |   40 +-\n apps/desk-web/src/pages/Inbox.tsx                  |  995 ++++++++++--\n apps/desk-web/src/pages/Kanban.css                 |   93 +-\n apps/desk-web/src/pages/Kanban.tsx                 |  364 +++--\n apps/desk-web/src/pages/Labels.css                 |   72 +-\n apps/desk-web/src/pages/Labels.tsx                 |  309 +++-\n apps/desk-web/src/pages/Login.css                  |    9 +\n apps/desk-web/src/pages/Login.tsx                  |  115 +-\n apps/desk-web/src/pages/Notes.css                  |  141 +-\n apps/desk-web/src/pages/Notes.tsx                  |  196 ++-\n apps/desk-web/src/pages/Patients.tsx               |  263 +++-\n apps/desk-web/src/pages/Sectors.css                |   72 +-\n apps/desk-web/src/pages/Sectors.tsx                |  264 +++-\n apps/desk-web/src/pages/Settings.css               |  237 ++-\n apps/desk-web/src/pages/Settings.tsx               |  254 ++-\n apps/desk-web/src/pages/Tasks.css                  |   96 +-\n apps/desk-web/src/pages/Tasks.tsx                  |  350 ++++-\n apps/desk-web/src/pages/Tutors.tsx                 |  232 ++-\n apps/desk-web/src/premium-surfaces.css             |   89 +-\n apps/desk-web/src/store/auth.ts                    |  114 +-\n apps/message-worker/Dockerfile                     |   22 +-\n apps/message-worker/package.json                   |   10 +-\n apps/message-worker/src/__tests__/health.test.ts   |   66 +-\n .../src/__tests__/worker-structure.test.ts         |   55 +-\n apps/message-worker/src/dead-letter.ts             |   51 +-\n apps/message-worker/src/health.ts                  |  210 ++-\n apps/message-worker/src/healthcheck.ts             |   28 +-\n apps/message-worker/src/index.ts                   |  508 +++---\n apps/message-worker/src/polling.ts                 |    9 +\n apps/message-worker/tsconfig.json                  |    6 +-\n apps/realtime-service/Dockerfile                   |   26 +-\n apps/realtime-service/package.json                 |    7 +-\n .../src/__tests__/realtime-auth-behavioral.test.ts |   85 +-\n .../src/__tests__/realtime-fanout.test.ts          |   76 +-\n .../src/__tests__/realtime-projector.test.ts       |    4 +-\n .../src/__tests__/realtime-revalidation.test.ts    |   63 +-\n .../src/__tests__/realtime-three-replica.test.ts   |   81 +-\n apps/realtime-service/src/index.ts                 |  926 ++++++++---\n docker-compose.staging.yml                         |   47 +-\n docker-compose.yml                                 |  114 +-\n docs/00-meta/README.md                             |   19 +-\n docs/AI_SAFETY.md                                  |    6 +-\n docs/ARCHITECTURE.md                               |   46 +-\n docs/GAPS-TECNICOS.md                              |  236 +--\n docs/LGPD_DATA_SUBJECT_REQUESTS.md                 |  148 +-\n docs/OBSERVABILITY.md                              |   22 +-\n docs/RUNBOOK.md                                    |    3 +-\n docs/TEST_MATRIX.md                                |   66 +-\n docs/THREAT_MODEL.md                               |   44 +-\n docs/TRIPLE_AAA_CERTIFICATION.md                   |   72 +-\n eslint.config.js                                   |   36 +-\n infra/prometheus/prometheus.yml                    |   14 +\n infra/scripts/query-performance.mjs                |   64 +-\n modules/admin/package.json                         |   13 +-\n modules/admin/src/application/use-cases/index.ts   |   13 +-\n .../repositories/admin.repository.ts               |   38 +-\n .../src/presentation/http/admin.controller.ts      |  177 ++-\n .../http/dead-letter-persistent.controller.ts      |   22 +-\n modules/admin/src/types/index.ts                   |   10 +-\n modules/alerts/package.json                        |   12 +-\n .../src/__tests__/repository-structure.test.ts     |    8 +-\n .../use-cases/acknowledge-alert.use-case.ts        |  112 +-\n .../application/use-cases/create-alert.use-case.ts |  207 ++-\n .../use-cases/resolve-alert.use-case.ts            |  109 +-\n .../repositories/alert.repository.ts               |   73 +-\n .../src/presentation/http/alert.controller.ts      |  300 +++-\n modules/audit/package.json                         |    9 +-\n .../repositories/audit.repository.ts               |   22 +-\n .../src/presentation/http/audit.controller.ts      |   38 +-\n modules/auth/package.json                          |   11 +-\n modules/chat/package.json                          |   17 +-\n .../__tests__/receive-inbound-idempotency.test.ts  |   27 +-\n .../secretary-handoff.integration.test.ts          |   70 +-\n modules/chat/src/application/use-cases/index.ts    |    4 +\n .../process-message-with-secretary.use-case.ts     |   11 +-\n .../use-cases/receive-inbound-message.use-case.ts  |  263 ++--\n .../use-cases/send-outbound-message.use-case.ts    |  333 ++--\n modules/chat/src/index.ts                          |    2 +\n .../repositories/conversation.repository.ts        |  259 +++-\n .../repositories/inbound-contact.repository.ts     |   17 +-\n .../chat/src/infrastructure/repositories/index.ts  |   17 +\n .../repositories/message.repository.ts             |  109 +-\n .../repositories/outbound-delivery.repository.ts   |  691 ++++++++-\n modules/chat/src/presentation/http/index.ts        |    4 +\n .../src/presentation/http/outbound.controller.ts   |  150 +-\n .../http/webhook-inbound.controller.ts             |   55 +-\n modules/chatwoot-compat/package.json               |    9 +-\n modules/contact-groups/package.json                |   14 +-\n .../src/application/use-cases/index.ts             |    6 +-\n .../repositories/contact-group.repository.ts       |    2 +-\n .../presentation/http/contact-group.controller.ts  |  132 +-\n modules/contacts/package.json                      |   14 +-\n .../repositories/contact.repository.ts             |    7 +-\n .../src/presentation/http/contact.controller.ts    |  228 ++-\n modules/dashboard/package.json                     |    5 +-\n .../src/infrastructure/dashboard.repository.ts     |    2 +-\n modules/gateway-adapter/package.json               |   11 +-\n .../src/__tests__/gateway-contracts.test.ts        |    8 +-\n .../src/__tests__/provider-chaos.test.ts           |    2 -\n .../src/application/use-cases/index.ts             |   45 +-\n .../src/infrastructure/gateway-normalizer.ts       |    4 +-\n .../src/infrastructure/gateway-service.ts          |   56 +-\n .../src/presentation/http/gateway.controller.ts    |   57 +-\n modules/kanban/package.json                        |   13 +-\n .../kanban/src/infrastructure/kanban.repository.ts |    6 +-\n .../src/presentation/http/kanban.controller.ts     |  202 ++-\n modules/labels/package.json                        |   10 +-\n .../repositories/label.repository.ts               |    2 +-\n .../src/presentation/http/label.controller.ts      |   79 +-\n modules/notes/package.json                         |   17 +-\n .../application/use-cases/create-note.use-case.ts  |  106 +-\n .../infrastructure/repositories/note.repository.ts |   44 +-\n .../notes/src/presentation/http/note.controller.ts |  259 +++-\n modules/patients/package.json                      |    4 +-\n .../src/presentation/http/patient.controller.ts    |   10 +-\n modules/privacy/package.json                       |   12 +-\n modules/privacy/src/index.ts                       |    9 +\n .../src/presentation/http/privacy.controller.ts    |  398 ++++-\n modules/secretary-adapter/package.json             |   11 +-\n .../src/__tests__/ai-bypass.test.ts                |   12 +-\n .../src/__tests__/ai-policy.test.ts                |   68 +\n .../src/__tests__/ai-tools.test.ts                 |  193 ++-\n .../__tests__/invoke-secretary.integration.test.ts |  224 ++-\n .../__tests__/trigger-handoff.integration.test.ts  |   67 +-\n .../secretary-adapter/src/application/ai-policy.ts |  110 +-\n .../secretary-adapter/src/application/ai-tools.ts  |  412 ++++-\n .../use-cases/invoke-secretary.use-case.ts         |   60 +-\n .../use-cases/trigger-handoff.use-case.ts          |    8 +-\n modules/secretary-adapter/src/index.ts             |    2 +\n .../secretary-adapter/src/infrastructure/index.ts  |    2 +\n .../src/infrastructure/request-builder.ts          |    4 +-\n .../src/infrastructure/response-handler.ts         |    4 +-\n modules/secretary-adapter/src/types.ts             |    2 +\n modules/sectors/package.json                       |   14 +-\n .../repositories/sector.repository.ts              |    6 +-\n .../src/presentation/http/sector.controller.ts     |    4 +-\n modules/tasks/package.json                         |   17 +-\n .../application/use-cases/create-task.use-case.ts  |  105 +-\n .../use-cases/update-task-status.use-case.ts       |  125 +-\n .../infrastructure/repositories/task.repository.ts |  105 +-\n .../tasks/src/presentation/http/task.controller.ts |  189 ++-\n modules/transfers/package.json                     |   15 +-\n modules/transfers/src/__tests__/use-cases.test.ts  |  105 +-\n .../transfers/src/application/use-cases/index.ts   |  306 +++-\n .../repositories/transfer.repository.ts            |  182 ++-\n .../src/presentation/http/transfer.controller.ts   |  255 ++-\n modules/tutors/package.json                        |    4 +-\n .../src/presentation/http/tutor.controller.ts      |   10 +-\n package.json                                       |   36 +-\n packages/auth/package.json                         |   13 +-\n packages/auth/src/__tests__/authorize.test.ts      |   44 +\n packages/auth/src/authorize.ts                     |   22 +-\n packages/auth/src/index.ts                         |    3 +\n .../infrastructure/repositories/auth.repository.ts |  179 ++-\n packages/auth/src/middleware.ts                    |   74 +-\n .../auth/src/presentation/http/auth.controller.ts  |  141 +-\n packages/auth/src/rbac-middleware.ts               |   17 +-\n packages/auth/src/rbac.ts                          |   79 +\n packages/auth/src/sector-permissions.ts            |    2 +-\n packages/database/package.json                     |    8 +-\n packages/database/src/check-migrations.ts          |  327 +++-\n packages/database/src/index.ts                     |   10 +\n packages/database/src/schema.ts                    |  239 ++-\n packages/database/src/seed.ts                      |  101 +-\n packages/database/src/webhook-replay.ts            |   22 +-\n .../supabase/migrations/meta/_journal.json         |   77 +\n packages/events/package.json                       |   10 +-\n .../events/src/__tests__/outbox-behavioral.test.ts |    4 +-\n packages/events/src/__tests__/outbox.test.ts       |    1 -\n .../src/__tests__/persistent-dead-letter.test.ts   |   22 +-\n packages/events/src/index.ts                       |    1 +\n packages/events/src/outbox-publisher.ts            |   62 +-\n packages/events/src/outbox-reader.ts               |  151 +-\n packages/events/src/realtime-bus.ts                |   29 +\n packages/integrations/package.json                 |    7 +-\n packages/integrations/src/secretary-client.ts      |   35 +-\n packages/media/package.json                        |   11 +-\n packages/media/src/__tests__/clamav-real.test.ts   |   10 +-\n .../media/src/__tests__/media-pipeline.test.ts     |   13 +-\n packages/media/src/index.ts                        |  492 +++++-\n packages/media/src/repository.ts                   |   17 +-\n packages/media/src/scanner.ts                      |    9 +-\n packages/messaging-contracts/package.json          |    8 +-\n packages/messaging-contracts/src/index.ts          |    1 +\n packages/realtime/package.json                     |    9 +-\n packages/realtime/src/index.ts                     |    3 +\n packages/realtime/src/projections.ts               |    2 +-\n packages/shared/package.json                       |   10 +-\n packages/shared/src/__tests__/result.test.ts       |    7 +-\n .../shared/src/__tests__/webhook-guard.test.ts     |  218 ++-\n packages/shared/src/media-policy.ts                |   92 +-\n packages/shared/src/metrics.ts                     |  124 +-\n packages/shared/src/redact.ts                      |   14 +\n packages/shared/src/webhook-anti-replay.ts         |  319 +++-\n packages/shared/src/webhook-guard.ts               |   68 +-\n packages/shared/src/webhook-security-stats.ts      |    8 +-\n packages/shared/vitest.config.ts                   |    6 +-\n packages/tracing/package.json                      |    8 +-\n packages/tracing/src/__tests__/tracing.test.ts     |   10 +-\n pnpm-lock.yaml                                     | 1637 ++++++--------------\n scripts/production-readiness.mjs                   |  110 +-\n scripts/triple-aaa-verify.mjs                      |  295 ++--\n services/db-init/Dockerfile                        |   13 +-\n tsconfig.json                                      |    1 +\n turbo.json                                         |    4 +-\n 258 files changed, 21740 insertions(+), 7152 deletions(-)",
+    "counts": {
+      "entries": 482,
+      "modified": 258,
+      "untracked": 224,
+      "deleted": 0,
+      "renamed": 0
+    },
+    "worktrees": "worktree /home/ricardo/cvg-connect-desk\nHEAD 754f9badac46278e77d21de91c58eedb15e80581\nbranch refs/heads/main",
+    "stash": "",
+    "preexistingChanges": [
+      {
+        "status": " M",
+        "path": ".env.production.example"
+      },
+      {
+        "status": " M",
+        "path": ".github/scripts/certification-aggregator.mjs"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/ci.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/dr-e2e.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/postgres-real-tests.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/security.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/smoke-e2e.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/staging-integrations.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/triple-aaa-certification.yml"
+      },
+      {
+        "status": " M",
+        "path": ".github/workflows/triple-aaa-gate.yml"
+      },
+      {
+        "status": " M",
+        "path": ".gitignore"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/Dockerfile"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/package.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/chat-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/contact-groups-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/contacts-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/dead-letter-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/events-polling.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/kanban-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/labels-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/outbound-idempotency.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/runtime-config.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/sectors-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/transfers-routes.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/__tests__/webhook-inbound.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/app.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/internal-auth.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/src/runtime-config.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-api/tsconfig.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/Dockerfile"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/nginx.conf"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/package.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/App.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/__tests__/realtime.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/components/ErrorBoundary.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/components/layout/Layout.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/components/layout/Layout.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/index.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/lib/api.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/lib/realtime.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Admin.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Admin.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Alerts.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Alerts.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Audit.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Audit.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/ContactGroups.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/ContactGroups.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Contacts.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Contacts.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Dashboard.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Dashboard.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/EntityPages.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Inbox.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Inbox.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Kanban.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Kanban.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Labels.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Labels.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Login.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Login.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Notes.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Notes.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Patients.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Sectors.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Sectors.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Settings.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Settings.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Tasks.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Tasks.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/pages/Tutors.tsx"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/premium-surfaces.css"
+      },
+      {
+        "status": " M",
+        "path": "apps/desk-web/src/store/auth.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/Dockerfile"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/package.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/__tests__/health.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/__tests__/worker-structure.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/dead-letter.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/health.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/healthcheck.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/src/polling.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/message-worker/tsconfig.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/Dockerfile"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/package.json"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/__tests__/realtime-auth-behavioral.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/__tests__/realtime-fanout.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/__tests__/realtime-projector.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/__tests__/realtime-revalidation.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/__tests__/realtime-three-replica.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "apps/realtime-service/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "docker-compose.staging.yml"
+      },
+      {
+        "status": " M",
+        "path": "docker-compose.yml"
+      },
+      {
+        "status": " M",
+        "path": "docs/00-meta/README.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/AI_SAFETY.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/ARCHITECTURE.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/GAPS-TECNICOS.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/LGPD_DATA_SUBJECT_REQUESTS.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/OBSERVABILITY.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/RUNBOOK.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/TEST_MATRIX.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/THREAT_MODEL.md"
+      },
+      {
+        "status": " M",
+        "path": "docs/TRIPLE_AAA_CERTIFICATION.md"
+      },
+      {
+        "status": " M",
+        "path": "eslint.config.js"
+      },
+      {
+        "status": " M",
+        "path": "infra/prometheus/prometheus.yml"
+      },
+      {
+        "status": " M",
+        "path": "infra/scripts/query-performance.mjs"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/src/application/use-cases/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/src/infrastructure/repositories/admin.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/src/presentation/http/admin.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/src/presentation/http/dead-letter-persistent.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/admin/src/types/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/__tests__/repository-structure.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/application/use-cases/acknowledge-alert.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/application/use-cases/create-alert.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/application/use-cases/resolve-alert.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/infrastructure/repositories/alert.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/alerts/src/presentation/http/alert.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/audit/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/audit/src/infrastructure/repositories/audit.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/audit/src/presentation/http/audit.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/auth/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/__tests__/receive-inbound-idempotency.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/__tests__/secretary-handoff.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/application/use-cases/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/application/use-cases/process-message-with-secretary.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/application/use-cases/send-outbound-message.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/infrastructure/repositories/conversation.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/infrastructure/repositories/inbound-contact.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/infrastructure/repositories/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/infrastructure/repositories/message.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/infrastructure/repositories/outbound-delivery.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/presentation/http/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/presentation/http/outbound.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chat/src/presentation/http/webhook-inbound.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/chatwoot-compat/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/contact-groups/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/contact-groups/src/application/use-cases/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/contact-groups/src/infrastructure/repositories/contact-group.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/contact-groups/src/presentation/http/contact-group.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/contacts/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/contacts/src/infrastructure/repositories/contact.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/contacts/src/presentation/http/contact.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/dashboard/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/dashboard/src/infrastructure/dashboard.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/__tests__/gateway-contracts.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/__tests__/provider-chaos.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/application/use-cases/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/infrastructure/gateway-normalizer.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/infrastructure/gateway-service.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/gateway-adapter/src/presentation/http/gateway.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/kanban/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/kanban/src/infrastructure/kanban.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/kanban/src/presentation/http/kanban.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/labels/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/labels/src/infrastructure/repositories/label.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/labels/src/presentation/http/label.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/notes/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/notes/src/application/use-cases/create-note.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/notes/src/infrastructure/repositories/note.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/notes/src/presentation/http/note.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/patients/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/patients/src/presentation/http/patient.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/privacy/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/privacy/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/privacy/src/presentation/http/privacy.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/__tests__/ai-bypass.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/__tests__/ai-policy.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/__tests__/ai-tools.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/__tests__/invoke-secretary.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/__tests__/trigger-handoff.integration.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/application/ai-policy.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/application/ai-tools.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/application/use-cases/invoke-secretary.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/application/use-cases/trigger-handoff.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/infrastructure/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/infrastructure/request-builder.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/infrastructure/response-handler.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/secretary-adapter/src/types.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/sectors/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/sectors/src/infrastructure/repositories/sector.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/sectors/src/presentation/http/sector.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/tasks/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/tasks/src/application/use-cases/create-task.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/tasks/src/application/use-cases/update-task-status.use-case.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/tasks/src/infrastructure/repositories/task.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/tasks/src/presentation/http/task.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/transfers/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/transfers/src/__tests__/use-cases.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/transfers/src/application/use-cases/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/transfers/src/infrastructure/repositories/transfer.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/transfers/src/presentation/http/transfer.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "modules/tutors/package.json"
+      },
+      {
+        "status": " M",
+        "path": "modules/tutors/src/presentation/http/tutor.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/__tests__/authorize.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/authorize.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/infrastructure/repositories/auth.repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/middleware.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/presentation/http/auth.controller.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/rbac-middleware.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/rbac.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/auth/src/sector-permissions.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/src/check-migrations.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/src/schema.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/src/seed.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/src/webhook-replay.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/database/supabase/migrations/meta/_journal.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/__tests__/outbox-behavioral.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/__tests__/outbox.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/__tests__/persistent-dead-letter.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/outbox-publisher.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/outbox-reader.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/events/src/realtime-bus.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/integrations/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/integrations/src/secretary-client.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/src/__tests__/clamav-real.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/src/__tests__/media-pipeline.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/src/repository.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/media/src/scanner.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/messaging-contracts/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/messaging-contracts/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/realtime/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/realtime/src/index.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/realtime/src/projections.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/__tests__/result.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/__tests__/webhook-guard.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/media-policy.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/metrics.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/redact.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/webhook-anti-replay.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/webhook-guard.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/src/webhook-security-stats.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/shared/vitest.config.ts"
+      },
+      {
+        "status": " M",
+        "path": "packages/tracing/package.json"
+      },
+      {
+        "status": " M",
+        "path": "packages/tracing/src/__tests__/tracing.test.ts"
+      },
+      {
+        "status": " M",
+        "path": "pnpm-lock.yaml"
+      },
+      {
+        "status": " M",
+        "path": "scripts/production-readiness.mjs"
+      },
+      {
+        "status": " M",
+        "path": "scripts/triple-aaa-verify.mjs"
+      },
+      {
+        "status": " M",
+        "path": "services/db-init/Dockerfile"
+      },
+      {
+        "status": " M",
+        "path": "tsconfig.json"
+      },
+      {
+        "status": " M",
+        "path": "turbo.json"
+      },
+      {
+        "status": "??",
+        "path": ".gauntlet-v2-archive-20260912/"
+      },
+      {
+        "status": "??",
+        "path": ".gauntlet/"
+      },
+      {
+        "status": "??",
+        "path": ".github/scripts/certification-aggregator.test.mjs"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-03.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-04.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-05.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-09.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-10.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-11.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-12.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-17.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-18.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/aaa-19.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-api/src/__tests__/production/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-13.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-13.test.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-21.test.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-29.test.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-30.test.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/aaa-31.test.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/production/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/__tests__/realtime-connection-status.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/__tests__/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/layout/ConnectionStatus.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/layout/__tests__/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/Badge.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/Button.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/Card.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/StateMessage.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/TextField.tsx"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/__tests__/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/components/ui/index.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/hooks/__tests__/"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/hooks/useRealtimeStatus.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/navigation.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/pages/Patients.css"
+      },
+      {
+        "status": "??",
+        "path": "apps/desk-web/src/pages/Tutors.css"
+      },
+      {
+        "status": "??",
+        "path": "apps/message-worker/src/contract.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/message-worker/src/errors.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/message-worker/src/handlers.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/message-worker/src/processor.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/realtime-service/src/__tests__/aaa-05-isolation.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/realtime-service/src/__tests__/realtime-deadline-budget.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/realtime-service/src/__tests__/realtime-health.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "apps/realtime-service/src/authorization.ts"
+      },
+      {
+        "status": "??",
+        "path": "docs/auditorias/"
+      },
+      {
+        "status": "??",
+        "path": "docs/design/cvg-design-system.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/design/cvg-design-system.md"
+      },
+      {
+        "status": "??",
+        "path": "docs/design/cvg-page-state-adoption.json"
+      },
+      {
+        "status": "??",
+        "path": "docs/execucao-aaa-2026-09-12/"
+      },
+      {
+        "status": "??",
+        "path": "docs/melhorias-2026-09-13-r3/"
+      },
+      {
+        "status": "??",
+        "path": "docs/melhorias-2026-09-13/"
+      },
+      {
+        "status": "??",
+        "path": "docs/producao-2026-09-13/"
+      },
+      {
+        "status": "??",
+        "path": "docs/security/"
+      },
+      {
+        "status": "??",
+        "path": "e2e/aaa/"
+      },
+      {
+        "status": "??",
+        "path": "e2e/production/"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/aaa-06-remote.spec.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/aaa-06-remote.spec.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/aaa-06-remote.spec.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/aaa-06-remote.spec.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/aaa-06-remote.spec.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/create-task.test.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/create-task.test.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/create-task.test.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/create-task.test.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/inbox-authenticated.test.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/inbox-authenticated.test.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/inbox-authenticated.test.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/inbox-authenticated.test.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/kanban.test.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/kanban.test.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/kanban.test.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/kanban.test.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/login-flow.test.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/login-flow.test.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/login-flow.test.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/login-flow.test.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/send-message.test.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/send-message.test.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/send-message.test.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/send-message.test.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/support.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/support.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/support.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/smoke/support.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/aaa/"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/mock-evolution-server.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/mock-evolution-server.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/mock-evolution-server.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/mock-evolution-server.js.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/production/"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/start-e2e-stack.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/start-e2e-stack.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/start-e2e-stack.js"
+      },
+      {
+        "status": "??",
+        "path": "e2e/support/start-e2e-stack.js.map"
+      },
+      {
+        "status": "??",
+        "path": "modules/admin/src/__tests__/use-cases-app-error.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/admin/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/admin/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/alerts/src/infrastructure/audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/alerts/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/audit/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/auth/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/__tests__/aaa-08-atomicity.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/__tests__/chat-ports.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/__tests__/execute-inbound-secretary.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/__tests__/outbound-delivery-surface.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/ports/"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/use-cases/conversation-operations.use-case.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/use-cases/inbound-media-pipeline.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/application/use-cases/legacy-media-migration.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/infrastructure/repositories/outbound-atomic.repository.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/presentation/http/conversation-operations.controller.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/presentation/http/media-read.controller.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/presentation/http/media-upload.controller.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/presentation/http/message-dto.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/src/types/"
+      },
+      {
+        "status": "??",
+        "path": "modules/chat/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/chatwoot-compat/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/contact-groups/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/contact-groups/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/contacts/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/contacts/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/gateway-adapter/src/__tests__/gateway-ports.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/gateway-adapter/src/__tests__/provider-reconciliation.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/gateway-adapter/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/gateway-adapter/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/kanban/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/kanban/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/labels/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/labels/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/notes/src/__tests__/create-note-author.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/notes/src/infrastructure/audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/notes/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/contact-graph.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/data-inventory.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/erasure-operation.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/media-copy-port.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/privacy-access.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/privacy-audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/privacy-policy.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/redaction.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/residual-scan.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/application/scoped-export.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/src/types/"
+      },
+      {
+        "status": "??",
+        "path": "modules/privacy/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/src/__tests__/invoke-secretary-not-configured.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/src/__tests__/response-handler.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/src/__tests__/secretary-invocation.repository.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/src/infrastructure/repositories/"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/src/infrastructure/secretary-client-init.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/secretary-adapter/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/sectors/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/sectors/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/tasks/src/__tests__/task-filters.integration.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/tasks/src/__tests__/task-routes-validation.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/tasks/src/infrastructure/audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/tasks/src/types/"
+      },
+      {
+        "status": "??",
+        "path": "modules/tasks/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "modules/transfers/src/infrastructure/audit.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/transfers/src/types/fastify-openapi.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "modules/transfers/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/__tests__/permission-service.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/__tests__/rbac-effective.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/__tests__/rbac-middleware.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/__tests__/resource-authz.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/__tests__/session-policy.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/permission-service.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/resource-authz.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/src/session-policy.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/auth/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0019_outbox_lease.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0020_messages_keyset_indexes.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0021_outbound_idempotency_contract.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0022_privacy_operations.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0023_sessions_timezone_harmonization.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0024_webhook_replay_claim.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0025_role_permissions_backfill.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0026_worker_effect_receipts.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0027_secretary_invocations.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0028_ai_budget_and_approval_hardening.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/database/supabase/migrations/0029_media_intake_recovery.sql"
+      },
+      {
+        "status": "??",
+        "path": "packages/events/src/__tests__/aaa-07-lease-real.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/events/src/outbox-lease.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/integrations/src/__tests__/"
+      },
+      {
+        "status": "??",
+        "path": "packages/integrations/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/media/src/__tests__/aaa-10-media-boundary.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/media/src/legacy.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/media/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/messaging-contracts/src/__tests__/ports.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/messaging-contracts/src/ports.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/messaging-contracts/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/realtime/src/authorization.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/realtime/src/channels.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/realtime/src/routing.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/realtime/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/shared/src/__tests__/webhook-anti-replay.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/shared/src/__tests__/webhook-postgres-replay.test.ts"
+      },
+      {
+        "status": "??",
+        "path": "packages/shared/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "packages/tracing/tsconfig.json"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa.config.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa.config.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa.config.js"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa.config.js.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa.config.ts"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa06.config.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa06.config.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa06.config.js"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa06.config.js.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.aaa06.config.ts"
+      },
+      {
+        "status": "??",
+        "path": "playwright.config.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "playwright.config.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.config.js"
+      },
+      {
+        "status": "??",
+        "path": "playwright.config.js.map"
+      },
+      {
+        "status": "??",
+        "path": "playwright.production.config.ts"
+      },
+      {
+        "status": "??",
+        "path": "scripts/production/"
+      },
+      {
+        "status": "??",
+        "path": "test-results/"
+      },
+      {
+        "status": "??",
+        "path": "tools/"
+      },
+      {
+        "status": "??",
+        "path": "vitest.config.d.ts"
+      },
+      {
+        "status": "??",
+        "path": "vitest.config.d.ts.map"
+      },
+      {
+        "status": "??",
+        "path": "vitest.config.js"
+      },
+      {
+        "status": "??",
+        "path": "vitest.config.js.map"
+      }
+    ]
+  },
+  "audit": {
+    "report": "docs/auditorias/2026-09-13-r3/RELATORIO.md",
+    "reportSha256": "8af760f9ceac8d041d1375751b7f767edbb98b1ae1a169fcfbc03f575b417f55",
+    "expectedSha256": "8af760f9ceac8d041d1375751b7f767edbb98b1ae1a169fcfbc03f575b417f55",
+    "match": true,
+    "notes": "docs/auditorias/2026-09-13/notas.json",
+    "notesSha256": "e504b7d2d14024f5df4b1ba8d01d16ea61f6905276cb36e00c9754b2aad44cdb",
+    "expectedNotesSha256": "e504b7d2d14024f5df4b1ba8d01d16ea61f6905276cb36e00c9754b2aad44cdb",
+    "notesMatch": true
+  },
+  "planning": {
+    "programDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3",
+    "validateCommand": "python3 docs/melhorias-2026-09-13-r3/plan.py validate",
+    "renderCommand": "python3 docs/melhorias-2026-09-13-r3/plan.py render",
+    "tasks": 45,
+    "points": 284
+  },
+  "lock": {
+    "packageManager": "pnpm@10.33.0",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "packageJsonSha256": "0831fa61a8d458c8fc8cc120c8d36e0dade6b2b0e022110535f5cef00b1c3700"
+  },
+  "seeds": {
+    "databaseSeed": {
+      "path": "packages/database/src/seed.ts",
+      "sha256": "e6f0e81e35496962e1bced62128627950a09cb14cf6b4b2f82fb4d208788e6e3"
+    },
+    "aaaFixtures": {
+      "path": "e2e/support/aaa/fixtures.ts",
+      "sha256": "c4386358a922c6542c6fadb054d6212a35c3c8b687006c6360c602f3e7bcc3da"
+    },
+    "profiles": [
+      "minimal",
+      "benchmark? ver fixtures.ts"
+    ]
+  },
+  "migrations": {
+    "count": 30,
+    "files": [
+      {
+        "name": "0000_famous_whirlwind.sql",
+        "sha256": "d5db334abfd6bd6968b6496b2c6662492559e3e5bafaed64bd039dea60da64d3"
+      },
+      {
+        "name": "0001_chat_core.sql",
+        "sha256": "3e7b94fb87fc78ea57811b2ff99a23b5f05f96a9cc1a46bd823e9c8bfc76e774"
+      },
+      {
+        "name": "0002_operations.sql",
+        "sha256": "0b02df84f2a2d62fabfd8bb1700ccf4564a1ad745ab3d656ffdff8bc15f0c800"
+      },
+      {
+        "name": "0003_auth_audit.sql",
+        "sha256": "747bd5d51bf0a93fc65d4161b3800c37fd28761a5233f1caec64f6001110f293"
+      },
+      {
+        "name": "0004_add_current_handler.sql",
+        "sha256": "e2a40a7b43202d2c49addd26b8b37ac990b2901e66ea43b71884220552ec3773"
+      },
+      {
+        "name": "0005_notes_reference_generic.sql",
+        "sha256": "7bd2ca08ec835cb04740e6bacc7eb1df1db0c8281b846f6cc87c5c99692cda29"
+      },
+      {
+        "name": "0006_tasks_tutor_patient.sql",
+        "sha256": "8138a3a5963b815d03136569e5b5f5ef725a171f7d4bff3af652553fb9b66b07"
+      },
+      {
+        "name": "0007_enterprise_premium.sql",
+        "sha256": "bf6056fa5ad346b6ed7482bbe79dddf4fca9006024f2ed8f81881643224607e2"
+      },
+      {
+        "name": "0008_user_sectors.sql",
+        "sha256": "9d8910248eb6c01daea3e61ec7e82761b887e0108541c5e09ccff622ff256207"
+      },
+      {
+        "name": "0009_media_fields.sql",
+        "sha256": "34540d0c18f636581ac8535fca2543b568ac5e81910a9bde29b52960053f6f2e"
+      },
+      {
+        "name": "0010_outbox_events.sql",
+        "sha256": "ebb9248a12f677e1f36e605a7d08674b055399dbd893c97976c5c30d2e6596e2"
+      },
+      {
+        "name": "0011_outbox_consumer_acks.sql",
+        "sha256": "d1ffac75a0bd2e1ad0875c0cc4fd4165c807c8f906efe61f372a61bd7d63dbd3"
+      },
+      {
+        "name": "0012_outbox_event_version.sql",
+        "sha256": "ae07c093f95d4081e22c9980ddd2c8175f81cde93aea73dcb7f09afc7045f08d"
+      },
+      {
+        "name": "0013_security_correctness.sql",
+        "sha256": "1951519c4971f84db1aa0eeebc33b717345aec056d14c86567fc5bb9165d77b5"
+      },
+      {
+        "name": "0014_outbound_idempotency.sql",
+        "sha256": "a85a3ed9d3e07a0bdb8df7b01629f2346af2d2067486004e56583ed224459482"
+      },
+      {
+        "name": "0015_persistent_dlq.sql",
+        "sha256": "2b00932c1a278df7fb34a04bc35af582b28a713b5881e85bb249d84eee8ed4f3"
+      },
+      {
+        "name": "0016_media_assets.sql",
+        "sha256": "4aa30672b62887bdd3309f6ddf2850ca62ed040e23b3cb4eb0a9e58f857dbdfd"
+      },
+      {
+        "name": "0017_ai_action_approvals.sql",
+        "sha256": "b16a9d52622a6cd1cf9dbcbf4fab1d358fa4fa293d1a57f30bf6fb038346811e"
+      },
+      {
+        "name": "0018_conversation_unread.sql",
+        "sha256": "c252efbe7dd7b82624bb7aaef86049ee74374a6ab480f566f805ed57a8a572c5"
+      },
+      {
+        "name": "0019_outbox_lease.sql",
+        "sha256": "65e6b9397b7f441eee20127653f7c601e7c82c7dc6ef38375d7f9a5b8b18d3ad"
+      },
+      {
+        "name": "0020_messages_keyset_indexes.sql",
+        "sha256": "c691e7e53309925fe1f470203528422a6aee75fd361a4d5749390d82ce84355b"
+      },
+      {
+        "name": "0021_outbound_idempotency_contract.sql",
+        "sha256": "2a6a6374f1da8aea992869d76302a529ed9869e0bb95251a9525479255e38b32"
+      },
+      {
+        "name": "0022_privacy_operations.sql",
+        "sha256": "8be2786e9ed06ee828335a0348a52312d9a70a4f23e85bfb620dca87523dcf24"
+      },
+      {
+        "name": "0023_sessions_timezone_harmonization.sql",
+        "sha256": "91f47062a31bacdfb635e604b5985524c87b695e3a6666524b7c855df44e9613"
+      },
+      {
+        "name": "0024_webhook_replay_claim.sql",
+        "sha256": "69543fc3755c5fa440bf9b3ce5e3c6e2406563a996473ac5719c11db99f3c8cf"
+      },
+      {
+        "name": "0025_role_permissions_backfill.sql",
+        "sha256": "d689d3fa03c79024ca9ee18bbd3efd715505dbc6363ca70f932ce24b18bb69d2"
+      },
+      {
+        "name": "0026_worker_effect_receipts.sql",
+        "sha256": "2a645ada8f20b49ed08be360dc80592ab18f6200d867b9e4b2561473bd93afe2"
+      },
+      {
+        "name": "0027_secretary_invocations.sql",
+        "sha256": "5732113506b81376dde5a94cc6a633e031fde57df440e74ae84d8cdd9a5942a4"
+      },
+      {
+        "name": "0028_ai_budget_and_approval_hardening.sql",
+        "sha256": "472abea481d295712517ebe51f8fe8a63d35c4f4d9844065f565e96e99df61b7"
+      },
+      {
+        "name": "0029_media_intake_recovery.sql",
+        "sha256": "239c8a2588c0787c1cf03839261688ed98fe19839e3c71c6d2e5d2eaf1aae299"
+      }
+    ]
+  },
+  "fileHashes": {
+    "package.json": "0831fa61a8d458c8fc8cc120c8d36e0dade6b2b0e022110535f5cef00b1c3700",
+    "pnpm-lock.yaml": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "pnpm-workspace.yaml": "103b7542b71fbfbed408ac6a0b43a2b3be2266ddf82bdc08d7f0904e49041669",
+    "turbo.json": "24135c74129db727655d26c3257f9b9d0a364c3a879d927655145ca33d82c595",
+    "tsconfig.json": "f8196d5aac6097a7cc88e57b8cb4c63399d2039b409a2d1934bafe0a139c4a4a",
+    "vitest.config.ts": "6335315d4bc6b13325e4fbb1922a31ee3f2b20a528b4009dd4a951408d90c77a",
+    "playwright.config.ts": "6f911a8ed5418858105fc696e718e599ace4ce0dab3de4d3ccc3efb67abc9a7d",
+    "playwright.aaa.config.ts": "8458f5204ca7f2dcd33df975043aa1205e5c2ca087727ffb458c1bd399218e69",
+    "playwright.production.config.ts": "aa41586dd72c206779c48d9b503fd90f91527d669879e33473c535fedfcfbbba",
+    "docker-compose.yml": "30e4b8e6e921f98a810a8d2a7e8cdafbf6edfd7131556e32e93bd488aa8bc6db",
+    "docker-compose.dev.yml": "6bb9ada36fed0e9668dd42d999505bedca8b01da38818de800d17d6c35815569",
+    "docker-compose.staging.yml": "03b849565172ad618f711d8e9a16380522cd6de7da0c50a9dc57bd856f7c67ea",
+    "docker-compose.smoke.yml": "53e1c32eff4d689ea8dade458c1d2d8a62cc2714e0a0169a961c41cdbc6fdd70",
+    ".env.example": "d906f44d242a8f1acb25899e7630fa5ebb9952e70ba84c93064b338673da689a",
+    ".env.production.example": "8b03339967737a5693407ba515c952684dbef8df97eb12feebb2745fe784d158",
+    "packages/database/src/schema.ts": "faba62c2fcd6020ccee2cf1fa94bb2b575968c86e70aeb31ac58da5b4b4c0091",
+    "packages/database/src/seed.ts": "e6f0e81e35496962e1bced62128627950a09cb14cf6b4b2f82fb4d208788e6e3",
+    "packages/database/src/migrate.ts": "59330306765a1b434eaed8aeee3023c515bf6afe01e2b6f843e142996a2f870a",
+    "packages/database/src/check-migrations.ts": "d2d0734bde9e4a1c9f8446cad57346f86416ba0d939ce907c0495a90eff83520",
+    "e2e/support/aaa/run-context.ts": "5af6221eac6cbacc4038dfb3cc74349cc84257b2d0010e640b966b3859b0c5b7",
+    "e2e/support/aaa/pg.ts": "ba187453a077ae706ea516ddea5a7a0c93247e17a1b39220cd91aadfa8ec26c7",
+    "e2e/support/aaa/redis.ts": "75c43ca153a0e78efabc91003163aebc13b891baa7e6e6fccfedc223a6d84f90",
+    "e2e/support/aaa/fixtures.ts": "c4386358a922c6542c6fadb054d6212a35c3c8b687006c6360c602f3e7bcc3da",
+    "e2e/support/aaa/isolated-env.ts": "16f41169afa0d9d3636c475e0add38f0c1122039321da1170923f91e7aa2f7cc",
+    "e2e/support/aaa/harness-selfcheck.ts": "166cab19fab8114296626c744e97adf4d6a085929e545cf9496d71eee4405b77",
+    "e2e/support/production/program.mjs": "fae53b799bb8f65602dca73c50fd46d406688f858926e460b660679ac1c5f662",
+    "e2e/support/production/availability.mjs": "341dc869f58844f54248fe2202537dca0344f3db456c932b7c9dca26f7326e46",
+    "e2e/support/production/baseline.mjs": "d4e09974071eadd0384f20e7c1b4ce0ffa02e3ad7fa4bdcdcb22588595fd931e",
+    "e2e/support/production/isolation-canary.mjs": "7d1ff60206b52470070f456bb1c08fdbed3fc76a1730ecd7c8aa9a5e635d827d",
+    "e2e/production/01-harness-identity.spec.ts": "2e0295974833152736b18b9db9b2c51db447bc3ef84761c84893a7b496e2bf07",
+    "scripts/production/prod-00.test.mjs": "53057c55286cc42c75799ebb39a62f7294adf71456b1219f053ff4556df43026",
+    "scripts/triple-aaa-verify.mjs": "c23c861c19358b6028620090680313a2d2d541de23d36551e08b80f0e94dda5d",
+    ".github/scripts/certification-aggregator.mjs": "9056007c6b944922dd6a09ee571b2f280293742f61da65956d8e0627d7183273",
+    ".github/workflows/ci.yml": "a45c6b190502b7e5cce83aad67b01bcc08911082e1c15578c47962c1d1f01f00",
+    ".github/workflows/triple-aaa-certification.yml": "8b40f8274213fb89a3b791c4db7448f203befcf34143daf8ae3696d428a53ec9",
+    ".github/workflows/triple-aaa-gate.yml": "6f81ee721838a0bc091dca01f851ca6a73a9de66851784bbcdd736cb5ff1bfe4",
+    "docs/auditorias/2026-09-13/RELATORIO.md": "dd485eec8e0e59b89c4e2e75cec4ca83f134e0032ca49577aaa9f56058ec1b40",
+    "docs/auditorias/2026-09-13/notas.json": "e504b7d2d14024f5df4b1ba8d01d16ea61f6905276cb36e00c9754b2aad44cdb",
+    "docs/producao-2026-09-13/BACKLOG.json": "2c43a24d6ca16c4cff957119fe382c54c90b3b1cc872503b5d95801c50919747",
+    "docs/producao-2026-09-13/CRITERIOS.md": "b597658332b50ad622fb6c46c9d76d5b95ff9e1628e08e64e07c94fc313e22ec",
+    "docs/producao-2026-09-13/CONTRATOS.md": "13267f3da14c786a769fb9c7b7df195046cf821b220eac4dd11ed572e86744a1",
+    "docs/producao-2026-09-13/DECISOES.md": "3c3fad2c782c955a5cb957776f8fc00c703e600682539ba8c0ada459dd239c64",
+    "docs/melhorias-2026-09-13-r3/BACKLOG.json": "79944ebaae42d336fb4290f09c3f99d5b16b53ecd487b2c797fcb62bd3a7abe9",
+    "docs/melhorias-2026-09-13-r3/CONTRATOS.md": "d41dfd96803206fc499469e9f10eab00571fb464fede88674657e7f3d9767ca4",
+    "docs/melhorias-2026-09-13-r3/CRITERIOS.md": "cadd5161a4f839e51027281532395b3c93f23a855978ef0c3045352a2c95462c",
+    "docs/melhorias-2026-09-13-r3/DECISOES.md": "748c4a349585353733027d5e2958229fc8a77c5ec043677902b4f761243f0392",
+    "docs/melhorias-2026-09-13-r3/AGENTE.md": "516b14c35b137d27b508bed20921e1bc9301084c2d5a2c18fbed92d8c679d266",
+    "docs/auditorias/2026-09-13-r3/RELATORIO.md": "8af760f9ceac8d041d1375751b7f767edbb98b1ae1a169fcfbc03f575b417f55",
+    "docs/auditorias/2026-09-13-r3/ACHADOS.json": "4687c59ae3c155b2480c733db0dc3b70c67f0e32aabe3024998178efff8bceb8",
+    "docs/auditorias/2026-09-13-r3/VERIFICACOES.json": "87f4e83fa363c37afa35e338227cf9969506752b4947777609833d8682e3ee64"
+  },
+  "environment": {
+    "clock": {
+      "local": "2026-09-13T20:01:10-03:00",
+      "utc": "2026-09-13T23:01:10Z",
+      "timezone": "America/Sao_Paulo",
+      "TZ": null
+    },
+    "locale": [
+      "LANG=pt_BR.UTF-8",
+      "LANGUAGE=pt_BR:pt:en",
+      "LC_CTYPE=\"pt_BR.UTF-8\"",
+      "LC_NUMERIC=\"pt_BR.UTF-8\"",
+      "LC_TIME=\"pt_BR.UTF-8\"",
+      "LC_COLLATE=\"pt_BR.UTF-8\""
+    ],
+    "host": {
+      "cpu": "AMD Ryzen 7 5700",
+      "cpuCount": 16,
+      "memoryBytes": 67203821568
+    },
+    "node": "v24.20.0",
+    "concurrency": {
+      "vitestDefault": "vitest 3 (pool threads, workers derivados da CPU)",
+      "playwrightWorkers": 1,
+      "loadProfile": {
+        "source": "docs/producao-2026-09-13/CRITERIOS.md",
+        "dataset": {
+          "conversations": 10000,
+          "messages": 100000,
+          "sessions": 100
+        },
+        "warmupMinutes": 10,
+        "measurementMinutes": 30,
+        "rounds": 3,
+        "p95": {
+          "inboundMs": 250,
+          "realtimeMs": 500
+        },
+        "unexpectedErrors": "<0.1%"
+      }
+    }
+  },
+  "tools": {
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "git": "git version 2.43.0",
+    "python3": "Python 3.12.3",
+    "psql": "psql (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "redisServer": "Redis server v=7.0.15 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=e53ff17674aa6190",
+    "playwright": "Version 1.59.1",
+    "k6": "k6 v0.55.0 (commit/90bb9415d0, go1.23.3, linux/amd64)",
+    "turbo": "2.10.12"
+  },
+  "availability": {
+    "docker": "BLOCKED (permission denied while trying to connect to the docker API at unix:///var/run/docker.sock)",
+    "services": {
+      "postgresql": {
+        "status": "AVAILABLE",
+        "detail": "/home/ricardo/.local/share/cvg-his-v4-runtime/root/usr/lib/postgresql/16/bin"
+      },
+      "redis": {
+        "status": "AVAILABLE",
+        "detail": "Redis server v=7.0.15 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=e53ff17674aa6190"
+      },
+      "minio": {
+        "status": "BLOCKED",
+        "detail": "binario minio ausente; Docker sem permissao no socket"
+      },
+      "clamav": {
+        "status": "BLOCKED",
+        "detail": "clamscan ausente"
+      },
+      "otelCollector": {
+        "status": "AVAILABLE",
+        "detail": "/tmp/opencode/otelcol/otelcol-contrib"
+      },
+      "browserChromium": {
+        "status": "AVAILABLE",
+        "detail": "chromium-1243"
+      },
+      "loadGenerator": {
+        "status": "AVAILABLE",
+        "detail": "k6 v0.55.0 (commit/90bb9415d0, go1.23.3, linux/amd64)"
+      },
+      "osvScanner": {
+        "status": "AVAILABLE",
+        "detail": "/tmp/opencode/osv-scanner"
+      }
+    }
+  },
+  "images": {
+    "status": "BLOCKED",
+    "owner": "plataforma",
+    "reason": "Docker sem permissao no socket e sem sudo nao interativo; nenhuma imagem construida/baixada nesta sessao.",
+    "inventory": [],
+    "dependentTasks": [
+      "PROD-35",
+      "PROD-36",
+      "PROD-38"
+    ],
+    "policy": "Digests obrigatorios quando build local/CI estiver disponivel; ausencia bloqueia apenas as provas que exigem imagem."
+  },
+  "policy": [
+    "Alteracoes preexistentes preservadas; baseline reproduzivel por hash de status/diff.",
+    "Ausencia de servico nao vira skip/PASS; bloqueia somente a prova dependente.",
+    "Nenhum reset/clean/checkout destrutivo foi executado."
+  ]
+}

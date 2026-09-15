@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-00",
+  "runId": "r3-prod00-20260914-a5",
+  "attempt": 5,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a5/runtime CVG_EVIDENCE_SEGMENT=r3-prod00-20260914-a5 AAA_RUN_ID=r3-prod00-20260914-a5 AAA_WORKER_INDEX=7 AAA_ATTEMPT=5 node --test scripts/production/prod-00.test.mjs",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T00:26:26.779Z",
+  "finishedAt": "2026-09-14T00:27:27.315Z",
+  "durationMs": 60536,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "a424f0bdbc08998dd061d0bd64d27e58790ea8576c38d35cafe26542b21dc5d1",
+    "sourceFileCount": 1451,
+    "imageDigest": null,
+    "runId": "r3-prod00-20260914-a5",
+    "attempt": "5",
+    "sealedAt": "2026-09-14T00:26:26.779Z"
+  },
+  "artifacts": [
+    {
+      "path": "baseline/candidate-manifest.json",
+      "sha256": "7d5781a3f3cf90fa03bfc08ef90b4ccd8eba3d76a426e0c42884e3e6ade623d3"
+    },
+    {
+      "path": "baseline/git-status.txt",
+      "sha256": "159b23aea57ee9624d38c91c26946f7aefa97f8d79807ccb978b8806305f7b79"
+    },
+    {
+      "path": "baseline/diff-stat.txt",
+      "sha256": "df648fb09ae44b49273fd25099c93ecbc0c6eec17c83b553a479a05d5894d59d"
+    },
+    {
+      "path": "baseline/hash-before.txt",
+      "sha256": "84e6a091b8446a033a2799f0100b656c15e1ba1846be1319bfd50259cb408221"
+    },
+    {
+      "path": "baseline/migration-ledger.txt",
+      "sha256": "4a351ec8aab01bb03f32873c99daea01123bc669f08ccab4787d4d9b39d1d901"
+    },
+    {
+      "path": "environment/availability.json",
+      "sha256": "f8110d6c39d17adc1115dddfcbdff8a89b37f89bf5b720cc5c02761cb724c96d"
+    },
+    {
+      "path": "isolation/canary.json",
+      "sha256": "e6b2fba3d3c064957e09fc5fe6723f7ffc845de4380ff569efe25c32ee83503e"
+    },
+    {
+      "path": "harness/production-report.json",
+      "sha256": "6baf59df8f562a66bfebfddfb5f4beafc379784d010a2cec6577d90f1b61b2c4"
+    },
+    {
+      "path": "harness/canary-report.json",
+      "sha256": "03bbdc1611bfe5b2d774b99382384e9834054baebc40bfcfed5bf32b10cedd44"
+    },
+    {
+      "path": "harness/http-positive.log",
+      "sha256": "97b5a035eb6f81f923b439b25dbf8c8dc40d2486d8b97375a803e6cf9ea582cf"
+    },
+    {
+      "path": "harness/http-canary-negative.log",
+      "sha256": "567e18383bf658561e5e7fd78babdd4a8993089129eed26f972a9123d05bd88c"
+    },
+    {
+      "path": "checks/evidence-index.json",
+      "sha256": "b901f6d50fcfff9bcb04343473e798d89c2bab50727af3c7cb12469a4515d3ad"
+    },
+    {
+      "path": "checks/prod-00.test.log",
+      "sha256": "c5732eaeb09280ab36e889021a8998bef52d54036e1e8d94aaaf4afd651b1887"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis locais isolados e Playwright local; Docker permanece BLOCKED, sem prova remota, provider/terceiros ou revisao independente.",
+    "Disponibilidade de MinIO, ClamAV e OTel e registrada; provas dependentes permanecem bloqueadas."
+  ]
+}

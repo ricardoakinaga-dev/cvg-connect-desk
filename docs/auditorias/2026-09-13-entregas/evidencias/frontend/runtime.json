@@ -1,0 +1,11 @@
+{
+  "command": "pnpm --filter @cvg/desk-web exec vite --config /tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite.config.mjs --configLoader native",
+  "host": "127.0.0.1",
+  "port": 32893,
+  "owned_pids": [
+    4162052,
+    4162130
+  ],
+  "teardown": "SIGTERM only owned Vite and launcher PIDs",
+  "time": "2026-09-13T19:38:52.380727+00:00"
+}

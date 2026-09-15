@@ -1,7 +1,7 @@
 import { db } from '@cvg/database';
 import { contactGroups, contactGroupMembers, contacts } from '@cvg/database';
 import { eq, and, count } from 'drizzle-orm';
-import type { CreateGroupInput } from '../types';
+import type { CreateGroupInput } from '../../types';
 
 export class ContactGroupRepository {
   async findAll() {
@@ -57,11 +57,12 @@ export class ContactGroupRepository {
   }
 
   async addMember(groupId: string, contactId: string, userId?: string) {
+    // SA-019/AC2: membro repetido é idempotente (unique idx_group_members_unique).
     await db.insert(contactGroupMembers).values({
       groupId,
       contactId,
       addedBy: userId,
-    });
+    }).onConflictDoNothing();
   }
 
   async removeMember(groupId: string, contactId: string) {

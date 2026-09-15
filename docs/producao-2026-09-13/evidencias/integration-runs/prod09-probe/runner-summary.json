@@ -1,0 +1,30 @@
+{
+  "runId": "prod09-probe",
+  "workerIndex": 25,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_prod09_probe_w25",
+  "redisUrl": "redis://127.0.0.1:56930",
+  "startedAt": "2026-09-13T16:17:12.386Z",
+  "command": "bash -lc cd apps/message-worker && timeout 6 pnpm exec tsx src/index.ts; echo WORKER_EXIT=$?",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\"msg\":\"[Worker] Starting message worker\",\"consumer_id\":\"worker\",\"handlers\":[\"handoff.completed\",\"secretary.invocation\",\"message.persisted\"],\"poll_interval_ms\":500,\"max_retries\":3,\"level\":\"info\"}\n{\"msg\":\"[Worker] Worker started successfully\",\"level\":\"info\"}\n{\"msg\":\"[Worker] Received SIGTERM, shutting down gracefully\",\"level\":\"info\"}\nWORKER_EXIT=124\n\n"
+    }
+  ],
+  "exitCode": 0
+}

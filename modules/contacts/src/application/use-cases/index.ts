@@ -1,6 +1,14 @@
 import { ContactRepository } from '../../infrastructure/repositories/contact.repository';
 import { conversationRepository } from '@cvg/chat';
+import { db } from '@cvg/database';
 import { ok, err, NotFoundError, ConflictError } from '@cvg/shared';
+import { insertAuditLog } from '@cvg/audit';
+import {
+  persistOutboxEventIntent,
+  publishRealtimeHintsAfterCommit,
+  createConversationCreatedEvent,
+  type EventEnvelope,
+} from '@cvg/events';
 import type { CreateContactInput, UpdateContactInput } from '../../types';
 
 const repo = new ContactRepository();
@@ -40,29 +48,87 @@ export async function deleteContact(id: string) {
   return ok({ deleted: true });
 }
 
-export async function startConversation(contactId: string, sectorId?: string, userId?: string) {
-  const contact = await repo.findById(contactId);
-  if (!contact) return err(new NotFoundError('Contato'));
+export interface StartConversationContext {
+  actorId?: string;
+  correlationId?: string;
+}
 
-  // Verificar se já existe conversa ativa
-  const existingConv = await repo.getActiveConversation(contactId);
-  if (existingConv) return ok({ conversationId: existingConv.id, isNew: false });
+/**
+ * SA-007/A07 (C01): conversa + histórico + auditoria + outbox em UM commit.
+ *
+ * O `SELECT ... FOR UPDATE` no contato serializa requisições concorrentes: a
+ * segunda enxerga a conversa ativa criada pela primeira e devolve o MESMO id
+ * canônico (`isNew:false`, `deduplicated:true`), sem órfãos. Falha tardia
+ * (audit/outbox/histórico) reverte tudo, inclusive a conversa.
+ */
+export async function startConversation(
+  contactId: string,
+  sectorId?: string,
+  userId?: string,
+  context: StartConversationContext = {},
+) {
+  try {
+    const outcome = await db.transaction(async (tx) => {
+      const contact = await repo.lockById(contactId, tx);
+      if (!contact) throw new NotFoundError('Contato');
 
-  // Criar nova conversa
-  const conversation = await conversationRepository.create({
-    contactId,
-    status: 'open',
-    statusV2: 'novo',
-    isActive: true,
-    sectorId,
-    assignedUserId: userId,
-    externalChannelId: 'whatsapp',
-    externalConversationId: `desk_${contact.phone}_${Date.now()}`,
-  });
+      const existingConv = await conversationRepository.findActiveByContactId(contactId, tx);
+      if (existingConv) {
+        return { conversationId: existingConv.id, isNew: false, deduplicated: true, event: null as EventEnvelope | null };
+      }
 
-  await conversationRepository.addStatusHistory(conversation.id, 'open', userId, 'Conversa iniciada pelo Desk');
+      const conversation = await conversationRepository.create({
+        contactId,
+        status: 'open',
+        statusV2: 'novo',
+        isActive: true,
+        sectorId,
+        assignedUserId: userId,
+        externalChannelId: 'whatsapp',
+        externalConversationId: `desk_${contact.phone}_${Date.now()}`,
+      }, tx);
 
-  return ok({ conversationId: conversation.id, isNew: true });
+      await conversationRepository.addStatusHistory(
+        conversation.id,
+        'open',
+        userId,
+        'Conversa iniciada pelo Desk',
+        tx,
+      );
+
+      await insertAuditLog(tx, {
+        userId: context.actorId ?? userId ?? null,
+        action: 'contact.conversation_started',
+        entityType: 'conversation',
+        entityId: conversation.id,
+        newValue: { contactId, sectorId: sectorId ?? null, assignedUserId: userId ?? null },
+        correlationId: context.correlationId ?? null,
+      });
+
+      const event = createConversationCreatedEvent(
+        {
+          conversationId: conversation.id,
+          contactId,
+          externalConversationId: conversation.externalConversationId ?? undefined,
+          externalChannelId: conversation.externalChannelId ?? undefined,
+          createdAt: conversation.createdAt.toISOString(),
+        },
+        context.correlationId,
+      );
+      await persistOutboxEventIntent(tx, event);
+
+      return { conversationId: conversation.id, isNew: true, deduplicated: false, event };
+    });
+
+    if (outcome.event) {
+      await publishRealtimeHintsAfterCommit([outcome.event]);
+    }
+
+    return ok({ conversationId: outcome.conversationId, isNew: outcome.isNew, deduplicated: outcome.deduplicated });
+  } catch (error) {
+    if (error instanceof NotFoundError) return err(error);
+    return err(error as Error);
+  }
 }
 
 export async function getContactStats() {

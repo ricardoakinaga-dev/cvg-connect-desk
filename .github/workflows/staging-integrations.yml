@@ -51,6 +51,8 @@ jobs:
           --health-retries 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - name: Start MinIO, ClamAV and OTel Collector
         shell: bash
         run: |
@@ -58,7 +60,9 @@ jobs:
             -p 9100:9000 \
             -e MINIO_ROOT_USER=minioadmin \
             -e MINIO_ROOT_PASSWORD=minioadmin \
-            quay.io/minio/minio:latest server /data --console-address ":9001"
+            -e MINIO_KMS_SECRET_KEY=cvg-staging-key:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \
+            -e MINIO_KMS_AUTO_ENCRYPTION=on \
+            quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e server /data --console-address ":9001"
           docker run -d --name cvg-clamav \
             -p 3310:3310 \
             clamav/clamav:stable
@@ -85,21 +89,19 @@ jobs:
             if (( attempt == 30 )); then docker logs cvg-otel-collector; exit 1; fi
             sleep 2
           done
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
-        with:
-          version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: '24.20.0'
           cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@10.33.0 --activate
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @cvg/database db:migrate
       - name: Real MinIO + Real ClamAV integration tests
         run: pnpm --filter @cvg/media exec vitest run src/__tests__/minio-real.test.ts src/__tests__/clamav-real.test.ts
       - name: Staging smoke (MinIO put/get/signed + ClamAV clean/EICAR + Collector reachable)
-        run: pnpm exec tsx scripts/staging-smoke.mjs
+        run: node scripts/staging-smoke.mjs
       - name: OTel Collector end-to-end spans
-        run: pnpm exec tsx scripts/otel-e2e-check.mjs
+        run: node scripts/otel-e2e-check.mjs
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

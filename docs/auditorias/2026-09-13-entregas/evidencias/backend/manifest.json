@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-13T19:35:59.677593+00:00",
+  "source_hashes": {
+    "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts": "203940326fee1622e04471443e6a4d3ca45c256d684e0483c09e08b6d0884fad",
+    "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts": "ed874ef8794b787b1738b270bb0f9ad5ced4ebcf59c8901e5c5c1d5efbb462fe",
+    "apps/message-worker/src/processor.ts": "d11d2791512cac2d5d8e2545636a06a71a21f32745cd0cde1b59548c109b92cc",
+    "packages/integrations/src/secretary-client.ts": "5d76ad914254aeef403e5a26d45f03b8a484614b8b42ffd4f96494e8a450c0ec",
+    "packages/shared/src/webhook-guard.ts": "1a20f930af40887750a31e2061fdf7d0cf50ed023d2863ef11a8448e4f7fd746",
+    "packages/shared/src/webhook-anti-replay.ts": "ba31733fbb15c3ca41a35641a8d46fdf4c5a452f53af483909ca1f2daf3710a9",
+    "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts": "1d308071030ce974d06cfc0391767867b8f512f829cc317e72c79b812edc9c07",
+    "modules/privacy/src/presentation/http/privacy.controller.ts": "d7c477a8b3e4c2a154ee71122d932f6b086fb5b73d018623245e19b548297163",
+    "modules/privacy/src/application/data-subject-service.ts": "40a82131b0c8971fe917dec2245999f9234a44e5bc16b5e5ec3d458aeea66789",
+    "modules/chat/src/application/use-cases/conversation-operations.use-case.ts": "0c044014218c818d4a3529ecca89fc16dd9694eef3695a307d2c9805b457d4bf",
+    "modules/chat/src/presentation/http/conversation-operations.controller.ts": "dd70386cb811cce09a4025932f6cadcfc576fc8ae1f1aa89d3b84b24ae59ad7a"
+  },
+  "artifacts": {
+    "findings.json": "e8e189c5408b7a3a8d11fa641bf00e58194c7ca3504a9806dc11e02411123110",
+    "auth-tests.log": "6f0e12a89673d905036ea41aa5d12facf5e4f69679b3045bebb30a8104cd1507",
+    "report.md": "6b828b6f025321265c0abc603ca22a0724bba542156436b36c09191c30b668db",
+    "worker-tests.log": "a4cb76427df0d9f8b96b99ee017b54c654056c8365a799c42ebd737ed3b28e0e",
+    "probe-results.json": "134fb6b2e473a666dd9c41cc8094b6465395354fe338d9dd8dbd30c5b3772b9c",
+    "probes.cjs": "4d722047b07945b88e487412276973300d5568c68b0a790862992eeeb7b11b90"
+  },
+  "lock_hash": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba"
+}

@@ -1,5 +1,5 @@
 import { db, schema } from './index';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
 async function seed() {
@@ -16,7 +16,7 @@ async function seed() {
       .limit(1);
     
     if (existingRole.length === 0) {
-      const [role] = await db
+      await db
         .insert(schema.roles)
         .values({ name: roleName })
         .returning();
@@ -26,16 +26,22 @@ async function seed() {
     }
   }
 
-  // 2. Criar permissões básicas
+  // 2. Criar permissões do catálogo vigente (PROD-04/AC3/D01).
+  // Mesmos nomes do catálogo estático de packages/auth/src/rbac.ts e do
+  // backfill idempotente da migration 0025 — nenhum nome novo é inventado.
   const permissions = [
     { name: 'chat:read', description: 'Read chat messages' },
     { name: 'chat:write', description: 'Send messages' },
+    { name: 'chat:delete', description: 'Delete conversations/messages' },
     { name: 'tasks:read', description: 'Read tasks' },
     { name: 'tasks:write', description: 'Create and update tasks' },
+    { name: 'tasks:delete', description: 'Delete tasks' },
     { name: 'notes:read', description: 'Read notes' },
     { name: 'notes:write', description: 'Create notes' },
+    { name: 'notes:delete', description: 'Delete notes' },
     { name: 'alerts:read', description: 'Read alerts' },
     { name: 'alerts:write', description: 'Acknowledge and resolve alerts' },
+    { name: 'alerts:delete', description: 'Delete alerts' },
     { name: 'dashboard:read', description: 'View dashboard' },
     { name: 'admin:read', description: 'Read admin resources' },
     { name: 'admin:write', description: 'Manage admin resources' },
@@ -60,33 +66,78 @@ async function seed() {
     }
   }
 
-  // 3. Associate all permissions to Admin role
+  // 3. Associar permissões aos papéis built-in conforme o catálogo estático
+  // vigente (RolePermissions, packages/auth/src/rbac.ts). Idempotente: usa
+  // ON CONFLICT DO NOTHING sobre a PK (role_id, permission_id), sem duplicar.
+  const rolePermissionCatalog: Record<string, readonly string[]> = {
+    Admin: [
+      'chat:read', 'chat:write', 'chat:delete',
+      'tasks:read', 'tasks:write', 'tasks:delete',
+      'notes:read', 'notes:write', 'notes:delete',
+      'alerts:read', 'alerts:write', 'alerts:delete',
+      'admin:read', 'admin:write',
+      'dashboard:read',
+    ],
+    Receptionist: [
+      'chat:read', 'chat:write',
+      'tasks:read', 'tasks:write',
+      'notes:read', 'notes:write',
+      'alerts:read',
+      'dashboard:read',
+    ],
+    Veterinarian: [
+      'chat:read', 'chat:write',
+      'tasks:read', 'tasks:write',
+      'notes:read', 'notes:write',
+      'alerts:read', 'alerts:write',
+      'dashboard:read',
+    ],
+    Manager: [
+      'chat:read', 'chat:write',
+      'tasks:read', 'tasks:write',
+      'notes:read',
+      'alerts:read', 'alerts:write',
+      'admin:read',
+      'dashboard:read',
+    ],
+  };
+
+  const permissionRows = await db.select().from(schema.permissions);
+  const permissionIdByName = new Map(permissionRows.map((permission) => [permission.name, permission.id]));
+
+  for (const [roleName, permissionNames] of Object.entries(rolePermissionCatalog)) {
+    const [role] = await db
+      .select()
+      .from(schema.roles)
+      .where(eq(schema.roles.name, roleName))
+      .limit(1);
+
+    if (!role) {
+      console.log(`Seed: papel built-in ausente — associações não aplicadas: ${roleName}`);
+      continue;
+    }
+
+    let assigned = 0;
+    for (const permissionName of permissionNames) {
+      const permissionId = permissionIdByName.get(permissionName);
+      if (!permissionId) {
+        console.log(`Seed: permissão ausente no banco: ${permissionName}`);
+        continue;
+      }
+      await db
+        .insert(schema.rolePermissions)
+        .values({ roleId: role.id, permissionId })
+        .onConflictDoNothing();
+      assigned += 1;
+    }
+    console.log(`Role ${roleName}: ${assigned} associações de permissão garantidas`);
+  }
+
   const [adminRole] = await db
     .select()
     .from(schema.roles)
     .where(eq(schema.roles.name, 'Admin'))
     .limit(1);
-
-  if (adminRole) {
-    // Get all permission IDs
-    const allPerms = await db.select().from(schema.permissions);
-    for (const perm of allPerms) {
-      const existing = await db
-        .select()
-        .from(schema.rolePermissions)
-        .where(
-          and(eq(schema.rolePermissions.roleId, adminRole.id), eq(schema.rolePermissions.permissionId, perm.id))
-        )
-        .limit(1);
-      
-      if (existing.length === 0) {
-        await db
-          .insert(schema.rolePermissions)
-          .values({ roleId: adminRole.id, permissionId: perm.id });
-        console.log(`Assigned permission ${perm.name} to Admin`);
-      }
-    }
-  }
 
   // 4. Criar admin user — APENAS em desenvolvimento/teste.
   // Em produção, usar ADMIN_BOOTSTRAP_EMAIL + ADMIN_BOOTSTRAP_PASSWORD via bootstrap dedicado.

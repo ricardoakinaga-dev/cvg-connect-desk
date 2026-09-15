@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
-import { authRepository, hashSessionToken } from './infrastructure/repositories/auth.repository';
-
-const SESSION_IDLE_TIMEOUT_MS = Number(process.env.SESSION_IDLE_TIMEOUT_MS) || 24 * 60 * 60 * 1000;
+import { authRepository } from './infrastructure/repositories/auth.repository';
+import { evaluateSession } from './session-policy';
+import { resolveUserAccess } from './permission-service';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -12,13 +12,19 @@ declare module 'fastify' {
       email: string;
       name: string;
       roles: string[];
+      isActive?: boolean;
+      createdAt?: string;
+      /** Permissões efetivas do banco (D01/PROD-04-AC3). */
+      permissions?: string[];
+      /** true quando `role_permissions` tem linhas (conjunto autoritativo mesmo vazio). */
+      permissionsAuthoritative?: boolean;
     };
   }
 }
 
 export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
   const authHeader = request.headers.authorization;
-  
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return reply.status(401).send({
       error: 'UNAUTHORIZED',
@@ -27,67 +33,51 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
   }
 
   const token = authHeader.substring(7);
-  
-  try {
-    const tokenHash = hashSessionToken(token);
-    const [session] = await db
-      .select()
-      .from(schema.sessions)
-      .where(eq(schema.sessions.token, tokenHash));
 
-    if (!session || session.revokedAt) {
+  try {
+    const now = new Date();
+    const session = await authRepository.findSessionByToken(token);
+
+    if (!session) {
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
         message: 'Invalid token',
       });
     }
 
-    const now = new Date();
-    if (session.expiresAt && new Date(session.expiresAt) < now) {
-      return reply.status(401).send({
-        error: 'UNAUTHORIZED',
-        message: 'Token expired',
-      });
-    }
-
-    if (session.absoluteExpiresAt && new Date(session.absoluteExpiresAt) < now) {
-      return reply.status(401).send({
-        error: 'UNAUTHORIZED',
-        message: 'Session expired',
-      });
-    }
-
-    if (session.lastSeenAt && now.getTime() - new Date(session.lastSeenAt).getTime() > SESSION_IDLE_TIMEOUT_MS) {
-      return reply.status(401).send({
-        error: 'UNAUTHORIZED',
-        message: 'Session idle timeout',
-      });
-    }
-
-    await db
-      .update(schema.sessions)
-      .set({ lastSeenAt: now })
-      .where(eq(schema.sessions.id, session.id));
-
     const [user] = await db
       .select()
       .from(schema.users)
       .where(eq(schema.users.id, session.userId));
 
-    if (!user || !user.isActive) {
+    // Uma query resolve papéis + permissões efetivas do banco (D01/AC3) e o
+    // flag de provisionamento (role_permissions com linhas = autoritativo).
+    const access = user
+      ? await resolveUserAccess(user.id)
+      : { roles: [] as string[], permissions: [] as string[], permissionsAuthoritative: false };
+    const evaluation = evaluateSession(session, user, now, undefined, access.roles);
+
+    if (!evaluation.ok) {
       return reply.status(401).send({
         error: 'UNAUTHORIZED',
-        message: 'User not found or inactive',
+        message: evaluation.message,
       });
     }
 
-    const roles = await authRepository.getUserRoles(user.id);
+    const touched = await authRepository.touchSession(session.id, now);
+    if (!touched) {
+      return reply.status(401).send({
+        error: 'UNAUTHORIZED',
+        message: 'Invalid token',
+      });
+    }
 
     request.user = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      roles,
+      ...evaluation.principal,
+      isActive: user.isActive,
+      createdAt: user.createdAt.toISOString(),
+      permissions: access.permissions,
+      permissionsAuthoritative: access.permissionsAuthoritative,
     };
   } catch (error) {
     request.log.error(error, 'Authentication failed');

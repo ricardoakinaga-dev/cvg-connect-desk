@@ -8,10 +8,12 @@ set -euo pipefail
 : "${DR_POSTGRES_URL:?DR_POSTGRES_URL é obrigatório (superuser com CREATE DATABASE)}"
 
 START_TS=$(date +%s)
+STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 FIXTURE_TAG="dr-fixture-$(date -u +%Y%m%dT%H%M%SZ)"
 SRC_DB="connect_desk_dr_src"
 DST_DB="connect_desk_dr_dst"
 BACKUP_DIR="${DR_BACKUP_DIR:-/tmp/dr-e2e}"
+APP_PORT="${DR_APP_PORT:-4339}"
 mkdir -p "$BACKUP_DIR"
 BACKUP_FILE="$BACKUP_DIR/$FIXTURE_TAG.dump"
 
@@ -45,7 +47,7 @@ const conv = (await c.query("INSERT INTO conversations(contact_id,status) VALUES
 const msg = (await c.query("INSERT INTO messages(conversation_id,direction,content,external_message_id) VALUES('" + conv + "','inbound','" + tag + "','" + tag + "-msg') RETURNING id")).rows[0].id;
 await c.query("INSERT INTO outbox_events(event_id,event_type,aggregate_type,aggregate_id,occurred_at,payload,version) VALUES('" + tag + "-evt','message.persisted','Message','" + msg + "',NOW(),'{}',1)");
 await c.query("INSERT INTO audit_logs(action,entity_type,entity_id) VALUES('dr.fixture','fixture','" + conv + "')");
-await c.query("INSERT INTO dead_letter_events(original_event_id,consumer_id,event_type,payload) VALUES('" + tag + "-dlq','worker','message.persisted','{}')");
+await c.query("INSERT INTO dead_letter_events(original_event_id,consumer_id,event_type,payload) VALUES('" + tag + "-evt','worker','message.persisted','{}')");
 console.log(JSON.stringify({ userId: uid, contactId: cid, conversationId: conv, messageId: msg }));
 c.release(); await pool.end();
 NODEEOF
@@ -89,36 +91,34 @@ done
 
 # 11-13. Boot da aplicação + smoke + comparação da fixture
 log "11/13 boot da aplicação contra banco restaurado"
-DATABASE_URL="$(db_url "$DST_DB")" PORT=4339 NODE_ENV=development LOG_LEVEL=warn timeout 60 pnpm --filter @cvg/desk-api exec tsx src/index.ts >/tmp/dr-e2e-app.log 2>&1 &
+DATABASE_URL="$(db_url "$DST_DB")" PORT="$APP_PORT" NODE_ENV=development LOG_LEVEL=warn timeout 60 pnpm --filter @cvg/desk-api exec tsx src/index.ts >"$BACKUP_DIR/dr-e2e-app.log" 2>&1 &
 APP_PID=$!
 trap 'kill $APP_PID 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do
-  if curl -sf -o /dev/null http://localhost:4339/health; then break; fi
+  if curl -sf -o /dev/null "http://localhost:$APP_PORT/health"; then break; fi
   sleep 2
 done
-curl -sf http://localhost:4339/health >/dev/null || fail "aplicação não subiu contra banco restaurado"
+curl -sf "http://localhost:$APP_PORT/health" >/dev/null || fail "aplicação não subiu contra banco restaurado"
 log "12/13 smoke: readiness"
-curl -sf http://localhost:4339/readiness | grep -q '"ready":true' || fail "readiness não pronto"
-log "13/13 comparando fixture restaurada"
-RESTORED=$(DATABASE_URL="$(db_url "$DST_DB")" DR_FIXTURE_TAG="$FIXTURE_TAG" node --input-type=module <<'NODEEOF'
-import pg from 'pg';
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const c = await pool.connect();
-const tag = process.env.DR_FIXTURE_TAG;
-const msg = await c.query("SELECT content FROM messages WHERE external_message_id='" + tag + "-msg'");
-const evt = await c.query("SELECT event_id FROM outbox_events WHERE event_id='" + tag + "-evt'");
-const dlq = await c.query("SELECT original_event_id FROM dead_letter_events WHERE original_event_id='" + tag + "-dlq'");
-console.log(JSON.stringify({ message: msg.rows[0]?.content || null, event: evt.rows[0]?.event_id || null, dlq: dlq.rows[0]?.original_event_id || null }));
-c.release(); await pool.end();
-NODEEOF
-)
-echo "$RESTORED" | grep -q "$FIXTURE_TAG" || fail "fixture divergente após restore: $RESTORED"
+curl -sf "http://localhost:$APP_PORT/readiness" | grep -q '"ready":true' || fail "readiness não pronto"
+log "13/13 comparando fixture restaurada (verificador ESTRITO, entidade por entidade)"
+DR_VERIFY_OUT="$BACKUP_DIR/$FIXTURE_TAG.verify.json"
+DATABASE_URL="$(db_url "$DST_DB")" DR_FIXTURE_TAG="$FIXTURE_TAG" \
+  node infra/scripts/dr-verify-fixture.mjs \
+  --fixture "$BACKUP_DIR/$FIXTURE_TAG.fixture.json" \
+  --source-revision "${DR_SOURCE_REVISION:-desconhecido}" \
+  --out "$DR_VERIFY_OUT" \
+  || fail "verificador estrito reprovou a restauração; relatório em $DR_VERIFY_OUT"
 
 kill $APP_PID 2>/dev/null || true
 trap - EXIT
 
 DURATION=$(( $(date +%s) - START_TS ))
-log "OK: DR E2E completo em ${DURATION}s (RPO/RTO ver docs/DISASTER_RECOVERY.md)"
+DR_RESULT_JSON="$BACKUP_DIR/$FIXTURE_TAG.result.json"
+BACKUP_SHA=$(cut -d' ' -f1 "$BACKUP_FILE.sha256")
+node -e "require('node:fs').writeFileSync(process.argv[1], JSON.stringify({tag: process.argv[2], result: 'PASS', durationSeconds: Number(process.argv[3]), backupSha256: process.argv[4], sourceRevision: process.argv[5] || 'desconhecido', startedAt: process.argv[6], finishedAt: new Date().toISOString(), verifyReport: process.argv[7]}, null, 2) + '\n')" \
+  "$DR_RESULT_JSON" "$FIXTURE_TAG" "$DURATION" "$BACKUP_SHA" "${DR_SOURCE_REVISION:-}" "$STARTED_AT" "$DR_VERIFY_OUT"
+log "OK: DR E2E completo em ${DURATION}s; evidência estruturada em $DR_RESULT_JSON (RPO/RTO ver docs/DISASTER_RECOVERY.md)"
 
 # Limpeza
 admin_psql "DROP DATABASE IF EXISTS \"$DST_DB\";" >/dev/null

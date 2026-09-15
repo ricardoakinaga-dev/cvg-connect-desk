@@ -1,0 +1,54 @@
+{
+  "runId": "sa020-rehearsal",
+  "workerIndex": 46,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa020_rehearsal_w46",
+  "redisUrl": "redis://127.0.0.1:57140",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:31:52.995Z",
+  "finishedAt": "2026-09-15T03:31:55.449Z",
+  "command": "node scripts/production/sa-020-tutor-patient-rehearsal.mjs --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-020/rehearsal.json",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa020_rehearsal_w46",
+    "REDIS_URL": "redis://127.0.0.1:57140",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa020-rehearsal",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa020-rehearsal",
+    "AAA_WORKER_INDEX": "46"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:31:52.995Z",
+      "finishedAt": "2026-09-15T03:31:54.662Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:31:54.662Z",
+      "finishedAt": "2026-09-15T03:31:55.374Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "node scripts/production/sa-020-tutor-patient-rehearsal.mjs --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-020/rehearsal.json",
+      "startedAt": "2026-09-15T03:31:55.374Z",
+      "finishedAt": "2026-09-15T03:31:55.449Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "[sa020] PASS backfill_cria_vinculos_do_legado\n[sa020] PASS primario_marcado\n[sa020] PASS forward_idempotente\n[sa020] PASS pk_composta_rejeita_duplicata\n[sa020] PASS um_primario_por_paciente\n[sa020] PASS n_n_dois_tutores_no_paciente\n[sa020] PASS backfill_respeita_primario_divergente\n[sa020] PASS backfill_nao_promove_vinculo_nao_primario\n[sa020] PASS rollback_perde_vinculo_n_n_por_desenho\n[sa020] PASS rollback_preserva_pacientes_e_tutor_legado\n[sa020] PASS rollback_remove_tabela_nova\n[sa020] PASS rollforward_reconstroi_legado_sem_perda\n{\"result\":\"PASS\",\"checks\":12,\"failed\":0}\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

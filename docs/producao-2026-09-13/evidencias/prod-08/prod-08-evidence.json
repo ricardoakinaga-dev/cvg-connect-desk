@@ -1,0 +1,216 @@
+{
+  "generatedAt": "2026-09-14T07:39:09.527Z",
+  "runId": "prod08",
+  "workerIndex": 16,
+  "database": "cvg_aaa_prod08_w16",
+  "postgresPort": 58032,
+  "cases": [
+    {
+      "case": "AC1a-corrida-com-externalConversationId",
+      "externalConversationId": "prod08-ac1a-dd5aff7c-05c2-4375-898a-09f5490266bc-conv",
+      "externalMessageId": "prod08-ac1a-dd5aff7c-05c2-4375-898a-09f5490266bc-msg",
+      "messageId": "f67a4964-44e9-4daa-8903-ecde2b4b14f1",
+      "conversationId": "9556bfe1-c982-4826-8185-6bb154001e43",
+      "winner": "first",
+      "duplicateFlags": [
+        false,
+        true
+      ],
+      "conversations": 1,
+      "createdIntents": 1,
+      "persistedIntents": 1,
+      "orphans": 0
+    },
+    {
+      "case": "AC1b-corrida-sem-externalConversationId",
+      "externalMessageId": "prod08-ac1b-28135948-5dc5-41a7-a1d5-05e9789679e4-msg",
+      "messageId": "7171d29a-ce89-4431-82c6-7864058339a2",
+      "conversationId": "585a9638-82f7-436b-8dd4-31f321b60048",
+      "conversationsForContact": 1,
+      "orphans": 0
+    },
+    {
+      "case": "AC1c-rodadas",
+      "rounds": [
+        {
+          "round": 0,
+          "withExternal": true,
+          "messageId": "ed6cc348-c7c1-4269-8f19-a2f290fcfe40"
+        },
+        {
+          "round": 1,
+          "withExternal": false,
+          "messageId": "c8fb5765-4b0c-4ddd-b215-aac96cb93c15"
+        },
+        {
+          "round": 2,
+          "withExternal": true,
+          "messageId": "65b8a692-fbc5-4e00-8f80-13e3a993e4c7"
+        },
+        {
+          "round": 3,
+          "withExternal": false,
+          "messageId": "8faa2f16-8d7b-4249-8f59-4c0fdde21d9c"
+        },
+        {
+          "round": 4,
+          "withExternal": true,
+          "messageId": "69cba960-b26c-4394-ad97-7f890961d3ef"
+        },
+        {
+          "round": 5,
+          "withExternal": false,
+          "messageId": "48063e5f-7b46-4213-a1ae-eb9a541ffb64"
+        }
+      ]
+    },
+    {
+      "case": "AC1e-mensagens-diferentes-mesma-conversa",
+      "conversationId": "df1b3c78-c687-4fcd-b3f4-235563deccab",
+      "messages": [
+        "daa51732-abe7-4bda-9adf-9cb39c5e37a6",
+        "ce9a6c2f-4aa4-4300-9bd0-9be45109147d"
+      ],
+      "conversations": 1
+    },
+    {
+      "case": "AC1d-use-case",
+      "messageId": "d1dca74e-7b73-43a6-a85a-2853bf9b258a",
+      "conversationId": "e8574aa8-4c94-4036-8ad5-57b802f125b9",
+      "newConversationFlags": [
+        true,
+        false
+      ]
+    },
+    {
+      "case": "AC2-contacts",
+      "rollbackDelta": {
+        "contacts": 10,
+        "conversations": 10,
+        "conversation_status_history": 10,
+        "messages": 11,
+        "outbox_events": 21
+      },
+      "retryMessageId": "fec3b67f-104e-4671-bbd7-8e576b48f1d2"
+    },
+    {
+      "case": "AC2-conversations",
+      "rollbackDelta": {
+        "contacts": 11,
+        "conversations": 11,
+        "conversation_status_history": 11,
+        "messages": 12,
+        "outbox_events": 23
+      },
+      "retryMessageId": "13772486-498a-4078-900e-c2333967671e"
+    },
+    {
+      "case": "AC2-conversation_status_history",
+      "rollbackDelta": {
+        "contacts": 12,
+        "conversations": 12,
+        "conversation_status_history": 12,
+        "messages": 13,
+        "outbox_events": 25
+      },
+      "retryMessageId": "f4b031b1-5a97-4743-93e5-a2b2cab2d49a"
+    },
+    {
+      "case": "AC2-outbox:conversation.created",
+      "rollbackDelta": {
+        "contacts": 13,
+        "conversations": 13,
+        "conversation_status_history": 13,
+        "messages": 14,
+        "outbox_events": 27
+      },
+      "retryMessageId": "23290e96-e36b-4e9c-a126-32e9556b31f3"
+    },
+    {
+      "case": "AC2-messages",
+      "rollbackDelta": {
+        "contacts": 14,
+        "conversations": 14,
+        "conversation_status_history": 14,
+        "messages": 15,
+        "outbox_events": 29
+      },
+      "retryMessageId": "a730f283-4d26-49d8-9eef-40a3d1fd6665"
+    },
+    {
+      "case": "AC2-outbox:message.persisted",
+      "rollbackDelta": {
+        "contacts": 15,
+        "conversations": 15,
+        "conversation_status_history": 15,
+        "messages": 16,
+        "outbox_events": 31
+      },
+      "retryMessageId": "4b31f623-5bbb-48b9-aa95-b98d4fbe369d"
+    },
+    {
+      "case": "AC2-conversation_state",
+      "rollbackDelta": {
+        "contacts": 16,
+        "conversations": 16,
+        "conversation_status_history": 16,
+        "messages": 17,
+        "outbox_events": 33
+      },
+      "retryMessageId": "c6cf62c4-db9f-4c7c-8b1b-672524f2b349"
+    },
+    {
+      "case": "AC2-attach-contact",
+      "conversationId": "f9fbd684-eef8-4d92-885a-4cf5acf8b4d8",
+      "messageId": "7912f76e-6f63-4348-a68d-9b83a8a619a8",
+      "linked": true
+    },
+    {
+      "case": "AC2-hint-pos-commit",
+      "messageId": "4587264f-947d-4722-a8ae-66d7be444c88",
+      "hintEventId": "7192ba78-de87-4596-ae03-215bc2ad7aac",
+      "persistedEventId": "7192ba78-de87-4596-ae03-215bc2ad7aac"
+    },
+    {
+      "case": "AC3a-ordem-total",
+      "sectorId": "bbd96c9b-ca34-47f7-9efe-5d5cb8b3fab6",
+      "rows": 9,
+      "pageSize": 2,
+      "ordered": true
+    },
+    {
+      "case": "AC3b-inserts-concorrentes",
+      "sectorId": "8929b5fa-cd86-4371-a43c-f861b5fb4d2e",
+      "originals": 6,
+      "inserted": 2,
+      "seen": 7,
+      "duplicates": 0
+    },
+    {
+      "case": "AC3c-escopo-setor",
+      "memberItems": 2,
+      "outsiderItems": 0,
+      "adminContainsAll": true,
+      "cursorScopeMismatchRejected": true
+    },
+    {
+      "case": "AC4a-dry-run",
+      "criterion": "conversation_without_messages",
+      "candidates": 22,
+      "orphanDetected": true,
+      "healthyNotCandidate": true,
+      "nullExternalIdDetected": true,
+      "mutated": false
+    },
+    {
+      "case": "AC4b-reconciliacao",
+      "approvalRequired": "approval_required",
+      "archivedIds": [
+        "04495ec8-b84c-4900-a4ce-361cc7c14bd5"
+      ],
+      "status": "archived",
+      "messagesPreserved": 1,
+      "idempotentSecondRun": "no_candidates"
+    }
+  ]
+}

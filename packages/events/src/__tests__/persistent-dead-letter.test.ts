@@ -1,5 +1,7 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { db, schema } from '@cvg/database';
+import { eq } from 'drizzle-orm';
 import { persistentDeadLetterStore } from '../persistent-dead-letter';
 
 /**
@@ -8,6 +10,19 @@ import { persistentDeadLetterStore } from '../persistent-dead-letter';
  */
 describe('PersistentDeadLetterStore (real PG)', () => {
   const prefix = `dlq.persist.${Date.now()}`;
+  // A FK dead_letter_events.resolved_by -> users.id (0023) exige ator real:
+  // o fluxo produtivo resolve com o usuário autenticado, nunca com UUID solto.
+  const actorId = randomUUID();
+
+  beforeAll(async () => {
+    await db.insert(schema.users).values({
+      id: actorId,
+      name: 'DLQ Test Actor',
+      email: `dlq.actor.${Date.now()}@example.com`,
+      passwordHash: '$2a$10$kOS6WENS2HZ/vSU96GD62O6aJbj.nc/B5O6Ctp/ecRh1mV5a8BCCO',
+      isActive: true,
+    });
+  });
 
   beforeEach(async () => {
     await persistentDeadLetterStore.deleteByEventPrefix(prefix);
@@ -15,6 +30,7 @@ describe('PersistentDeadLetterStore (real PG)', () => {
 
   afterAll(async () => {
     await persistentDeadLetterStore.deleteByEventPrefix(prefix);
+    await db.delete(schema.users).where(eq(schema.users.id, actorId));
   });
 
   function input(suffix: string, payload: unknown = { hello: 'world' }) {
@@ -89,12 +105,12 @@ describe('PersistentDeadLetterStore (real PG)', () => {
 
   it('resolve and discard with actor and reason', async () => {
     const { entry: e1 } = await persistentDeadLetterStore.persist(input('g'));
-    const resolved = await persistentDeadLetterStore.resolve(e1.id, randomUUID(), 'fixed manually');
+    const resolved = await persistentDeadLetterStore.resolve(e1.id, actorId, 'fixed manually');
     expect(resolved?.status).toBe('RESOLVED');
     expect(resolved?.resolutionReason).toBe('fixed manually');
 
     const { entry: e2 } = await persistentDeadLetterStore.persist(input('h'));
-    const discarded = await persistentDeadLetterStore.discard(e2.id, randomUUID(), 'poison event');
+    const discarded = await persistentDeadLetterStore.discard(e2.id, actorId, 'poison event');
     expect(discarded?.status).toBe('DISCARDED');
   });
 

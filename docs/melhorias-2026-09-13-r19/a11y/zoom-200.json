@@ -1,0 +1,98 @@
+[
+  {
+    "route": "login",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "inbox",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "contacts",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "tutors",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "patients",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "kanban",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "tasks",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "notes",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "alerts",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "dashboard",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "sectors",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "labels",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "contact-groups",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "admin",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "audit",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  },
+  {
+    "route": "settings",
+    "overflowX": false,
+    "scrollWidth": 720,
+    "clientWidth": 720
+  }
+]

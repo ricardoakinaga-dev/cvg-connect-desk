@@ -1,0 +1,2896 @@
+{
+  "failures": [],
+  "routes": [
+    {
+      "route": "login",
+      "path": "/login",
+      "failures": [],
+      "samples": [],
+      "indeterminateCount": 16,
+      "elementsChecked": 56,
+      "pixelMeasured": 16,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "inbox",
+      "path": "/inbox",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.inbox-kicker",
+          "text": "Atendimento",
+          "ratio": 6.03,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": true,
+          "color": "rgb(3, 105, 150)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "h1",
+          "text": "Conversas",
+          "ratio": 17.4,
+          "required": 3,
+          "fontSize": 24,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "button.sector-tab.active",
+          "text": "Todos 3",
+          "ratio": 5.28,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(3, 105, 150)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Administrativo",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Cirurgia",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Clínica Médica",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Comercial",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Farmácia",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Internação",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Recepção",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Setor A (fixture) 1",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.sector-tab",
+          "text": "Setor B (fixture) 1",
+          "ratio": 5.74,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "label",
+          "text": "Status",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-name-v2",
+          "text": "Contato Setor A",
+          "ratio": 17.76,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-time-v2",
+          "text": "3h",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-last-msg",
+          "text": "Nova conversa",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-name-v2",
+          "text": "Contato Setor B",
+          "ratio": 17.76,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-time-v2",
+          "text": "3h",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-last-msg",
+          "text": "[fixture] inbound B1",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-name-v2",
+          "text": "Contato Setor A",
+          "ratio": 17.76,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-time-v2",
+          "text": "3h",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "span.conv-last-msg",
+          "text": "[fixture] inbound A1",
+          "ratio": 5.71,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(254, 254, 255)"
+        },
+        {
+          "selector": "h2",
+          "text": "CVG Connect Desk",
+          "ratio": 15.42,
+          "required": 3,
+          "fontSize": 22,
+          "bold": true,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(234, 242, 245)"
+        },
+        {
+          "selector": "p",
+          "text": "Selecione uma conversa na barra lateralou inicie uma nova co",
+          "ratio": 5.06,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(82, 105, 122)",
+          "background": "rgb(234, 242, 245)"
+        },
+        {
+          "selector": "button.btn-start-new",
+          "text": "Nova conversa",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        }
+      ],
+      "indeterminateCount": 25,
+      "elementsChecked": 240,
+      "pixelMeasured": 25,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "contacts",
+      "path": "/contacts",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "h1",
+          "text": "Contatos",
+          "ratio": 17.85,
+          "required": 3,
+          "fontSize": 20,
+          "bold": true,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contacts-count",
+          "text": "2 contatos",
+          "ratio": 5.07,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(91, 113, 132)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-name",
+          "text": "Contato Setor A",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-phone",
+          "text": "+55 11 90000-0011",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-date",
+          "text": "14 de set.",
+          "ratio": 5.07,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(91, 113, 132)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-name",
+          "text": "Contato Setor B",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-phone",
+          "text": "+55 11 90000-0012",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.contact-date",
+          "text": "14 de set.",
+          "ratio": 5.07,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(91, 113, 132)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "p.ui-state__title",
+          "text": "Selecione um contato",
+          "ratio": 16.69,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(243, 248, 251)"
+        },
+        {
+          "selector": "p.ui-state__description",
+          "text": "Escolha um contato na lista para ver o perfil",
+          "ratio": 7.08,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(243, 248, 251)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo contato",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        }
+      ],
+      "indeterminateCount": 25,
+      "elementsChecked": 197,
+      "pixelMeasured": 25,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "tutors",
+      "path": "/tutors",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo tutor",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "th",
+          "text": "Nome",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Telefone",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "E-mail",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Cadastro",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Ações",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "button.entity-row-detail",
+          "text": "Tutor Fixture A",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td",
+          "text": "+5511900000001",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.muted",
+          "text": "14/09/2026",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.entity-row-action",
+          "text": "Editar",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.entity-row-action.danger",
+          "text": "Excluir",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "p.ui-state__title",
+          "text": "Selecione um tutor",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "p.ui-state__description",
+          "text": "Os detalhes e vínculos aparecerão aqui.",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 27,
+      "elementsChecked": 197,
+      "pixelMeasured": 27,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "patients",
+      "path": "/patients",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo paciente",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "th",
+          "text": "Paciente",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Espécie",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Raça",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Tutor",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Ações",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": true,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "button.entity-row-detail",
+          "text": "🐾 Paciente Fixture A",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td",
+          "text": "canino",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.muted",
+          "text": "Tutor Fixture A",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.entity-row-action",
+          "text": "Editar",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.entity-row-action.danger",
+          "text": "Excluir",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "p.ui-state__title",
+          "text": "Selecione um paciente",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 14,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "p.ui-state__description",
+          "text": "Os detalhes aparecerão aqui.",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 27,
+      "elementsChecked": 206,
+      "pixelMeasured": 27,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "kanban",
+      "path": "/kanban",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Novo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-name",
+          "text": "Contato Setor A",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-time",
+          "text": "3h",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--warning",
+          "text": "Prioridade Alta",
+          "ratio": 5.81,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(138, 82, 8)",
+          "background": "rgb(253, 243, 227)"
+        },
+        {
+          "selector": "div.card-sector",
+          "text": "🅰 Setor A (fixture)",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.card-message",
+          "text": "[fixture] inbound A1…",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-agent",
+          "text": "AAA",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span",
+          "text": "Mover para",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-name",
+          "text": "Contato Setor B",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-time",
+          "text": "3h",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--warning",
+          "text": "Prioridade Alta",
+          "ratio": 5.81,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(138, 82, 8)",
+          "background": "rgb(253, 243, 227)"
+        },
+        {
+          "selector": "div.card-sector",
+          "text": "🅱 Setor B (fixture)",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.card-message",
+          "text": "[fixture] inbound B1…",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-agent",
+          "text": "AAA",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span",
+          "text": "Mover para",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-name",
+          "text": "Contato Setor A",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.card-time",
+          "text": "3h",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--warning",
+          "text": "Prioridade Alta",
+          "ratio": 5.81,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(138, 82, 8)",
+          "background": "rgb(253, 243, 227)"
+        },
+        {
+          "selector": "span",
+          "text": "Mover para",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Em Atendimento",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.column-empty",
+          "text": "Nenhum atendimento",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Pendente",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.column-empty",
+          "text": "Nenhum atendimento",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Em Espera",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.column-empty",
+          "text": "Nenhum atendimento",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Finalizado",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.column-empty",
+          "text": "Nenhum atendimento",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span.column-label",
+          "text": "Arquivado",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.column-empty",
+          "text": "Nenhum atendimento",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        }
+      ],
+      "indeterminateCount": 26,
+      "elementsChecked": 299,
+      "pixelMeasured": 26,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "tasks",
+      "path": "/tasks",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Nova tarefa",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "button.chip.active",
+          "text": "Todas",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Pendente",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Em andamento",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Concluída",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Cancelada",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.priority-filter",
+          "text": "Todas",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.chip.priority-filter",
+          "text": "Urgente",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.priority-filter",
+          "text": "Alta",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.priority-filter",
+          "text": "Média",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.priority-filter",
+          "text": "Baixa",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Nova tarefa",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        }
+      ],
+      "indeterminateCount": 37,
+      "elementsChecked": 207,
+      "pixelMeasured": 37,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "notes",
+      "path": "/notes",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Nova nota",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "button.chip.active",
+          "text": "Todos",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Conversa",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Tarefa",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Tutor",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Paciente",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Tentar novamente",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 31,
+      "elementsChecked": 203,
+      "pixelMeasured": 31,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "alerts",
+      "path": "/alerts",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.active",
+          "text": "Todos",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Ativos",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Reconhecidos",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip",
+          "text": "Resolvidos",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.severity-filter",
+          "text": "Todas",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "button.chip.severity-filter",
+          "text": "Crítico",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.severity-filter",
+          "text": "Erro",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.severity-filter",
+          "text": "Aviso",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.chip.severity-filter",
+          "text": "Info",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 37,
+      "elementsChecked": 198,
+      "pixelMeasured": 37,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "dashboard",
+      "path": "/dashboard",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Atualizar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.sev-label",
+          "text": "Crítico",
+          "ratio": 5.36,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 107, 121)",
+          "background": "rgb(247, 250, 252)"
+        },
+        {
+          "selector": "span.sev-label",
+          "text": "Erro",
+          "ratio": 5.36,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 107, 121)",
+          "background": "rgb(247, 250, 252)"
+        },
+        {
+          "selector": "span.sev-label",
+          "text": "Aviso",
+          "ratio": 5.36,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 107, 121)",
+          "background": "rgb(247, 250, 252)"
+        },
+        {
+          "selector": "span.sev-label",
+          "text": "Info",
+          "ratio": 5.36,
+          "required": 4.5,
+          "fontSize": 9,
+          "bold": false,
+          "color": "rgb(82, 107, 121)",
+          "background": "rgb(247, 250, 252)"
+        },
+        {
+          "selector": "span",
+          "text": "Internal server error. O resumo acima permanece disponível.",
+          "ratio": 6.33,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(128, 83, 14)",
+          "background": "rgb(255, 249, 236)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Recarregar indicadores",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 46,
+      "elementsChecked": 298,
+      "pixelMeasured": 46,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "sectors",
+      "path": "/sectors",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo setor",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Desativar",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 51,
+      "elementsChecked": 270,
+      "pixelMeasured": 51,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "labels",
+      "path": "/labels",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Nova label",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "agendamento",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "tipo",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Solicitação de agendamento",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "cirurgia",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "serviço",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Agendamento de cirurgia",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "duvida",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "tipo",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Dúvida geral",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "exame",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "serviço",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Solicitação de exame",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "inadimplente",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "financeiro",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Cliente inadimplente",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "internacao",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "serviço",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Paciente internado",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "orcamento",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "tipo",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Solicitação de orçamento",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "primeira-vez",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "tipo",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Primeira consulta",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "retorno",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "tipo",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Retorno de atendimento",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "urgente",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "prioridade",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Conversa urgente",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "vacinacao",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "serviço",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Serviço de vacinação",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.label-name",
+          "text": "vip",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--info",
+          "text": "Sistema",
+          "ratio": 6.59,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(7, 89, 133)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span.label-category",
+          "text": "status",
+          "ratio": 7,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(63, 85, 102)",
+          "background": "rgb(238, 244, 247)"
+        },
+        {
+          "selector": "p.label-desc",
+          "text": "Cliente VIP",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 26,
+      "elementsChecked": 261,
+      "pixelMeasured": 26,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "contact-groups",
+      "path": "/contact-groups",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo grupo",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo grupo",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        }
+      ],
+      "indeterminateCount": 28,
+      "elementsChecked": 177,
+      "pixelMeasured": 28,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "admin",
+      "path": "/admin",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Novo usuário",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        },
+        {
+          "selector": "button#admin-tab-users.admin-tab.active",
+          "text": "Usuáriosⓘ",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "div.tab-description",
+          "text": "Usuários: Pessoas que acessam o sistema (atendentes, veterin",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "strong",
+          "text": "Usuários:",
+          "ratio": 15.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": true,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Nome",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Email",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Status",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Criado",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Setores",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "th",
+          "text": "Ações",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "strong",
+          "text": "AAA Admin",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": true,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.mono",
+          "text": "aaa-admin@cvg.test",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "td",
+          "text": "14/09/2026, 02:14",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Setores",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "strong",
+          "text": "AAA Agente A",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": true,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.mono",
+          "text": "aaa-agente-a@cvg.test",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "td",
+          "text": "14/09/2026, 02:14",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Setores",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "strong",
+          "text": "AAA Agente B",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": true,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.mono",
+          "text": "aaa-agente-b@cvg.test",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "td",
+          "text": "14/09/2026, 02:14",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Setores",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "strong",
+          "text": "AAA Sem Setor",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": true,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "td.mono",
+          "text": "aaa-sem-setor@cvg.test",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "td",
+          "text": "14/09/2026, 02:14",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Setores",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        }
+      ],
+      "indeterminateCount": 32,
+      "elementsChecked": 282,
+      "pixelMeasured": 32,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "audit",
+      "path": "/audit",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "label.ui-field__label",
+          "text": "Filtrar auditoria por ação",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "label.ui-field__label",
+          "text": "Filtrar auditoria por entidade",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--primary",
+          "text": "Filtrar",
+          "ratio": 5.93,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(3, 105, 161)"
+        }
+      ],
+      "indeterminateCount": 29,
+      "elementsChecked": 184,
+      "pixelMeasured": 29,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    },
+    {
+      "route": "settings",
+      "path": "/settings",
+      "failures": [],
+      "samples": [
+        {
+          "selector": "a.skip-link",
+          "text": "Ir para o conteúdo",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 16,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "strong",
+          "text": "AAA Admin",
+          "ratio": 13.74,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": true,
+          "color": "rgb(217, 237, 247)",
+          "background": "rgb(13, 33, 45)"
+        },
+        {
+          "selector": "small",
+          "text": "Admin",
+          "ratio": 6.7,
+          "required": 4.5,
+          "fontSize": 10,
+          "bold": false,
+          "color": "rgb(127, 171, 192)",
+          "background": "rgb(13, 33, 45)"
+        },
+        {
+          "selector": "div.profile-name",
+          "text": "AAA Admin",
+          "ratio": 17.49,
+          "required": 4.5,
+          "fontSize": 20,
+          "bold": false,
+          "color": "rgb(7, 27, 43)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "div.profile-email",
+          "text": "aaa-admin@cvg.test",
+          "ratio": 7.58,
+          "required": 4.5,
+          "fontSize": 13,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.ui-badge.ui-badge--success",
+          "text": "Ativo",
+          "ratio": 7.12,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(15, 92, 72)",
+          "background": "rgb(231, 246, 240)"
+        },
+        {
+          "selector": "span.profile-date",
+          "text": "Membro desde 14 de setembro de 2026",
+          "ratio": 5.07,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(91, 113, 132)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "span.role-badge",
+          "text": "Admin",
+          "ratio": 5.17,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(3, 105, 161)",
+          "background": "rgb(224, 242, 254)"
+        },
+        {
+          "selector": "span",
+          "text": "notes:delete",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "alerts:delete",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "alerts:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "notes:write",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "alerts:write",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "tasks:write",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "admin:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "dashboard:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "tasks:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "admin:write",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "chat:write",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "notes:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "tasks:delete",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "chat:read",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "span",
+          "text": "chat:delete",
+          "ratio": 16.18,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "button.ui-btn.ui-btn--secondary",
+          "text": "Alterar Senha",
+          "ratio": 17.85,
+          "required": 4.5,
+          "fontSize": 12,
+          "bold": false,
+          "color": "rgb(15, 23, 42)",
+          "background": "rgb(255, 255, 255)"
+        },
+        {
+          "selector": "code",
+          "text": "22222222-2222-4222-8222-2222222222a1",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "code",
+          "text": "1f528b35-64b2-44aa-9…",
+          "ratio": 6.87,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(71, 85, 105)",
+          "background": "rgb(237, 245, 249)"
+        },
+        {
+          "selector": "code",
+          "text": "/auth/me",
+          "ratio": 4.6,
+          "required": 4.5,
+          "fontSize": 11,
+          "bold": false,
+          "color": "rgb(91, 113, 132)",
+          "background": "rgb(237, 245, 249)"
+        }
+      ],
+      "indeterminateCount": 32,
+      "elementsChecked": 257,
+      "pixelMeasured": 32,
+      "pixelNotMeasured": 0,
+      "pixelFailures": []
+    }
+  ]
+}

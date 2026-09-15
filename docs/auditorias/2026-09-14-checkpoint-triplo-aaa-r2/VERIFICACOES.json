@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-09-14T23:23:28-03:00",
+  "head": "754f9badac46278e77d21de91c58eedb15e80581",
+  "tools": {"node":"v24.20.0","pnpm":"10.33.0"},
+  "results": [
+    {"command":"python3 docs/programa-triplo-aaa-2026-09-14/programa.py validate","result":"PASS","exit":0},
+    {"command":"node scripts/production/run-integration-isolated.mjs --run-id audit-r2-full --worker 46 --skip-seed -- pnpm test:ci","result":"PASS","exit":0,"evidence":"../../programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r2-full/runner-summary.json","limitation":"exclui suítes AAA/produção e não mede coverage"},
+    {"command":"pnpm exec tsx scripts/production/sa-009-realtime-boot.ts","result":"PASS","exit":0,"checks":20,"image_id":"sha256:75ba64408faed4d4090d0160915ba70b0374c1d81c1995ecb320773ab6f49572","evidence":"evidencias/sa-009/sa-009-boot.json"},
+    {"command":"pnpm exec tsx scripts/production/sa-010-dr-run.ts","result":"PASS","exit":0,"checks":25,"evidence":"evidencias/sa-010/sa-010-dr-run.json"},
+    {"command":"pnpm lint","result":"PARTIAL","exit":0,"tasks":"33/33","warnings":142},
+    {"command":"pnpm typecheck","result":"FAIL","exit":2,"tasks":"32/33","failure":"apps/desk-api/src/__tests__/sa-007-start-conversation.integration.test.ts:83 TS2339"},
+    {"command":"pnpm build","result":"PASS_WITH_BUDGET_FAILURE","exit":0,"tasks":"6/6","web_js_gzip_kib":121.64,"web_css_gzip_kib":24.09}
+  ],
+  "candidate_drift": {"manifest_generated_at":"2026-09-15T01:38:31.507100+00:00","changed_hashed_files":65,"changed_non_program_artifact_files":25},
+  "documentation_manifest_before_update": {"mismatched_entries":17}
+}
+

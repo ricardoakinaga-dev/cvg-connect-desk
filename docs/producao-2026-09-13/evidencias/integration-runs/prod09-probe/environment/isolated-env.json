@@ -1,0 +1,24 @@
+{
+  "runId": "prod09-probe",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_prod09_probe_w25",
+  "databaseName": "cvg_aaa_prod09_probe_w25",
+  "databasePort": 58932,
+  "redisUrl": "redis://127.0.0.1:56930",
+  "redisPort": 56930,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2581444,
+    "dataDir": "/tmp/cvg-aaa-runs/prod09-probe/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2581482,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod09-probe",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:16:32.627789-03"
+  }
+}

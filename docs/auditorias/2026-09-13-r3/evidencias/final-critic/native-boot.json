@@ -1,0 +1,1 @@
+{"exit": 1, "command": "NODE_ENV=test DATABASE_URL=postgresql://invalid:invalid@127.0.0.1:1/invalid pnpm --filter @cvg/realtime-service exec tsx src/index.ts"}

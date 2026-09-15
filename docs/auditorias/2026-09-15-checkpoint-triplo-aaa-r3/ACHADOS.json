@@ -1,0 +1,171 @@
+{
+  "audit_id": "2026-09-15-checkpoint-triplo-aaa-r3",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "id": "R3-F01",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "criterion": "Terminal evidence integrity",
+      "summary": "0/17 promoções DONE possuíam evidência completa, corrente e I1 final no candidato c486a63f.",
+      "affected": [
+        "SA-001",
+        "SA-002",
+        "SA-003",
+        "SA-004",
+        "SA-005",
+        "SA-006",
+        "SA-007",
+        "SA-008",
+        "SA-009",
+        "SA-010",
+        "SA-011",
+        "SA-012",
+        "SA-013",
+        "SA-014",
+        "SA-015",
+        "SA-019",
+        "SA-020"
+      ],
+      "route": "REWORK e requalificação por aceite no candidato exato"
+    },
+    {
+      "id": "R3-F02",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "criterion": "G01/C09",
+      "summary": "O selo não incorpora bytes de .env.production.example; controle negativo preserva tree_sha256.",
+      "affected": [
+        "SA-001"
+      ],
+      "route": "Corrigir gerador e validar known-bad/known-good"
+    },
+    {
+      "id": "R3-F03",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "criterion": "SA-020-AC2/AC3",
+      "summary": "Ensaio aceita perda N:N no rollback e autoridade nominal não está registrada.",
+      "affected": [
+        "SA-020"
+      ],
+      "route": "Rollback lossless ou decisão formal; autoridade e I1"
+    },
+    {
+      "id": "R3-F04",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "criterion": "SA-014-AC3",
+      "summary": "Crash/SIGKILL e suítes production requeridas não foram executados.",
+      "affected": [
+        "SA-014"
+      ],
+      "route": "Executar falha real, replay, convergência e I1"
+    },
+    {
+      "id": "R3-F05",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "SA-012/015/019 acceptance",
+      "summary": "Faltam AC3 de rede/bootstrap, fault injection na última escrita e política/paginação/eventos de catálogos.",
+      "affected": [
+        "SA-012",
+        "SA-015",
+        "SA-019"
+      ],
+      "route": "Completar cenários e reexecutar em runner isolado"
+    },
+    {
+      "id": "R3-F06",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "G08",
+      "summary": "pnpm lint falha em realtime-service: 29 warnings > 26; 110 warnings somados.",
+      "affected": [
+        "SA-063"
+      ],
+      "route": "Eliminar warnings sem elevar allowances"
+    },
+    {
+      "id": "R3-F07",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "G08/G12",
+      "summary": "test:ci e CI omitem suítes AAA/production.",
+      "affected": [
+        "SA-050"
+      ],
+      "route": "SA-050 fecha inventário e agregação obrigatória"
+    },
+    {
+      "id": "R3-F08",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "G11",
+      "summary": "Bundle JS inicial 121.64 KiB gzip excede 120 KiB.",
+      "affected": [
+        "SA-056"
+      ],
+      "route": "Reduzir bundle e revalidar Web Vitals/budgets"
+    },
+    {
+      "id": "R3-F09",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "SA-003-AC2",
+      "summary": "Comandos fuser -k e portas fixas conflitam com ownership isolado.",
+      "affected": [
+        "SA-003",
+        "SA-052"
+      ],
+      "route": "Cleanup por PID/label/run-id próprio"
+    },
+    {
+      "id": "R3-F10",
+      "severity": "MEDIUM",
+      "status": "RESOLVED_DOCUMENTALLY",
+      "criterion": "Canonical documentation",
+      "summary": "Resumos, marcos, próxima ação e inventário de rotas divergiam do backlog/artefato.",
+      "affected": [
+        "SA-011",
+        "SA-057"
+      ],
+      "route": "Documentos atualizados; automatizar detecção"
+    },
+    {
+      "id": "R3-F11",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "criterion": "Resource ownership",
+      "summary": "Container cvg-phase4-postgres-20260915 estava ativo sem labels de ownership; não foi interrompido.",
+      "affected": [
+        "SA-003",
+        "SA-052"
+      ],
+      "route": "Registrar owner, finalidade, TTL e cleanup"
+    },
+    {
+      "id": "R3-F12",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "criterion": "G01 candidate scope",
+      "summary": "O selo inclui docs/auditorias como produto; persistir a auditoria muda o candidato sem mudança do software.",
+      "affected": [
+        "SA-001"
+      ],
+      "route": "Separar manifestos de produto e livro-caixa sem autorreferência"
+    },
+    {
+      "id": "R3-F13",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "criterion": "G09 harness validity",
+      "summary": "prod-36 termina 4/5 por assertion localhost obsoleta; é FAIL_HARNESS e não falha comportamental do produto.",
+      "affected": [
+        "SA-009",
+        "SA-052"
+      ],
+      "route": "Atualizar contrato do harness e reexecutar imagem/boot/readiness"
+    }
+  ]
+}

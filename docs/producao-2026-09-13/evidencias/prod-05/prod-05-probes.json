@@ -1,0 +1,239 @@
+{
+  "task": "PROD-05",
+  "runId": "prod05-20260913",
+  "attempt": 1,
+  "evidenceSegment": null,
+  "database": "cvg_aaa_prod05_20260913_w15",
+  "timezone": "America/Sao_Paulo",
+  "probes": [
+    {
+      "id": "AC1.1",
+      "method": "POST",
+      "url": "/auth/login",
+      "expected": [
+        200
+      ],
+      "status": 200,
+      "note": "token opaco"
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/auth/me (expira exatamente agora)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Token expired"
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/auth/me (absoluto exatamente agora)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Session expired"
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/auth/me (idle exatamente 24h)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Session idle timeout"
+    },
+    {
+      "id": "AC1.4",
+      "method": "GET",
+      "url": "/auth/me (legado dentro do absoluto original)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC1.4",
+      "method": "GET",
+      "url": "/auth/me (legado além do absoluto original)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Session expired"
+    },
+    {
+      "id": "AC1.5",
+      "method": "POST",
+      "url": "/auth/rotate (absoluto em 1h)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/auth/me",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.1",
+      "method": "POST",
+      "url": "/auth/rotate",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/auth/me (token antigo pós-rotação)",
+      "expected": [
+        401
+      ],
+      "status": 401
+    },
+    {
+      "id": "AC2.1",
+      "method": "POST",
+      "url": "/auth/logout",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.1",
+      "method": "POST",
+      "url": "/auth/logout-all",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/auth/logout-all (token expirado)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Token expired"
+    },
+    {
+      "id": "AC2.3",
+      "method": "GET",
+      "url": "/auth/me (isActive=false)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "inactive_user"
+    },
+    {
+      "id": "AC2.3",
+      "method": "GET",
+      "url": "/auth/me (reativado)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.4",
+      "method": "POST",
+      "url": "/auth/rotate x2 (concorrente)",
+      "expected": [
+        200,
+        401
+      ],
+      "status": 200,
+      "note": "statuses=[200,401]"
+    },
+    {
+      "id": "AC2.5",
+      "method": "POST",
+      "url": "/auth/rotate (TZ America/Sao_Paulo)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/auth/me (sessão revogada)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Invalid token"
+    },
+    {
+      "id": "AC3.1",
+      "method": "WS",
+      "url": "auth.message (sucessor)",
+      "expected": [
+        200
+      ],
+      "status": 200,
+      "note": "auth.success"
+    },
+    {
+      "id": "AC3.2",
+      "method": "GET",
+      "url": "/auth/me (idle após revalidação WS)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "Session idle timeout"
+    },
+    {
+      "id": "AC3.3",
+      "method": "GET",
+      "url": "/auth/me (Authorization)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    },
+    {
+      "id": "AC3.3",
+      "method": "GET",
+      "url": "/auth/me?token=... (sem header)",
+      "expected": [
+        401
+      ],
+      "status": 401,
+      "note": "querystring não autentica"
+    },
+    {
+      "id": "AC4",
+      "method": "GET",
+      "url": "/events (sem chave)",
+      "expected": [
+        401
+      ],
+      "status": 401
+    },
+    {
+      "id": "AC4",
+      "method": "GET",
+      "url": "/events (INTERNAL_EVENTS_SECRET)",
+      "expected": [
+        200
+      ],
+      "status": 200
+    }
+  ]
+}

@@ -15,12 +15,12 @@ const textField = { type: ['string', 'null'] as const, maxLength: 200 };
 
 export async function registerPatientRoutes(app: FastifyInstance): Promise<void> {
   app.get('/patients/stats/overview', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {},
   }, async () => (await useCases.getPatientStats()).value);
 
   app.get('/patients', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {
       querystring: {
         type: 'object',
@@ -42,7 +42,7 @@ export async function registerPatientRoutes(app: FastifyInstance): Promise<void>
   });
 
   app.get('/patients/:id', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {
       params: idParams,
     },
@@ -58,7 +58,7 @@ export async function registerPatientRoutes(app: FastifyInstance): Promise<void>
   });
 
   app.post('/patients', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:write')],
     schema: {
       body: {
         type: 'object',
@@ -84,7 +84,7 @@ export async function registerPatientRoutes(app: FastifyInstance): Promise<void>
   });
 
   app.put('/patients/:id', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:write')],
     schema: {
       params: idParams,
       body: {

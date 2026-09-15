@@ -1,0 +1,1 @@
+export default { root:'/home/ricardo/cvg-connect-desk/apps/realtime-service',cacheDir:'/tmp/cvg-audit-r3-dvlqz0my/ops/vite-cache', test:{environment:'node',include:['src/__tests__/realtime-health.test.ts'],testTimeout:30000}};

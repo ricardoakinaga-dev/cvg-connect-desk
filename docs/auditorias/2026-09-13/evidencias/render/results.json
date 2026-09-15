@@ -1,0 +1,202 @@
+[
+  {
+    "path": "/login",
+    "width": 375,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/login-375.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/login",
+    "documentWidth": 375,
+    "viewport": 375,
+    "text": "CVG Connect\nDESK OPERACIONAL\nACESSO SEGURO\nBem-vindo ao plantão.\n\nEntre com suas credenciais para continuar.\n\nEmail\nSenha\nEntrar\nAmbiente operacional do CVG\nv1.0"
+  },
+  {
+    "path": "/inbox?conversation=audit-conv",
+    "width": 375,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/inbox-375.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/inbox?conversation=audit-conv",
+    "documentWidth": 375,
+    "viewport": 375,
+    "text": "Ir para o conteúdo\nInbox\nConectando\nCVG Connect\nDESK OPERACIONAL\nConectando à central\nEstabelecendo tempo real\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nT\nTutor Sintético\n● Novo\nHoje\nMensagem sintética enviada em 1º de setembro para conferir histórico.\n07:00\nMensagem\nCONTEXTO\nAtendimento\nT\nTutor Sintético\n+55 11 99999-0000\nSTATUS\nNovo\nSETOR\nRecepção\nINÍCIO\n01 De Set., 07:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+  },
+  {
+    "path": "/tasks",
+    "width": 375,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/tasks-375.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/tasks",
+    "documentWidth": 375,
+    "viewport": 375,
+    "text": "Ir para o conteúdo\nTarefas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n0\nTOTAL\n0\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n0 tarefas exibidas\n\nNenhuma tarefa encontrada\n\nCrie a primeira tarefa para acompanhar o fluxo da operação.\n\nNova tarefa"
+  },
+  {
+    "path": "/notes",
+    "width": 375,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/notes-375.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/notes",
+    "documentWidth": 375,
+    "viewport": 375,
+    "text": "Ir para o conteúdo\nNotas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  },
+  {
+    "path": "/login",
+    "width": 390,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/login-390.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/login",
+    "documentWidth": 390,
+    "viewport": 390,
+    "text": "CVG Connect\nDESK OPERACIONAL\nACESSO SEGURO\nBem-vindo ao plantão.\n\nEntre com suas credenciais para continuar.\n\nEmail\nSenha\nEntrar\nAmbiente operacional do CVG\nv1.0"
+  },
+  {
+    "path": "/inbox?conversation=audit-conv",
+    "width": 390,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/inbox-390.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/inbox?conversation=audit-conv",
+    "documentWidth": 390,
+    "viewport": 390,
+    "text": "Ir para o conteúdo\nInbox\nConectando\nCVG Connect\nDESK OPERACIONAL\nConectando à central\nEstabelecendo tempo real\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nT\nTutor Sintético\n● Novo\nHoje\nMensagem sintética enviada em 1º de setembro para conferir histórico.\n07:00\nMensagem\nCONTEXTO\nAtendimento\nT\nTutor Sintético\n+55 11 99999-0000\nSTATUS\nNovo\nSETOR\nRecepção\nINÍCIO\n01 De Set., 07:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+  },
+  {
+    "path": "/tasks",
+    "width": 390,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/tasks-390.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/tasks",
+    "documentWidth": 390,
+    "viewport": 390,
+    "text": "Ir para o conteúdo\nTarefas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n0\nTOTAL\n0\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n0 tarefas exibidas\n\nNenhuma tarefa encontrada\n\nCrie a primeira tarefa para acompanhar o fluxo da operação.\n\nNova tarefa"
+  },
+  {
+    "path": "/notes",
+    "width": 390,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/notes-390.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/notes",
+    "documentWidth": 390,
+    "viewport": 390,
+    "text": "Ir para o conteúdo\nNotas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  },
+  {
+    "path": "/login",
+    "width": 768,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/login-768.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/login",
+    "documentWidth": 768,
+    "viewport": 768,
+    "text": "CVG Connect\nDESK OPERACIONAL\nACESSO SEGURO\nBem-vindo ao plantão.\n\nEntre com suas credenciais para continuar.\n\nEmail\nSenha\nEntrar\nAmbiente operacional do CVG\nv1.0"
+  },
+  {
+    "path": "/inbox?conversation=audit-conv",
+    "width": 768,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/inbox-768.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/inbox?conversation=audit-conv",
+    "documentWidth": 768,
+    "viewport": 768,
+    "text": "Ir para o conteúdo\nInbox\nConectando\nCVG Connect\nDESK OPERACIONAL\nConectando à central\nEstabelecendo tempo real\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nT\nTutor Sintético\nRecepção\n● Novo\nHoje\nMensagem sintética enviada em 1º de setembro para conferir histórico.\n07:00\nMensagem\nCONTEXTO\nAtendimento\nT\nTutor Sintético\n+55 11 99999-0000\nSTATUS\nNovo\nSETOR\nRecepção\nINÍCIO\n01 De Set., 07:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+  },
+  {
+    "path": "/tasks",
+    "width": 768,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/tasks-768.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/tasks",
+    "documentWidth": 768,
+    "viewport": 768,
+    "text": "Ir para o conteúdo\nTarefas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n0\nTOTAL\n0\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n0 tarefas exibidas\n\nNenhuma tarefa encontrada\n\nCrie a primeira tarefa para acompanhar o fluxo da operação.\n\nNova tarefa"
+  },
+  {
+    "path": "/notes",
+    "width": 768,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/notes-768.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/notes",
+    "documentWidth": 768,
+    "viewport": 768,
+    "text": "Ir para o conteúdo\nNotas\nSem conexão\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  },
+  {
+    "path": "/login",
+    "width": 1024,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/login-1024.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/login",
+    "documentWidth": 1024,
+    "viewport": 1024,
+    "text": "CENTRO VETERINÁRIO GUARAPIRANGA\nO plantão inteiro,\nem um só pulso.\n\nConversas, pacientes e prioridades conectados em uma central clínica precisa e humana.\n\nRede disponível\nA autenticação é verificada no acesso\nCVG Connect\nDESK OPERACIONAL\nACESSO SEGURO\nBem-vindo ao plantão.\n\nEntre com suas credenciais para continuar.\n\nEmail\nSenha\nEntrar\nAmbiente operacional do CVG\nv1.0"
+  },
+  {
+    "path": "/inbox?conversation=audit-conv",
+    "width": 1024,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/inbox-1024.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/inbox?conversation=audit-conv",
+    "documentWidth": 1318,
+    "viewport": 1024,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nConectando à central\nEstabelecendo tempo real\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n1\nRecepção\n1\nPesquisar conversas\nT\nTutor Sintético\n2h\nNova conversa\nT\nTutor Sintético\n+55 11 99999-0000\nRecepção\n● Novo\nHoje\nMensagem sintética enviada em 1º de setembro para conferir histórico.\n07:00\nMensagem\nCONTEXTO\nAtendimento\nT\nTutor Sintético\n+55 11 99999-0000\nSTATUS\nNovo\nSETOR\nRecepção\nINÍCIO\n01 De Set., 07:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+  },
+  {
+    "path": "/tasks",
+    "width": 1024,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/tasks-1024.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/tasks",
+    "documentWidth": 1024,
+    "viewport": 1024,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n0\nTOTAL\n0\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n0 tarefas exibidas\n\nNenhuma tarefa encontrada\n\nCrie a primeira tarefa para acompanhar o fluxo da operação.\n\nNova tarefa"
+  },
+  {
+    "path": "/notes",
+    "width": 1024,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/notes-1024.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/notes",
+    "documentWidth": 1024,
+    "viewport": 1024,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  },
+  {
+    "path": "/login",
+    "width": 1440,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/login-1440.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/login",
+    "documentWidth": 1440,
+    "viewport": 1440,
+    "text": "CENTRO VETERINÁRIO GUARAPIRANGA\nO plantão inteiro,\nem um só pulso.\n\nConversas, pacientes e prioridades conectados em uma central clínica precisa e humana.\n\nRede disponível\nA autenticação é verificada no acesso\nCVG Connect\nDESK OPERACIONAL\nACESSO SEGURO\nBem-vindo ao plantão.\n\nEntre com suas credenciais para continuar.\n\nEmail\nSenha\nEntrar\nAmbiente operacional do CVG\nv1.0"
+  },
+  {
+    "path": "/inbox?conversation=audit-conv",
+    "width": 1440,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/inbox-1440.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/inbox?conversation=audit-conv",
+    "documentWidth": 1440,
+    "viewport": 1440,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nConectando à central\nEstabelecendo tempo real\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n1\nRecepção\n1\nPesquisar conversas\nT\nTutor Sintético\n2h\nNova conversa\nT\nTutor Sintético\n+55 11 99999-0000\nRecepção\n● Novo\nHoje\nMensagem sintética enviada em 1º de setembro para conferir histórico.\n07:00\nMensagem\nCONTEXTO\nAtendimento\nT\nTutor Sintético\n+55 11 99999-0000\nSTATUS\nNovo\nSETOR\nRecepção\nINÍCIO\n01 De Set., 07:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+  },
+  {
+    "path": "/tasks",
+    "width": 1440,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/tasks-1440.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/tasks",
+    "documentWidth": 1440,
+    "viewport": 1440,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n0\nTOTAL\n0\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n0 tarefas exibidas\n\nNenhuma tarefa encontrada\n\nCrie a primeira tarefa para acompanhar o fluxo da operação.\n\nNova tarefa"
+  },
+  {
+    "path": "/notes",
+    "width": 1440,
+    "png": "/tmp/cvg-audit-20260913/frontend-render/notes-1440.png",
+    "errors": [],
+    "url": "http://127.0.0.1:14573/notes",
+    "documentWidth": 1440,
+    "viewport": 1440,
+    "text": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOD\nOperador de auditoria\nadmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  }
+]

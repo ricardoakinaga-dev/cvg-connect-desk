@@ -1,0 +1,54 @@
+{
+  "runId": "sa013-repro-msg",
+  "workerIndex": 47,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_sa013_repro_msg_w47",
+  "redisUrl": "redis://127.0.0.1:57150",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:55:08.316Z",
+  "finishedAt": "2026-09-15T03:55:14.173Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-013-authz-matrix.integration.test.ts -t diagnostico temporario",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_sa013_repro_msg_w47",
+    "REDIS_URL": "redis://127.0.0.1:57150",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa013-repro-msg",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa013-repro-msg",
+    "AAA_WORKER_INDEX": "47"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:55:08.316Z",
+      "finishedAt": "2026-09-15T03:55:09.991Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:55:09.991Z",
+      "finishedAt": "2026-09-15T03:55:10.685Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-013-authz-matrix.integration.test.ts -t diagnostico temporario",
+      "startedAt": "2026-09-15T03:55:10.685Z",
+      "finishedAt": "2026-09-15T03:55:14.173Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": ", G02) > diagnostico temporario — mensagens 404 de contato inexistente vs fora de escopo\nDIAG-contato-fora-escopo \u001b[33m404\u001b[39m {\"error\":\"NOT_FOUND\",\"message\":\"Contact not found\"}\nDIAG-contato-inexistente \u001b[33m404\u001b[39m {\"error\":\"NOT_FOUND\",\"message\":\"Contato\"}\n\n{\"level\":30,\"time\":1789444513991,\"pid\":1893853,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks/7c200aa1-1f35-4b65-b813-40c1a020a800\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444513994,\"pid\":1893853,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"res\":{\"statusCode\":404},\"responseTime\":2.9569000000001324,\"msg\":\"request completed\"}\nstdout | src/__tests__/sa-013-authz-matrix.integration.test.ts > SA-013 — matriz de autorização HTTP (C02/C04, G02) > diagnostico temporario — mensagens 404 de contato inexistente vs fora de escopo\nDIAG-task-inexistente \u001b[33m404\u001b[39m {\"error\":\"NOT_FOUND\",\"message\":\"Task not found\"}\n\n{\"level\":30,\"time\":1789444513994,\"pid\":1893853,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"req\":{\"method\":\"GET\",\"url\":\"/notes/bec59d4b-3a8b-4b7b-a284-35c21a938ab0\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444513997,\"pid\":1893853,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":404},\"responseTime\":2.8296329999998306,\"msg\":\"request completed\"}\nstdout | src/__tests__/sa-013-authz-matrix.integration.test.ts > SA-013 — matriz de autorização HTTP (C02/C04, G02) > diagnostico temporario — mensagens 404 de contato inexistente vs fora de escopo\nDIAG-note-inexistente \u001b[33m404\u001b[39m {\"error\":\"NOT_FOUND\",\"message\":\"Note not found\"}\n\n ✓ src/__tests__/sa-013-authz-matrix.integration.test.ts (7 tests | 6 skipped) 900ms\n\n Test Files  1 passed (1)\n      Tests  1 passed | 6 skipped (7)\n   Start at  00:55:11\n   Duration  2.86s (transform 841ms, setup 0ms, collect 1.77s, tests 900ms, environment 0ms, prepare 54ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,12 @@
+{
+  "checked": 42,
+  "changed": [
+    "pnpm-lock.yaml",
+    "docker-compose.yml",
+    "docker-compose.staging.yml",
+    ".env.production.example",
+    "packages/database/src/schema.ts",
+    "docs/producao-2026-09-13/BACKLOG.json"
+  ],
+  "baselineGeneratedAt": null
+}

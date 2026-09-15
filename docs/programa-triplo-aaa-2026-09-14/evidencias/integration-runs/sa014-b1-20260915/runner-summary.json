@@ -1,0 +1,29 @@
+{
+  "runId": "sa014-b1-20260915",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:49:25.217Z",
+  "finishedAt": "2026-09-15T03:49:25.217Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-014-message-contract.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa014-b1-20260915",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa014-b1-20260915",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "error",
+      "message": "Porta 60932 ocupada por processo que nao pertence ao run sa014-b1-20260915. Escolha outra AAA_PG_PORT.",
+      "finishedAt": "2026-09-15T03:49:25.217Z"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 1
+}

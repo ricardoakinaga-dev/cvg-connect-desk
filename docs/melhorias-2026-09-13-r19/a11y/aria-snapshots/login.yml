@@ -1,0 +1,24 @@
+- main:
+  - region "CVG Connect Desk":
+    - text: Centro Veterinário Guarapiranga
+    - heading "O plantão inteiro, em um só pulso." [level=1]:
+      - text: O plantão inteiro,
+      - emphasis: em um só pulso.
+    - paragraph: Conversas, pacientes e prioridades conectados em uma central clínica precisa e humana.
+    - status:
+      - strong: Rede disponível
+      - text: A autenticação é verificada no acesso
+  - region "Bem-vindo ao plantão.":
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - text: CVG Connect Desk operacional Acesso seguro
+    - heading "Bem-vindo ao plantão." [level=2]
+    - paragraph: Entre com suas credenciais para continuar.
+    - text: Email
+    - textbox "Email"
+    - text: Senha
+    - textbox "Senha Mostrar senha":
+      - /placeholder: Senha
+    - button "Mostrar senha"
+    - button "Entrar"
+    - text: Ambiente operacional do CVG
+    - strong: v1.0

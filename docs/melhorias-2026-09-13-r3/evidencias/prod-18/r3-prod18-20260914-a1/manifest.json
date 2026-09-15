@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "task": "prod-18",
+  "runId": "r3-prod18-20260914-a1",
+  "attempt": 1,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-18/r3-prod18-20260914-a1/runtime CVG_EVIDENCE_SEGMENT=r3-prod18-20260914-a1 AAA_RUN_ID=r3-prod18-20260914-a1 AAA_WORKER_INDEX=42 AAA_ATTEMPT=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-18.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T02:08:45.780Z",
+  "finishedAt": "2026-09-14T02:08:53.460Z",
+  "durationMs": 7680,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "774c6f05bf456908ad23b8a7c6c31f3f111ede1200a7f6d2e907b1581aa770d4",
+    "sourceFileCount": 1452,
+    "imageDigest": null,
+    "runId": "r3-prod18-20260914-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-14T02:08:45.280Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-18.test.log",
+      "sha256": "615d7a534d2d549f5888389126e3c25c20300f5fa3f4a8c939a2c403852a77c9"
+    },
+    {
+      "path": "evidence-matrix.json",
+      "sha256": "09e43d7532e6f5fa154b9f69f8dc9a210332d266d7afc0adb951efcd175543b6"
+    },
+    {
+      "path": "logs/db-migrate.log",
+      "sha256": "f5df789f5f1a6850f68082cfca13bbde6c934471d690757ade998d96838bfe79"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "3865a30c3956c262b69efa1e3101e14cc9e2a81ca60321915462635f833c8f2d"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis locais isolados, migrations e triggers reais; HTTP via app.inject do app de produção; sem dados de produção.",
+    "expected* segue opcional/ausente na UI; revisão independente e gates externos permanecem pendentes."
+  ]
+}

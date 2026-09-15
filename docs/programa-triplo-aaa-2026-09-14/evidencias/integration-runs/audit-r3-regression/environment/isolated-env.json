@@ -1,0 +1,24 @@
+{
+  "runId": "audit-r3-regression",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_audit_r3_regression_w47",
+  "databaseName": "cvg_aaa_audit_r3_regression_w47",
+  "databasePort": 61132,
+  "redisUrl": "redis://127.0.0.1:57150",
+  "redisPort": 57150,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3468151,
+    "dataDir": "/tmp/cvg-aaa-runs/audit-r3-regression/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3468169,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "audit-r3-regression",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-15 06:50:20.390091-03"
+  }
+}

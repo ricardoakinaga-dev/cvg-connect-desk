@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { authenticate, requirePermission } from '@cvg/auth';
 import { createAuditLog } from '@cvg/audit';
 import {
@@ -73,7 +73,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
     },
   );
 
-  app.get(
+  app.get<{ Params: { id: string } }>(
     '/dead-letter/:id',
     {
       preHandler: [authenticate, requirePermission('admin:read')],
@@ -87,7 +87,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       const entry = await persistentDeadLetterStore.getById(request.params.id);
       if (!entry) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
@@ -96,7 +96,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
     },
   );
 
-  app.post(
+  app.post<{ Params: { id: string } }>(
     '/dead-letter/:id/replay',
     {
       preHandler: [authenticate, requirePermission('admin:write')],
@@ -110,7 +110,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       const claimed = await persistentDeadLetterStore.claimForReplay(request.params.id);
       if (!claimed) {
         const existing = await persistentDeadLetterStore.getById(request.params.id);
@@ -167,7 +167,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
     },
   );
 
-  app.post(
+  app.post<{ Body: { consumerId?: string; eventType?: string; limit?: number } }>(
     '/dead-letter/replay-batch',
     {
       preHandler: [authenticate, requirePermission('admin:write')],
@@ -184,7 +184,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Body: { consumerId?: string; eventType?: string; limit?: number } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       const { consumerId, eventType, limit } = request.body || {};
       const claimed = await persistentDeadLetterStore.claimBatch({ consumerId, eventType, limit });
       const results: Array<{ id: string; ok: boolean; reason?: string }> = [];
@@ -228,7 +228,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
     },
   );
 
-  app.post(
+  app.post<{ Params: { id: string }; Body: { reason?: string } }>(
     '/dead-letter/:id/resolve',
     {
       preHandler: [authenticate, requirePermission('admin:write')],
@@ -246,7 +246,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { id: string }; Body: { reason?: string } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       const entry = await persistentDeadLetterStore.resolve(request.params.id, request.user?.id, request.body?.reason);
       if (!entry) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });
@@ -261,7 +261,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
     },
   );
 
-  app.post(
+  app.post<{ Params: { id: string }; Body: { reason?: string } }>(
     '/dead-letter/:id/discard',
     {
       preHandler: [authenticate, requirePermission('admin:write')],
@@ -279,7 +279,7 @@ export async function registerPersistentDeadLetterRoutes(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { id: string }; Body: { reason?: string } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       const entry = await persistentDeadLetterStore.discard(request.params.id, request.user?.id, request.body?.reason);
       if (!entry) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'Dead-letter entry not found' });

@@ -1,0 +1,30 @@
+{
+  "runId": "prod18-regressao-modulos",
+  "workerIndex": 43,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60732/cvg_aaa_prod18_regressao_modulos_w43",
+  "redisUrl": "redis://127.0.0.1:57110",
+  "startedAt": "2026-09-13T18:19:30.485Z",
+  "command": "pnpm --filter @cvg/notes --filter @cvg/tasks --filter @cvg/alerts --filter @cvg/transfers --filter @cvg/admin test",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "Scope: 5 of 34 workspace projects\nmodules/notes test$ vitest run\nmodules/tasks test$ vitest run\nmodules/alerts test$ vitest run\nmodules/transfers test$ vitest run\nmodules/alerts test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/alerts\nmodules/notes test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/notes\nmodules/tasks test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/tasks\nmodules/transfers test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/transfers\nmodules/alerts test:  ✓ src/__tests__/repository-structure.test.ts (7 tests) 5ms\nmodules/alerts test:  Test Files  1 passed (1)\nmodules/alerts test:       Tests  7 passed (7)\nmodules/alerts test:    Start at  15:19:26\nmodules/alerts test:    Duration  1.08s (transform 147ms, setup 0ms, collect 134ms, tests 5ms, environment 0ms, prepare 175ms)\nmodules/transfers test:  ✓ src/__tests__/repository-structure.test.ts (11 tests) 5ms\nmodules/notes test:  ✓ src/__tests__/repository-structure.test.ts (5 tests) 3ms\nmodules/alerts test: Done\nmodules/admin test$ vitest run\nmodules/tasks test:  ✓ src/__tests__/repository-structure.test.ts (8 tests) 8ms\nmodules/admin test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/admin\nmodules/notes test:  ✓ src/__tests__/create-note-author.test.ts (6 tests) 22ms\nmodules/notes test:  Test Files  2 passed (2)\nmodules/notes test:       Tests  11 passed (11)\nmodules/notes test:    Start at  15:19:26\nmodules/notes test:    Duration  2.26s (transform 618ms, setup 0ms, collect 1.26s, tests 25ms, environment 0ms, prepare 769ms)\nmodules/admin test:  ✓ src/__tests__/repository-structure.test.ts (15 tests) 5ms\nmodules/transfers test:  ✓ src/__tests__/use-cases.test.ts (5 tests) 11ms\nmodules/transfers test:  Test Files  2 passed (2)\nmodules/transfers test:       Tests  16 passed (16)\nmodules/transfers test:    Start at  15:19:27\nmodules/transfers test:    Duration  2.33s (transform 597ms, setup 0ms, collect 1.27s, tests 16ms, environment 0ms, prepare 337ms)\nmodules/notes test: Done\nmodules/tasks test:  ✓ src/__tests__/task-filters.integration.test.ts (3 tests) 63ms\nmodules/transfers test: Done\nmodules/tasks test:  ✓ src/__tests__/task-routes-validation.test.ts (3 tests) 111ms\nmodules/tasks test:  Test Files  3 passed (3)\nmodules/tasks test:       Tests  14 passed (14)\nmodules/tasks test:    Start at  15:19:26\nmodules/tasks test:    Duration  3.08s (transform 741ms, setup 0ms, collect 3.32s, tests 181ms, environment 3ms, prepare 1.16s)\nmodules/tasks test: Done\nmodules/admin test:  ✓ src/__tests__/use-cases-app-error.test.ts (3 tests) 4ms\nmodules/admin test:  Test Files  2 passed (2)\nmodules/admin test:       Tests  18 passed (18)\nmodules/admin test:    Start at  15:19:28\nmodules/admin test:    Duration  1.60s (transform 409ms, setup 0ms, collect 1.15s, tests 9ms, environment 1ms, prepare 269ms)\nmodules/admin test: Done\n\n"
+    }
+  ],
+  "exitCode": 0
+}

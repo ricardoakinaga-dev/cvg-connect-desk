@@ -1,0 +1,9 @@
+[gate] dr-e2e: PASS
+[gate] staging-otel: PASS
+[gate] query-performance: PASS
+STALE + EMPTY evidence {
+  'dr-e2e': { status: 'PASS' },
+  'staging-otel': { status: 'PASS' },
+  'query-performance': { status: 'PASS' }
+}
+all local PASS + external FAIL: VERIFIED_CANDIDATE exit: 0

@@ -1,0 +1,30 @@
+{
+  "runId": "prod13-reg-secretary2",
+  "workerIndex": 46,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_prod13_reg_secretary2_w46",
+  "redisUrl": "redis://127.0.0.1:57140",
+  "startedAt": "2026-09-13T17:52:20.310Z",
+  "command": "pnpm --filter @cvg/secretary-adapter test",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n> @cvg/secretary-adapter@0.0.0 test /home/ricardo/cvg-connect-desk/modules/secretary-adapter\n> vitest run\n\n\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/secretary-adapter\n\n ✓ src/__tests__/ai-policy.test.ts (9 tests) 10ms\n ✓ src/__tests__/ai-bypass.test.ts (6 tests) 61ms\n ✓ src/__tests__/response-handler.test.ts (6 tests) 6ms\n ✓ src/__tests__/trigger-handoff.integration.test.ts (5 tests) 21ms\n ✓ src/__tests__/ai-tools.test.ts (12 tests) 226ms\n ✓ src/__tests__/invoke-secretary-not-configured.test.ts (1 test) 2ms\n ✓ src/__tests__/invoke-secretary.integration.test.ts (9 tests) 2998ms\n   ✓ Secretary adapter integration > returns an error when the Secretary API times out  2914ms\n\n Test Files  7 passed (7)\n      Tests  48 passed (48)\n   Start at  14:52:15\n   Duration  4.51s (transform 691ms, setup 0ms, collect 5.68s, tests 3.32s, environment 1ms, prepare 981ms)\n\n\nstderr | src/__tests__/invoke-secretary.integration.test.ts > Secretary adapter integration > returns an error when the Secretary API times out\n[SecretaryClient] retry attempt=1 classification=timeout delayMs=1119 action=classify\n\nstderr | src/__tests__/invoke-secretary.integration.test.ts > Secretary adapter integration > returns an error when the Secretary API times out\n[SecretaryClient] retry attempt=2 classification=timeout delayMs=1710 action=classify\n\n"
+    }
+  ],
+  "exitCode": 0
+}

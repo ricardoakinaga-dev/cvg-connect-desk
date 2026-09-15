@@ -1,0 +1,24 @@
+{
+  "runId": "sa013-regress-desk",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_sa013_regress_desk_w47",
+  "databaseName": "cvg_aaa_sa013_regress_desk_w47",
+  "databasePort": 61132,
+  "redisUrl": "redis://127.0.0.1:57150",
+  "redisPort": 57150,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1858072,
+    "dataDir": "/tmp/cvg-aaa-runs/sa013-regress-desk/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1858108,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa013-regress-desk",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-15 00:50:19.015683-03"
+  }
+}

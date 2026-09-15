@@ -1,0 +1,15 @@
+{
+  "scripts/triple-aaa-verify.mjs": "c23c861c19358b6028620090680313a2d2d541de23d36551e08b80f0e94dda5d",
+  "scripts/production/evidence-gate.mjs": "29a7a788018128b430aee4335e020e3a5dad830ffe2e32ec1284002e2cace5fe",
+  ".github/scripts/certification-aggregator.mjs": "9056007c6b944922dd6a09ee571b2f280293742f61da65956d8e0627d7183273",
+  ".github/workflows/triple-aaa-gate.yml": "6f81ee721838a0bc091dca01f851ca6a73a9de66851784bbcdd736cb5ff1bfe4",
+  "scripts/staging-smoke.mjs": "216a04b149045cab53625a71cc5c1b3716e9d85048b638d5e4512ebb66070abf",
+  "infra/scripts/dr-e2e.sh": "47e6d2a3463e7dfcf7e297dc226cfc0b14d046fa30c215bae79971973c8fc4c1",
+  "infra/scripts/pg-restore.sh": "73947167ede2a36963581cc43b4203b1027fc62326083a01c989c15592bbf02a",
+  "apps/realtime-service/src/index.ts": "9af1f8a0aea8d0039eac667d3f957cf99b97cfbcc475429e78ee0c8ca4cb8054",
+  "apps/realtime-service/src/__tests__/realtime-health.test.ts": "93ce0cf695bdef027bcf0a3865cfdfe9ebbdb55dcb4c58cf9c3a1f0fef4c29e9",
+  "docker-compose.yml": "30e4b8e6e921f98a810a8d2a7e8cdafbf6edfd7131556e32e93bd488aa8bc6db",
+  "docker-compose.staging.yml": "03b849565172ad618f711d8e9a16380522cd6de7da0c50a9dc57bd856f7c67ea",
+  "infra/prometheus/prometheus.yml": "3f6e902f683dce7917f34522d5dff623f7dec52ec401b6d30c130e3708e1451f",
+  "docs/producao-2026-09-13/evidencias/prod-36/prod-36-evidence.json": "72be1d28c612ff4d22142e2e8a8f565a6092178bc86542a00b014357a65bd70d"
+}

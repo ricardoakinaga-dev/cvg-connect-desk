@@ -1,0 +1,22 @@
+{
+  "viewport": "1024x768",
+  "beforeOpen": {
+    "present": true,
+    "onScreen": false,
+    "left": 1038,
+    "innerWidth": 1024
+  },
+  "open": {
+    "present": true,
+    "onScreen": true,
+    "left": 744,
+    "innerWidth": 1024
+  },
+  "closed": {
+    "present": true,
+    "onScreen": false,
+    "left": 1038,
+    "innerWidth": 1024
+  },
+  "focusDescriptor": "Abrir informações da conversa"
+}

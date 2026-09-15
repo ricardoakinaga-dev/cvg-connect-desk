@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-09-13T17:07:14.709Z",
+  "boundary": "PostgreSQL isolado (runner AAA) + consultas com a semântica pré-delta + serviço NOVO",
+  "database": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_prod16_repro_w25",
+  "beforeFiles": {
+    "erasure-operation.ts": {
+      "sha256": "ff5fb6fa33388e8fd649a6a7fe9a2ca3a7952813adf762704294996349fd1ab8"
+    },
+    "privacy.controller.ts": {
+      "sha256": "5340e2a92814804409451e2fb5d8b261ea0d9f3dbfe5dee8799c0c1935afa65e"
+    }
+  },
+  "oldCode": {
+    "findOperationByRequestId": {
+      "line": 489,
+      "text": "async function findOperationByRequestId(requestId: string) {"
+    },
+    "globalDedupReturn": {
+      "line": 527,
+      "text": "return { ok: true, report: { ...reportFromRow(existing), deduplicated: true } };"
+    },
+    "resumeSignature": {
+      "line": 651,
+      "text": "export async function resumeContactErasure(operationId: string): Promise<RunErasureResult> {"
+    },
+    "getSignature": {
+      "line": 736,
+      "text": "export async function getPrivacyOperation(operationId: string): Promise<ErasureReport | null> {"
+    },
+    "controllerGetCall": {
+      "line": 185,
+      "text": "const report = await getPrivacyOperation(request.params.id);"
+    },
+    "controllerResumeCall": {
+      "line": 209,
+      "text": "const result = await resumeContactErasure(request.params.id);"
+    }
+  },
+  "oldRequestIdLeak": {
+    "callerActor": "e807e6c3-4206-4b63-8a65-47354f45c5de",
+    "callerScope": [
+      "c603fc0b-62bf-4eb2-934b-eceb12826564"
+    ],
+    "requestedContact": "e2d425b6-dffc-4f05-9678-c87f976e7d48",
+    "requestId": "repro16-7fe3601a-e3b5-4fa4-bf24-ff615faf1163",
+    "globalLookupReturnedOperationOf": "00d54cd3-da6d-49bf-bbb4-cd706fabf649",
+    "returnedOtherContactReport": true,
+    "leakedContactId": "00d54cd3-da6d-49bf-bbb4-cd706fabf649",
+    "status": "planned"
+  },
+  "oldResumeWithoutScope": {
+    "operationOfContact": "00d54cd3-da6d-49bf-bbb4-cd706fabf649",
+    "operationScope": [
+      "47c1e709-88e9-4612-91c4-fa0c75873bb8"
+    ],
+    "lookupByIdReturnedOperation": true,
+    "oldFunctionAcceptedOnly": "operationId",
+    "scopeCheck": false
+  },
+  "newBehavior": {
+    "incompatibleRequestId": {
+      "ok": false,
+      "reason": "conflict"
+    },
+    "outOfScopeRead": {
+      "ok": false,
+      "reason": "out_of_scope"
+    }
+  }
+}

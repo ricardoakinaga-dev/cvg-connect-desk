@@ -1,0 +1,265 @@
+{
+  "generatedAt": "2026-09-13T23:52:16.440Z",
+  "runId": "r3-prod12-20260913-a1",
+  "workerIndex": 40,
+  "database": "cvg_aaa_r3_prod12_20260913_a1_w40",
+  "postgresPort": 60432,
+  "redisPort": 57080,
+  "cases": [
+    {
+      "case": "AC1a-dois-workers-exclusao",
+      "eventCount": 10,
+      "perWorker": {
+        "w1": 0,
+        "w2": 10
+      },
+      "perEvent": [
+        {
+          "eventId": "ac1a-3000b9ba-evt-0",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-1",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-2",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-3",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-4",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-5",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-6",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-7",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-8",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        },
+        {
+          "eventId": "ac1a-3000b9ba-evt-9",
+          "owner": "ac1a-3000b9ba-owner-2",
+          "generation": 1,
+          "receipts": 1,
+          "alerts": 1,
+          "processedIn": [
+            "w2"
+          ]
+        }
+      ],
+      "note": "cada eventId aparece em exatamente um processo e tem 1 recibo/1 alerta"
+    },
+    {
+      "case": "AC1b-claim-concorrente-4-processos",
+      "processes": 4,
+      "events": 16,
+      "rounds": [
+        [
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "uniqueWinners": true,
+      "generations": [
+        1
+      ]
+    },
+    {
+      "case": "AC1c-renew-takeover-stale-ack",
+      "eventId": "ac1c-f9744ac6-evt",
+      "initialGeneration": 1,
+      "renewedGeneration": 1,
+      "competingClaims": [],
+      "takeoverGeneration": 2,
+      "staleAck": "stale",
+      "freshAck": "acked",
+      "processed": true
+    },
+    {
+      "case": "AC1d-crash-takeover-sem-duplicata",
+      "eventId": "ac1d-5d51412d-evt",
+      "crashedExitCode": 86,
+      "crashedGeneration": 1,
+      "resumedGeneration": 2,
+      "receipts": 1,
+      "alerts": 1
+    },
+    {
+      "case": "AC2a-dlq-restart-replay",
+      "eventId": "ac2a-57c12b83-evt",
+      "dlqId": "488d8b1a-c0cd-4d24-899c-4fb884ebb19d",
+      "statusBefore": "PENDING",
+      "statusAfter": "RESOLVED",
+      "replayCount": 1,
+      "replayEventId": "ac2a-57c12b83-evt-replay-1",
+      "envelopeIntact": true,
+      "workerAck": {
+        "processedAt": null,
+        "retryCount": 2
+      },
+      "divergentWorkerBudget": 5,
+      "replayReceipts": 1,
+      "originalReceipts": 0,
+      "audit": "dlq.replay"
+    },
+    {
+      "case": "AC2b-replay-concorrente-claim-unico",
+      "eventId": "ac2b-30b61641-evt",
+      "statuses": [
+        200,
+        409
+      ],
+      "replayEvents": 1,
+      "replayCount": 1
+    },
+    {
+      "case": "AC2c-resolve-discard-http",
+      "resolveEventId": "ac2c-resolve-95d1e1eb-evt",
+      "discardEventId": "ac2c-discard-5cd78f85-evt",
+      "unauthorized": 401,
+      "forbidden": 403,
+      "resolvedStatus": "RESOLVED",
+      "discardedStatus": "DISCARDED",
+      "auditEntries": true
+    },
+    {
+      "case": "AC2d-consumers-independentes-http-ack",
+      "eventId": "ac2d-50c2b297-evt",
+      "workerAck": true,
+      "httpPollSawEvent": true,
+      "staleAck": 409,
+      "ack": 200,
+      "hiddenAfterAck": false
+    },
+    {
+      "case": "AC3a-fanout-2-replicas-sem-duplicata",
+      "eventId": "ac3a-0ad22191-evt",
+      "deliveriesA": 1,
+      "deliveriesB": 1,
+      "deliveriesForeign": 0,
+      "realtimeConsumerAck": true
+    },
+    {
+      "case": "AC3b-autorizacao-por-destinatario",
+      "eventId": "ac3b-80df554b-evt",
+      "foreignSubscribed": false,
+      "foreignDeliveries": 0,
+      "foreignUserId": "c357750b-3e4e-4c2b-9243-577148b45797",
+      "authorizedUserId": "d4aef803-b87b-4c23-8ccc-9e22b15638a7"
+    },
+    {
+      "case": "AC3c-revogacao-corta",
+      "eventId": "ac3c-fb8abc89-evt",
+      "revokedA": true,
+      "revokedB": true,
+      "deliveriesAfterRevocation": 0
+    },
+    {
+      "case": "AC4a-sigkill-meio-processamento-recuperacao",
+      "eventId": "ac4a-17c853e7-evt",
+      "victimSignal": "SIGKILL",
+      "victimReceipts": 0,
+      "rescuedGeneration": 2,
+      "receipts": 1,
+      "alerts": 1
+    },
+    {
+      "case": "AC4b-dlq-entre-restarts",
+      "eventId": "ac4b-4c0cae45-evt",
+      "retryAfterFirstProcess": 1,
+      "finalRetryCount": 3,
+      "attemptCount": 3,
+      "errorCode": "RETRY_BUDGET_EXHAUSTED",
+      "processedAt": null,
+      "receipts": 0
+    }
+  ]
+}

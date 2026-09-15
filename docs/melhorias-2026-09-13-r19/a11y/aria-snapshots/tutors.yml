@@ -1,0 +1,77 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - heading "Tutores" [level=1]
+  - paragraph: Cadastre responsáveis e acompanhe os vínculos da operação.
+  - textbox "Buscar tutores":
+    - /placeholder: Buscar por nome ou telefone
+  - button "Novo tutor"
+  - region "Lista de tutores":
+    - table:
+      - rowgroup:
+        - row "Nome Telefone E-mail Cadastro Ações":
+          - columnheader "Nome"
+          - columnheader "Telefone"
+          - columnheader "E-mail"
+          - columnheader "Cadastro"
+          - columnheader "Ações"
+      - rowgroup:
+        - row "Tutor Fixture A +5511900000001 — 14/09/2026 Editar Excluir":
+          - cell "Tutor Fixture A":
+            - button "Tutor Fixture A"
+          - cell "+5511900000001"
+          - cell "—"
+          - cell "14/09/2026"
+          - cell "Editar Excluir":
+            - button "Editar"
+            - button "Excluir"
+  - complementary:
+    - paragraph: Selecione um tutor
+    - paragraph: Os detalhes e vínculos aparecerão aqui.

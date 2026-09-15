@@ -134,6 +134,83 @@
       "when": 1789228800000,
       "tag": "0018_conversation_unread",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1789315200000,
+      "tag": "0019_outbox_lease",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1789315201000,
+      "tag": "0020_messages_keyset_indexes",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1789315202000,
+      "tag": "0021_outbound_idempotency_contract",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1789315203000,
+      "tag": "0022_privacy_operations",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1789315204000,
+      "tag": "0023_sessions_timezone_harmonization",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789315205000,
+      "tag": "0024_webhook_replay_claim",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1789315206000,
+      "tag": "0025_role_permissions_backfill",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1789315207000,
+      "tag": "0026_worker_effect_receipts",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1789315208000,
+      "tag": "0027_secretary_invocations",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1789315209000,
+      "tag": "0028_ai_budget_and_approval_hardening",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1789315210000,
+      "tag": "0029_media_intake_recovery",
+      "breakpoints": true
     }
   ]
 }

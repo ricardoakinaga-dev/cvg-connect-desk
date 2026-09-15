@@ -1,0 +1,24 @@
+{
+  "runId": "sa019-memberships-b",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60832/cvg_aaa_sa019_memberships_b_w44",
+  "databaseName": "cvg_aaa_sa019_memberships_b_w44",
+  "databasePort": 60832,
+  "redisUrl": "redis://127.0.0.1:57120",
+  "redisPort": 57120,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2146053,
+    "dataDir": "/tmp/cvg-aaa-runs/sa019-memberships-b/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2146083,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa019-memberships-b",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-15 01:33:54.367931-03"
+  }
+}

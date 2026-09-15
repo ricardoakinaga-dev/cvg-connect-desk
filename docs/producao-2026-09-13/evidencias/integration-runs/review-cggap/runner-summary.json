@@ -1,0 +1,30 @@
+{
+  "runId": "review-cggap",
+  "workerIndex": 23,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58732/cvg_aaa_review_cggap_w23",
+  "redisUrl": "redis://127.0.0.1:56910",
+  "startedAt": "2026-09-13T15:38:48.401Z",
+  "command": "pnpm exec tsx /tmp/opencode/contact-groups-gap.mts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\"level\":40,\"time\":1789313927590,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"msg\":\"[API] SECRETARY_URL or SECRETARY_API_KEY not set — Secretary integration disabled\"}\n{\"level\":30,\"time\":1789313927933,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"req\":{\"method\":\"POST\",\"url\":\"/auth/login\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789313928012,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"userId\":\"3b4f9652-4a31-4dfc-be62-b2f7ebd70d28\",\"email\":\"review.cg.927890@example.com\",\"action\":\"login\",\"msg\":\"User logged in\"}\n{\"level\":30,\"time\":1789313928015,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"res\":{\"statusCode\":200},\"responseTime\":80.46838000000002,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789313928015,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"req\":{\"method\":\"POST\",\"url\":\"/messages\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789313928025,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"userId\":\"3b4f9652-4a31-4dfc-be62-b2f7ebd70d28\",\"userRoles\":[\"Receptionist\"],\"userPermissions\":7,\"requiredPermissions\":[\"chat:write\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789313928026,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"res\":{\"statusCode\":403},\"responseTime\":10.219954000000143,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789313928026,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"req\":{\"method\":\"POST\",\"url\":\"/contact-groups/1493a87a-34e1-4502-9575-e8280bed0e54/members\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789313928327,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"res\":{\"statusCode\":201},\"responseTime\":300.284535,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789313928328,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"GET\",\"url\":\"/contact-groups\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789313928341,\"pid\":2243057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":200},\"responseTime\":13.020254000000023,\"msg\":\"request completed\"}\n{\n  \"scenario\": \"PROD-04 reviewer probe — contact-groups action gap\",\n  \"chatWriteRevoked\": true,\n  \"postMessagesStatus\": 403,\n  \"addGroupMemberStatus\": 201,\n  \"getContactGroupsStatus\": 200\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

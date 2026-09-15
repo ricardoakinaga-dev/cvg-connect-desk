@@ -1,0 +1,390 @@
+{
+  "audit_id": "2026-09-15-checkpoint-triplo-aaa-r3",
+  "candidate_observed_at_entry": "754f9badac46278e77d21de91c58eedb15e80581+worktree#c486a63f161da313",
+  "checks": [
+    {
+      "id": "V01",
+      "procedure": "programa.py validate após reconciliação",
+      "tool": "Python 3.12.3",
+      "observed_at": "2026-09-15T10:45:53.055984+00:00",
+      "exit_status": 0,
+      "result": "PASS_STRUCTURAL",
+      "actual": "63 tasks, 59 requirements, 0 DONE, 19 REWORK, 44 PLANNED, 411 points",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/programa-validate.log",
+          "sha256": "91ef2afd62b36a17c11c3ab0be175666e6448c694341ed9e33472fe8e163f1a4"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V02",
+      "procedure": "candidate_manifest.py regenerate na entrada, antes da persistência R3",
+      "tool": "Python 3.12.3",
+      "observed_at": "2026-09-15T09:46:00Z",
+      "exit_status": 0,
+      "result": "PASS_IDENTITY_REPRODUCTION_LIMITED",
+      "actual": "tree_sha256 c486a63f161da3132019d2185203e8b28e0d547876b8334def5989d5ec614da0; G01 não aprovado",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/candidate-probes.json",
+          "sha256": "675813c7f47e157015eaefd1a312335dbb2461360ba28c30b26f7555ab69aa7e"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V03",
+      "procedure": "temporary Git known-bad .env.production.example mutation",
+      "tool": "Python 3.12.3 + Git",
+      "observed_at": "2026-09-15T09:48:00Z",
+      "exit_status": 0,
+      "result": "FAIL_HARNESS",
+      "actual": "tree_sha256 unchanged after same-size content mutation",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/candidate-probes.json",
+          "sha256": "675813c7f47e157015eaefd1a312335dbb2461360ba28c30b26f7555ab69aa7e"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V04",
+      "procedure": "pnpm typecheck",
+      "tool": "pnpm 10.33.0 / turbo 2.10.12",
+      "observed_at": "2026-09-15T10:21:51.154630+00:00",
+      "exit_status": 0,
+      "result": "PASS",
+      "actual": "33/33",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/typecheck.log",
+          "sha256": "8f4ec64c96daf936db5e27c61f745e2e0cace364b0fc61f41b7383c1306bb258"
+        },
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/tool-versions.log",
+          "sha256": "72b7ca0437447ebb1ac69ea8972c9169beb014b531e7a31faf144df886c22584"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V05",
+      "procedure": "isolated runner audit-r3-regression -- pnpm test:ci",
+      "tool": "isolated runner + pnpm/vitest",
+      "observed_at": "2026-09-15T09:52:18.541Z",
+      "exit_status": 0,
+      "result": "PASS_LIMITED",
+      "actual": "macro exit 0; exclusions remain",
+      "artifacts": [
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-regression/runner-summary.json",
+          "sha256": "0d9764e3034da02dee4cce73455c219541e82622b75944c71b1c84dae81db4b0"
+        },
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-regression/runner-output.log",
+          "sha256": "48ec5c37b9d1a55f3f6e9fbca6f52f37260d6f2f8220fc0ebb476f0447b897c9"
+        },
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-regression/runner-cleanup.json",
+          "sha256": "f2dce98f34044553ab8b33df106ec6f90b38b48a7b25e32ebfd9a1118e461a3a"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V06",
+      "procedure": "isolated runner audit-r3-sa015-sa019",
+      "tool": "isolated runner + vitest 3.2.7",
+      "observed_at": "2026-09-15T09:53:40.707Z",
+      "exit_status": 0,
+      "result": "PASS_LIMITED",
+      "actual": "35/35; missing AC scenarios remain",
+      "artifacts": [
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-sa015-sa019/runner-summary.json",
+          "sha256": "ea7cb1e7c8e338a4b525680fafcc534c5b4ff12ebd8d817e1387a03fc6606624"
+        },
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-sa015-sa019/runner-output.log",
+          "sha256": "fd2aca3314ee08ba80bb2a87cab02f3cf38e85bf9a615df175650514d3aa279d"
+        },
+        {
+          "path": "docs/programa-triplo-aaa-2026-09-14/evidencias/integration-runs/audit-r3-sa015-sa019/runner-cleanup.json",
+          "sha256": "da44015f53ccd011d191caee234fb95f3f74589829ecf6db4eb248f305c87097"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V07",
+      "procedure": "pnpm lint",
+      "tool": "pnpm 10.33.0 / ESLint",
+      "observed_at": "2026-09-15T10:21:48.193791+00:00",
+      "exit_status": 1,
+      "result": "FAIL",
+      "actual": "32/33 packages; realtime 29 > 26; 110 warnings summed",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/lint.log",
+          "sha256": "36d978f35169268217edf269783ea67d8c5f5d06db201f77417b3a7d22707843"
+        },
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/tool-versions.log",
+          "sha256": "72b7ca0437447ebb1ac69ea8972c9169beb014b531e7a31faf144df886c22584"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V08",
+      "procedure": "pnpm build",
+      "tool": "pnpm 10.33.0 / turbo 2.10.12 / Vite",
+      "observed_at": "2026-09-15T10:21:54.323306+00:00",
+      "exit_status": 0,
+      "result": "PASS_WITH_FAILED_G11_BUDGET",
+      "actual": "6/6; JS 121.64 KiB gzip FAIL; CSS 24.09 KiB PASS",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/build.log",
+          "sha256": "f1fe35d306d02c1b42568c179172a1844c8cffccac900a66ce591d894ce08c70"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V09",
+      "procedure": "node --test scripts/production/prod-36.test.mjs",
+      "tool": "Node 24.20.0 test runner",
+      "observed_at": "2026-09-15T10:22:02.598833+00:00",
+      "exit_status": 1,
+      "result": "FAIL_HARNESS",
+      "actual": "4/5; stale localhost assertion; G09 product verdict remains NOT_RUN/INVALID",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/prod-36.log",
+          "sha256": "9ecd6835b42678a2782f1cf6b01ffb991fd5daaf655e8c2000c09e3f1ad61694"
+        },
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/local-check-status.json",
+          "sha256": "c52be1006d8305a761488ac914c86b1f55b893adeedf679e55338f3ee2036f1e"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V10",
+      "procedure": "fresh evidence critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:00:00Z",
+      "exit_status": null,
+      "result": "REJECT",
+      "actual": "entry audit: 0/17 terminal promotions fully supported; current inventory 104 references/105 JSONL records remains non-terminal",
+      "critic": "/root/r23_evidence_critic",
+      "independence": "I1 fresh context, read-only",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/EVIDENCE-INVENTORY.json",
+          "sha256": "b1a9540a8fbbe932c2fb0c81d1ca2e590f085c33316f37e03e072c8c231dc028"
+        },
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/reproduce-evidence-inventory.py",
+          "sha256": "b8c331bad6331bc02548e9c1d0c1a6608deaf18fb828d642eeecb4c78f72e1bc"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V11",
+      "procedure": "fresh runtime critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:00:00Z",
+      "exit_status": null,
+      "result": "INVALID",
+      "actual": "mutation sentinel changed during concurrent audit; only lead-reproduced findings retained",
+      "critic": "/root/r23_runtime_critic",
+      "independence": "I1 fresh context, read-only; invalid sentinel",
+      "artifacts": [],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V12",
+      "procedure": "candidate_manifest.py após persistir docs/auditorias R3",
+      "tool": "Python 3.12.3",
+      "observed_at": "2026-09-15T10:23:09.158272+00:00",
+      "exit_status": 0,
+      "result": "FAIL_SCOPE_ISOLATION",
+      "actual": "digest changed after audit-only files because docs/auditorias is included in product seal",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/candidate-probes.json",
+          "sha256": "675813c7f47e157015eaefd1a312335dbb2461360ba28c30b26f7555ab69aa7e"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V13",
+      "procedure": "JSON and relative Markdown link verifier",
+      "tool": "Python 3.12.3",
+      "observed_at": "2026-09-15T10:52:22.969055+00:00",
+      "exit_status": 0,
+      "result": "PASS_DOCUMENTATION",
+      "actual": "zero JSON parse errors and zero broken relative links at capture",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/documentation-validation.json",
+          "sha256": "e5861c4c2fdf1da7e64896290497ae776270a52d0075865f15f95b81d04e93cd"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V14",
+      "procedure": "SA-011 static route inventory",
+      "tool": "Node 24.20.0",
+      "observed_at": "2026-09-15T10:22:02.662064+00:00",
+      "exit_status": 0,
+      "result": "PASS_INVENTORY",
+      "actual": "148 routes, 120 with schema, 5 allowlisted mutations without schema",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/route-audit.log",
+          "sha256": "dd3346f9889f0371df39f4278948c355df64107e61a1fdeee8cfc03ff486e8a9"
+        },
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/evidencias/local-check-status.json",
+          "sha256": "c52be1006d8305a761488ac914c86b1f55b893adeedf679e55338f3ee2036f1e"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V15",
+      "procedure": "first final-document critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:15:00Z",
+      "exit_status": null,
+      "result": "REJECT_AND_CORRECTED",
+      "actual": "gate mapping, auditability, wave points, DAG order and metadata findings",
+      "critic": "/root/r3_final_docs_critic",
+      "independence": "I1 fresh context, read-only; concurrent external mutation invalidated global fingerprint",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/REVISAO-I1-01.md",
+          "sha256": "d3319008779e720c9e9ca2ddeedbd285b5122b757d48c723e79806ca09d5fa87"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace / isolated runner where stated"
+    },
+    {
+      "id": "V16",
+      "procedure": "second final-document critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:33:39.866069+00:00",
+      "exit_status": null,
+      "result": "INVALID_REJECT",
+      "actual": "concurrent SA-017/SA-013/SA-015 mutations invalidated snapshot; narrative/gate/V13 findings corrected",
+      "critic": "/root/r3_final_docs_critic_2",
+      "independence": "I1 fresh context, strictly read-only",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/REVISAO-I1-02.md",
+          "sha256": "a76d07bbf780169bef1c1ae09db7bfb7ee7b13d7750dcd648eae4d4862431ff5"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace"
+    },
+    {
+      "id": "V17",
+      "procedure": "third final-document critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:38:44.247769+00:00",
+      "exit_status": null,
+      "result": "REJECT_AND_CORRECTED",
+      "actual": "external checkpoint had restored 17 DONE/1 IMPLEMENTED; canonical state and projections were reopened again after external writer stopped",
+      "critic": "/root/r3_final_docs_critic_3",
+      "independence": "I1 fresh context, strictly read-only, stable during its inspection",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/REVISAO-I1-03.md",
+          "sha256": "02d1253a8fac7a6ddef1b45f09fa1eaabf6e2d510bfa0e6e197d12b37baf57af"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace"
+    },
+    {
+      "id": "V18",
+      "procedure": "fourth final-document critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:45:23.293319+00:00",
+      "exit_status": null,
+      "result": "REJECT_AND_CORRECTED",
+      "actual": "inventory summary and prod-36 wording corrected; all other requested invariants confirmed",
+      "critic": "/root/r3_final_docs_critic_4",
+      "independence": "I1 fresh context, strictly read-only, stable snapshot",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/REVISAO-I1-04.md",
+          "sha256": "4bbc2c515996404d8c933e14c5dcc06abcc95ccadf54464b6c1035bd43a0d857"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace"
+    },
+    {
+      "id": "V19",
+      "procedure": "fifth final-document critic fork none",
+      "tool": "Codex critic",
+      "observed_at": "2026-09-15T10:51:54.846959+00:00",
+      "exit_status": null,
+      "result": "REJECT_AND_CORRECTED",
+      "actual": "warning aggregate corrected to 110 and stale limitation removed; all material invariants confirmed",
+      "critic": "/root/r3_final_docs_critic_5",
+      "independence": "I1 fresh context, strictly read-only, stable snapshot",
+      "artifacts": [
+        {
+          "path": "docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/REVISAO-I1-05.md",
+          "sha256": "f6408a9232aa6514dc3d25b031e57984235404e2e8cf7b677cd9ee58723e576d"
+        }
+      ],
+      "producer": "lead-auditor",
+      "environment": "local workspace"
+    }
+  ],
+  "not_run": [
+    "UX 16 surfaces",
+    "screen reader",
+    "real mobile device",
+    "coverage by layer",
+    "load",
+    "full security scans",
+    "durable off-host DR",
+    "final E2E",
+    "provider integrations"
+  ],
+  "limitations": [
+    "test:ci passes only under the isolated runner used here and excludes required AAA/production suites",
+    "runtime critic verdict invalidated by concurrent cache/evidence mutations",
+    "no external or production action performed"
+  ]
+}

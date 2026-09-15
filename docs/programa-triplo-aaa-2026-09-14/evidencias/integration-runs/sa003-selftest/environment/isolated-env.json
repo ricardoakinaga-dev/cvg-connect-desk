@@ -1,0 +1,24 @@
+{
+  "runId": "sa003-selftest",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58532/cvg_aaa_sa003_selftest_w21",
+  "databaseName": "cvg_aaa_sa003_selftest_w21",
+  "databasePort": 58532,
+  "redisUrl": "redis://127.0.0.1:56890",
+  "redisPort": 56890,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 825201,
+    "dataDir": "/tmp/cvg-aaa-runs/sa003-selftest/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 825220,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa003-selftest",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 21:47:36.771912-03"
+  }
+}

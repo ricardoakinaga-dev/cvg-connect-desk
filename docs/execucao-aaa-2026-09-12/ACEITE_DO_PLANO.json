@@ -1,0 +1,38 @@
+{
+  "scope": "Artefatos de planejamento, não produto",
+  "version": 1,
+  "requirements": [
+    {
+      "id": "P01",
+      "target": "Relatório em docs preservado por SHA-256 e indexado."
+    },
+    {
+      "id": "P02",
+      "target": "Plano executivo com escopo completo, metas, responsáveis, riscos, recursos e recuperação."
+    },
+    {
+      "id": "P03",
+      "target": "Roadmap de marcos e DAG acíclico com todas tarefas, caminho crítico e saída verificável."
+    },
+    {
+      "id": "P04",
+      "target": "A01–A16 e L01 cobertos; 18 áreas com baseline/meta/criteria/tasks; nenhum item excluído."
+    },
+    {
+      "id": "P05",
+      "target": "Cada tarefa tem ownership, deps, contratos, aceite negativo, checks existentes/novos, esforço, rollback e retorno por evidência."
+    },
+    {
+      "id": "P06",
+      "target": "Consulta gera briefs e simula lotes sem colisão; testes rejeitam grafo inválido, paths inseguros e cobertura ausente."
+    },
+    {
+      "id": "P07",
+      "target": "Estratégia Gauntlet com crítica fresca, sentinela e final distinto; design matrix todas rotas e views; sem falsa AAA."
+    },
+    {
+      "id": "P08",
+      "target": "Revisão independente do pacote atual e verificação de consistência; produto não alterado nem marcado concluído."
+    }
+  ]
+}

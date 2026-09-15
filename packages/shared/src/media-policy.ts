@@ -1,4 +1,5 @@
 import { createHash } from 'crypto';
+import { stripControlChars } from './redact';
 
 /**
  * Media security policy (Phase 3 — §6, fatia 1: validação + SSRF + hash).
@@ -9,22 +10,37 @@ import { createHash } from 'crypto';
 
 export type MediaKind = 'image' | 'audio' | 'video' | 'document';
 
+/** Limite alvo de C05: 16 MiB de conteúdo REAL (sem overhead de transporte). */
+export const MEDIA_MAX_BYTES_DEFAULT = 16 * 1024 * 1024;
+
 const ALLOWED_MIME: Record<MediaKind, string[]> = {
   image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-  audio: ['audio/mpeg', 'audio/ogg', 'audio/mp4', 'audio/wav', 'audio/webm', 'audio/aac'],
+  audio: ['audio/mpeg', 'audio/mp3', 'audio/ogg', 'audio/mp4', 'audio/wav', 'audio/webm', 'audio/aac'],
   video: ['video/mp4', 'video/webm', 'video/quicktime'],
   document: ['application/pdf', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
 };
 
 export function getMediaMaxBytes(): number {
-  return Number(process.env.MEDIA_MAX_BYTES) || 16 * 1024 * 1024;
+  return Number(process.env.MEDIA_MAX_BYTES) || MEDIA_MAX_BYTES_DEFAULT;
+}
+
+/** Kind lógico de um MIME permitido (para DTOs/auditoria sem confiar no cliente). */
+export function mediaKindForMime(mimetype: string | undefined | null): MediaKind | undefined {
+  const normalized = (mimetype || '').split(';')[0].trim().toLowerCase();
+  if (!normalized) return undefined;
+  for (const [kind, mimes] of Object.entries(ALLOWED_MIME) as Array<[MediaKind, string[]]>) {
+    if (mimes.includes(normalized)) return kind;
+  }
+  return undefined;
 }
 
 export type MediaRejectReason =
   | 'mime_not_allowed'
   | 'media_too_large'
   | 'unsafe_url'
-  | 'invalid_data_url';
+  | 'invalid_data_url'
+  | 'executable_content'
+  | 'mime_magic_mismatch';
 
 export interface MediaValidation {
   ok: boolean;
@@ -137,7 +153,7 @@ export function validateMedia(input: ValidateMediaInput): MediaValidation {
 /** Nome de arquivo seguro (sem path traversal, chars de controle ou excesso). */
 export function safeFilename(name: string): string {
   const base = name.split(/[\\/]/).pop() || 'file';
-  const cleaned = base.replace(/[\x00-\x1f\x7f]/g, '').replace(/^\.+/, '').trim();
+  const cleaned = stripControlChars(base).replace(/^\.+/, '').trim();
   return (cleaned || 'file').slice(0, 128);
 }
 
@@ -150,12 +166,15 @@ const MAGIC_BYTES: Array<{ kind: MediaKind; mimes: string[]; prefix: (b: Buffer)
   { kind: 'image', mimes: ['image/png'], prefix: (b) => b.length >= 8 && b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) },
   { kind: 'image', mimes: ['image/gif'], prefix: (b) => b.length >= 6 && (b.subarray(0, 3).toString('latin1') === 'GIF' || b.subarray(0, 6).toString('latin1') === 'GIF87a' || b.subarray(0, 6).toString('latin1') === 'GIF89a') },
   { kind: 'image', mimes: ['image/webp'], prefix: (b) => b.length >= 12 && b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WEBP' },
-  { kind: 'audio', mimes: ['audio/mpeg', 'audio/mp3'], prefix: (b) => b.length >= 3 && (b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33) }, // ID3
+  // MP3: ID3v2 tag OU frame sync (0xFFEx/0xFFFx) — cobre arquivos sem tag.
+  { kind: 'audio', mimes: ['audio/mpeg', 'audio/mp3'], prefix: (b) => b.length >= 3 && ((b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33) || (b[0] === 0xff && (b[1] & 0xe0) === 0xe0)) },
   { kind: 'audio', mimes: ['audio/ogg'], prefix: (b) => b.length >= 4 && b.subarray(0, 4).toString('latin1') === 'OggS' },
   { kind: 'audio', mimes: ['audio/wav'], prefix: (b) => b.length >= 12 && b.subarray(0, 4).toString('latin1') === 'RIFF' && b.subarray(8, 12).toString('latin1') === 'WAVE' },
-  { kind: 'video', mimes: ['video/mp4'], prefix: (b) => b.length >= 12 && b.subarray(4, 8).toString('latin1') === 'ftyp' },
-  { kind: 'video', mimes: ['video/webm'], prefix: (b) => b.length >= 4 && b.subarray(0, 4).toString('latin1') === '\x1aE\xdf\xa3' },
+  { kind: 'audio', mimes: ['audio/aac'], prefix: (b) => b.length >= 2 && b[0] === 0xff && (b[1] === 0xf1 || b[1] === 0xf9) },
+  { kind: 'video', mimes: ['video/mp4', 'audio/mp4', 'video/quicktime'], prefix: (b) => b.length >= 12 && b.subarray(4, 8).toString('latin1') === 'ftyp' },
+  { kind: 'video', mimes: ['video/webm', 'audio/webm'], prefix: (b) => b.length >= 4 && b.subarray(0, 4).toString('latin1') === '\x1aE\xdf\xa3' },
   { kind: 'document', mimes: ['application/pdf'], prefix: (b) => b.length >= 5 && b.subarray(0, 5).toString('latin1') === '%PDF-' },
+  { kind: 'document', mimes: ['application/msword'], prefix: (b) => b.length >= 8 && b.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1])) }, // OLE2 CFB
   { kind: 'document', mimes: ['application/zip', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'], prefix: (b) => b.length >= 4 && b[0] === 0x50 && b[1] === 0x4b && (b[2] === 0x03 || b[2] === 0x05 || b[2] === 0x07) }, // ZIP/OOXML
 ];
 
@@ -183,6 +202,63 @@ export function mimeMatchesBytes(declaredMime: string, bytes: Buffer): { matches
     return { matches: false, detected };
   }
   return { matches: allowed.prefix(bytes), detected };
+}
+
+// ============================================
+// Assinaturas executáveis (C05: arquivo .pdf com MZ/ELF não pode ser aceito).
+// ============================================
+
+const EXECUTABLE_SIGNATURES: Array<{ id: string; detect: (b: Buffer) => boolean }> = [
+  { id: 'mz-pe', detect: (b) => b.length >= 2 && b[0] === 0x4d && b[1] === 0x5a },
+  { id: 'elf', detect: (b) => b.length >= 4 && b[0] === 0x7f && b[1] === 0x45 && b[2] === 0x4c && b[3] === 0x46 },
+  { id: 'mach-o', detect: (b) => {
+    if (b.length < 4) return false;
+    const le = b.readUInt32LE(0);
+    const be = b.readUInt32BE(0);
+    return [0xfeedface, 0xfeedfacf, 0xcefaedfe, 0xcffaedfe, 0xcafebabe, 0xbebafeca].includes(le) || le === 0xcafebabe || be === 0xcafebabe;
+  } },
+  { id: 'java-class', detect: (b) => b.length >= 4 && b[0] === 0xca && b[1] === 0xfe && b[2] === 0xba && b[3] === 0xbe },
+];
+
+/** Detecta conteúdo executável independentemente do nome/extensão/header. */
+export function detectExecutableContent(bytes: Buffer): string | undefined {
+  return EXECUTABLE_SIGNATURES.find((entry) => entry.detect(bytes))?.id;
+}
+
+export interface MediaBytesValidation {
+  ok: boolean;
+  reason?: 'executable_content' | 'mime_magic_mismatch';
+  message?: string;
+  detected?: string;
+}
+
+/**
+ * Validação de bytes reais (C05): rejeita executável disfarçado e exige que o
+ * MIME declarado com assinatura conhecida case com os magic bytes. MIME sem
+ * assinatura catalogada (ex.: text/plain) segue aceito e depende do scanner.
+ */
+export function validateMediaBytes(declaredMimetype: string, bytes: Buffer): MediaBytesValidation {
+  const executable = detectExecutableContent(bytes);
+  if (executable) {
+    return { ok: false, reason: 'executable_content', message: `Conteúdo executável (${executable}) não é aceito como anexo`, detected: executable };
+  }
+  const normalized = (declaredMimetype || '').split(';')[0].trim().toLowerCase();
+  if (!normalized) {
+    return { ok: false, reason: 'mime_magic_mismatch', message: 'MIME declarado ausente', detected: sniffMimeType(bytes) };
+  }
+  const expected = MAGIC_BYTES.find((entry) => entry.mimes.includes(normalized));
+  if (!expected) {
+    return { ok: true, detected: sniffMimeType(bytes) };
+  }
+  if (!expected.prefix(bytes)) {
+    return {
+      ok: false,
+      reason: 'mime_magic_mismatch',
+      message: `Bytes reais não correspondem ao MIME declarado ${normalized}`,
+      detected: sniffMimeType(bytes) ?? 'unknown',
+    };
+  }
+  return { ok: true, detected: expected.mimes[0] };
 }
 
 // ============================================
@@ -229,6 +305,8 @@ export async function safeRemoteFetch(url: string, maxBytes: number, opts: { max
   if (!safe.ok) throw new Error(safe.message || 'Unsafe media URL');
 
   for (let redirect = 0; redirect <= maxRedirects; redirect += 1) {
+    const hopSafe = assertSafeMediaUrl(url);
+    if (!hopSafe.ok) throw new Error(hopSafe.message || 'Unsafe media URL');
     const parsed = new URL(url);
     const dnsCheck = await dnsRebindingCheck(parsed.hostname);
     if (!dnsCheck.ok) throw new Error(`Media URL DNS guard: ${dnsCheck.reason}`);

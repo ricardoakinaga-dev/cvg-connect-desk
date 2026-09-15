@@ -7,10 +7,21 @@ interface AuditQuery {
   entityType?: string;
   entityId?: string;
   action?: string;
+  correlationId?: string;
   startDate?: string;
   endDate?: string;
   limit?: number;
   offset?: number;
+}
+
+/** DTO de período estável: data inválida responde 400, nunca 500. */
+function parseDate(value: string | undefined, field: string): Date | undefined | { error: string } {
+  if (value === undefined) return undefined;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return { error: `INVALID_${field.toUpperCase()}` };
+  }
+  return parsed;
 }
 
 export async function registerAuditRoutes(app: FastifyInstance) {
@@ -23,27 +34,38 @@ export async function registerAuditRoutes(app: FastifyInstance) {
           type: 'object',
           properties: {
             userId: { type: 'string', format: 'uuid' },
-            entityType: { type: 'string' },
+            entityType: { type: 'string', maxLength: 64 },
             entityId: { type: 'string', format: 'uuid' },
-            action: { type: 'string' },
+            action: { type: 'string', maxLength: 128 },
+            correlationId: { type: 'string', maxLength: 128 },
             startDate: { type: 'string' },
             endDate: { type: 'string' },
-            limit: { type: 'integer', minimum: 1, maximum: 1000 },
-            offset: { type: 'integer', minimum: 0 },
+            limit: { type: 'integer', minimum: 1, maximum: 1000, default: 100 },
+            offset: { type: 'integer', minimum: 0, default: 0 },
           },
         },
       },
     },
-    async (request) => {
-      const { userId, entityType, entityId, action, startDate, endDate, limit = 100, offset = 0 } = request.query;
+    async (request, reply) => {
+      const { userId, entityType, entityId, action, correlationId, startDate, endDate, limit = 100, offset = 0 } = request.query;
+
+      const parsedStart = parseDate(startDate, 'start_date');
+      if (parsedStart && 'error' in parsedStart) {
+        return reply.status(400).send({ error: parsedStart.error, message: 'startDate inválida' });
+      }
+      const parsedEnd = parseDate(endDate, 'end_date');
+      if (parsedEnd && 'error' in parsedEnd) {
+        return reply.status(400).send({ error: parsedEnd.error, message: 'endDate inválida' });
+      }
 
       const filter = {
         userId,
         entityType,
         entityId,
         action,
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined,
+        correlationId,
+        startDate: parsedStart,
+        endDate: parsedEnd,
       };
 
       const logs = await getAuditLogs(filter, limit, offset);

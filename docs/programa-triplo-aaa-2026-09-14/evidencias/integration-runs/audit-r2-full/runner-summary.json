@@ -1,0 +1,54 @@
+{
+  "runId": "audit-r2-full",
+  "workerIndex": 46,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_audit_r2_full_w46",
+  "redisUrl": "redis://127.0.0.1:57140",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T02:17:10.471Z",
+  "finishedAt": "2026-09-15T02:18:11.109Z",
+  "command": "pnpm test:ci",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_audit_r2_full_w46",
+    "REDIS_URL": "redis://127.0.0.1:57140",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "audit-r2-full",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/audit-r2-full",
+    "AAA_WORKER_INDEX": "46"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T02:17:10.471Z",
+      "finishedAt": "2026-09-15T02:17:12.077Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T02:17:12.077Z",
+      "finishedAt": "2026-09-15T02:17:12.755Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm test:ci",
+      "startedAt": "2026-09-15T02:17:12.755Z",
+      "finishedAt": "2026-09-15T02:18:11.109Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Message-based auth\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"auth_method\":\"message-token\",\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Client authenticated\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"user_id\":\"user-network\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Starting token revalidation timer\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"interval_ms\":250,\"deadline_ms\":5000,\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Connection closed\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n\n ✓ src/__tests__/realtime-auth-behavioral.test.ts (8 tests) 3463ms\n   ✓ RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure  378ms\n   ✓ RealtimeServer behavioral auth flow > 403 na revalidação é tratado como revogação: fecha 4002  380ms\n   ✓ RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada  1054ms\n   ✓ RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)  1028ms\n\n Test Files  11 passed (11)\n      Tests  89 passed (89)\n   Start at  23:18:05\n   Duration  5.00s (transform 857ms, setup 0ms, collect 8.67s, tests 8.84s, environment 2ms, prepare 1.25s)\n\n",
+      "stderrTail": "http_status\":403,\"level\":\"warn\"}\n{\"msg\":\"[Realtime] Revalidation failure — closing connection\",\"client_id\":\"client_1789438688594_tfomy9r\",\"reason\":\"Token revoked: 403\",\"close_code\":4002,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438688975_0zugqmd\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438688975_0zugqmd\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438688975_0zugqmd\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438690028_oz1l9m5\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

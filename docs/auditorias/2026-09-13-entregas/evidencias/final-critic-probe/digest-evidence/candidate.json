@@ -1,0 +1,9 @@
+{
+  "repository": null,
+  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+  "sourceSha256": "70a313d9366ede714e81a51146ee778813de79b96f72be8d5b5686e473564dc5",
+  "sourceFileCount": 4,
+  "imageDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "sealedAt": "2026-09-13T19:48:43.445Z"
+}

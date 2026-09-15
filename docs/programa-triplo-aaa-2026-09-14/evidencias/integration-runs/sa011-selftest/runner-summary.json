@@ -1,0 +1,54 @@
+{
+  "runId": "sa011-selftest",
+  "workerIndex": 48,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_selftest_w48",
+  "redisUrl": "redis://127.0.0.1:57160",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:26:56.885Z",
+  "finishedAt": "2026-09-15T04:27:02.875Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_selftest_w48",
+    "REDIS_URL": "redis://127.0.0.1:57160",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa011-selftest",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa011-selftest",
+    "AAA_WORKER_INDEX": "48"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:26:56.885Z",
+      "finishedAt": "2026-09-15T04:26:58.690Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:26:58.691Z",
+      "finishedAt": "2026-09-15T04:26:59.420Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts",
+      "startedAt": "2026-09-15T04:26:59.420Z",
+      "finishedAt": "2026-09-15T04:27:02.874Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": ":5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/limit\",\"schemaPath\":\"#/properties/limit/minimum\",\"keyword\":\"minimum\",\"params\":{\"comparison\":\">=\",\"limit\":1},\"message\":\"must be >= 1\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?limit=0\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789446422590,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-o\",\"res\":{\"statusCode\":400},\"responseTime\":0.6389679999997497,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422591,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-p\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?limit=2000\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789446422591,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-p\",\"err\":{\"type\":\"Error\",\"message\":\"querystring/limit must be <= 200\",\"stack\":\"Error: querystring/limit must be <= 200\\n    at defaultSchemaErrorFormatter (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/context.js:92:10)\\n    at wrapValidationError (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:446:17)\\n    at validate (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:375:16)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:128:25)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/limit\",\"schemaPath\":\"#/properties/limit/maximum\",\"keyword\":\"maximum\",\"params\":{\"comparison\":\"<=\",\"limit\":200},\"message\":\"must be <= 200\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?limit=2000\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789446422591,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-p\",\"res\":{\"statusCode\":400},\"responseTime\":0.26339999999981956,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422591,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-q\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?offset=-1\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789446422592,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-q\",\"err\":{\"type\":\"Error\",\"message\":\"querystring/offset must be >= 0\",\"stack\":\"Error: querystring/offset must be >= 0\\n    at defaultSchemaErrorFormatter (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/context.js:92:10)\\n    at wrapValidationError (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:446:17)\\n    at validate (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:375:16)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:128:25)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/offset\",\"schemaPath\":\"#/properties/offset/minimum\",\"keyword\":\"minimum\",\"params\":{\"comparison\":\">=\",\"limit\":0},\"message\":\"must be >= 0\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?offset=-1\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789446422592,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-q\",\"res\":{\"statusCode\":400},\"responseTime\":0.32878200000004654,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422592,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-r\",\"req\":{\"method\":\"GET\",\"url\":\"/__sa011_boom\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":50,\"time\":1789446422592,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-r\",\"err\":{\"type\":\"Error\",\"message\":\"detalhe-interno-sensivel\",\"stack\":\"Error: detalhe-interno-sensivel\\n    at Object.<anonymous> (/home/ricardo/cvg-connect-desk/apps/desk-api/src/__tests__/sa-011-api-contract.integration.test.ts:59:27)\\n    at preHandlerCallbackInner (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:203:24)\\n    at preHandlerCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:168:5)\\n    at validationCompleted (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:158:5)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:135:5)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"code\":\"42P01\"},\"path\":\"/__sa011_boom\",\"method\":\"GET\",\"msg\":\"Erro interno\"}\n{\"level\":30,\"time\":1789446422594,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-r\",\"res\":{\"statusCode\":500},\"responseTime\":2.0024050000001807,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422595,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-s\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789446422595,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-s\",\"res\":{\"statusCode\":401},\"responseTime\":0.19870899999978064,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422596,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-t\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789446422599,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-t\",\"res\":{\"statusCode\":200},\"responseTime\":3.3001179999996566,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422599,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"req\":{\"method\":\"GET\",\"url\":\"/rota-inexistente\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789446422600,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"msg\":\"Route GET:/rota-inexistente not found\"}\n{\"level\":30,\"time\":1789446422600,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"res\":{\"statusCode\":404},\"responseTime\":0.2424710000000232,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789446422601,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-v\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/ac8f5c59-cc5d-4289-ae20-c9c16082c0d3\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789446422607,\"pid\":2100180,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-v\",\"res\":{\"statusCode\":200},\"responseTime\":5.873665000000074,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-011-api-contract.integration.test.ts (7 tests) 593ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  01:26:59\n   Duration  2.77s (transform 956ms, setup 0ms, collect 1.97s, tests 593ms, environment 0ms, prepare 65ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,24 @@
+{
+  "runId": "prod14-reg-chat",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58952/cvg_aaa_prod14_reg_chat_w25",
+  "databaseName": "cvg_aaa_prod14_reg_chat_w25",
+  "databasePort": 58952,
+  "redisUrl": "redis://127.0.0.1:58962",
+  "redisPort": 58962,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2657512,
+    "dataDir": "/tmp/cvg-aaa-runs/prod14-reg-chat/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2657539,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod14-reg-chat",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:25:22.60617-03"
+  }
+}

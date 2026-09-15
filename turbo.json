@@ -42,7 +42,7 @@
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "cache": true
     },
     "dev": {
       "cache": false,
@@ -52,7 +52,7 @@
       "outputs": ["coverage/**"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "cache": true
     }
   }
 }

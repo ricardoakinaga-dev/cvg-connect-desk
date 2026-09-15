@@ -1,0 +1,54 @@
+{
+  "runId": "sa011-fix2",
+  "workerIndex": 48,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_fix2_w48",
+  "redisUrl": "redis://127.0.0.1:57160",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:17:39.762Z",
+  "finishedAt": "2026-09-15T04:17:50.023Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts src/__tests__/events-polling.integration.test.ts src/__tests__/dead-letter-routes.integration.test.ts src/__tests__/sa-013-authz-matrix.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_fix2_w48",
+    "REDIS_URL": "redis://127.0.0.1:57160",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa011-fix2",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa011-fix2",
+    "AAA_WORKER_INDEX": "48"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:17:39.762Z",
+      "finishedAt": "2026-09-15T04:17:41.379Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:17:41.379Z",
+      "finishedAt": "2026-09-15T04:17:42.061Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts src/__tests__/events-polling.integration.test.ts src/__tests__/dead-letter-routes.integration.test.ts src/__tests__/sa-013-authz-matrix.integration.test.ts",
+      "startedAt": "2026-09-15T04:17:42.061Z",
+      "finishedAt": "2026-09-15T04:17:50.022Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": ":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445869780,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-s\",\"res\":{\"statusCode\":401},\"responseTime\":0.13704500000017106,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789445869781,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-t\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445869785,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-t\",\"res\":{\"statusCode\":200},\"responseTime\":3.725549000000001,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789445869785,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"req\":{\"method\":\"GET\",\"url\":\"/rota-inexistente\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445869785,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"msg\":\"Route GET:/rota-inexistente not found\"}\n{\"level\":30,\"time\":1789445869786,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-u\",\"res\":{\"statusCode\":404},\"responseTime\":0.32327100000020437,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789445869787,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-v\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/03557ee0-0dce-404d-b320-bf0144d59e0d\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445869794,\"pid\":2039763,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-v\",\"res\":{\"statusCode\":200},\"responseTime\":6.2992759999999635,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-011-api-contract.integration.test.ts (7 tests) 534ms\n\n Test Files  4 passed (4)\n      Tests  21 passed (21)\n   Start at  01:17:42\n   Duration  7.30s (transform 856ms, setup 0ms, collect 4.06s, tests 2.53s, environment 1ms, prepare 217ms)\n\n",
+      "stderrTail": "nt_id\":\"dlq.manual.1789445864460\",\"handler_name\":\"worker.processTask\",\"retry_count\":5,\"retryable\":false,\"reason\":\"Persistent failure\",\"level\":\"error\"}\n\nstderr | src/__tests__/dead-letter-routes.integration.test.ts > Dead-letter routes integration > exposes operational dead-letter stats for triage\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"message.persisted\",\"event_id\":\"dlq.replayable.1789445864460\",\"handler_name\":\"worker.processMessage\",\"retry_count\":3,\"retryable\":true,\"reason\":\"Timeout\",\"level\":\"error\"}\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"task.created\",\"event_id\":\"dlq.manual.1789445864460\",\"handler_name\":\"worker.processTask\",\"retry_count\":5,\"retryable\":false,\"reason\":\"Persistent failure\",\"level\":\"error\"}\n\nstderr | src/__tests__/dead-letter-routes.integration.test.ts > Dead-letter routes integration > retries replayable dead-letter entries by republishing to the outbox\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"message.persisted\",\"event_id\":\"dlq.replayable.1789445864460\",\"handler_name\":\"worker.processMessage\",\"retry_count\":3,\"retryable\":true,\"reason\":\"Timeout\",\"level\":\"error\"}\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"task.created\",\"event_id\":\"dlq.manual.1789445864460\",\"handler_name\":\"worker.processTask\",\"retry_count\":5,\"retryable\":false,\"reason\":\"Persistent failure\",\"level\":\"error\"}\n\nstderr | src/__tests__/dead-letter-routes.integration.test.ts > Dead-letter routes integration > marks manual-only dead-letter entries as resolved\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"message.persisted\",\"event_id\":\"dlq.replayable.1789445864460\",\"handler_name\":\"worker.processMessage\",\"retry_count\":3,\"retryable\":true,\"reason\":\"Timeout\",\"level\":\"error\"}\n{\"msg\":\"[DeadLetter] Recorded terminal failure\",\"event_type\":\"task.created\",\"event_id\":\"dlq.manual.1789445864460\",\"handler_name\":\"worker.processTask\",\"retry_count\":5,\"retryable\":false,\"reason\":\"Persistent failure\",\"level\":\"error\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,8 @@
+Synthetic config: NODE_ENV/JWT_SECRET/INTERNAL_EVENTS_SECRET absent
+=== PRODUCTION READINESS ===
+mode: (ausente)
+INFO  OTEL_ENABLED=false: sem tracing (aceitável em degradação, revisar SLOs)
+WARN  MALWARE_SCANNER não configurado: docs exigem fail-secure (documents) — ver MEDIA_REQUIRE_SCAN
+WARN  ADMIN_BOOTSTRAP_PASSWORD ausente/curta: seed fail-secure não criará admin (ok se admin já existe)
+WARN  ADMIN_BOOTSTRAP_EMAIL ausente
+=== READY ===

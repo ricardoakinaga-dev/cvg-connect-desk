@@ -1,0 +1,54 @@
+{
+  "runId": "sa004-dto",
+  "workerIndex": 25,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_sa004_dto_w25",
+  "redisUrl": "redis://127.0.0.1:56930",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T00:51:09.006Z",
+  "finishedAt": "2026-09-15T00:51:16.009Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-004-admin-dto.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_sa004_dto_w25",
+    "REDIS_URL": "redis://127.0.0.1:56930",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa004-dto",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa004-dto",
+    "AAA_WORKER_INDEX": "25"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T00:51:09.006Z",
+      "finishedAt": "2026-09-15T00:51:10.839Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T00:51:10.840Z",
+      "finishedAt": "2026-09-15T00:51:11.654Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-004-admin-dto.integration.test.ts",
+      "startedAt": "2026-09-15T00:51:11.654Z",
+      "finishedAt": "2026-09-15T00:51:16.009Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "request\"}\n{\"level\":30,\"time\":1789433475819,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"res\":{\"statusCode\":401},\"responseTime\":0.33313799999996263,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789433475819,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users/3f352115-62a4-4cef-bf6f-2b7047328398\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789433475823,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"userId\":\"3294061d-1c6a-4050-8027-225464d0230b\",\"userRoles\":[\"Receptionist\"],\"userPermissions\":8,\"requiredPermissions\":[\"admin:read\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789433475823,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"res\":{\"statusCode\":403},\"responseTime\":4.080415999999786,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789433475823,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"req\":{\"method\":\"POST\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789433475826,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"userId\":\"3294061d-1c6a-4050-8027-225464d0230b\",\"userRoles\":[\"Receptionist\"],\"userPermissions\":8,\"requiredPermissions\":[\"admin:write\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789433475826,\"pid\":848546,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"res\":{\"statusCode\":403},\"responseTime\":2.840314000000035,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-004-admin-dto.integration.test.ts (5 tests) 1442ms\n   ✓ SA-004 — DTO público de usuário (A01/C02) > PUT /admin/users/:id altera senha e continua sem hash  727ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  21:51:12\n   Duration  3.65s (transform 911ms, setup 0ms, collect 1.90s, tests 1.44s, environment 0ms, prepare 103ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

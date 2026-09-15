@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api
+
+ ✓ src/__tests__/audit-20260912.tmp.test.ts (2 tests) 139ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:03:22
+   Duration  2.48s (transform 522ms, setup 0ms, collect 1.57s, tests 139ms, environment 0ms, prepare 202ms)
+

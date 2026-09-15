@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "sa007-rework",
+    "redis": {
+      "stopped": true,
+      "pid": 1507737
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1507719
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "runId": "sa015-b1-20260915-r3",
+  "workerIndex": 46,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa015_b1_20260915_r3_w46",
+  "redisUrl": "redis://127.0.0.1:57140",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:37:26.218Z",
+  "finishedAt": "2026-09-15T04:37:34.263Z",
+  "command": "bash -lc env -u AAA_RUN_ID pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-015-tasks-hardening.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa015_b1_20260915_r3_w46",
+    "REDIS_URL": "redis://127.0.0.1:57140",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa015-b1-20260915-r3",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa015-b1-20260915-r3",
+    "AAA_WORKER_INDEX": "46"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:37:26.218Z",
+      "finishedAt": "2026-09-15T04:37:28.289Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:37:28.289Z",
+      "finishedAt": "2026-09-15T04:37:29.097Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "bash -lc env -u AAA_RUN_ID pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-015-tasks-hardening.integration.test.ts",
+      "startedAt": "2026-09-15T04:37:29.097Z",
+      "finishedAt": "2026-09-15T04:37:34.263Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789447053673,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-z\",\"res\":{\"statusCode\":200},\"responseTime\":19.315180000000055,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789447053710,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-10\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&limit=200&offset=0\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789447054015,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-10\",\"res\":{\"statusCode\":200},\"responseTime\":304.84881600000017,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789447054015,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-11\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&limit=201\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789447054016,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-11\",\"err\":{\"type\":\"Error\",\"message\":\"querystring/limit must be <= 200\",\"stack\":\"Error: querystring/limit must be <= 200\\n    at defaultSchemaErrorFormatter (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/context.js:92:10)\\n    at wrapValidationError (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:446:17)\\n    at validate (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:375:16)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:128:25)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/limit\",\"schemaPath\":\"#/properties/limit/maximum\",\"keyword\":\"maximum\",\"params\":{\"comparison\":\"<=\",\"limit\":200},\"message\":\"must be <= 200\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&limit=201\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789447054017,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-11\",\"res\":{\"statusCode\":400},\"responseTime\":1.3250690000004397,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789447054017,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-12\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&limit=0\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789447054017,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-12\",\"err\":{\"type\":\"Error\",\"message\":\"querystring/limit must be >= 1\",\"stack\":\"Error: querystring/limit must be >= 1\\n    at defaultSchemaErrorFormatter (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/context.js:92:10)\\n    at wrapValidationError (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:446:17)\\n    at validate (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:375:16)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:128:25)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/limit\",\"schemaPath\":\"#/properties/limit/minimum\",\"keyword\":\"minimum\",\"params\":{\"comparison\":\">=\",\"limit\":1},\"message\":\"must be >= 1\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&limit=0\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789447054018,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-12\",\"res\":{\"statusCode\":400},\"responseTime\":0.4412419999998747,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789447054018,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-13\",\"req\":{\"method\":\"GET\",\"url\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&offset=-1\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789447054018,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-13\",\"err\":{\"type\":\"Error\",\"message\":\"querystring/offset must be >= 0\",\"stack\":\"Error: querystring/offset must be >= 0\\n    at defaultSchemaErrorFormatter (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/context.js:92:10)\\n    at wrapValidationError (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:446:17)\\n    at validate (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/validation.js:375:16)\\n    at preValidationCallback (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/handle-request.js:128:25)\\n    at next (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:236:9)\\n    at handleResolve (/home/ricardo/cvg-connect-desk/node_modules/.pnpm/fastify@5.12.4/node_modules/fastify/lib/hooks.js:253:7)\\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\",\"statusCode\":400,\"code\":\"FST_ERR_VALIDATION\",\"validation\":[{\"instancePath\":\"/offset\",\"schemaPath\":\"#/properties/offset/minimum\",\"keyword\":\"minimum\",\"params\":{\"comparison\":\">=\",\"limit\":0},\"message\":\"must be >= 0\"}],\"validationContext\":\"querystring\"},\"path\":\"/tasks?conversationId=8412c791-04a7-4141-a07b-bd32066551d5&offset=-1\",\"msg\":\"Erro de requisição\"}\n{\"level\":30,\"time\":1789447054018,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-13\",\"res\":{\"statusCode\":400},\"responseTime\":0.27333900000030553,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789447054019,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-14\",\"req\":{\"method\":\"POST\",\"url\":\"/tasks\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789447054024,\"pid\":2171274,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-14\",\"res\":{\"statusCode\":500},\"responseTime\":5.451418000000558,\"msg\":\"request completed\"}\nstdout | src/__tests__/sa-015-tasks-hardening.integration.test.ts > SA-015 — tarefas vinculadas e concorrência de estados (PG/Redis reais) > AC3 — paginação canônica e filtro contextual autorizado > DEFEITO SA-015-D4 — dueAt inválido deve ser rejeitado com 4xx (hoje 500)\n[SA-015][probe] d4-dueat-invalido-espera-4xx -> HTTP 500\n\n ✓ src/__tests__/sa-015-tasks-hardening.integration.test.ts (11 tests) 1719ms\n   ✓ SA-015 — tarefas vinculadas e concorrência de estados (PG/Redis reais) > AC2 — CAS por estado esperado, 409 previsível e repetição idempotente > concorrência real: CAS perdedor recebe 409 e não deixa efeito parcial (linha travada por outra transação)  315ms\n   ✓ SA-015 — tarefas vinculadas e concorrência de estados (PG/Redis reais) > AC3 — paginação canônica e filtro contextual autorizado > paginação é limitada: default 100, teto 200, piso 1, offset >= 0 e HTTP 400 fora da faixa  345ms\n\n Test Files  1 passed (1)\n      Tests  11 passed (11)\n   Start at  01:37:29\n   Duration  4.35s (transform 1.17s, setup 0ms, collect 2.39s, tests 1.72s, environment 0ms, prepare 68ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

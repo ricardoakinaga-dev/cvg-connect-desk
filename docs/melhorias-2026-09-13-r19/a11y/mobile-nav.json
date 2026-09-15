@@ -1,0 +1,14 @@
+{
+  "openState": {
+    "sidebarInert": false,
+    "focusInsideSidebar": true,
+    "focusDescriptor": "CVG Connect Desk — ir para Inbox",
+    "navOpen": true
+  },
+  "trap": [],
+  "closedState": {
+    "sidebarInert": true,
+    "navOpen": false,
+    "focusOnMenu": true
+  }
+}

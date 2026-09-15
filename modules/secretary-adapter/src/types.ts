@@ -1,6 +1,8 @@
 export interface SecretaryInvocationRequest {
   conversationId: string;
   messageId?: string;
+  /** Chave estável para retries/reconciliação no provider externo. */
+  invocationId?: string;
   action: 'classify' | 'respond' | 'handoff' | 'evaluate';
   context: {
     content: string;

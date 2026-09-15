@@ -1,6 +1,14 @@
 import { db, schema } from '@cvg/database';
-import { eq, isNull, and, asc, sql, not, exists, isNotNull } from 'drizzle-orm';
+import { eq, isNull, and, asc, sql, not, exists, isNotNull, inArray } from 'drizzle-orm';
+import { randomUUID } from 'node:crypto';
 import type { EventEnvelope } from './envelope';
+import {
+  PostgresOutboxLease,
+  type AckResult,
+  type LeaseToken,
+  type NackResult,
+  type OutboxLeasePort,
+} from './outbox-lease';
 
 export interface OutboxEvent {
   id: string;
@@ -144,17 +152,31 @@ export type ConsumerId = typeof CONSUMER_IDS[keyof typeof CONSUMER_IDS];
 
 export interface ConsumerAwareReaderOptions extends OutboxReaderOptions {
   consumerId: ConsumerId;
+  /** Porta de lease (C03); injetável para teste. Default: PostgresOutboxLease. */
+  lease?: OutboxLeasePort;
+  /**
+   * Catálogo de tipos consumidos (PROD-09/BK06). O claim filtra candidatos por
+   * esta lista; eventos fora do contrato não são reservados nem ACKados.
+   */
+  eventTypes?: readonly string[];
 }
+
+/** Lease default do claim (C03 §4 e rota HTTP). */
+export const DEFAULT_LEASE_SECONDS = 120;
 
 export class ConsumerAwareOutboxReader {
   private batchSize: number;
   private maxRetries: number;
   private consumerId: ConsumerId;
+  private lease: OutboxLeasePort;
+  private eventTypes?: readonly string[];
 
   constructor(options: ConsumerAwareReaderOptions) {
     this.batchSize = options.batchSize || 50;
     this.maxRetries = options.maxRetries || 3;
     this.consumerId = options.consumerId;
+    this.eventTypes = options.eventTypes;
+    this.lease = options.lease ?? new PostgresOutboxLease({ maxRetries: this.maxRetries });
   }
 
   /**
@@ -196,15 +218,18 @@ export class ConsumerAwareOutboxReader {
         )
     );
 
+    const pendingPredicate = this.eventTypes && this.eventTypes.length > 0
+      ? and(
+        not(hasSuccessfulAck),
+        not(hasPermanentFailure),
+        inArray(schema.outboxEvents.eventType, [...this.eventTypes]),
+      )
+      : and(not(hasSuccessfulAck), not(hasPermanentFailure));
+
     const results = await db
       .select()
       .from(schema.outboxEvents)
-      .where(
-        and(
-          not(hasSuccessfulAck),
-          not(hasPermanentFailure)
-        )
-      )
+      .where(pendingPredicate)
       .orderBy(asc(schema.outboxEvents.createdAt))
       .limit(this.batchSize);
 
@@ -214,13 +239,93 @@ export class ConsumerAwareOutboxReader {
   }
 
   /**
-   * Claim com semântica de lease (Phase 2 §5.7): GET aluga, ACK explícito confirma.
-   * Implementação atual: fetch sem ACK destrutivo. O lease distribuído via
-   * SELECT ... FOR UPDATE SKIP LOCKED chega na migration 0014; até lá o claim
-   * apenas evita a perda lógica (response perdido ≠ evento perdido).
+   * Claim atômico com lease (C03 D-C03-4): `FOR UPDATE SKIP LOCKED`, fencing
+   * por geração e `since` aplicado antes da reserva (MEDIUM-03). Consumidores
+   * do mesmo `consumerId` nunca recebem o mesmo evento simultaneamente.
    */
-  async claimPendingEvents(_opts?: { leaseOwner?: string; leaseSeconds?: number }): Promise<ConsumerOutboxEvent[]> {
-    return this.fetchPendingEvents();
+  async claim(input: {
+    owner: string;
+    leaseSeconds?: number;
+    limit?: number;
+    since?: Date;
+    eventTypes?: readonly string[];
+  }): Promise<Array<{ event: EventEnvelope; lease: LeaseToken }>> {
+    return this.lease.claim({
+      consumerId: this.consumerId,
+      owner: input.owner,
+      leaseSeconds: input.leaseSeconds ?? DEFAULT_LEASE_SECONDS,
+      limit: input.limit ?? this.batchSize,
+      since: input.since,
+      eventTypes: input.eventTypes ?? this.eventTypes,
+    });
+  }
+
+  /** Renewal condicionado a owner+geração; null quando o lease foi cercado. */
+  async renew(lease: LeaseToken, leaseSeconds: number): Promise<LeaseToken | null> {
+    return this.lease.renew(lease, leaseSeconds);
+  }
+
+  /** ACK cercado por owner+geração; `stale` não marca processado nem retry. */
+  async ack(input: { eventId: string; owner: string; generation: number }): Promise<AckResult> {
+    return this.lease.ack({ ...input, consumerId: this.consumerId });
+  }
+
+  /** NACK cercado; `dead-letter` esgota o retry do consumidor e grava DLQ. */
+  async nack(input: {
+    eventId: string;
+    owner: string;
+    generation: number;
+    error: string;
+    errorCode?: string;
+    permanent?: boolean;
+  }): Promise<NackResult> {
+    return this.lease.nack({
+      ...input,
+      consumerId: this.consumerId,
+    });
+  }
+
+  /**
+   * ACK do lease vigente deste consumidor sem exigir token do chamador
+   * (compatibilidade da rota HTTP que não ecoa owner/generation). A resolução
+   * do token é atômica: se um reclaim aconteceu antes da leitura, o ACK é do
+   * lease novo; se acontecer depois, o fencing da porta rejeita (`stale`).
+   */
+  async acknowledgeCurrentLease(eventId: string): Promise<AckResult> {
+    const [row] = await db
+      .select({
+        leaseOwner: schema.outboxConsumerAcks.leaseOwner,
+        generation: schema.outboxConsumerAcks.generation,
+      })
+      .from(schema.outboxConsumerAcks)
+      .where(
+        and(
+          eq(schema.outboxConsumerAcks.eventId, eventId),
+          eq(schema.outboxConsumerAcks.consumerId, this.consumerId),
+        ),
+      )
+      .limit(1);
+    if (!row || !row.leaseOwner) return 'not_found';
+    return this.ack({ eventId, owner: row.leaseOwner, generation: row.generation });
+  }
+
+  /**
+   * Alias histórico de claim (A06). Antes era um fetch sem reserva; agora
+   * delega para `claim()` e devolve `{ event, lease }`, garantindo reserva
+   * atômica por (eventId, consumerId). Mantido para consumidores existentes.
+   */
+  async claimPendingEvents(opts?: {
+    leaseOwner?: string;
+    leaseSeconds?: number;
+    limit?: number;
+    since?: Date;
+  }): Promise<Array<{ event: EventEnvelope; lease: LeaseToken }>> {
+    return this.claim({
+      owner: opts?.leaseOwner ?? `${this.consumerId}:${randomUUID().slice(0, 8)}`,
+      leaseSeconds: opts?.leaseSeconds ?? DEFAULT_LEASE_SECONDS,
+      limit: opts?.limit ?? this.batchSize,
+      since: opts?.since,
+    });
   }
 
   private async populateConsumerMeta(events: ConsumerOutboxEvent[]): Promise<void> {
@@ -261,10 +366,24 @@ export class ConsumerAwareOutboxReader {
 
   /**
    * Acknowledge successful processing.
-   * Upserts the consumer ack so a later success can overwrite a prior failure state.
-   * Sets processedAt and clears retry metadata for this consumer.
+   *
+   * Com token (`{owner, generation}`) aplica o ACK cercado do C03: só conclui
+   * se o lease vigente é do owner e da geração informados; token antigo retorna
+   * `stale` sem marcar processado e sem incrementar retry.
+   *
+   * Sem token mantém a semântica legada (upsert com processedAt), necessária
+   * para consumidores/rotinas anteriores ao lease.
    */
-  async acknowledge(eventId: string): Promise<void> {
+  async acknowledge(eventId: string): Promise<void>;
+  async acknowledge(eventId: string, lease: { owner: string; generation: number }): Promise<AckResult>;
+  async acknowledge(
+    eventId: string,
+    lease?: { owner: string; generation: number },
+  ): Promise<void | AckResult> {
+    if (lease) {
+      return this.ack({ eventId, owner: lease.owner, generation: lease.generation });
+    }
+
     await db
       .insert(schema.outboxConsumerAcks)
       .values({

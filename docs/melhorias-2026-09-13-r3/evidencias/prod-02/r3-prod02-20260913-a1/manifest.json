@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-02",
+  "runId": "r3-prod02-20260913-a1",
+  "attempt": 1,
+  "command": "node --test scripts/production/prod-02.test.mjs",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T23:40:00.084Z",
+  "finishedAt": "2026-09-13T23:40:04.731Z",
+  "durationMs": 4647,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "1bf7b0478dce47d09fee2c229b2ac647b6f79de0a49a9ddac1176e667f8b8684",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod02-20260913-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-13T23:40:00.084Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-02.test.log",
+      "sha256": "afc2de5cf1d8a5a21291a27f940e46d02c5ff02bb20a9659eea02f2bafa286f7"
+    }
+  ],
+  "limitations": [
+    "Fixture adversarial sintética; não substitui infraestrutura remota/terceiros."
+  ]
+}

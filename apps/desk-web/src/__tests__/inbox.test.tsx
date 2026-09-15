@@ -45,6 +45,9 @@ vi.mock('../lib/api', () => ({
   sectorApi: {
     list: mocks.sectorListMock,
   },
+  taskApi: { list: vi.fn().mockResolvedValue([]) },
+  alertApi: { list: vi.fn().mockResolvedValue([]) },
+  noteApi: { list: vi.fn().mockResolvedValue([]) },
 }));
 
 Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {

@@ -1,0 +1,4 @@
+FINAL=TRIPLE_AAA_CERTIFIED
+tag/signature check presente no gate: false
+final observado: TRIPLE_AAA_CERTIFIED
+CERTIFIED emitido só por status local: true

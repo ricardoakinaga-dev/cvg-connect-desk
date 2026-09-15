@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-09-14T03:22:10.869Z",
+  "runId": "r3-prod13-20260914-a2",
+  "workerIndex": 33,
+  "database": "cvg_aaa_r3_prod13_20260914_a2_w33",
+  "postgresPort": 59732,
+  "cases": [
+    {
+      "case": "AC1-contador-duravel",
+      "conversationId": "b96b37ad-2e24-4968-a590-1a377f969c64",
+      "admitted": 4,
+      "otherConversation": 0,
+      "retryConsumesBudgetAgain": false
+    },
+    {
+      "case": "AC1-limite-exato",
+      "limit": 2,
+      "admitted": 2,
+      "deniedStatus": "denied",
+      "deniedErrorCode": "AI_BUDGET_EXHAUSTED",
+      "retryRejected": true
+    },
+    {
+      "case": "AC1-concorrencia-limite-1",
+      "admitted": 1,
+      "denied": 1,
+      "exactlyOneWinner": true
+    },
+    {
+      "case": "AC1-restart-nao-reseta",
+      "persistedAdmitted": 1,
+      "newAttemptDenied": true
+    },
+    {
+      "case": "AC1-worker-denied",
+      "status": "denied",
+      "deniedRowStatus": "denied",
+      "secretaryCalls": 0,
+      "outboundReplies": 0
+    },
+    {
+      "case": "AC1-policy-duravel",
+      "priorPersisted": 2,
+      "limit": 2,
+      "deniedBeforeExternalCall": true,
+      "allowedWithLimit3": true,
+      "secretaryCalls": 1
+    },
+    {
+      "case": "AC3-budget-indisponivel-fail-closed",
+      "decision": "deny",
+      "statusCode": 403,
+      "secretaryCalls": 0
+    },
+    {
+      "case": "AC3-timeout-e-auditoria-sem-pii",
+      "errorCode": "SECRETARY_TIMEOUT",
+      "secretaryCalls": 2,
+      "decisionHasContent": false,
+      "decisionHasPhone": false
+    },
+    {
+      "case": "AC2-deny-default",
+      "toolsDenied": 4,
+      "decideDenied": true
+    },
+    {
+      "case": "AC4-hash-e-sanitizacao",
+      "phoneHashesDiffer": true,
+      "keyOrderStable": true,
+      "scopeBound": true,
+      "nestedPiiRedacted": true
+    },
+    {
+      "case": "AC2-AC4-aprovacao",
+      "differentPayloadDenied": true,
+      "singleUseEnforced": true,
+      "doubleDecisionNull": true,
+      "expiredDenied": true,
+      "unauthorizedReviewerDenied": true
+    }
+  ]
+}

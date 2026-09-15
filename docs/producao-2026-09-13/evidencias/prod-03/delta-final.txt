@@ -1,0 +1,10 @@
+# Delta final — 2026-09-13T10:53:43-03:00
+candidate HEAD: 754f9badac46278e77d21de91c58eedb15e80581
+dc47c806d7f4813db7830018cc190a65fb76d8bd85b626a6a5be04d3f514e688  scripts/triple-aaa-verify.mjs
+eaf66abf5a4725136671d0703079ec14ef33113abdbecf4bb84988b7e6d8be53  scripts/production/evidence-gate.mjs
+a7f39057a2dd8212bce42badf7139566ad0feea069b6e129e9e7364e70b4e2f7  scripts/production/prod-02.test.mjs
+f6c4a47032ab193e591122caaf70f76bbc8475080c7cbb117519160b5a016931  scripts/production/prod-03.test.mjs
+8d6ce30b20346dcf8269c51b898f14a370242748c5493cbd1b462f18683dfb5a  .github/scripts/certification-aggregator.mjs
+5e9353fc7368b680c73d9f9a9aa90342589201ccdde478f8b7557cf710f394e8  .github/scripts/certification-aggregator.test.mjs
+b486d8077666f688744577a8fd94a6b1f1e7cf72741689475ed63caa93692e1b  .github/workflows/triple-aaa-gate.yml
+8b40f8274213fb89a3b791c4db7448f203befcf34143daf8ae3696d428a53ec9  .github/workflows/triple-aaa-certification.yml

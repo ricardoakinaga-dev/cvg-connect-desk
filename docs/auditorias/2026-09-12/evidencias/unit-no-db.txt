@@ -1,0 +1,43 @@
+Scope: 4 of 34 workspace projects
+packages/shared test$ vitest run --passWithNoTests
+packages/messaging-contracts test$ vitest run --passWithNoTests
+packages/shared test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/shared
+packages/messaging-contracts test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/messaging-contracts
+packages/shared test:  ✓ src/__tests__/webhook-security-stats.test.ts (1 test) 4ms
+packages/shared test:  ✓ src/__tests__/result.test.ts (5 tests) 4ms
+packages/shared test:  ✓ src/__tests__/error.test.ts (6 tests) 4ms
+packages/shared test:  ✓ src/__tests__/pagination.test.ts (8 tests) 4ms
+packages/shared test:  ✓ src/__tests__/observability.test.ts (8 tests) 7ms
+packages/shared test:  ✓ src/__tests__/media-policy.test.ts (6 tests) 44ms
+packages/messaging-contracts test:  ✓ src/__tests__/contracts.test.ts (7 tests) 9ms
+packages/messaging-contracts test:  Test Files  1 passed (1)
+packages/messaging-contracts test:       Tests  7 passed (7)
+packages/messaging-contracts test:    Start at  17:02:30
+packages/messaging-contracts test:    Duration  661ms (transform 54ms, setup 0ms, collect 101ms, tests 9ms, environment 0ms, prepare 144ms)
+packages/shared test:  ✓ src/__tests__/media-security-final.test.ts (6 tests) 74ms
+packages/messaging-contracts test: Done
+packages/tracing test$ vitest run --passWithNoTests
+packages/tracing test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/tracing
+packages/shared test:  ✓ src/__tests__/app-error.test.ts (9 tests) 6ms
+packages/shared test:  ✓ src/__tests__/webhook-guard.test.ts (12 tests) 72ms
+packages/tracing test:  ✓ src/__tests__/tracing.test.ts (7 tests) 13ms
+packages/tracing test:  Test Files  1 passed (1)
+packages/tracing test:       Tests  7 passed (7)
+packages/tracing test:    Start at  17:02:31
+packages/tracing test:    Duration  427ms (transform 50ms, setup 0ms, collect 112ms, tests 13ms, environment 0ms, prepare 92ms)
+packages/tracing test: Done
+packages/shared test:  ✓ src/__tests__/retry-policy.test.ts (13 tests) 1016ms
+packages/shared test:    ✓ withRetry > honors Retry-After header when provided  1001ms
+packages/shared test:  Test Files  10 passed (10)
+packages/shared test:       Tests  74 passed (74)
+packages/shared test:    Start at  17:02:30
+packages/shared test:    Duration  1.65s (transform 669ms, setup 0ms, collect 2.17s, tests 1.24s, environment 4ms, prepare 1.33s)
+packages/shared test: Done
+packages/auth test$ vitest run --passWithNoTests
+packages/auth test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/auth
+packages/auth test:  ✓ src/__tests__/authorize.test.ts (9 tests) 12ms
+packages/auth test:  Test Files  1 passed (1)
+packages/auth test:       Tests  9 passed (9)
+packages/auth test:    Start at  17:02:32
+packages/auth test:    Duration  857ms (transform 83ms, setup 0ms, collect 471ms, tests 12ms, environment 0ms, prepare 79ms)
+packages/auth test: Done

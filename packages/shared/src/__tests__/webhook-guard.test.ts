@@ -288,7 +288,7 @@ describe('WebhookGuard', () => {
     expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'timestamp_too_future' }));
   });
 
-  it('rejects duplicate event ID (anti-replay)', async () => {
+  it('returns a stable 2xx ACK for a completed event ID replay', async () => {
     process.env.NODE_ENV = 'production';
     process.env.WEBHOOK_SECRET = 'test-secret';
 
@@ -297,6 +297,8 @@ describe('WebhookGuard', () => {
     const timestamp = Math.floor(Date.now() / 1000);
     const signature = await signPayload(rawBody, 'test-secret', timestamp);
     const eventId = `evt-dup-${Date.now()}`;
+    const store = new InMemoryWebhookReplayStore();
+    setDefaultWebhookReplayStore(store);
 
     const { createWebhookGuard } = await import('../webhook-guard');
     const guard = createWebhookGuard();
@@ -311,7 +313,9 @@ describe('WebhookGuard', () => {
       rawBody,
       log: freshLog(),
     };
-    await guard(firstReq as any, freshReply() as any);
+    await guard(firstReq as never, freshReply() as never);
+    // Negócio concluiu: sem `complete`, o retry seria legítimo.
+    expect(await store.complete(eventId)).toBe(true);
 
     const secondReq = {
       headers: {
@@ -324,10 +328,208 @@ describe('WebhookGuard', () => {
       log: freshLog(),
     };
     const secondReply = freshReply();
-    await guard(secondReq as any, secondReply as any);
+    await guard(secondReq as never, secondReply as never);
 
-    expect(secondReply.status).toHaveBeenCalledWith(409);
-    expect(secondReply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'duplicate_event_id' }));
+    expect(secondReply.status).toHaveBeenCalledWith(200);
+    expect(secondReply.send).toHaveBeenCalledWith({
+      success: true,
+      deduplicated: true,
+      eventId,
+    });
+    expect(getWebhookSecurityStats()).toMatchObject({
+      allowed: 3,
+      denied: 0,
+      byReason: { duplicate_event_id: 1 },
+    });
+  });
+
+  it('accepts a failed retry with a renewed timestamp and signature', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'renewed-signature' };
+    const rawBody = JSON.stringify(body);
+    const firstTimestamp = Math.floor(Date.now() / 1000) - 1;
+    const secondTimestamp = firstTimestamp + 1;
+    const eventId = `evt-renewed-${Date.now()}`;
+    const store = new InMemoryWebhookReplayStore();
+    setDefaultWebhookReplayStore(store);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+    const firstHeaders = {
+      'x-webhook-signature': await signPayload(rawBody, 'test-secret', firstTimestamp),
+      'x-webhook-timestamp': String(firstTimestamp),
+      'x-webhook-event-id': eventId,
+    };
+
+    await guard({ headers: firstHeaders, body, rawBody, log: freshLog() } as never, freshReply() as never);
+    await store.fail(eventId);
+
+    const retryReply = freshReply();
+    await guard(
+      {
+        headers: {
+          'x-webhook-signature': await signPayload(rawBody, 'test-secret', secondTimestamp),
+          'x-webhook-timestamp': String(secondTimestamp),
+          'x-webhook-event-id': eventId,
+        },
+        body,
+        rawBody,
+        log: freshLog(),
+      } as never,
+      retryReply as never,
+    );
+
+    expect(retryReply.status).not.toHaveBeenCalled();
+  });
+
+  it('allows legitimate retry after business failure (same event ID and payload)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'retry' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+    const eventId = `evt-retry-${Date.now()}`;
+    const store = new InMemoryWebhookReplayStore();
+    setDefaultWebhookReplayStore(store);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+    const headers = {
+      'x-webhook-signature': signature,
+      'x-webhook-timestamp': String(timestamp),
+      'x-webhook-event-id': eventId,
+    };
+
+    await guard({ headers, body, rawBody, log: freshLog() } as never, freshReply() as never);
+    await store.fail(eventId);
+
+    const retryReply = freshReply();
+    await guard({ headers, body, rawBody, log: freshLog() } as never, retryReply as never);
+
+    expect(retryReply.status).not.toHaveBeenCalled();
+  });
+
+  it('rejects same event ID with different payload (mismatch)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const firstBody = { test: 'payload-a' };
+    const secondBody = { test: 'payload-b' };
+    const timestamp = Math.floor(Date.now() / 1000);
+    const eventId = `evt-mismatch-${Date.now()}`;
+    setDefaultWebhookReplayStore(new InMemoryWebhookReplayStore());
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+
+    const firstRaw = JSON.stringify(firstBody);
+    await guard(
+      {
+        headers: {
+          'x-webhook-signature': await signPayload(firstRaw, 'test-secret', timestamp),
+          'x-webhook-timestamp': String(timestamp),
+          'x-webhook-event-id': eventId,
+        },
+        body: firstBody,
+        rawBody: firstRaw,
+        log: freshLog(),
+      } as never,
+      freshReply() as never,
+    );
+
+    const secondRaw = JSON.stringify(secondBody);
+    const mismatchReply = freshReply();
+    await guard(
+      {
+        headers: {
+          'x-webhook-signature': await signPayload(secondRaw, 'test-secret', timestamp),
+          'x-webhook-timestamp': String(timestamp),
+          'x-webhook-event-id': eventId,
+        },
+        body: secondBody,
+        rawBody: secondRaw,
+        log: freshLog(),
+      } as never,
+      mismatchReply as never,
+    );
+
+    expect(mismatchReply.status).toHaveBeenCalledWith(409);
+    expect(mismatchReply.send).toHaveBeenCalledWith(
+      expect.objectContaining({ reason: 'event_payload_mismatch' }),
+    );
+  });
+
+  it('rejects a delivery for an event still in progress (concurrent claim)', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+
+    const body = { test: 'in-progress' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+    const eventId = `evt-in-progress-${Date.now()}`;
+    setDefaultWebhookReplayStore(new InMemoryWebhookReplayStore());
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+    const headers = {
+      'x-webhook-signature': signature,
+      'x-webhook-timestamp': String(timestamp),
+      'x-webhook-event-id': eventId,
+    };
+
+    await guard({ headers, body, rawBody, log: freshLog() } as never, freshReply() as never);
+
+    const concurrentReply = freshReply();
+    await guard({ headers, body, rawBody, log: freshLog() } as never, concurrentReply as never);
+
+    expect(concurrentReply.status).toHaveBeenCalledWith(409);
+    expect(concurrentReply.send).toHaveBeenCalledWith(
+      expect.objectContaining({ reason: 'event_in_progress' }),
+    );
+  });
+
+  it('propagates transient replay store errors instead of reporting duplicate', async () => {
+    process.env.NODE_ENV = 'production';
+    process.env.WEBHOOK_SECRET = 'test-secret';
+    setDefaultWebhookReplayStore({
+      has: async () => false,
+      claim: async () => {
+        throw new Error('connection refused');
+      },
+      complete: async () => false,
+      fail: async () => undefined,
+    });
+
+    const body = { test: 'db-down' };
+    const rawBody = JSON.stringify(body);
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = await signPayload(rawBody, 'test-secret', timestamp);
+
+    const { createWebhookGuard } = await import('../webhook-guard');
+    const guard = createWebhookGuard();
+    const reply = freshReply();
+
+    await expect(
+      guard(
+        {
+          headers: {
+            'x-webhook-signature': signature,
+            'x-webhook-timestamp': String(timestamp),
+            'x-webhook-event-id': `evt-db-down-${Date.now()}`,
+          },
+          body,
+          rawBody,
+          log: freshLog(),
+        } as never,
+        reply as never,
+      ),
+    ).rejects.toThrow('connection refused');
+    expect(reply.status).not.toHaveBeenCalled();
   });
 
   it('rejects production request without timestamp', async () => {
@@ -353,7 +555,7 @@ describe('WebhookGuard', () => {
     };
     const reply = freshReply();
 
-    await guard(request as any, reply as any);
+    await guard(request as never, reply as never);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'missing_timestamp' }));
@@ -382,7 +584,7 @@ describe('WebhookGuard', () => {
     };
     const reply = freshReply();
 
-    await guard(request as any, reply as any);
+    await guard(request as never, reply as never);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'missing_event_id' }));
@@ -407,7 +609,7 @@ describe('WebhookGuard', () => {
     };
     const reply = freshReply();
 
-    await guard(request as any, reply as any);
+    await guard(request as never, reply as never);
 
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith(expect.objectContaining({ reason: 'invalid_signature' }));

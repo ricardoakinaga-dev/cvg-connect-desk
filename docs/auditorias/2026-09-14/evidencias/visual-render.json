@@ -1,0 +1,1039 @@
+{
+  "baseUrl": "http://127.0.0.1:5199",
+  "outputDir": "/tmp/cvg-audit-20260914-visual",
+  "results": [
+    {
+      "target": "login-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "activeAnimations": 0
+    },
+    {
+      "target": "login-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "activeAnimations": 0
+    },
+    {
+      "target": "login-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "activeAnimations": 0
+    },
+    {
+      "target": "login-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "activeAnimations": 0
+    },
+    {
+      "target": "login-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "activeAnimations": 0
+    },
+    {
+      "target": "inbox-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "navVisible": false,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "inbox-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "navVisible": false,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "inbox-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "navVisible": false,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "inbox-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "navVisible": true,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "inbox-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "navVisible": true,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "dashboard-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 2130
+    },
+    {
+      "target": "dashboard-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 2130
+    },
+    {
+      "target": "dashboard-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1532
+    },
+    {
+      "target": "dashboard-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 1417
+    },
+    {
+      "target": "dashboard-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 1043
+    },
+    {
+      "target": "tasks-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 1447,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58
+      }
+    },
+    {
+      "target": "tasks-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 1395,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58
+      }
+    },
+    {
+      "target": "tasks-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58
+      }
+    },
+    {
+      "target": "tasks-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 822,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58
+      }
+    },
+    {
+      "target": "tasks-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58
+      }
+    },
+    {
+      "target": "alerts-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 1240,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58,
+        "alertTime": 7.58,
+        "acknowledgedTime": 7.58
+      }
+    },
+    {
+      "target": "alerts-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 1240,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58,
+        "alertTime": 7.58,
+        "acknowledgedTime": 7.58
+      }
+    },
+    {
+      "target": "alerts-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58,
+        "alertTime": 7.58,
+        "acknowledgedTime": 7.58
+      }
+    },
+    {
+      "target": "alerts-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 979,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58,
+        "alertTime": 7.58,
+        "acknowledgedTime": 7.58
+      }
+    },
+    {
+      "target": "alerts-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "filterLabel": 7.58,
+        "alertTime": 7.58,
+        "acknowledgedTime": 7.58
+      }
+    },
+    {
+      "target": "notes-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "notes-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "notes-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "notes-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "notes-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "kanban-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "cardTime": 7.58
+      }
+    },
+    {
+      "target": "kanban-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "cardTime": 7.58
+      }
+    },
+    {
+      "target": "kanban-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "cardTime": 7.58
+      }
+    },
+    {
+      "target": "kanban-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "cardTime": 7.58
+      }
+    },
+    {
+      "target": "kanban-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": {
+        "cardTime": 7.58
+      }
+    },
+    {
+      "target": "sectors-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 979,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "sectors-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 979,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "sectors-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "sectors-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "sectors-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "labels-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "labels-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "labels-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "labels-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "labels-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contact-groups-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contact-groups-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contact-groups-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contact-groups-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contact-groups-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "admin-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "admin-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "admin-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "admin-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "admin-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "audit-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "audit-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "audit-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "audit-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "audit-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "settings-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 1686,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "settings-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 1686,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "settings-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1220,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "settings-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 1096,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "settings-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 1126,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contacts-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contacts-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contacts-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contacts-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "contacts-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "tutors-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "tutors-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "tutors-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "tutors-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "tutors-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "patients-mobile-375",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "scrollHeight": 812,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "patients-mobile",
+      "innerWidth": 390,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "patients-tablet",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "scrollHeight": 1024,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "patients-tablet-landscape",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "scrollHeight": 768,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "patients-desktop",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "unnamedControls": 0,
+      "hasTouchMoveAlternative": true,
+      "singlePanelSelection": true,
+      "adminTabsVisible": true,
+      "adminTableScrollable": true,
+      "contrastChecks": null
+    },
+    {
+      "target": "mobile-navigation-keyboard",
+      "drawerOpen": true,
+      "drawerFocusInside": true,
+      "drawerClosedByEscape": true,
+      "focusRestored": true,
+      "keyboardSequence": [
+        {
+          "tag": "BUTTON",
+          "name": "Iniciar nova conversa"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Todos 1"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Recepção 1"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Administrativo"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Cirurgia"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "Clínica"
+        },
+        {
+          "tag": "INPUT",
+          "name": "Pesquisar conversas"
+        },
+        {
+          "tag": "SELECT",
+          "name": "Filtrar status"
+        },
+        {
+          "tag": "BUTTON",
+          "name": "RRicardo Akinaga16minPode esclarecer um pouco ma"
+        },
+        {
+          "tag": "BODY",
+          "name": "Ir para o conteúdoInboxReconectandoCVG ConnectDe"
+        }
+      ],
+      "unnamedInSequence": 0
+    },
+    {
+      "target": "admin-dialog-keyboard",
+      "adminDialogInitialFocus": true,
+      "adminDialogBackgroundInert": true,
+      "adminDialogTrapReverse": true,
+      "adminDialogClosedByEscape": true,
+      "adminDialogFocusRestored": true
+    },
+    {
+      "target": "tutors-dialog-keyboard",
+      "initialFocus": true,
+      "backgroundInert": true,
+      "reverseTrap": true,
+      "closedByEscape": true,
+      "restored": true
+    },
+    {
+      "target": "patients-dialog-keyboard",
+      "initialFocus": true,
+      "backgroundInert": true,
+      "reverseTrap": true,
+      "closedByEscape": true,
+      "restored": true
+    },
+    {
+      "target": "contacts-dialog-keyboard",
+      "initialFocus": true,
+      "backgroundInert": true,
+      "reverseTrap": true,
+      "closedByEscape": true,
+      "restored": true
+    },
+    {
+      "target": "layout-intermediate-900",
+      "innerWidth": 900,
+      "scrollWidth": 900,
+      "sidebarVisible": true,
+      "sidebarInert": false,
+      "sidebarAriaHidden": null,
+      "mobileMenuVisible": false
+    },
+    {
+      "target": "inbox-200pct-reflow",
+      "cssViewportWidth": 640,
+      "devicePixelRatio": 2,
+      "scrollWidth": 640,
+      "clippedSectorChips": 0
+    },
+    {
+      "target": "login-performance-mobile-production",
+      "lcpMs": 288,
+      "cls": 0,
+      "transferBytes": 4086050
+    },
+    {
+      "target": "login-reduced-motion",
+      "activeAnimations": 0
+    }
+  ]
+}

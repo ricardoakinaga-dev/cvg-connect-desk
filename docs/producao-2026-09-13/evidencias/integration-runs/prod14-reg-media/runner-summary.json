@@ -1,0 +1,30 @@
+{
+  "runId": "prod14-reg-media",
+  "workerIndex": 24,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_prod14_reg_media_w24",
+  "redisUrl": "redis://127.0.0.1:58942",
+  "startedAt": "2026-09-13T16:25:06.517Z",
+  "command": "pnpm --filter @cvg/media exec vitest run",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/media\n\n ↓ src/__tests__/minio-real.test.ts (7 tests | 7 skipped)\n ✓ src/__tests__/s3-storage.test.ts (8 tests) 11ms\n ↓ src/__tests__/aaa-10-media-boundary.test.ts (8 tests | 8 skipped)\n ✓ src/__tests__/media-pipeline.test.ts (12 tests) 59ms\n ✓ src/__tests__/clamav-real.test.ts (12 tests | 6 skipped) 1022ms\n   ✓ ClamAV scanner (protocolo) > timeout → SCAN_FAILED (lenha sem reply)  1002ms\n\n Test Files  3 passed | 2 skipped (5)\n      Tests  26 passed | 21 skipped (47)\n   Start at  13:25:04\n   Duration  1.43s (transform 316ms, setup 0ms, collect 1.86s, tests 1.09s, environment 1ms, prepare 541ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

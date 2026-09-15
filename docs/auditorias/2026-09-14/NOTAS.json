@@ -1,0 +1,316 @@
+{
+  "backend": [
+    [
+      "Arquitetura e API",
+      79,
+      "API registra os módulos efetivos; controllers antigos ainda concentram regras e persistência.",
+      "apps/desk-api/src/app.ts:656",
+      "Alta"
+    ],
+    [
+      "Autenticação e sessões",
+      89,
+      "Sessões opacas, hash, expiração/inatividade, rotação e validação de login. Não exigir JWT como sinônimo de segurança.",
+      "packages/auth/src/session-policy.ts",
+      "Alta"
+    ],
+    [
+      "RBAC e autorização por recurso",
+      84,
+      "Permissões do banco, ação + recurso/setor e negação por ausência de vínculo; agregados globais precisam de regra explícita.",
+      "packages/auth/src/resource-authz.ts:119",
+      "Alta"
+    ],
+    [
+      "Administração/IAM",
+      57,
+      "CRUD de usuários, papéis, filas/times; hash exposto nas respostas e alterações parcialmente transacionais.",
+      "modules/admin/src/presentation/http/admin.controller.ts:64",
+      "Alta"
+    ],
+    [
+      "Chat inbound/outbound",
+      89,
+      "Núcleo transacional com idempotência, locks, outbox e reconciliação; caminhos alternativos não têm as mesmas garantias.",
+      "modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts:131",
+      "Alta"
+    ],
+    [
+      "Contatos",
+      69,
+      "CRUD/busca/detalhe e início de conversa; startConversation separa conversa e histórico sem transação/evento.",
+      "modules/contacts/src/application/use-cases/index.ts:43",
+      "Alta"
+    ],
+    [
+      "Kanban — comportamento backend",
+      59,
+      "Board e movimento com autorização; reabertura mantém conversa inativa e movimento faz escritas independentes.",
+      "modules/kanban/src/presentation/http/kanban.controller.ts:220",
+      "Alta"
+    ],
+    [
+      "Tarefas — domínio",
+      87,
+      "Criação e transições com vínculo, histórico, controle concorrente, auditoria e outbox.",
+      "modules/tasks/src/application/use-cases/update-task-status.use-case.ts:37",
+      "Média-alta"
+    ],
+    [
+      "Notas — domínio",
+      86,
+      "Autoria vem da sessão; referências e persistência com auditoria/outbox transacionais.",
+      "modules/notes/src/application/use-cases/create-note.use-case.ts:44",
+      "Média-alta"
+    ],
+    [
+      "Alertas — domínio",
+      85,
+      "Lifecycle de criação/reconhecimento/resolução; histórico anterior pode ficar desatualizado numa corrida ack/resolve.",
+      "modules/alerts/src/application/use-cases/resolve-alert.use-case.ts:68",
+      "Média-alta"
+    ],
+    [
+      "Transferências",
+      88,
+      "Criação, aceite e rejeição com transações, trilha e controle de concorrência.",
+      "modules/transfers/src/application/use-cases/index.ts:87",
+      "Média-alta"
+    ],
+    [
+      "Setores, etiquetas e grupos — domínio",
+      77,
+      "Rotas, casos de uso e repositórios reais; inspeção amostral de operações, sem validar toda combinação de membership.",
+      "modules/contact-groups/src/application/use-cases/index.ts",
+      "Média"
+    ],
+    [
+      "Tutores e pacientes — domínio",
+      80,
+      "CRUD com validação e RBAC; paciente conserva tutorId singular, enquanto o alvo documental prevê N:N.",
+      "packages/database/src/schema.ts:41",
+      "Média"
+    ],
+    [
+      "Dashboard/KPIs — domínio",
+      76,
+      "Consultas reais de fluxo/aging/handoff; validação de datas e agrupamento irregular; escopo global exige decisão.",
+      "modules/dashboard/src/presentation/http/dashboard.controller.ts:90",
+      "Alta"
+    ],
+    [
+      "Auditoria de negócio",
+      76,
+      "Persistência e trilha no núcleo recente; ausente ou posterior ao commit em caminhos antigos de admin/contatos/Kanban.",
+      "modules/audit/src/application/use-cases/index.ts:3",
+      "Alta"
+    ],
+    [
+      "Banco, integridade e migrações",
+      86,
+      "Schema amplo, FKs/índices e migração fresca executada; upgrade e todos invariantes não foram exercitados nesta rodada.",
+      "packages/database/src/schema.ts:478",
+      "Média-alta"
+    ],
+    [
+      "Eventos, outbox e DLQ",
+      90,
+      "Claims por consumidor, lease/fencing, retry e DLQ persistente; suíte com PG/Redis passou, sem prova integral de crash físico.",
+      "packages/events/src/outbox-lease.ts:5",
+      "Média-alta"
+    ],
+    [
+      "Worker",
+      88,
+      "Contrato de eventos, efeito antes de ACK, classificação de falhas, retry e DLQ; não é prova de operação prolongada.",
+      "apps/message-worker/src/processor.ts:75",
+      "Alta"
+    ],
+    [
+      "Realtime — implementação",
+      88,
+      "Auth por mensagem, autorização por entrega, revalidação e fanout; boot nativo passou. Falha de configuração Compose é pontuada em operação.",
+      "apps/realtime-service/src/authorization.ts:75",
+      "Alta"
+    ],
+    [
+      "Gateway e compatibilidade de canal",
+      86,
+      "Adapter com timeout, aceite ambíguo e retry condicionado à idempotência; integração com provedor real não foi executada.",
+      "modules/gateway-adapter/src/infrastructure/gateway-service.ts:60",
+      "Média-alta"
+    ],
+    [
+      "Secretary e controles de IA",
+      84,
+      "Invocação persistida, handoff, policy/budget e aprovação; ferramentas/provedor real e política operacional ainda não certificados.",
+      "modules/secretary-adapter/src/application/use-cases/invoke-secretary.use-case.ts:54",
+      "Média"
+    ],
+    [
+      "Privacidade e solicitações de titulares",
+      83,
+      "Exportação por escopo e operação retomável; rota legada já checa escopo. Políticas, resíduos/backup e eliminação real exigem validação própria.",
+      "modules/privacy/src/application/erasure-operation.ts:350",
+      "Média"
+    ],
+    [
+      "Mídia privada e quarentena",
+      81,
+      "Storage/scanner, CLEAN/INFECTED e retomada implementados; 26 testes passaram e 21 específicos foram ignorados. MinIO/ClamAV reais não validados aqui.",
+      "packages/media/src/index.ts:125",
+      "Média"
+    ]
+  ],
+  "frontend": [
+    [
+      "Login",
+      88,
+      "Identidade, legibilidade e ação principal claras."
+    ],
+    [
+      "Inbox",
+      80,
+      "Master/detail e ações implementados; atalhos perdem contexto e painel não mostra pendências inline."
+    ],
+    [
+      "Dashboard",
+      84,
+      "Métricas e estados parciais explícitos; percurso móvel longo."
+    ],
+    [
+      "Tarefas",
+      78,
+      "Ações/erros claros; contexto descartado e conteúdo útil abaixo de muitos resumos."
+    ],
+    [
+      "Alertas",
+      77,
+      "Severidade e ações identificadas; alerta crítico deslocado no celular."
+    ],
+    [
+      "Notas",
+      72,
+      "Estados claros; exige ID manual e descarta contexto da conversa."
+    ],
+    [
+      "Kanban — superfície",
+      84,
+      "Rolagem contida e alternativa de movimento por teclado/toque; nota não valida persistência do movimento."
+    ],
+    [
+      "Contatos",
+      85,
+      "Lista/detalhe móvel e início de atendimento visíveis."
+    ],
+    [
+      "Tutores",
+      84,
+      "Cadastro e vínculos apresentados de forma consistente."
+    ],
+    [
+      "Pacientes",
+      84,
+      "Vínculo com tutor claro; modelo N:N continua pendência do domínio."
+    ],
+    [
+      "Setores",
+      84,
+      "Composição, ações e status coerentes."
+    ],
+    [
+      "Etiquetas/Labels",
+      82,
+      "Estado vazio útil; vocabulário inconsistente."
+    ],
+    [
+      "Grupos de contatos",
+      83,
+      "Lista/detalhe móvel funcional; apresentação de telefone pouco refinada."
+    ],
+    [
+      "Admin — superfície",
+      83,
+      "Tabela orienta rolagem e diálogos passaram teclado; não neutraliza exposição de dados na API."
+    ],
+    [
+      "Audit — superfície",
+      79,
+      "Busca exige códigos técnicos; estados vazios claros."
+    ],
+    [
+      "Configurações/perfil",
+      82,
+      "Perfil e segurança legíveis; excesso de detalhes internos."
+    ]
+  ],
+  "operacao": [
+    [
+      "CI e gates de qualidade",
+      72,
+      "Checkout por SHA, lockfile e agregação implementados; 51 testes do agregador passaram. Falta evidência integral de release.",
+      ".github/scripts/certification-aggregator.mjs:36"
+    ],
+    [
+      "Docker e implantação",
+      50,
+      "Hardening de containers existe, mas realtime não recebe DATABASE_URL no Compose de produção.",
+      "docker-compose.yml:232"
+    ],
+    [
+      "Segurança operacional e cadeia de fornecimento",
+      62,
+      "Scans/SBOM declarados; scan de container cobre apenas API e não comprova identidade de todas imagens entregues.",
+      ".github/workflows/security.yml:49"
+    ],
+    [
+      "Observabilidade",
+      49,
+      "Métricas autenticadas e tracing existem; não há conjunto provisionável completo de dashboards/regras de alerta.",
+      "infra/prometheus/prometheus.yml:1"
+    ],
+    [
+      "Testes e cobertura contratual",
+      71,
+      "1209 testes passaram com banco isolado; 21 skips e várias suites excluídas pelo comando. Coverage global não é gate implementado.",
+      ".github/scripts/certification-aggregator.mjs:45"
+    ],
+    [
+      "Performance e capacidade demonstrada",
+      33,
+      "Bundle dentro dos limites declarados; sem execução do perfil de carga e sem percentis de produção. A nota mede comprovação, não lentidão observada.",
+      ".github/scripts/certification-aggregator.mjs:86"
+    ],
+    [
+      "Backup, restore e continuidade",
+      45,
+      "Scripts de backup/restore existem; verificador aceita fixture parcial e não prova backup externo durável/RPO/RTO.",
+      "infra/scripts/dr-e2e.sh:108"
+    ]
+  ],
+  "qualidade_documentacao": [
+    [
+      "Qualidade TypeScript/lint/build",
+      84,
+      "33 checks lint e 33 typecheck passaram sem cache; 6 builds passaram; 105 avisos e páginas extensas permanecem."
+    ],
+    [
+      "Consistência e uso da documentação",
+      50,
+      "Inventário amplo e critérios úteis, mas descrições atuais conflitam com fonte e com outras seções; planos/histórico se misturam."
+    ]
+  ],
+  "medias": {
+    "Backend/dados/integrações": 81.17391304347827,
+    "Interface": 81.8125,
+    "Operação e comprovação": 54.57142857142857,
+    "Qualidade de código e documentação": 67.0
+  },
+  "pesos": [
+    0.4,
+    0.25,
+    0.25,
+    0.1
+  ],
+  "nota_geral": 73.26554736024845
+}

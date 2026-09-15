@@ -1,0 +1,54 @@
+{
+  "runId": "sa017-recheck",
+  "workerIndex": 44,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60832/cvg_aaa_sa017_recheck_w44",
+  "redisUrl": "redis://127.0.0.1:57120",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T10:16:08.798Z",
+  "finishedAt": "2026-09-15T10:16:17.408Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60832/cvg_aaa_sa017_recheck_w44",
+    "REDIS_URL": "redis://127.0.0.1:57120",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa017-recheck",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa017-recheck",
+    "AAA_WORKER_INDEX": "44"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T10:16:08.798Z",
+      "finishedAt": "2026-09-15T10:16:11.499Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T10:16:11.499Z",
+      "finishedAt": "2026-09-15T10:16:12.674Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts",
+      "startedAt": "2026-09-15T10:16:12.674Z",
+      "finishedAt": "2026-09-15T10:16:17.408Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n{\"level\":40,\"time\":1789467376519,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"msg\":\"[API] SECRETARY_URL or SECRETARY_API_KEY not set — Secretary integration disabled\"}\n{\"level\":30,\"time\":1789467376811,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"req\":{\"method\":\"POST\",\"url\":\"/auth/login\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467376900,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"userId\":\"80e65652-9bf4-41ab-9770-4380437ed343\",\"email\":\"sa017.user.376454@example.com\",\"action\":\"login\",\"msg\":\"User logged in\"}\n{\"level\":30,\"time\":1789467376903,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"res\":{\"statusCode\":200},\"responseTime\":90.94929499999989,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789467377095,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/2335810a-faf9-4a9f-b21b-397241625d0e/resolve\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467377118,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"res\":{\"statusCode\":200},\"responseTime\":22.78554299999996,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789467377137,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/4770a7e3-c1d9-4fcb-b560-e7c82900a3b0/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467377137,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/4770a7e3-c1d9-4fcb-b560-e7c82900a3b0/resolve\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467377155,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"res\":{\"statusCode\":200},\"responseTime\":18.219892999999956,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789467377156,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":409},\"responseTime\":18.67903000000024,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789467377161,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/2335810a-faf9-4a9f-b21b-397241625d0e/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467377169,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"res\":{\"statusCode\":409},\"responseTime\":7.583802999999989,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789467377169,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/a5ce3ae8-cd83-422a-98f9-3f9fb9034407/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789467377173,\"pid\":3674057,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"res\":{\"statusCode\":404},\"responseTime\":3.887745999999879,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-017-alerts.integration.test.ts (5 tests) 740ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  07:16:13\n   Duration  3.82s (transform 1.35s, setup 0ms, collect 2.79s, tests 740ms, environment 0ms, prepare 93ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

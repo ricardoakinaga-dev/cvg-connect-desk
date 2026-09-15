@@ -1,0 +1,24 @@
+{
+  "runId": "prod10-verif2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_prod10_verif2_w24",
+  "databaseName": "cvg_aaa_prod10_verif2_w24",
+  "databasePort": 58832,
+  "redisUrl": "redis://127.0.0.1:56920",
+  "redisPort": 56920,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "already-ours",
+    "pid": 2968844,
+    "dataDir": "/tmp/cvg-aaa-runs/prod10-verif2/pg/data"
+  },
+  "redis": {
+    "status": "already-ours",
+    "pid": 2968891,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod10-verif2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:01:02.406597-03"
+  }
+}

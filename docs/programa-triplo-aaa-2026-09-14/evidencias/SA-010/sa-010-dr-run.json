@@ -1,0 +1,51 @@
+{
+  "runId": "sa010-dr-final",
+  "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59732/cvg_aaa_sa010_dr_final_w33",
+  "startedAt": "2026-09-15T01:45:09.944Z",
+  "result": "PASS",
+  "failures": [],
+  "provisioned": {
+    "databaseName": "cvg_aaa_sa010_dr_final_w33",
+    "databasePort": 59732,
+    "marker": {
+      "runId": "sa010-dr-final",
+      "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+      "createdAt": "2026-09-14 22:45:10.129323-03"
+    }
+  },
+  "pgBinDir": "/home/ricardo/.local/share/cvg-his-v4-runtime/root/usr/lib/postgresql/16/bin",
+  "exitStatus": 0,
+  "log": "[dr-e2e] 1/13 criando banco limpo connect_desk_dr_src\n[dr-e2e] 2/13 aplicando migrations\n[dr-e2e] 3/13 inserindo fixture dr-fixture-20260915T014510Z\n[dr-e2e] fixture: {\"userId\":\"e49045ac-851a-421d-9904-2e26227e614e\",\"contactId\":\"d96d0290-90a1-4a8b-87b9-4afdc1eb1861\",\"conversationId\":\"ef7ab389-ad8c-49af-93c6-c0c999fd9683\",\"messageId\":\"a75ccd29-0ee9-49ef-80eb-663617ca7783\"}\n[dr-e2e] 4/13 backup\n[dr-e2e] 5/13 checksum: 6bbc9e5a93a9a761b598616f59ad2cb7745f412663a707a41a597a714ecad74e\n[dr-e2e] 6/13 destruindo banco origem\n[dr-e2e] 7/13 criando banco destino connect_desk_dr_dst\n[dr-e2e] 8/13 restore\n/home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-010/artifacts/dr-fixture-20260915T014510Z.dump: SUCESSO\n[dr-e2e] 9/13 validando estrutura\n[dr-e2e] 10/13 integrity queries\n[dr-e2e]   SELECT count(*) FROM users => 1\n[dr-e2e]   SELECT count(*) FROM conversations => 1\n[dr-e2e]   SELECT count(*) FROM messages => 1\n[dr-e2e]   SELECT count(*) FROM outbox_events => 1\n[dr-e2e]   SELECT count(*) FROM dead_letter_events => 1\n[dr-e2e]   SELECT count(*) FROM audit_logs => 1\n[dr-e2e] 11/13 boot da aplicação contra banco restaurado\n[dr-e2e] 12/13 smoke: readiness\n[dr-e2e] 13/13 comparando fixture restaurada (verificador ESTRITO, entidade por entidade)\n[dr-verify] PASS user_presente\n[dr-verify] PASS user_id_esperado\n[dr-verify] PASS contact_presente\n[dr-verify] PASS conversation_presente\n[dr-verify] PASS vinculo_contato_conversa\n[dr-verify] PASS conversation_id_esperado\n[dr-verify] PASS mensagem_presente\n[dr-verify] PASS mensagem_conteudo\n[dr-verify] PASS vinculo_mensagem_conversa\n[dr-verify] PASS mensagem_id_esperado\n[dr-verify] PASS outbox_presente\n[dr-verify] PASS outbox_tipo\n[dr-verify] PASS vinculo_evento_mensagem\n[dr-verify] PASS dlq_presente\n[dr-verify] PASS dlq_consumer\n[dr-verify] PASS vinculo_dlq_evento\n[dr-verify] PASS auditoria_presente\n[dr-verify] PASS contagem_users\n[dr-verify] PASS contagem_contacts\n[dr-verify] PASS contagem_conversations\n[dr-verify] PASS contagem_messages\n[dr-verify] PASS contagem_outbox_events\n[dr-verify] PASS contagem_dead_letter_events\n[dr-verify] PASS contagem_audit_logs\n[dr-verify] PASS cadeia_restaurada\n{\"result\":\"PASS\",\"totalChecks\":25,\"failedChecks\":0}\n[dr-e2e] OK: DR E2E completo em 3s; evidência estruturada em /home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-010/artifacts/dr-fixture-20260915T014510Z.result.json (RPO/RTO ver docs/DISASTER_RECOVERY.md)\n[dr-e2e] limpeza concluída\n\nNOTICE:  database \"connect_desk_dr_src\" does not exist, skipping\nNOTICE:  database \"connect_desk_dr_dst\" does not exist, skipping\n",
+  "artifacts": {
+    "resultFile": "dr-fixture-20260915T014510Z.result.json",
+    "verifyFile": "dr-fixture-20260915T014510Z.verify.json"
+  },
+  "drResult": {
+    "tag": "dr-fixture-20260915T014510Z",
+    "result": "PASS",
+    "durationSeconds": 3,
+    "backupSha256": "6bbc9e5a93a9a761b598616f59ad2cb7745f412663a707a41a597a714ecad74e",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "startedAt": "2026-09-15T01:45:10Z",
+    "finishedAt": "2026-09-15T01:45:13.834Z",
+    "verifyReport": "/home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-010/artifacts/dr-fixture-20260915T014510Z.verify.json"
+  },
+  "verify": {
+    "result": "PASS",
+    "totalChecks": 25,
+    "failedChecks": 0
+  },
+  "teardown": {
+    "runId": "sa010-dr-final",
+    "redis": {
+      "stopped": true,
+      "pid": 1164891
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1164873
+    }
+  },
+  "finishedAt": "2026-09-15T01:45:14.026Z"
+}

@@ -1,0 +1,417 @@
+[
+  {
+    "path": "apps/desk-web/index.html",
+    "sha256": "b5f001a175340dbe7ad7948690c91a6192adaa2d6c76745aebc05a3460866674",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/package.json",
+    "sha256": "f72594c6e2a9502a79c569159a9bbaa99c1a99f4350fe1c17284db2a1651aef3",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/App.tsx",
+    "sha256": "3f9bc2829eb5adb762096bd7a262e68e6ef2078a0d1526ae9a9c811a62afa0cd",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-13.test.ts",
+    "sha256": "1941b3dca7a98b86237ab5b11ca961a74de9f272af4d90aa21e4e9e13ead172d",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-13.test.tsx",
+    "sha256": "c3b7a62998627ad5f14e5e38e502ea144bfc85b6b22d9626eab9ddb559695766",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-21.test.tsx",
+    "sha256": "9bf218d0da2bfa2a4b1237d9424551a6bb733fea24625a96b68d5b6be1cd0122",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-29.test.tsx",
+    "sha256": "207ac41a53c7fec8edf31f246fac5f80c01df4e669d469449e42af3709194579",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-30.test.tsx",
+    "sha256": "e3e69ada8d65321bef5b7d34f2d01e2899f7e9be5d6e9eacc0c422d64c7bfd04",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/aaa-31.test.tsx",
+    "sha256": "62377cebb4b949c6936e43a148f0a431a71bb2478d470d371f2a480eaeebdd85",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/admin.test.tsx",
+    "sha256": "b24dafdfe6333bf8536189fb679c238091e7e4b04597a28a7d653b4c2e649556",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/api-client.test.ts",
+    "sha256": "205e3ae365fa2d11d4dd209c0e18d9211f07f7d229923b4c4c8860058d1a497a",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/auth-store.test.ts",
+    "sha256": "beb021e8f67dc6cf3cfcb2e2c97f5e6e06c38fc90f2ac32c30d8380aad3d7cfe",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/entities.test.tsx",
+    "sha256": "f9bbd916925d229bce23e56f88c32c98e60aeb298e1026b2bc03121aeff733df",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/inbox.test.tsx",
+    "sha256": "ebc46b802f946918817693af9e28daeef076a647a14cf0f4a8f7592af14f99de",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/kanban.test.tsx",
+    "sha256": "b1361c98857a61a3b6c58cf5b7657349767ac369b46c8cbf748ec7c169e44812",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/login.test.tsx",
+    "sha256": "0460776ace39b8a856763544695d7a885968bccefad4c4997d88d2f937b04609",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/production/prod-17-auth-store.test.ts",
+    "sha256": "9bcebb25468a24f3a651ca81a3edd5793a500579037ae62086ee5ce0cb520433",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/production/prod-17.test.tsx",
+    "sha256": "6174ba19e4cf390b12a455ad5cd7aae090caa0735072069523f29c1a09806b86",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/realtime-connection-status.test.ts",
+    "sha256": "d163d58969880eabd60492bd103e39db1c108f9ec15b00596c464b26fb6112da",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/__tests__/realtime.test.ts",
+    "sha256": "c96e01e9114377961624c20016755707521a243b2ef6451fd6be2308873a9cb5",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ErrorBoundary.tsx",
+    "sha256": "d0ddd9db1592302cf258f55d6bb67f343dbc02240896d4eefad1e2e21bc2edef",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/__tests__/ErrorBoundary.test.tsx",
+    "sha256": "b878b2f3117cd83a9252c63936006a56a4a96399995ca0f3fdda936825be0141",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/layout/ConnectionStatus.tsx",
+    "sha256": "c02740431a8cbc8d73771c51edba15dc29a2772fb92a247b35fce813735be394",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/layout/Layout.css",
+    "sha256": "9282efcb230bac1afd129b925fc2a3362cc85aa2c458df8f9b3dc810d880bd4a",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/layout/Layout.tsx",
+    "sha256": "19c71fe9389919bf5fdcba393294666c8f88b369866cf59ea700622daf0c5425",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/layout/__tests__/ConnectionStatus.test.tsx",
+    "sha256": "0ddcce7bd0e8acb59b0d99499d1a35f732122a72dea4d8daa8ce8dba0798d00d",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/layout/__tests__/Layout.test.tsx",
+    "sha256": "02d0f29583f47bb15d96f324c2916b52d15c32b0f3fcae8fe14031d47d342713",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/Badge.tsx",
+    "sha256": "91b1e674ec81edfa1d2377a6e0e7fb2dc19be400a7741e9efe7c78e40b207363",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/Button.tsx",
+    "sha256": "b667c6c2095f75b42073acab175a77c1dfd201cd217125e37f5e243425105056",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/Card.tsx",
+    "sha256": "ac8d2e27c7fd5b38ffeda6a1538b02990a64ad193588eae626bcb2b431e1ed83",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/Icon.tsx",
+    "sha256": "7eb317a290a460a34f0a2cea62812642947b3962d11152135be3cb97e4c4fd13",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/StateMessage.tsx",
+    "sha256": "e1754fb0498b411fc1288a32db033122b8ba43197a1a2d69f8635cbcc85dbcb1",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/TextField.tsx",
+    "sha256": "272707884acaa743a861d33011ef0234e08d6e9b9e12fc1755e8ef482e9d4f36",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/__tests__/primitives.test.tsx",
+    "sha256": "c6b6c6fc8dca5ea9dab21ad5bdc87f8a69ab13b4ca7c1ca80fe3c0bfc577f948",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/components/ui/index.ts",
+    "sha256": "b198cff23ea074b431aa93df82b884480f14cb2135917dd1755a50eebd0228ce",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/hooks/__tests__/useRealtimeStatus.test.tsx",
+    "sha256": "898b18c457e5d09fc61eab588bb690499e07fdd13e38f180d85ac9ea545491e3",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/hooks/useModalFocus.ts",
+    "sha256": "7cf23befc40f9b7f5d2dd4e09412e093817cce5eb859bb590c3adb0ec53826d2",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/hooks/useRealtimeStatus.ts",
+    "sha256": "86aff8b11a60562f209d64649adbc82ce65aea00c0ce3f6014bd5d5f5f3cd990",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/index.css",
+    "sha256": "d549501d9e8f808aabacd33cbf27cb85430a569e919e332ce2e170028ce9b7b2",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/lib/api.ts",
+    "sha256": "bc8966e0656cdeadcdc4cfa22747e536e8115114c7e1d385c9e556b9c237d191",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/lib/realtime.ts",
+    "sha256": "235c26a74667b565c3efb1a41e0d1532c56aa8ca03fb3de738db5da7abc71c41",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/main.tsx",
+    "sha256": "14a10dee4aaa2130d9f57c136db7f16f95f524d60d77146b17776e91c2ab626c",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/navigation.ts",
+    "sha256": "70c74e1ff0f39380c1381d0e3f049264cc9a675e5028898a7dbe3822f17468bb",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Admin.css",
+    "sha256": "0aa40485eca2f8e8b32a9672ae4c8b7a5c9ddc8a652164d554902f21de60f0f8",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Admin.tsx",
+    "sha256": "2c46644a72db5e49ec479fd4a443f9276924aaf773720064a3f1c752a2ffae40",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Alerts.css",
+    "sha256": "18d897ea4ad1d722954eb3e1ea1dcb2fbcc1376bcc02aa4e28754f5bbcd27851",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Alerts.tsx",
+    "sha256": "e1be088df1930ce307d04c271da8d3848f0ad7afc53fd19f1dd1af6be7b8fc12",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Audit.css",
+    "sha256": "2e2e1f00b7311f732108d684b013ed31c2b1ba4469cb1a55094ffeaea1d098f6",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Audit.tsx",
+    "sha256": "e6135a2c2e8bff476a1c13248190a6438db112c3db60a843cfb61afceff59107",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/ContactGroups.css",
+    "sha256": "72fb74c728931255b0b09a4693d0a5d46f615481bba7d8469362b41292c69fe2",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/ContactGroups.tsx",
+    "sha256": "ff674c54b99f431ff3bbde82b55cf221e4e1cd2fe9370cf3a4eb9492889d53f1",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Contacts.css",
+    "sha256": "7d92aa490b4fffad35ffa56248646d3ec4ae1d00f26ce41693f8307678430519",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Contacts.tsx",
+    "sha256": "306fd6a14a4f30789a8b0a8c8d4af69e9bef5c58b6583f81f5180251ede61178",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Dashboard.css",
+    "sha256": "35716ff8024e363911fc8a7b7cd86130d13648cf29d592410121dc9cb1daa070",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Dashboard.tsx",
+    "sha256": "e3325cf25ed52a7ece90fbf9a58a0dd985c9fdc99e345c402e716e761ddbbf89",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/EntityPages.css",
+    "sha256": "08c61aa3aab8f4c6d26b4c55596c2451e417c1bd0fcd55895faee438c9a9f064",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Inbox.css",
+    "sha256": "2c9254c8af2b47193df07a21bd95a270d060d0e9a71f638d09034b45f8bef8a4",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Inbox.tsx",
+    "sha256": "3f7a3eeb1e564233d59a8b002ec3be8c60816e40ab505e7076027bb8f234183e",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Kanban.css",
+    "sha256": "ff0eec19e3d9400807a7f6449d74e334618cb217765b2b3c0343482e65c19e61",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Kanban.tsx",
+    "sha256": "b69038169a4ec97166b6a9dd74078014c5562766b8be19391cf5dd69d1f5d063",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Labels.css",
+    "sha256": "804f3ba2089ecc118cdfad4556eae90c01e974e1f6c45298965913d55b79804a",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Labels.tsx",
+    "sha256": "326df35ef1ae55c26ae913f9e6ccbcee3f83a67ef6f70df62a08cd66dcde382b",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Login.css",
+    "sha256": "b1d3b97c800d9ff0ef018fa03f96f0b4a52438050c3c28d13068bb9bac4beedd",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Login.tsx",
+    "sha256": "8d0e97a2f42626c62fbc64217b18bd605d83c4c6f5b91526a5d402bb8ce28ff1",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Notes.css",
+    "sha256": "bee79d638d9e26b5733f5938a35453acb6e33ae12456355c60b5c4d90014d60d",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Notes.tsx",
+    "sha256": "90ea1b623053e612cd10e79e4656d62736df97041238b77a0fc91a02dcf325e1",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Patients.css",
+    "sha256": "e3c447ac43e11f32641fe1df2b25e7243fa15d350f858495909faae7bb9be509",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Patients.tsx",
+    "sha256": "a12bba134a939fc76b059c7e5a5af23c8c97e35a6bdfad9ff4f18ee11095fa51",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Sectors.css",
+    "sha256": "cac4ed56b0b7b9ba0479d1ac1a2b5793ae77403b8d2736f0472e8dce503320bd",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Sectors.tsx",
+    "sha256": "05af3134dcf3a62ab37b15c884715a8928442ce815be4ab5503133febfe1ac4b",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Settings.css",
+    "sha256": "6c6274965cb74e4d23f22de120258dea70966bd6eaa97466e1514f751545b2a2",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Settings.tsx",
+    "sha256": "ede24dc4dbcafae0123145f832a5b865c7572e80cd4637c6adef182b02e4f4d3",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Tasks.css",
+    "sha256": "3fc96dac08193a1451b02c7213cfe950178db4330b7eb25fa36af3f8a4156836",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Tasks.tsx",
+    "sha256": "a471a59369c96f3dc316ebb03ee79434f5d149825f0efd1b441bad963ea10f1c",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Tutors.css",
+    "sha256": "10532fa4ebfd852b7b46d236ed9006ed1b85ca666f4cc75f0e76258e0ae29f12",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/pages/Tutors.tsx",
+    "sha256": "3a273c8dc0a486d1f03c15571ca9f116017a1f98199dbe5504c60e15eefbca97",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/premium-surfaces.css",
+    "sha256": "25ddc21f7c41bb4a51f3b26cb9a7c707a2986f17591029f889c23ef65ebe455d",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/store/auth.ts",
+    "sha256": "bc1b8371393208279e90f5b21874e49d27df8bfdbf6ec216880afba66957c872",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/src/vite-env.d.ts",
+    "sha256": "fd014bc87287165129ab7e0e33188863962de981551a90701d39395fb466206a",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "apps/desk-web/vite.config.ts",
+    "sha256": "6c7cdd1621122cabc7f8a00f260c93322a0f09281a9b5bb64a6bd9447f82b053",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "playwright.production.config.ts",
+    "sha256": "aa41586dd72c206779c48d9b503fd90f91527d669879e33473c535fedfcfbbba",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "e2e/production/01-harness-identity.spec.ts",
+    "sha256": "2e0295974833152736b18b9db9b2c51db447bc3ef84761c84893a7b496e2bf07",
+    "unchanged_during_r3": true
+  },
+  {
+    "path": "pnpm-lock.yaml",
+    "sha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "unchanged_during_r3": true
+  }
+]

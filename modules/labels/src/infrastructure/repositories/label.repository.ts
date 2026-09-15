@@ -1,7 +1,7 @@
 import { db } from '@cvg/database';
 import { labels, conversationLabels, contactLabels } from '@cvg/database';
 import { eq, and } from 'drizzle-orm';
-import type { CreateLabelInput, UpdateLabelInput, LabelAssignment } from '../types';
+import type { CreateLabelInput, UpdateLabelInput } from '../../types';
 
 export class LabelRepository {
   async findAll() {
@@ -53,11 +53,12 @@ export class LabelRepository {
   }
 
   async addConversationLabel(conversationId: string, labelId: string, userId?: string) {
+    // SA-019/AC2: vínculo repetido é idempotente (unique idx_conv_labels_unique).
     await db.insert(conversationLabels).values({
       conversationId,
       labelId,
       createdBy: userId,
-    });
+    }).onConflictDoNothing();
   }
 
   async removeConversationLabel(conversationId: string, labelId: string) {
@@ -78,11 +79,12 @@ export class LabelRepository {
   }
 
   async addContactLabel(contactId: string, labelId: string, userId?: string) {
+    // SA-019/AC2: vínculo repetido é idempotente (unique idx_contact_labels_unique).
     await db.insert(contactLabels).values({
       contactId,
       labelId,
       createdBy: userId,
-    });
+    }).onConflictDoNothing();
   }
 
   async removeContactLabel(contactId: string, labelId: string) {

@@ -1,0 +1,24 @@
+{
+  "runId": "realtime-metrics-r2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59332/cvg_aaa_realtime_metrics_r2_w29",
+  "databaseName": "cvg_aaa_realtime_metrics_r2_w29",
+  "databasePort": 59332,
+  "redisUrl": "redis://127.0.0.1:56970",
+  "redisPort": 56970,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1162435,
+    "dataDir": "/tmp/cvg-aaa-runs/realtime-metrics-r2/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1162454,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "realtime-metrics-r2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 19:01:33.980554-03"
+  }
+}

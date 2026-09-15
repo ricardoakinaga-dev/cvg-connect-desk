@@ -1,0 +1,24 @@
+{
+  "runId": "prod36-health-final",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_prod36_health_final_w36",
+  "databaseName": "cvg_aaa_prod36_health_final_w36",
+  "databasePort": 60032,
+  "redisUrl": "redis://127.0.0.1:57040",
+  "redisPort": 57040,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 4011572,
+    "dataDir": "/tmp/cvg-aaa-runs/prod36-health-final/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 4011843,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod36-health-final",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 16:09:41.730385-03"
+  }
+}

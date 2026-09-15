@@ -1,0 +1,327 @@
+{
+  "config": {
+    "configFile": "/home/ricardo/cvg-connect-desk/playwright.aaa.config.ts",
+    "rootDir": "/home/ricardo/cvg-connect-desk/e2e/aaa",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-008/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "aaa",
+        "name": "aaa",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e/aaa",
+        "testIgnore": [
+          "**/*.canary.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-008/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "canary",
+        "name": "canary",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e/aaa",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.canary.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/ricardo/cvg-connect-desk/docs/programa-triplo-aaa-2026-09-14/evidencias/SA-008/runtime/harness/last-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec tsx e2e/support/aaa/start-aaa-stack.ts",
+      "url": "http://127.0.0.1:4813/login",
+      "reuseExistingServer": true,
+      "timeout": 240000,
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "AAA_RUN_ID": "sa008-browser",
+        "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa008-browser",
+        "AAA_PG_PORT": "60832",
+        "AAA_REDIS_PORT": "57120",
+        "AAA_API_PORT": "5070",
+        "AAA_REALTIME_PORT": "5371",
+        "AAA_WEB_PORT": "4813",
+        "AAA_EVOLUTION_MOCK_PORT": "8127"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "sa-008-context.spec.ts",
+      "file": "sa-008-context.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "SA-008 — contexto de conversa (browser + API reais)",
+          "file": "sa-008-context.spec.ts",
+          "line": 101,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Inbox → atalhos → Tarefas/Notas/Alertas filtram pelo contexto e voltam à conversa",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2826,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:28.934Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-b49460eae31491904ef6",
+              "file": "sa-008-context.spec.ts",
+              "line": 126,
+              "column": 7
+            },
+            {
+              "title": "back, forward, refresh e deep-link preservam o contexto selecionado",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2230,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:31.989Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-327fe8bf1dccd5a09dbc",
+              "file": "sa-008-context.spec.ts",
+              "line": 176,
+              "column": 7
+            },
+            {
+              "title": "alternância repetida A↔B na Inbox isola histórico, seleção e painel",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1693,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:34.229Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-cddea985a1a6535f399f",
+              "file": "sa-008-context.spec.ts",
+              "line": 209,
+              "column": 7
+            },
+            {
+              "title": "negativos: UUID inválido e contexto inexistente/inacessível sem vazamento",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1458,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:35.929Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-e39a96341f659d0b6590",
+              "file": "sa-008-context.spec.ts",
+              "line": 234,
+              "column": 7
+            },
+            {
+              "title": "viewport móvel: contexto visível, sem overflow e primeiro item útil no topo",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 790,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:37.394Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-2cba12fa230a1bc52e49",
+              "file": "sa-008-context.spec.ts",
+              "line": 266,
+              "column": 7
+            },
+            {
+              "title": "falha de transporte recuperável preserva o contexto (fault injection de API)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1193,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-15T03:09:38.191Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24aff058b73e9aba10b6-7aa2c9d0b3c52de93191",
+              "file": "sa-008-context.spec.ts",
+              "line": 284,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-15T03:09:28.293Z",
+    "duration": 11169.466,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

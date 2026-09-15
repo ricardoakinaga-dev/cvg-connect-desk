@@ -1,0 +1,24 @@
+{
+  "runId": "review-authz",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58632/cvg_aaa_review_authz_w22",
+  "databaseName": "cvg_aaa_review_authz_w22",
+  "databasePort": 58632,
+  "redisUrl": "redis://127.0.0.1:56900",
+  "redisPort": 56900,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2221400,
+    "dataDir": "/tmp/cvg-aaa-runs/review-authz/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2221418,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-authz",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:36:12.952636-03"
+  }
+}

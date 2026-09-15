@@ -1,11 +1,13 @@
 import type { EventEnvelope, DeadLetterEntry, DeadLetterFailureContext } from '@cvg/events';
-import { deadLetterStore, persistentDeadLetterStore } from '@cvg/events';
+import { deadLetterStore } from '@cvg/events';
+import { redactErrorForLog } from './errors';
 
 function buildFailureContext(params: {
   event: EventEnvelope;
   error: string;
   retryCount: number;
   handlerName: string;
+  errorCode?: string;
 }): DeadLetterFailureContext {
   return {
     stage: 'worker-terminal',
@@ -14,53 +16,40 @@ function buildFailureContext(params: {
     eventType: params.event.event_type,
     eventId: params.event.event_id,
     retryCount: params.retryCount,
-    retryable: true,
-    reason: params.error,
+    retryable: params.errorCode !== 'HANDLER_PERMANENT' && params.errorCode !== 'MALFORMED_PAYLOAD',
+    reason: params.errorCode ? `[${params.errorCode}] ${params.error}` : params.error,
     eventVersion: params.event.event_version,
     correlationId: params.event.correlation_id,
     causationId: params.event.causation_id,
   };
 }
 
+/**
+ * Espelho em memória do dead-letter terminal do worker.
+ *
+ * A durabilidade é garantida pelo `nack` do lease (packages/events): ele grava
+ * `dead_letter_events` com o ENVELOPE íntegro e a causa na MESMA transação do
+ * incremento de retry. Este espelho não deve engolir erro de persistência nem
+ * duplicar a escrita durável — por isso não chama o store persistente. O erro
+ * vai REDIGIDO (sem `params:` do driver) porque o store emite log; o registro
+ * durável mantém a causa completa.
+ */
 export function recordWorkerDeadLetter(params: {
   event: EventEnvelope;
   error: string;
   retryCount: number;
   handlerName: string;
+  errorCode?: string;
 }): DeadLetterEntry {
-  const entry = deadLetterStore.add({
+  const loggedError = redactErrorForLog(params.error);
+  return deadLetterStore.add({
     eventType: params.event.event_type,
     eventId: params.event.event_id,
     payload: params.event.payload,
-    error: params.error,
+    error: loggedError,
     retryCount: params.retryCount,
     handlerName: params.handlerName,
     sourceEvent: params.event,
-    failureContext: buildFailureContext(params),
+    failureContext: buildFailureContext({ ...params, error: loggedError }),
   });
-
-  // Durabilidade (Final-1): espelha no PostgreSQL. Best-effort e nunca
-  // bloqueia o worker — a entrada em memória já foi registrada acima.
-  void persistentDeadLetterStore
-    .persist({
-      originalEventId: params.event.event_id,
-      consumerId: 'worker',
-      eventType: params.event.event_type,
-      payload: params.event,
-      errorCode: 'WORKER_TERMINAL',
-      errorMessage: params.error,
-      attemptCount: params.retryCount,
-    })
-    .catch((error) => {
-      console.error(
-        JSON.stringify({
-          msg: '[Worker] Failed to persist dead-letter to PostgreSQL',
-          event_id: params.event.event_id,
-          error: error instanceof Error ? error.message : String(error),
-          level: 'error',
-        }),
-      );
-    });
-
-  return entry;
 }

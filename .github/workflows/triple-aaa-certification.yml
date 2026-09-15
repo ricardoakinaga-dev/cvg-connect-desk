@@ -1,10 +1,14 @@
 name: Triple AAA Certification (aggregator)
 
-# Aggregator único de promoção (§3–4, §28):
-# quando TODOS os workflows de gate concluem no SHA, avalia o estado real de
-# cada required check e publica artifacts/triple-aaa-report.json + check-run.
-# Estado: FAILED | CONDITIONAL | VERIFIED_CANDIDATE.
+# Aggregator único de promoção (§3–4, §28) — PROD-03.
+# Consulta runs/jobs paginados do SHA com política por evento
+# (pull_request | push | schedule | release), valida imagem testada por digest
+# e publica artifacts/triple-aaa-report.json + check-run.
+# Estado: FAILED | CONDITIONAL | BLOCKED | VERIFIED_CANDIDATE.
 # TRIPLE_AAA_CERTIFIED exige tag manual (release approval) — nunca automática.
+#
+# Segurança: o código executado é sempre o da branch default (o agregador só lê
+# a API do SHA avaliado), nunca código de PR não confiável.
 
 on:
   workflow_run:
@@ -13,15 +17,30 @@ on:
       - Supply Chain Security
       - Triple AAA Gate
       - DR End-to-End (backup/restore proof)
-      - E2E Browser Smoke
+      - Smoke E2E
       - PostgreSQL Real Tests
+      - Staging Integrations (MinIO + ClamAV + OTel Collector real)
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: SHA do candidato a avaliar (release)
+        required: true
+      event:
+        description: Política de avaliação
+        type: choice
+        options:
+          - release
+          - push
+          - schedule
+          - pull_request
+        default: release
 
 permissions:
   checks: read
   actions: read
-  contents: write
+  contents: read
   statuses: write
 
 jobs:
@@ -29,16 +48,24 @@ jobs:
     name: Aggregate required checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: ${{ github.event.workflow_run.head_branch == 'main' }}
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch'
+          || github.event.workflow_run.event == 'pull_request'
+          || github.event.workflow_run.head_branch == 'main' }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-      - name: Collect workflow evidence for SHA
+          ref: ${{ github.event.repository.default_branch || 'main' }}
+      - name: Collect workflow evidence for SHA and policy
         id: evidence
+        # O exit do agregador reflete o veredito; o job agrega e o passo
+        # seguinte decide reprovar. continue-on-error garante publicar o
+        # relatório e os outputs mesmo em state != VERIFIED_CANDIDATE.
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ github.event.workflow_run.head_sha }}
+          SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.event.workflow_run.head_sha }}
+          EVENT: ${{ github.event_name == 'workflow_dispatch' && inputs.event || github.event.workflow_run.event }}
         run: node .github/scripts/certification-aggregator.mjs
       - name: Publish certification report artifact
         if: always()
@@ -46,9 +73,16 @@ jobs:
         with:
           name: triple-aaa-report
           path: artifacts/triple-aaa-report.*
-          if-no-files-found: warn
-      - name: Fail job if state is not VERIFIED_CANDIDATE+
-        if: always() && steps.evidence.outputs.state != 'VERIFIED_CANDIDATE' && steps.evidence.outputs.state != 'TRIPLE_AAA_CERTIFIED'
+          if-no-files-found: error
+      - name: Fail job if required evidence is not green
+        # PR é informativo (branch protection exige os checks individuais); os
+        # demais eventos (push/schedule/release dispatch) reprovam sem
+        # VERIFIED_CANDIDATE. Ausência de prova de release nunca é dispensada
+        # em silêncio.
+        if: >-
+          ${{ (github.event_name == 'workflow_dispatch'
+              || github.event.workflow_run.event != 'pull_request')
+              && steps.evidence.outputs.state != 'VERIFIED_CANDIDATE' }}
         run: |
           echo "CERTIFICATION STATE: ${{ steps.evidence.outputs.state }}"
           echo "gates: ${{ steps.evidence.outputs.summary }}"

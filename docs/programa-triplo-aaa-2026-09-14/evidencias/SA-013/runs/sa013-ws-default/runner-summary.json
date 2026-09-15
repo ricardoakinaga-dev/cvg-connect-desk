@@ -1,0 +1,54 @@
+{
+  "runId": "sa013-ws-default",
+  "workerIndex": 46,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa013_ws_default_w46",
+  "redisUrl": "redis://127.0.0.1:57140",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:14:56.965Z",
+  "finishedAt": "2026-09-15T04:15:05.401Z",
+  "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/sa-013-ws-authz.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_sa013_ws_default_w46",
+    "REDIS_URL": "redis://127.0.0.1:57140",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa013-ws-default",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa013-ws-default",
+    "AAA_WORKER_INDEX": "46"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:14:56.965Z",
+      "finishedAt": "2026-09-15T04:14:58.802Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:14:58.802Z",
+      "finishedAt": "2026-09-15T04:14:59.565Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/sa-013-ws-authz.test.ts",
+      "startedAt": "2026-09-15T04:14:59.566Z",
+      "finishedAt": "2026-09-15T04:15:05.401Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": ".test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Token revalidated\",\"client_id\":\"client_1789445702504_nenabtc\",\"level\":\"debug\"}\n\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Broadcast to channel\",\"channel\":\"global\",\"recipient_count\":1,\"level\":\"info\"}\n\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Projected event\",\"event_type\":\"message.persisted\",\"aggregate_id\":\"msg-permission-post\",\"aggregate_type\":\"Message\",\"content_targets\":1,\"level\":\"info\"}\n\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Connection closed\",\"client_id\":\"client_1789445702504_nenabtc\",\"level\":\"info\"}\n\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02)\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n\n ✓ src/__tests__/sa-013-ws-authz.test.ts (2 tests) 3912ms\n   ✓ SA-013 — WS: negativas de recurso com decisão real (G02) > subscribe a conversa de outro setor é negado (decisão real) sem entregar evento; canal inexistente responde igual  740ms\n   ✓ SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)  2719ms\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  01:15:00\n   Duration  5.11s (transform 323ms, setup 0ms, collect 887ms, tests 3.91s, environment 0ms, prepare 106ms)\n\n",
+      "stderrTail": "stderr | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > subscribe a conversa de outro setor é negado (decisão real) sem entregar evento; canal inexistente responde igual\n{\"msg\":\"[Realtime] Subscribe rejected by authorization\",\"client_id\":\"client_1789445701768_wxwqb93\",\"channel\":\"conversation:e1545207-f4bd-4e97-8e21-8784c3e269ed\",\"reason\":\"NOT_FOUND\",\"level\":\"warn\"}\n\nstderr | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > subscribe a conversa de outro setor é negado (decisão real) sem entregar evento; canal inexistente responde igual\n{\"msg\":\"[Realtime] Subscribe rejected by authorization\",\"client_id\":\"client_1789445701768_wxwqb93\",\"channel\":\"conversation:64fbcf3d-9fe0-4e34-a505-837a7be267b0\",\"reason\":\"NOT_FOUND\",\"level\":\"warn\"}\n\nstderr | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Channel revoked after revalidation\",\"client_id\":\"client_1789445702504_nenabtc\",\"channel\":\"conversation:e1545207-f4bd-4e97-8e21-8784c3e269ed\",\"reason\":\"missing-permission\",\"level\":\"warn\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

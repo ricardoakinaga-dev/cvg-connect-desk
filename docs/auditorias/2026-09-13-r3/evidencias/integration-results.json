@@ -1,0 +1,34 @@
+[
+  {
+    "task": "PROD-05",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-05.test.ts"
+    ],
+    "start": "2026-09-13T22:12:46.351864+00:00",
+    "end": "2026-09-13T22:13:24.036041+00:00",
+    "exit": 1,
+    "log": "/tmp/cvg-audit-r3-dvlqz0my/integration-05/output.log"
+  },
+  {
+    "task": "PROD-18",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-18.test.ts"
+    ],
+    "start": "2026-09-13T22:13:24.036485+00:00",
+    "end": "2026-09-13T22:13:32.995087+00:00",
+    "exit": 0,
+    "log": "/tmp/cvg-audit-r3-dvlqz0my/integration-18/output.log"
+  }
+]

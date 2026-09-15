@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { hasPermission, Permission, Role } from './rbac';
+import { actorGrantsPermission, Permission, Role } from './rbac';
 import { authzDenialsTotal } from '@cvg/shared';
 import { sectorPermissionService, type AccessLevel } from './sector-permissions';
 
@@ -10,6 +10,12 @@ declare module 'fastify' {
       email: string;
       name: string;
       roles: string[];
+      isActive?: boolean;
+      createdAt?: string;
+      /** Permissões efetivas do banco (D01/PROD-04-AC3). */
+      permissions?: string[];
+      /** true quando `role_permissions` tem linhas (conjunto autoritativo mesmo vazio). */
+      permissionsAuthoritative?: boolean;
     };
   }
 }
@@ -23,16 +29,19 @@ export function requirePermission(...permissions: Permission[]) {
       });
     }
 
-    const userRoles = request.user.roles as Role[];
-
-    const hasAnyPermission = permissions.some(permission => 
-      userRoles.some(role => hasPermission(role, permission))
+    // D01/AC3: o conjunto efetivo do banco é autoritativo quando existe;
+    // sem nenhuma permissão resolvida, o catálogo estático cobre apenas
+    // papéis built-in (instalação legada). Papel customizado sem permissão
+    // no banco continua negado.
+    const hasAnyPermission = permissions.some((permission) =>
+      actorGrantsPermission(request.user, permission)
     );
 
     if (!hasAnyPermission) {
       request.log.warn({
         userId: request.user.id,
         userRoles: request.user.roles,
+        userPermissions: request.user.permissions?.length ?? 0,
         requiredPermissions: permissions,
       }, 'Access denied - insufficient permissions');
 

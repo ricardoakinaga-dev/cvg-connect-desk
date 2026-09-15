@@ -5,10 +5,10 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo build",
-    "lint": "echo lint",
-    "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest"
+    "lint": "eslint . --max-warnings 5",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@cvg/audit": "workspace:*",
@@ -16,9 +16,12 @@
     "@cvg/database": "workspace:*",
     "@cvg/events": "workspace:*",
     "@cvg/shared": "workspace:*",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "0.45.2",
+    "fastify": "^5.12.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "vitest": "^3.2.7"
   }
 }

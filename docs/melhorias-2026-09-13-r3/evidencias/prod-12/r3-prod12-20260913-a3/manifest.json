@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-12",
+  "runId": "r3-prod12-20260913-a3",
+  "attempt": 3,
+  "command": "CVG_PROGRAM_DIR=/tmp/cvg-r3-prod12-20260913-a3 CVG_RUNTIME_DIR=/tmp/cvg-r3-prod12-20260913-a3/runtime AAA_RUN_ID=r3-prod12-20260913-a3 AAA_WORKER_INDEX=40 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-12.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T23:57:46.356Z",
+  "finishedAt": "2026-09-13T23:58:42.422Z",
+  "durationMs": 56066,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "8cb02ea20d061344fd5d8dc0f7ba18f21cc6f6971334dcbbc618b1e4f5551e33",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod12-20260913-a3",
+    "attempt": "3",
+    "sealedAt": "2026-09-13T23:57:46.356Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-12.test.log",
+      "sha256": "cdba7ff5eca1d6b8daed90b6f272a70c3020e9fc7589c091b879e340a6d99a5c"
+    },
+    {
+      "path": "prod-12-evidence.json",
+      "sha256": "4c874cea9a3316ebea6b118c4b0abcad67519acda1a55aa9759700cb5025ec7b"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "5a4bd1cd41bab92d871c7aa0a327fafa12215c63ca6195fc862daffa8d274d03"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis e 2 replicas realtime locais isolados; processos filhos reais e SIGKILL foram exercitados, mas isso nao substitui provas Docker/staging remotas, provider real ou revisao independente."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "runId": "r3-prod14-20260914-a3",
+  "workerIndex": 36,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_r3_prod14_20260914_a3_w36",
+  "redisUrl": "redis://127.0.0.1:57040",
+  "startedAt": "2026-09-14T03:25:08.701Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-14.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 1,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ❯ src/__tests__/production/prod-14.test.ts (13 tests | 13 skipped) 15630ms\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — webhook CLEAN: pipeline produtivo, quarentena→media/, asset:// e leitura autenticada\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — SSRF: URL privada/link-local rejeitada; mensagem preservada sem asset público\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — fetch remoto falho é registrado e retentável (FAILED com sourceUrl server-side)\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — EICAR real: INFECTED em quarentena, leitura 422, DTO sem URL\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — scanner ausente: fail-closed em quarentena e leitura 409 PENDING\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC1 — timeout de scanner: webhook não bloqueia e leitura 503 SCAN_FAILED\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > BE-A04 — recovery durável retoma SCAN_FAILED, reclama uma vez e limita retries\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC2 — limites e magic bytes: >16MiB, MIME divergente e executável bloqueados\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC2 — asset de outra conversa nunca é entregue (404) e idempotência não duplica\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC3 — MEDIA_PIPELINE_ENABLED=false desliga o pipeline sem expor URL crua\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC2/AC4 — quarentena preserva bytes do EICAR e objeto sem scan não é público\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC4 — dry-run identifica mídias legadas fora do storage controlado sem mutação\n   ↓ PROD-14 — mídia inbound: quarentena, scan real e leitura privada > AC4 — migração idempotente publica CLEAN, bloqueia INFECTED e mantém pendente indisponível\n\n Test Files  1 failed (1)\n      Tests  13 skipped (13)\n     Errors  1 error\n   Start at  00:24:52\n   Duration  16.11s (transform 140ms, setup 0ms, collect 114ms, tests 15.63s, environment 0ms, prepare 121ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/production/prod-14.test.ts\n\n\n⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/production/prod-14.test.ts [ src/__tests__/production/prod-14.test.ts ]\nError: porta 42577 não abriu em 15000ms\n ❯ waitForTcpPort src/__tests__/production/prod-14.test.ts:239:9\n    237|     await new Promise((r) => setTimeout(r, 100));\n    238|   }\n    239|   throw new Error(`porta ${port} não abriu em ${timeoutMs}ms`);\n       |         ^\n    240| }\n    241| \n ❯ src/__tests__/production/prod-14.test.ts:544:3\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯\n\nVitest caught 1 unhandled error during the test run.\nThis might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.\n\n⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯\nError: BLOCKED (PROD-14): falha ao iniciar moto S3 real: spawn /tmp/opencode/moto-venv/bin/python ENOENT\n ❯ ChildProcess.<anonymous> src/__tests__/production/prod-14.test.ts:542:11\n    540|   });\n    541|   moto.on('error', (error) => {\n    542|     throw new Error(`BLOCKED (PROD-14): falha ao iniciar moto S3 real:…\n       |           ^\n    543|   });\n    544|   await waitForTcpPort(motoPort);\n ❯ ChildProcess.emit node:events:514:28\n ❯ Process.ChildProcess._handle.onexit node:internal/child_process:293:12\n ❯ onErrorNT node:internal/child_process:525:16\n ❯ processTicksAndRejections node:internal/process/task_queues:90:21\n\nThis error originated in \"src/__tests__/production/prod-14.test.ts\" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n"
+    }
+  ],
+  "exitCode": 1
+}

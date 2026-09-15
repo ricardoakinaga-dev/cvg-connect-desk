@@ -1,0 +1,54 @@
+{
+  "runId": "sa005-kanban",
+  "workerIndex": 26,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59032/cvg_aaa_sa005_kanban_w26",
+  "redisUrl": "redis://127.0.0.1:56940",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:44:43.861Z",
+  "finishedAt": "2026-09-15T01:44:49.590Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-005-kanban-atomic.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59032/cvg_aaa_sa005_kanban_w26",
+    "REDIS_URL": "redis://127.0.0.1:56940",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa005-kanban",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa005-kanban",
+    "AAA_WORKER_INDEX": "26"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:44:43.861Z",
+      "finishedAt": "2026-09-15T01:44:45.494Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:44:45.494Z",
+      "finishedAt": "2026-09-15T01:44:46.199Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-005-kanban-atomic.integration.test.ts",
+      "startedAt": "2026-09-15T01:44:46.199Z",
+      "finishedAt": "2026-09-15T01:44:49.589Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "Id\":\"req-8\",\"res\":{\"statusCode\":200},\"responseTime\":4.371627999999873,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789436689396,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/fa7769c2-5e74-42d3-b8f1-ae82da7edee0/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789436689402,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"res\":{\"statusCode\":200},\"responseTime\":6.037975999999617,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789436689403,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/fa7769c2-5e74-42d3-b8f1-ae82da7edee0/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789436689409,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"res\":{\"statusCode\":409},\"responseTime\":5.141908999999941,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789436689410,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/fa7769c2-5e74-42d3-b8f1-ae82da7edee0/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789436689412,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"userId\":\"b216057c-5bb2-40bb-8f3f-f41f10534634\",\"userRoles\":[],\"userPermissions\":0,\"requiredPermissions\":[\"chat:write\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789436689412,\"pid\":1162444,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"res\":{\"statusCode\":403},\"responseTime\":2.022653999999875,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-005-kanban-atomic.integration.test.ts (7 tests) 622ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  22:44:46\n   Duration  2.74s (transform 872ms, setup 0ms, collect 1.82s, tests 622ms, environment 0ms, prepare 108ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

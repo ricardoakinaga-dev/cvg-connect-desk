@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-09-13T16:28:50.619Z",
+  "runId": "prod09-contra2",
+  "workerIndex": "27",
+  "database": "postgresql://***@127.0.0.1:59132/cvg_aaa_prod09_contra2_w27",
+  "scenarios": {
+    "A_replay_com_dedup": {
+      "firstIsOk": true,
+      "secondIsOk": true,
+      "firstDeduplicated": false,
+      "secondDeduplicated": true,
+      "sameAlertId": true,
+      "alertsCreated": 1,
+      "defect": false
+    },
+    "B_err_persistente_dlq": {
+      "dlqArrived": true,
+      "processedAtSet": false,
+      "consumerRetryCount": 2,
+      "lastErrorPresent": true,
+      "dlqStatus": "PENDING",
+      "dlqErrorCode": "RETRY_BUDGET_EXHAUSTED",
+      "envelopeEventIdMatches": true,
+      "envelopeConversationMatches": true,
+      "alertsCreated": 0,
+      "defect": false
+    },
+    "C_handoff_valido": {
+      "isOk": true,
+      "alertsCreated": 1,
+      "defect": false
+    }
+  },
+  "verdict": "NO_DEFECT_OBSERVED"
+}

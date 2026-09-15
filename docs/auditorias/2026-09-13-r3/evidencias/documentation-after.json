@@ -1,0 +1,32 @@
+[
+  {
+    "path": "docs/ARCHITECTURE.md",
+    "sha256": "f8a21ed490d3447d70380a988cbc944ec2e9abb4537cc9342299f03ddb581071",
+    "snapshot": "evidencias/documentation-after/ARCHITECTURE.md"
+  },
+  {
+    "path": "docs/TEST_MATRIX.md",
+    "sha256": "ae1afa3473806b98e49b7e7a979f282680ac8d44ddba5e15d8546c2fa48a7330",
+    "snapshot": "evidencias/documentation-after/TEST_MATRIX.md"
+  },
+  {
+    "path": "docs/GAPS-TECNICOS.md",
+    "sha256": "d16edb0f7db43cb35ea943c4213b3ec969975b99a95eb2fbba26e2c021ab9f55",
+    "snapshot": "evidencias/documentation-after/GAPS-TECNICOS.md"
+  },
+  {
+    "path": "docs/THREAT_MODEL.md",
+    "sha256": "95e665bf8cfb1384600539edf9b7b9b20db3c3ede5f6e3cd99e7e7ec04b537b4",
+    "snapshot": "evidencias/documentation-after/THREAT_MODEL.md"
+  },
+  {
+    "path": "docs/TRIPLE_AAA_CERTIFICATION.md",
+    "sha256": "a289375d089d4326db785a96e8b65973e1aa7002d23d66f4ae36b2a3d2d5a934",
+    "snapshot": "evidencias/documentation-after/TRIPLE_AAA_CERTIFICATION.md"
+  },
+  {
+    "path": "docs/00-meta/README.md",
+    "sha256": "4dacd9fe53295265e4b819a1f279da68076a3cb02395d01d6c27163ada8b62af",
+    "snapshot": "evidencias/documentation-after/00-meta/README.md"
+  }
+]

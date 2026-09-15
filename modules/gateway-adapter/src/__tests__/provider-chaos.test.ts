@@ -11,7 +11,6 @@ import { AddressInfo } from 'node:net';
  */
 describe('provider failure chaos (mock servers)', () => {
   let gatewayUrl = '';
-  let evolutionUrl = '';
 
   beforeEach(async () => {
     vi.resetModules();
@@ -62,7 +61,6 @@ describe('provider failure chaos (mock servers)', () => {
       await mock.close();
       delete process.env.GATEWAY_URL;
     }
-    void evolutionUrl;
   }, 30000);
 
   it('gateway 429 → NO retry on non-idempotent POST (prevents double-send)', async () => {

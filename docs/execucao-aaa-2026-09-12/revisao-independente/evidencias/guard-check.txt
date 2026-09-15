@@ -1,0 +1,6 @@
+PASS smoke_db_recusado recusado com DB_URL_NO_TEST_MARKER (esperado DB_URL_NO_TEST_MARKER)
+PASS host_remoto_recusado recusado com DB_URL_REMOTE_HOST (esperado DB_URL_REMOTE_HOST)
+PASS porta_divergente_recusada recusado com DB_URL_WRONG_PORT (esperado DB_URL_WRONG_PORT)
+PASS banco_sem_marcador_recusado recusado com DB_URL_NO_TEST_MARKER (esperado DB_URL_NO_TEST_MARKER)
+PASS banco_do_run_aceito aceito
+guard_result=PASS failures=0

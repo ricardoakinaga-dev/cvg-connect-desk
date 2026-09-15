@@ -1,0 +1,24 @@
+{
+  "runId": "prod36-api-resilience",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60132/cvg_aaa_prod36_api_resilience_w37",
+  "databaseName": "cvg_aaa_prod36_api_resilience_w37",
+  "databasePort": 60132,
+  "redisUrl": "redis://127.0.0.1:57050",
+  "redisPort": 57050,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 4019348,
+    "dataDir": "/tmp/cvg-aaa-runs/prod36-api-resilience/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 4019424,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod36-api-resilience",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 16:10:46.520698-03"
+  }
+}

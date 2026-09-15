@@ -1,0 +1,24 @@
+{
+  "runId": "review-wsperm",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58432/cvg_aaa_review_wsperm_w20",
+  "databaseName": "cvg_aaa_review_wsperm_w20",
+  "databasePort": 58432,
+  "redisUrl": "redis://127.0.0.1:56880",
+  "redisPort": 56880,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2200605,
+    "dataDir": "/tmp/cvg-aaa-runs/review-wsperm/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2200643,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-wsperm",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:33:14.268834-03"
+  }
+}

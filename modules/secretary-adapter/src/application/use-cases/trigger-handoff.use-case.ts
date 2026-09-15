@@ -1,5 +1,5 @@
 import { ok, err, type Result } from '@cvg/shared';
-import { AppError, NotFoundError } from '@cvg/shared';
+import { AppError } from '@cvg/shared';
 import { publishHandoffRequested, publishHandoffCompleted } from './secretary-publisher';
 
 export interface TriggerHandoffInput {
@@ -20,7 +20,7 @@ export interface TriggerHandoffOutput {
   timestamp: Date;
 }
 
-export async function triggerHandoff(input: TriggerHandoffInput): Promise<Result<TriggerHandoffOutput, Error>> {
+export async function triggerHandoff(input: TriggerHandoffInput): Promise<Result<TriggerHandoffOutput, AppError>> {
   try {
     if (!input.conversationId) {
       return err(new AppError('Conversation ID is required', 400, 'INVALID_INPUT'));
@@ -56,6 +56,8 @@ export async function triggerHandoff(input: TriggerHandoffInput): Promise<Result
       timestamp: new Date(),
     });
   } catch (error) {
-    return err(error as Error);
+    return err(error instanceof AppError
+      ? error
+      : new AppError(error instanceof Error ? error.message : 'Unknown error', 500, 'HANDOFF_ERROR'));
   }
 }

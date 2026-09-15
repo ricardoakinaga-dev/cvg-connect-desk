@@ -1,0 +1,30 @@
+{
+  "runId": "prod10-reg-chat2",
+  "workerIndex": 28,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59232/cvg_aaa_prod10_reg_chat2_w28",
+  "redisUrl": "redis://127.0.0.1:56960",
+  "startedAt": "2026-09-13T17:07:53.323Z",
+  "command": "pnpm --filter @cvg/chat exec vitest run --exclude **/aaa-08-atomicity.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/chat\n\n ✓ src/__tests__/conversation-repository.test.ts (15 tests) 6ms\n ✓ src/__tests__/outbound-delivery-surface.test.ts (2 tests) 3ms\n ✓ src/__tests__/receive-inbound-idempotency.test.ts (6 tests) 277ms\n ✓ src/__tests__/secretary-handoff.integration.test.ts (5 tests) 233ms\nstdout | src/__tests__/chat-ports.integration.test.ts > chat ports (C02) — comportamento em PostgreSQL isolado > sendOutboundMessage usa a GatewayOutboundPort injetada e reconcilia status\n[deliverOutbound] Mensagem aceita pelo gateway: aaa02-ports-1789319272931-provider-1\n\n ✓ src/__tests__/chat-ports.integration.test.ts (6 tests) 205ms\n\n Test Files  5 passed (5)\n      Tests  34 passed (34)\n   Start at  14:07:51\n   Duration  1.86s (transform 844ms, setup 0ms, collect 4.25s, tests 725ms, environment 1ms, prepare 469ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

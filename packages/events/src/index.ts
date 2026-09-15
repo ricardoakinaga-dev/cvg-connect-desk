@@ -7,5 +7,6 @@ export * from './retry';
 export * from './dead-letter';
 export * from './persistent-dead-letter';
 export * from './outbox-publisher';
+export * from './outbox-lease';
 export * from './outbox-reader';
 export * from './realtime-bus';

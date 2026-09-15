@@ -1,0 +1,11 @@
+{
+  "source": "infra/scripts/dr-e2e.sh:115",
+  "input": {
+    "message": "dr-fixture-demo",
+    "event": null,
+    "dlq": null
+  },
+  "predicate": "echo \"$RESTORED\" | grep -q \"$FIXTURE_TAG\"",
+  "observed_exit_code": 0,
+  "scope": "Reprodução isolada do predicado; não foi executado restore."
+}

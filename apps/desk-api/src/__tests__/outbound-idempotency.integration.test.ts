@@ -1,7 +1,7 @@
 import './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { buildDeskApiApp } from '../app.ts';
 
@@ -12,8 +12,8 @@ describe('Outbound idempotency integration', () => {
   const roleName = 'Receptionist';
   const conversationId = randomUUID();
   const userId = randomUUID();
+  let sectorId = '';
   let roleId = '';
-  let createdRole = false;
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
   let token = '';
 
@@ -29,13 +29,22 @@ describe('Outbound idempotency integration', () => {
     if (existingRole) {
       roleId = existingRole.id;
     } else {
+      // Papel compartilhado entre suítes: criação idempotente e nunca removida
+      // (apagar em paralelo quebra o teardown de outra suíte via FK).
       roleId = randomUUID();
-      createdRole = true;
-      await db.insert(schema.roles).values({
-        id: roleId,
-        name: roleName,
-        description: 'Role for outbound idempotency tests',
-      });
+      await db
+        .insert(schema.roles)
+        .values({
+          id: roleId,
+          name: roleName,
+          description: 'Role for outbound idempotency tests',
+        })
+        .onConflictDoNothing({ target: schema.roles.name });
+      const [createdRoleRow] = await db
+        .select()
+        .from(schema.roles)
+        .where(eq(schema.roles.name, roleName));
+      roleId = createdRoleRow.id;
     }
 
     await db.insert(schema.users).values({
@@ -47,6 +56,12 @@ describe('Outbound idempotency integration', () => {
     });
 
     await db.insert(schema.userRoles).values({ userId, roleId });
+
+    // AAA-04 (MUD-CAT-002): conversa com setor exige membership para o ator de teste.
+    const suffix = String(Date.now()).slice(-6);
+    const [sector] = await db.insert(schema.sectors).values({ name: `outbound-idem ${suffix}`, code: `oidem${suffix}` }).returning();
+    sectorId = sector.id;
+    await db.insert(schema.userSectors).values({ userId, sectorId, accessLevel: 'write' });
 
     const login = await app.inject({
       method: 'POST',
@@ -65,6 +80,7 @@ describe('Outbound idempotency integration', () => {
       statusV2: 'novo',
       currentHandler: 'bot',
       isActive: true,
+      sectorId,
     });
   });
 
@@ -74,7 +90,6 @@ describe('Outbound idempotency integration', () => {
       .from(schema.messages)
       .where(eq(schema.messages.conversationId, conversationId));
     if (msgs.length > 0) {
-      const { inArray } = await import('drizzle-orm');
       await db.delete(schema.outboundDeliveries).where(
         inArray(schema.outboundDeliveries.internalMessageId, msgs.map((m) => m.id))
       );
@@ -90,10 +105,11 @@ describe('Outbound idempotency integration', () => {
       await db.delete(schema.auditLogs).where(eq(schema.auditLogs.userId, userId));
       await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
       await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
+      await db.delete(schema.userSectors).where(eq(schema.userSectors.userId, userId));
       await db.delete(schema.users).where(eq(schema.users.id, userId));
     }
-    if (createdRole) {
-      await db.delete(schema.roles).where(eq(schema.roles.id, roleId));
+    if (sectorId) {
+      await db.delete(schema.sectors).where(eq(schema.sectors.id, sectorId));
     }
     await app.close();
   });
@@ -131,11 +147,17 @@ describe('Outbound idempotency integration', () => {
     expect(first.statusCode).toBe(201);
     const firstBody = first.json() as { messageId: string };
 
-    const second = await sendMessage({ content: 'Conteudo diferente (retry)' }, key);
+    // C04: retry com MESMO payload é a mesma intenção (dedup).
+    const second = await sendMessage({ content: 'Original' }, key);
     expect(second.statusCode).toBe(200);
     const secondBody = second.json() as { messageId: string; deduplicated: boolean };
     expect(secondBody.messageId).toBe(firstBody.messageId);
     expect(secondBody.deduplicated).toBe(true);
+
+    // C04: reuso com payload divergente é conflito (409), sem side effects.
+    const divergent = await sendMessage({ content: 'Conteudo diferente (retry)' }, key);
+    expect(divergent.statusCode).toBe(409);
+    expect((divergent.json() as { error: string }).error).toBe('IDEMPOTENCY_KEY_CONFLICT');
 
     const rows = await db
       .select()
@@ -156,11 +178,16 @@ describe('Outbound idempotency integration', () => {
     const first = await sendMessage({ content: 'Via body', clientMessageId });
     expect(first.statusCode).toBe(201);
 
-    const second = await sendMessage({ content: 'Via body retry', clientMessageId });
+    // C04: mesmo payload deduplica; payload divergente com a mesma chave ⇒ 409.
+    const second = await sendMessage({ content: 'Via body', clientMessageId });
     expect(second.statusCode).toBe(200);
     expect((second.json() as { messageId: string }).messageId).toBe(
       (first.json() as { messageId: string }).messageId
     );
+
+    const divergent = await sendMessage({ content: 'Via body retry', clientMessageId });
+    expect(divergent.statusCode).toBe(409);
+    expect((divergent.json() as { error: string }).error).toBe('IDEMPOTENCY_KEY_CONFLICT');
   });
 
   it('sem chave, cada request cria mensagem nova', async () => {
@@ -238,14 +265,15 @@ describe('Outbound idempotency integration', () => {
     const { messageId } = response.json() as { messageId: string };
 
     // sendViaEvolution é assíncrono; aguardar reconciliação (mock resolve imediato).
-    // Poll na DELIVERY (última escrita da cadeia) para evitar race com o update da mensagem.
+    // Poll na DELIVERY (última escrita da cadeia) por internal_message_id: a
+    // coluna `idempotency_key` guarda a chave de armazenamento derivada (C04).
     let delivery: { status: string | null; attemptCount: number } | null = null;
     const deadline = Date.now() + 15000;
     while (Date.now() < deadline) {
       const [row] = await db
         .select({ status: schema.outboundDeliveries.status, attemptCount: schema.outboundDeliveries.attemptCount })
         .from(schema.outboundDeliveries)
-        .where(eq(schema.outboundDeliveries.idempotencyKey, key));
+        .where(eq(schema.outboundDeliveries.internalMessageId, messageId));
       delivery = row ?? null;
       if (delivery?.status === 'sent') break;
       await new Promise((resolve) => setTimeout(resolve, 25));

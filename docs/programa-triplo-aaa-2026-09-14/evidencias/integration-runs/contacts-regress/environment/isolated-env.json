@@ -1,0 +1,24 @@
+{
+  "runId": "contacts-regress",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60532/cvg_aaa_contacts_regress_w41",
+  "databaseName": "cvg_aaa_contacts_regress_w41",
+  "databasePort": 60532,
+  "redisUrl": "redis://127.0.0.1:57090",
+  "redisPort": 57090,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1287144,
+    "dataDir": "/tmp/cvg-aaa-runs/contacts-regress/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1287180,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "contacts-regress",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 23:06:04.542238-03"
+  }
+}

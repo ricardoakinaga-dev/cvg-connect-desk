@@ -1,6 +1,4 @@
 # docker-compose.yml — Produção (build das imagens, sem bind mounts)
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15-alpine
@@ -60,16 +58,40 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
       REDIS_URL: redis://redis:6379
       PORT: 3000
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório em produção}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
       SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
       SECRETARY_TIMEOUT_MS: ${SECRETARY_TIMEOUT_MS:-30000}
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+      OTEL_ENABLED: ${OTEL_ENABLED:-false}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-desk-api}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:?WEBHOOK_SECRET é obrigatório em produção}
       CORS_ORIGIN: ${CORS_ORIGIN:?CORS_ORIGIN obrigatorio em producao - ausente ou * derruba o boot (fail-secure)}
       TRUST_PROXY: ${TRUST_PROXY:-}
       INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
+      REDIS_REQUIRED: "true"
+      # C08/AAA-18 — /metrics exige token em produção (fail-closed sem ele).
+      # O valor nunca entra em imagem, config versionada ou log; a rede interna
+      # pode ser restringida adicionalmente com METRICS_ALLOWED_CIDRS (ex.: 172.16.0.0/12).
+      METRICS_TOKEN: ${METRICS_TOKEN:?METRICS_TOKEN é obrigatório em produção}
+      METRICS_ALLOWED_CIDRS: ${METRICS_ALLOWED_CIDRS:-}
+      # C05 — mídia: storage privado S3 + scanner real sempre ativos (não opt-in).
+      # S3_ENDPOINT vazio usa AWS S3; fornecer endpoint S3-compatible se aplicável.
+      MEDIA_STORAGE_DRIVER: s3
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:?S3_BUCKET é obrigatório em produção}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?S3_ACCESS_KEY_ID é obrigatório em produção}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?S3_SECRET_ACCESS_KEY é obrigatório em produção}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+      MEDIA_MAX_BYTES: ${MEDIA_MAX_BYTES:-16777216}
+      MEDIA_REQUIRE_SCAN: all
+      MEDIA_PIPELINE_ENABLED: "true"
+      MALWARE_SCANNER: clamav
+      CLAMAV_HOST: ${CLAMAV_HOST:?CLAMAV_HOST é obrigatório em produção}
+      CLAMAV_PORT: ${CLAMAV_PORT:?CLAMAV_PORT é obrigatório em produção}
+      MEDIA_SIGNED_URL_TTL_SECONDS: ${MEDIA_SIGNED_URL_TTL_SECONDS:-300}
     ports:
       - "127.0.0.1:3000:3000"
     read_only: true
@@ -86,8 +108,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      clamav:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/readiness"]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -96,12 +120,28 @@ services:
       - internal
       - frontend
 
+  # C05: scanner real no runtime implantado (clamd TCP 3310 na rede interna).
+  clamav:
+    image: clamav/clamav:stable
+    restart: always
+    volumes:
+      - clamavdata:/var/lib/clamav
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    networks:
+      - internal
+
   desk-web:
     build:
       context: .
       dockerfile: apps/desk-web/Dockerfile
       args:
         VITE_API_URL: /api
+        VITE_REALTIME_URL: /ws/
     restart: always
     ports:
       - "80:80"
@@ -137,10 +177,34 @@ services:
       REDIS_URL: redis://redis:6379
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
       WORKER_HEALTH_PORT: ${WORKER_HEALTH_PORT:-9090}
+      METRICS_TOKEN: ${METRICS_TOKEN:?METRICS_TOKEN é obrigatório em produção}
+      OTEL_ENABLED: ${OTEL_ENABLED:-false}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-message-worker}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
       GATEWAY_URL: ${GATEWAY_URL:-}
       EVOLUTION_API_URL: ${EVOLUTION_API_URL:-}
       SECRETARY_URL: ${SECRETARY_URL:-}
       SECRETARY_API_KEY: ${SECRETARY_API_KEY:-}
+      # C05/PROD-14 — o recovery roda no worker e precisa do mesmo storage
+      # privado e scanner fail-closed do fluxo HTTP.
+      MEDIA_STORAGE_DRIVER: s3
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:?S3_BUCKET é obrigatório em produção}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?S3_ACCESS_KEY_ID é obrigatório em produção}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?S3_SECRET_ACCESS_KEY é obrigatório em produção}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+      MEDIA_MAX_BYTES: ${MEDIA_MAX_BYTES:-16777216}
+      MEDIA_REQUIRE_SCAN: all
+      MEDIA_PIPELINE_ENABLED: "true"
+      MALWARE_SCANNER: clamav
+      CLAMAV_HOST: ${CLAMAV_HOST:?CLAMAV_HOST é obrigatório em produção}
+      CLAMAV_PORT: ${CLAMAV_PORT:?CLAMAV_PORT é obrigatório em produção}
+      MEDIA_RECOVERY_BATCH_SIZE: ${MEDIA_RECOVERY_BATCH_SIZE:-50}
+      MEDIA_RECOVERY_LEASE_SECONDS: ${MEDIA_RECOVERY_LEASE_SECONDS:-120}
+      MEDIA_RECOVERY_MAX_ATTEMPTS: ${MEDIA_RECOVERY_MAX_ATTEMPTS:-8}
+      MEDIA_RECOVERY_BACKOFF_BASE_MS: ${MEDIA_RECOVERY_BACKOFF_BASE_MS:-1000}
+      MEDIA_RECOVERY_BACKOFF_MAX_MS: ${MEDIA_RECOVERY_BACKOFF_MAX_MS:-300000}
     read_only: true
     tmpfs:
       - /tmp
@@ -155,6 +219,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      clamav:
+        condition: service_healthy
     networks:
       - internal
 
@@ -165,11 +231,18 @@ services:
     restart: always
     environment:
       NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-connect_desk}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-connect_desk_db}
       REDIS_URL: redis://redis:6379
       REALTIME_PORT: 8080
+      # SA-009/AC1: modo de outbox explícito (o serviço consulta o banco).
+      USE_DATABASE_OUTBOX: "true"
       REALTIME_POLL_INTERVAL_MS: ${REALTIME_POLL_INTERVAL_MS:-500}
       DESK_API_URL: http://desk-api:3000
       INTERNAL_EVENTS_SECRET: ${INTERNAL_EVENTS_SECRET:?INTERNAL_EVENTS_SECRET é obrigatório em produção}
+      METRICS_TOKEN: ${METRICS_TOKEN:?METRICS_TOKEN é obrigatório em produção}
+      OTEL_ENABLED: ${OTEL_ENABLED:-false}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-realtime-service}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:
@@ -182,7 +255,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/readiness"]
       interval: 15s
       timeout: 3s
       retries: 3
@@ -198,9 +271,43 @@ services:
       - internal
       - frontend
 
+  # Observabilidade (C08/AAA-18): o scrape do /metrics envia METRICS_TOKEN.
+  # O token é materializado apenas em tmpfs (/tmp/metrics_token), lido pelo
+  # credentials_file do Prometheus, e nunca aparece na config versionada.
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    environment:
+      METRICS_TOKEN: ${METRICS_TOKEN:?METRICS_TOKEN é obrigatório em produção}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        umask 077
+        printf '%s' "$$METRICS_TOKEN" > /tmp/metrics_token
+        exec /bin/prometheus \
+          --config.file=/etc/prometheus/prometheus.yml \
+          --storage.tsdb.path=/prometheus \
+          --web.enable-lifecycle
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheusdata:/prometheus
+    tmpfs:
+      - /tmp
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      desk-api:
+        condition: service_healthy
+    networks:
+      - internal
+
 volumes:
   pgdata:
   redisdata:
+  clamavdata:
+  prometheusdata:
 
 networks:
   internal:

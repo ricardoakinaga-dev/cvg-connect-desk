@@ -92,3 +92,17 @@ export const PINO_REDACT_PATHS = [
   'req.body.token',
   'res.headers["set-cookie"]',
 ];
+
+/**
+ * Remove caracteres de controle C0 (U+0000–U+001F) e DEL (U+007F).
+ * Implementado sem regex para não depender de classes com escapes de
+ * controle (evita falso positivo do `no-control-regex` do ESLint).
+ */
+export function stripControlChars(value: string): string {
+  let out = '';
+  for (const ch of value) {
+    const code = ch.codePointAt(0) ?? 0;
+    if (code > 0x1f && code !== 0x7f) out += ch;
+  }
+  return out;
+}

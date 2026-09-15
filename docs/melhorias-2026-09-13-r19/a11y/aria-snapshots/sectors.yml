@@ -1,0 +1,70 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - heading "Setores" [level=1]
+  - button "Novo setor"
+  - text: Administrativo admin Cobrança, documentos, reclamações Ativo
+  - button "Desativar setor Administrativo": Desativar
+  - text: Cirurgia cirurgia Agendamento e acompanhamento cirúrgico Ativo
+  - button "Desativar setor Cirurgia": Desativar
+  - text: Clínica Médica clinica Consultas, exames, resultados Ativo
+  - button "Desativar setor Clínica Médica": Desativar
+  - text: Comercial comercial Orçamentos, pacotes, vacinas Ativo
+  - button "Desativar setor Comercial": Desativar
+  - text: Farmácia farmacia Medicamentos, dispensação Ativo
+  - button "Desativar setor Farmácia": Desativar
+  - text: Internação internacao Pacientes internados Ativo
+  - button "Desativar setor Internação": Desativar
+  - text: Recepção recepcao Primeiro atendimento, agendamentos, dúvidas Ativo
+  - button "Desativar setor Recepção": Desativar
+  - text: Setor A (fixture) AAA-A Ativo
+  - button "Desativar setor Setor A (fixture)": Desativar
+  - text: Setor B (fixture) AAA-B Ativo
+  - button "Desativar setor Setor B (fixture)": Desativar

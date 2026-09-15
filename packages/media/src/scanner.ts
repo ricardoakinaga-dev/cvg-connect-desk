@@ -114,14 +114,17 @@ export class ClamAVScanner implements MalwareScanner {
       socket.end();
 
       const response = await reply;
-      if (response.endsWith('OK')) {
+      // clamd responde em modo `zINSTREAM` com NUL terminador; sem normalizar,
+      // "stream: OK\0" nunca casaria e todo scan real viraria SCAN_FAILED.
+      const normalized = response.replace(/\0/g, '').trim();
+      if (/(^|\n)\s*stream: OK\s*$/.test(normalized)) {
         return { status: 'CLEAN', durationMs: Date.now() - started };
       }
-      const infected = response.match(/stream: (.+) FOUND$/);
+      const infected = /stream: (.+?)\s+FOUND/.exec(normalized);
       if (infected) {
         return { status: 'INFECTED', signature: infected[1], durationMs: Date.now() - started };
       }
-      return { status: 'SCAN_FAILED', error: `unexpected clamd reply: ${response.slice(0, 120)}`, durationMs: Date.now() - started };
+      return { status: 'SCAN_FAILED', error: `unexpected clamd reply: ${normalized.slice(0, 120)}`, durationMs: Date.now() - started };
     } catch (error) {
       socket.destroy();
       return {

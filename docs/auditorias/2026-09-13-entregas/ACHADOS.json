@@ -1,0 +1,558 @@
+[
+  {
+    "id": "BE-A01",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Secretary reabre estado unknown e refaz chamada externa",
+    "evidence_kind": "current-source-and-mocked-probe",
+    "references": [
+      "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:184",
+      "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:251",
+      "apps/message-worker/src/processor.ts:225",
+      "packages/integrations/src/secretary-client.ts:58"
+    ],
+    "description": "**Confiança alta; CURRENT por revisão conectada + probe da função real com store simulado.**\n\n`modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:184` trata apenas denied/completed como terminais; `:192` converte qualquer outro estado, inclusive unknown e processing, em processing, incrementa attemptCount e apaga lastError/errorCode. `modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:251` classifica falha ambígua, persiste unknown e relança erro; `apps/message-worker/src/processor.ts:225` entra no retry. Na próxima tentativa o fluxo chega novamente a processMessageWithSecretary. Probe observou unknown→processing, alreadyCompleted=false e perda da causa.\n\n**Impacto:** timeout/5xx após processamento remoto pode provocar nova IA/custo/efeito; crash após envio antes de completar invocação pode recalcular resposta diferente e colidir no fingerprint outbound. O recibo local não é reconciliação externa. `packages/integrations/src/secretary-client.ts:58` envia POST sem invocationKey ou contrato explícito de idempotência remota.\n\n**PROPOSED:** preservar unknown como bloqueio de reexecução automática; obter reconciliação/idempotência oficial ou criar etapa durável de resultado com referência, separando IA de entrega. `processing` também precisa owner/generation/checkpoint para impedir dois executores após lease expirado. Provar timeout após efeito, crash após IA/antes gravação e redelivery concorrente. PROD10-AC2/3, PROD13, G03/G05.",
+    "tasks": [
+      "PROD-10",
+      "PROD-13",
+      "PROD-12"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "BE-A02",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Retry de webhook com timestamp renovado é rejeitado como payload diferente",
+    "evidence_kind": "current-source-and-mocked-probe",
+    "references": [
+      "packages/shared/src/webhook-guard.ts:235",
+      "packages/shared/src/webhook-anti-replay.ts:243"
+    ],
+    "description": "**Confiança alta; CURRENT com probe + SQL inspecionado.**\n\n`packages/shared/src/webhook-guard.ts:235` deriva signatureHash da assinatura HMAC; a assinatura inclui timestamp. `packages/shared/src/webhook-anti-replay.ts:243` exige assinatura **e** payload iguais. Evento failed com conteúdo idêntico mas timestamp/HMAC novos retorna mismatch. Probe: claimed_new → fail → nova assinatura/mismo payload = mismatch; assinatura original = claimed_retry. Depois de 300s a assinatura original passa a falhar pelo skew, de modo que uma entrega pendente pode ficar sem retry viável, dependendo do contrato real de redelivery.\n\n**PROPOSED:** autenticar cada tentativa pelo timestamp/HMAC atual; deduplicar identidade+origem+payload canônico estável, não a assinatura transitória. Exigir mismatch quando payload mudar, aceitar retry quando só timestamp/assinatura forem atualizados. Gateway oficial/sandbox continua necessário para fechar AC4. PROD07-AC1/2/3, G03.",
+    "tasks": [
+      "PROD-07"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "BE-A03",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Duplicata já commitada ainda recebe 409 contra o contrato C03",
+    "evidence_kind": "current-source-connected-path",
+    "references": [
+      "packages/shared/src/webhook-guard.ts:243"
+    ],
+    "description": "**Confiança alta; CURRENT estático, HTTP não executado.**\n\n`packages/shared/src/webhook-guard.ts:243`–`:265` responde 409 `duplicate_event_id` para completed. `CONTRATOS.md` C03 exige evento já aplicado → 2xx idempotente. O negócio não é duplicado (positivo), mas ACK perdido seguido de retry resulta em erro permanente e pode alimentar retries/DLQ do produtor.\n\n**PROPOSED:** retornar o ACK idempotente estável ou ratificar contrato real incompatível antes de alterar documentação; guardar resultRef do recibo se necessário. Não remover HMAC/skew para resolver. PROD07-AC4/G03.",
+    "tasks": [
+      "PROD-07",
+      "PROD-01"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "BE-A04",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Recuperação de mídia não é acionada pelo runtime e exclui SCAN_FAILED",
+    "evidence_kind": "current-source-connected-path",
+    "references": [
+      "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts:139",
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:257",
+      "modules/chat/src/application/use-cases/legacy-media-migration.ts:325",
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:335"
+    ],
+    "description": "**Confiança alta; CURRENT por mapa completo de callers.**\n\n`modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts:139` agenda trabalho em memória após persistência; o pipeline mantém `inflight` local em `inbound-media-pipeline.ts:257`. `recoverPendingInboundMedia` em `:325` tem caller apenas em `legacy-media-migration.ts:325` e testes; busca global não encontrou boot/poller/worker/comando operacional conectado à recuperação. Logo crash entre commit e enqueue deixa mídia pendente até chamada manual da função. Além disso `inbound-media-pipeline.ts:335` seleciona somente PENDING_SCAN/FAILED, enquanto falha real de scanner produz SCAN_FAILED (`:250`): esse estado jamais entra na própria recuperação proposta. Falha é fail-closed (bytes não liberados), mas atendimento fica sem mídia.\n\n**PROPOSED:** conectar recuperação durável ao worker/poller com backoff, limite e observabilidade; incluir SCAN_FAILED retentável e evitar starvation de primeiras linhas permanentemente indisponíveis. Provar crash pós-commit/pré-enqueue, scanner indisponível→recuperado e reinício real. PROD14-AC3/G04. Não adicionar broker: fila PG/estado existente é baseline suficiente.",
+    "tasks": [
+      "PROD-14"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "BE-A05",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Endpoint legado de anonimização contorna política e escopo de mutação",
+    "evidence_kind": "current-source-connected-path",
+    "references": [
+      "modules/privacy/src/presentation/http/privacy.controller.ts:406",
+      "modules/privacy/src/application/data-subject-service.ts:143",
+      "modules/privacy/src/application/privacy-policy.ts:4"
+    ],
+    "description": "**Confiança alta no caminho estático; HTTP/PG não executado.**\n\n`modules/privacy/src/presentation/http/privacy.controller.ts:406` mantém `/privacy/contacts/:id/anonymize`; `:431` verifica apenas se o contato possui algum vínculo dentro do escopo e `:445` chama `anonymizeContactData` sem passar escopo/política/confirmIrreversible. `modules/privacy/src/application/data-subject-service.ts:143` altera PII global; `:157` carrega **todas** as conversas do contato e `:164` altera remetentes em todas elas. Não há transação englobando contato/mensagens/audit, nem vínculo idempotente de requestId. `privacy-policy.ts:4` declara D02 não aprovada/default dry-run, mas este caminho não consulta a política.\n\n**Impacto:** um ator com admin:write setorial e contato compartilhado pode alterar cópias de mensagens em outro setor; mesmo global, o endpoint executa alteração irreversível fora da política dry-run/checkpoints. Falha após UPDATE contacts perde o telefone original necessário à limpeza de sender no retry. A nova rota erasure mais robusta não elimina o bypass legado.\n\n**PROPOSED:** rotear anonimização legada pelo mesmo núcleo de política, escopo, confirmação, transação/checkpoint e recibo da erasure, ou bloquear mutação enquanto D02 estiver OPEN. Testar contato compartilhado A/B, ator A, modo dry-run, falha após primeira escrita e retry. PROD16-AC1/2/3/4, G02/G05.",
+    "tasks": [
+      "PROD-16",
+      "PROD-04"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "BE-A06",
+    "severity": "High",
+    "confidence": "high",
+    "title": "CAS é opcional e cliente atual não envia versão",
+    "evidence_kind": "current-source-connected-path",
+    "references": [
+      "modules/chat/src/application/use-cases/conversation-operations.use-case.ts:67",
+      "modules/chat/src/presentation/http/conversation-operations.controller.ts:70"
+    ],
+    "description": "**Confiança alta no contrato estático; corrida HTTP/PG não executada.**\n\n`modules/chat/src/application/use-cases/conversation-operations.use-case.ts:67` retorna true quando expectedUpdatedAt está ausente. Campos expectedStatusV2/expectedAssignedUserId/expectedHandler também são opcionais. `modules/chat/src/presentation/http/conversation-operations.controller.ts:70`, `:124`, `:176` exigem apenas novo estado/assignee/handler. Busca em apps/desk-web/src não encontrou nenhum expectedUpdatedAt/expectedStatus/expectedHandler/expectedAssigned. SELECT FOR UPDATE serializa escrita, porém não impede operador antigo de sobrescrever uma alteração já commitada sem precondição.\n\n**PROPOSED:** exigir versão/precondição no endpoint operacional e propagá-la do DTO ao web, com 409/428 e refresh em conflito; usar versão inteira ou token que preserve precisão em vez de depender do Date truncado. Provar dois operadores: B salva, A envia estado antigo e recebe conflito sem sobrescrita. PROD18-AC3/G06.",
+    "tasks": [
+      "PROD-18",
+      "PROD-19",
+      "PROD-27"
+    ],
+    "source": "evidencias/backend/report.md"
+  },
+  {
+    "id": "OPS01",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Digest esperado é ignorado na reavaliação",
+    "evidence_kind": "CURRENT_REPRO",
+    "references": [
+      "scripts/triple-aaa-verify.mjs:160"
+    ],
+    "description": "O CLI passa o candidato selado ao evaluateGate e compara drift somente commit/lock/source. --evaluate --image-digest diferente aceita o digest antigo com VERIFIED_CANDIDATE exit 0.",
+    "proposed": "Comparar imageDigest live/selado e exigir identidade de imagem não vazia para gates de imagem; regressão trocar apenas digest.",
+    "tasks": [
+      "PROD-02",
+      "PROD-35"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS02",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Manifesto contraditório com log vazio recebe PASS",
+    "evidence_kind": "CURRENT_REPRO",
+    "references": [
+      "scripts/production/evidence-gate.mjs:544"
+    ],
+    "description": "evaluateCheck aceita command=true em check pnpm typecheck, exitCode=99, log vazio hash correto e timestamp 2099; não valida comando esperado, exit 0, log não vazio, futuro, run/attempt. Reprodução direta retorna PASS sem razões.",
+    "proposed": "Validar comando/escopo efetivos, exitCode/status, janela temporal, metadados e log não vazio; coverage exige métricas/denominadores e thresholds em vez de só status.",
+    "tasks": [
+      "PROD-02",
+      "PROD-34"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS03",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Query-performance sem medição recebe PASS",
+    "evidence_kind": "CURRENT_REPRO",
+    "references": [
+      "scripts/production/evidence-gate.mjs:371"
+    ],
+    "description": "queries:[{}] satisfaz minEntries=1 e ausência de acceptable:false/error; nenhum SQL, plano, tempo, dataset ou orçamento é exigido.",
+    "proposed": "Schema por query exige identidade, plano/medição e orçamento, dataset/perfil; rejeitar objeto vazio e conjunto incompleto.",
+    "tasks": [
+      "PROD-02",
+      "PROD-33"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS04",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Evento desconhecido cai silenciosamente em push",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      ".github/scripts/certification-aggregator.mjs:451"
+    ],
+    "description": "main resolve EVENT desconhecido como push; typo release pode remover coverage-global/load/DR obrigatórios do release. A própria evidência RELATORIO-CORRECOES de PROD02 registra L5 aberto.",
+    "proposed": "Rejeitar enum desconhecido com exit não zero; testes EVENT=relase e dispatch sem política; manter required congelado por evento.",
+    "tasks": [
+      "PROD-03"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS05",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Smoke real MinIO não consegue provar delete",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      "scripts/staging-smoke.mjs:42"
+    ],
+    "description": "DeleteObjectCommand não é importado na linha 11 e é instanciado na 42 (ReferenceError após put/get); HEAD de objeto apagado lança 404 e condição tem || true.",
+    "proposed": "Importar DeleteObjectCommand, aceitar somente HEAD 404 esperado, remover tautologia, provar erro/credenciais/objeto e scanner com reais isolados.",
+    "tasks": [
+      "PROD-32"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS06",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Prova de imagem identifica build local, sem ligação com boot/scan/entrega",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      ".github/workflows/triple-aaa-gate.yml:222"
+    ],
+    "description": "Image identity extrai docker inspect .Id; builds próprios efêmeros não são publicados ou executados nesse job. Agregador valida formato/nomes/commit, sem comparar digest consumido no Smoke E2E/scans. SHA source não prova identidade de imagem entregue.",
+    "proposed": "Build once, registry manifest digest por serviço, boot/scan/E2E usando mesmos digests; agregador compara artefatos e source/lock/run.",
+    "tasks": [
+      "PROD-03",
+      "PROD-35",
+      "PROD-38"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS07",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Conjunto entregue não sela candidato atual",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      "docs/producao-2026-09-13/evidencias/prod-36/prod-36-evidence.json:1"
+    ],
+    "description": "PROD36 só candidate commit/status/runs; faltam source/lock/digests/hashes e horários completos. runner-summary tampouco tem identidade de fonte. PROD00 fileHashes divergem em 6 de 42 arquivos, inclusive lock/schema/compose (baseline-drift.json). Provas históricas podem ser úteis, mas não qualificam worktree atual.",
+    "proposed": "Reexecutar checks afetados e produzir manifestos C10 por run; separar histórico de prova atual, não regenerar selo sobrescrevendo baseline antigo.",
+    "tasks": [
+      "PROD-00",
+      "PROD-36",
+      "PROD-40"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "OPS08",
+    "severity": "High",
+    "confidence": "high",
+    "title": "DR usa bancos fixos destrutivos e prova de fixture insuficiente",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      "infra/scripts/dr-e2e.sh:11"
+    ],
+    "description": "DROP DATABASE de connect_desk_dr_src/dst sem marcador/owner; backup padrão /tmp; valida fixture final por grep de uma única tag, aceitando message presente com outbox/DLQ ausentes. pg-restore.sh:20 permite ausência de checksum. Sem prova durável RPO/restore mídia/erasures.",
+    "proposed": "Namespace por run e ownership, checksum obrigatório, backup durável privado, comparação exata de todas entidades/assets, RPO/RTO e teardown idempotente.",
+    "tasks": [
+      "PROD-37"
+    ],
+    "source": "evidencias/ops/REPORT.md"
+  },
+  {
+    "id": "DOC01",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Documentação e metadados de execução contradizem as entregas",
+    "evidence_kind": "CURRENT_STATIC",
+    "references": [
+      "docs/producao-2026-09-13/BACKLOG.json:4",
+      "docs/producao-2026-09-13/README.md:3",
+      "docs/THREAT_MODEL.md:29",
+      "docs/TEST_MATRIX.md:3"
+    ],
+    "description": "Cabeçalho PLANNED_NOT_EXECUTING convive com 20 entregas; checks TO_CREATE têm suítes existentes. Contratos repetem lacunas já alteradas; threat model ainda declara DLQ em memória e ausência de OTel. Matriz de testes promove resultados antigos a VERIFIED sem vínculo ao candidato atual.",
+    "tasks": [
+      "PROD-00",
+      "PROD-01",
+      "PROD-39"
+    ],
+    "source": "evidencias/documentation-before",
+    "resolution": "Documentação canônica corrigida nesta auditoria; manutenção e comprovação final continuam em PROD-39."
+  },
+  {
+    "id": "FE01",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Drawer fechado amplia Inbox 1024 para 1318 pixels e continua no DOM acessível",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.css:17",
+      "apps/desk-web/src/pages/Inbox.tsx:1240"
+    ],
+    "description": "inbox-1024-selected.png; browser-observations.json: geometry 1318/1024",
+    "proposed": "Fechar drawer com geometria contida e inert/aria-hidden conforme estado; medir scrollWidth e navegação por Tab nos breakpoints.",
+    "tasks": [
+      "PROD-29"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE02",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Operação no contexto incompleta: transferência desabilitada; cadastro abre lista genérica",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:1127",
+      "apps/desk-web/src/pages/Inbox.tsx:1249"
+    ],
+    "description": "inbox-1440-selected.png",
+    "proposed": "Implementar atribuição/status/handoff/transferência/tags e links exatos; contexto de tarefa/nota/tutor/paciente via recursos autorizados.",
+    "tasks": [
+      "PROD-19"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE03",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Busca e contagens consideram apenas conversas carregadas; parâmetros de consulta não incluem busca/status/responsável/labels",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:335",
+      "apps/desk-web/src/pages/Inbox.tsx:880",
+      "apps/desk-web/src/pages/Inbox.tsx:894"
+    ],
+    "description": "render.cjs fixture anuncia segunda página; browser-observations.json registra consultas",
+    "proposed": "Levar busca/filtros ao servidor autorizado e distinguir totais globais dos itens carregados.",
+    "tasks": [
+      "PROD-19"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE04",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Timeline rotula qualquer histórico como Hoje",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:1162"
+    ],
+    "description": "inbox-375-selected.png e inbox-1440-selected.png; fixture usa 10/11 setembro",
+    "proposed": "Agrupar por data local real e tratar timezone, mudança de dia e empates.",
+    "tasks": [
+      "PROD-20"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE05",
+    "severity": "High",
+    "confidence": "high",
+    "title": "asset:// é chip sem ação; documento/vídeo não têm componente de leitura completo",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:1164"
+    ],
+    "description": "inbox-1440-selected.png, arquivo exame-luna-fixture.pdf sem botão/link",
+    "proposed": "Resolver leitura/download autorizado e estados pending/infected/revogado/expirado; não reconduzir mídia para URL arbitrária.",
+    "tasks": [
+      "PROD-20"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE06",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Rascunhos e intenções existem só em memória do Inbox; sair/remontar perde estado",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:246",
+      "apps/desk-web/src/pages/Inbox.tsx:274"
+    ],
+    "description": "Inspeção state/ref, nenhuma persistência por conversa na página",
+    "proposed": "Definir recuperação segura por identidade/conversa durante 401/relogin/navegação; preservar intenção idempotente sem compartilhar dados entre usuários.",
+    "tasks": [
+      "PROD-20"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE07",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Tarefa não permite atribuição/vínculos no formulário nem abrir conversa do card",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Tasks.tsx:129",
+      "apps/desk-web/src/pages/Tasks.tsx:357"
+    ],
+    "description": "tasks-create-1440.png: apenas título/descrição/prioridade/prazo; assignee 10000000",
+    "proposed": "Seletores humanos autorizados e edição/links de conversa/tutor/paciente/assignee; provar persistência e atualização.",
+    "tasks": [
+      "PROD-21"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE08",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Nota exige ID técnico e apresenta referência truncada sem navegação",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Notes.tsx:95",
+      "apps/desk-web/src/pages/Notes.tsx:170",
+      "apps/desk-web/src/pages/Notes.tsx:243"
+    ],
+    "description": "notes-create-1440.png: ID da referência e #20000000",
+    "proposed": "Pesquisa/seletor por nomes, preseleção contextual e links exatos.",
+    "tasks": [
+      "PROD-22"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE09",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Ficha de contato carrega/cria notas apenas na primeira conversa",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Contacts.tsx:188",
+      "apps/desk-web/src/pages/Contacts.tsx:305"
+    ],
+    "description": "Inspeção do caminho loadContactNotes e criação",
+    "proposed": "Agregar notas de todas conversas autorizadas com procedência e paginação; evitar escolha implícita da primeira conversa.",
+    "tasks": [
+      "PROD-22",
+      "PROD-25"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE10",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Alertas têm ack/resolve mas não navegam ao recurso relacionado",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Alerts.tsx:105",
+      "apps/desk-web/src/pages/Alerts.tsx:245"
+    ],
+    "description": "alerts-1440.png: fixture tem conversationId/taskId, sem link",
+    "proposed": "Adicionar links autorizados para tarefa/conversa e reconciliar status entre operadores.",
+    "tasks": [
+      "PROD-23"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE11",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Grupos só exibem membros; instrução para adicionar pela ficha não corresponde a controle ali",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/ContactGroups.tsx:354",
+      "apps/desk-web/src/pages/ContactGroups.tsx:363",
+      "apps/desk-web/src/pages/Contacts.tsx:452"
+    ],
+    "description": "ContactGroups mostra membros e texto de orientação; Contacts apenas renderiza badges grupos/labels",
+    "proposed": "Conectar ações adicionar/remover membros e labels; editar grupo/setor conforme permissões e invalidar consultas.",
+    "tasks": [
+      "PROD-24"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE12",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Paciente ainda usa tutorId singular; N:N não representado pela UI",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Patients.tsx:68",
+      "apps/desk-web/src/pages/Patients.tsx:144",
+      "apps/desk-web/src/pages/Patients.tsx:322"
+    ],
+    "description": "Formulário e payload com tutorId único",
+    "proposed": "Resolver D03 e adaptar API/UI/migração compatível a múltiplos tutores; não declarar N:N entregue.",
+    "tasks": [
+      "PROD-25"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE13",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Admin não possui editor de permissões por papel/vínculo usuário-papel nem gestão completa de membros de times/filas",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Admin.tsx:739",
+      "apps/desk-web/src/pages/Admin.tsx:745"
+    ],
+    "description": "admin-correct-fixture-1440.png; admin-roles-1440.png",
+    "proposed": "Manter editor de setores existente, adicionar editor por capacidade efetiva, associação papel e membros com audit/revogação.",
+    "tasks": [
+      "PROD-26"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE14",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Kanban move por select/drag, mas card não abre conversa e só há filtro de setor",
+    "evidence_kind": "BROWSER+STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Kanban.tsx:92",
+      "apps/desk-web/src/pages/Kanban.tsx:265"
+    ],
+    "description": "kanban-1440.png; card sem anchor/onClick de navegação",
+    "proposed": "Conectar deep-link de conversa e filtros agente/label/prioridade/período/grupo; manter alternativa teclado e feedback de falha.",
+    "tasks": [
+      "PROD-27"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE15",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Tasks/Alerts/Contacts/Kanban/Dashboard não assinam realtime nem executam polling bounded",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Tasks.tsx:84",
+      "apps/desk-web/src/pages/Alerts.tsx:76",
+      "apps/desk-web/src/pages/Kanban.tsx:108"
+    ],
+    "description": "Busca por setInterval/realtime/addEventListener nessas páginas sem ocorrência; fetch inicial/mutação/manual",
+    "proposed": "Invalidação ou polling limitado e estado stale/offline; preservar formulário sujo e reconciliar reconexão.",
+    "tasks": [
+      "PROD-30"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE16",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Monólitos de página e duplicação de estados continuam; features/inbox ausente",
+    "evidence_kind": "STATIC",
+    "references": [
+      "apps/desk-web/src/pages/Inbox.tsx:1",
+      "apps/desk-web/src/pages/Admin.tsx:1",
+      "apps/desk-web/src/pages/Contacts.tsx:1"
+    ],
+    "description": "Inbox1254 linhas, Admin1342, Contacts682; loadFailureFrom repetido",
+    "proposed": "Extrações por ownership real de consultas/mutações e adoção de primitivos; preservar comportamento em capturas equivalentes.",
+    "tasks": [
+      "PROD-28"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  },
+  {
+    "id": "FE17",
+    "severity": "Medium",
+    "confidence": "high",
+    "title": "Percurso E2E produção completo não está implementado na pasta de suites",
+    "evidence_kind": "STATIC",
+    "references": [
+      "playwright.production.config.ts:41",
+      "e2e/production/01-harness-identity.spec.ts:1"
+    ],
+    "description": "e2e/production contém somente 01-harness-identity.spec.ts; config permite reuseExistingServer local",
+    "proposed": "Criar cenário de atendimento com serviços isolados identificados e impedir reutilização sem prova de identidade; esta auditoria não executou o stack.",
+    "tasks": [
+      "PROD-38"
+    ],
+    "source": "evidencias/frontend/RELATORIO.md"
+  }
+]

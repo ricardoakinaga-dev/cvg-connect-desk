@@ -1,0 +1,194 @@
+{
+  "fixture": "SYNTHETIC API MOCKS, real Vite frontend; no integration proof",
+  "captures": [
+    {
+      "name": "closed-drawer-dom",
+      "data": {
+        "inert": false,
+        "ariaHidden": null,
+        "rect": {
+          "x": 1038,
+          "y": 0,
+          "width": 280,
+          "height": 768,
+          "top": 0,
+          "right": 1318,
+          "bottom": 768,
+          "left": 1038
+        },
+        "buttons": [
+          {
+            "label": "Fechar informações",
+            "tabIndex": 0,
+            "disabled": false
+          },
+          {
+            "label": " Abrir cadastro do contato",
+            "tabIndex": 0,
+            "disabled": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "closed-drawer-tab",
+      "focus": {
+        "tag": "BUTTON",
+        "label": null,
+        "text": " Abrir cadastro do contato",
+        "inContext": true
+      }
+    },
+    {
+      "name": "inbox-1024-context-stable",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:43543/inbox",
+      "geometry": {
+        "scrollWidth": 1024,
+        "innerWidth": 1024,
+        "scrollHeight": 768
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nM\nMaria — fixture sintética\n+55 11 99999-0000\nRecepção\n● Atendendo\nHoje\nexame-luna-fixture.pdfSegue o documento para leitura autorizada.\n12:00 ✓\nBom dia. Este histórico sintético é de 10 de setembro.\n09:00\n\nReconectando ao tempo real…\n\nMensagem\nCONTEXTO\nAtendimento\nM\nMaria — fixture sintética\n+55 11 99999-0000\nSTATUS\nAtendendo\nSETOR\nRecepção\nINÍCIO\n10 De Set., 09:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+    },
+    {
+      "name": "context-escape-stable",
+      "focus": "Abrir informações da conversa",
+      "stillOpen": 0
+    },
+    {
+      "name": "draft-after-navigation",
+      "value": ""
+    },
+    {
+      "name": "server-search",
+      "requests": [],
+      "body": "ATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\n\nNenhuma conversa\n\nNovas conversas aparecerão aqui quando chegarem.\n\nCarregar mais conversas"
+    }
+  ],
+  "logs": [
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:43543/ <--[HTTP]--> 127.0.0.1:43543/ (server)\n  (browser) 127.0.0.1:43543/ <--[WebSocket (failing)]--> 127.0.0.1:43543/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    }
+  ],
+  "requests": [
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/messages",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/read",
+      "query": "",
+      "method": "POST"
+    },
+    {
+      "path": "/tasks",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/tasks",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/messages",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/read",
+      "query": "",
+      "method": "POST"
+    }
+  ]
+}

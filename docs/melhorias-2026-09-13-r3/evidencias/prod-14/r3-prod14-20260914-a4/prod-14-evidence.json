@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-09-14T03:26:31.190Z",
+  "runId": "r3-prod14-20260914-a4",
+  "workerIndex": 38,
+  "database": "cvg_aaa_r3_prod14_20260914_a4_w38",
+  "postgresPort": 60232,
+  "storage": {
+    "driver": "s3",
+    "endpoint": "http://127.0.0.1:46289",
+    "bucket": "cvg-media-prod14-8a574782",
+    "backend": "moto real (S3 protocol)"
+  },
+  "scanner": {
+    "driver": "clamav",
+    "host": "127.0.0.1",
+    "port": 53110,
+    "real": true
+  },
+  "users": {
+    "adminUserId": "",
+    "receptionistUserId": ""
+  },
+  "cases": []
+}

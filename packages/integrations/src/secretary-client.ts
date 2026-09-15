@@ -13,6 +13,8 @@ export interface SecretaryRequest {
   action: string;
   conversationId: string;
   messageId?: string;
+  /** Stable opaque key understood by the Secretary provider for safe retries. */
+  invocationId?: string;
   context: Record<string, unknown>;
 }
 
@@ -35,7 +37,7 @@ export class SecretaryClient {
     this.timeout = config.timeout || 30000;
   }
 
-  async invoke(request: SecretaryRequest): Promise<Result<SecretaryResponse, Error>> {
+  async invoke(request: SecretaryRequest): Promise<Result<SecretaryResponse, AppError>> {
     return withSpan(
       'secretary.invoke',
       () => this.invokeWithRetry(request),
@@ -46,25 +48,36 @@ export class SecretaryClient {
     );
   }
 
-  private async invokeWithRetry(request: SecretaryRequest): Promise<Result<SecretaryResponse, Error>> {
+  private async invokeWithRetry(request: SecretaryRequest): Promise<Result<SecretaryResponse, AppError>> {
+    const configuredRetries = Number(process.env.SECRETARY_MAX_RETRIES);
+    const maxRetries = Number.isInteger(configuredRetries) && configuredRetries >= 0
+      ? configuredRetries
+      : 2;
+    const idempotencyKey = typeof request.invocationId === 'string' && request.invocationId.trim().length > 0
+      ? request.invocationId.trim()
+      : undefined;
+
     // Retry limitado a falhas pré-resposta (network/timeout) ou 429/5xx.
-    // idempotent:false — nunca retenta após resposta 4xx/auth/schema.
+    // Sem chave estável, não repetir uma chamada ambígua ao provider.
     const outcome = await withRetry(
       async () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
         try {
+          const headers = injectTraceContext({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiKey}`,
+            ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+          });
           const response = await fetch(`${this.baseUrl}/invoke`, {
             method: 'POST',
-            headers: injectTraceContext({
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.apiKey}`,
-            }),
+            headers,
             body: JSON.stringify({
               action: request.action,
               conversation_id: request.conversationId,
               message_id: request.messageId,
+              ...(idempotencyKey ? { invocation_id: idempotencyKey } : {}),
               context: request.context,
             }),
             signal: controller.signal,
@@ -84,10 +97,9 @@ export class SecretaryClient {
         }
       },
       {
-        maxRetries: Number(process.env.SECRETARY_MAX_RETRIES) || 2,
-        idempotent: false,
+        maxRetries: idempotencyKey ? maxRetries : 0,
+        idempotent: Boolean(idempotencyKey),
         onRetry: (info) => {
-          // eslint-disable-next-line no-console
           console.warn(
             `[SecretaryClient] retry attempt=${info.attempt} classification=${info.classification} delayMs=${info.delayMs} action=${request.action}`,
           );
@@ -106,7 +118,8 @@ export class SecretaryClient {
         const status = (error as Error & { status?: number }).status ?? 502;
         return err(new AppError(error.message, status, 'SECRETARY_ERROR'));
       }
-      return err(error as Error);
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new AppError(message, 502, 'SECRETARY_ERROR'));
     }
 
     return ok(outcome.value as SecretaryResponse);

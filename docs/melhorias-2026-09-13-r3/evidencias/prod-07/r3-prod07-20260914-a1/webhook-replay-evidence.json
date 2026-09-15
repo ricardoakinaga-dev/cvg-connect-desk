@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-09-14T00:28:34.150Z",
+  "runId": "r3-prod07-20260914-a1",
+  "workerIndex": 11,
+  "database": "cvg_aaa_r3_prod07_20260914_a1_w11",
+  "postgresPort": 57532,
+  "cases": [
+    {
+      "case": "AC1-falha-retry",
+      "eventId": "prod07-retry-6ee0e22a-cd4d-47b6-9fe4-3e7b3288beca",
+      "messageId": "prod07-retry-msg-6ee0e22a-cd4d-47b6-9fe4-3e7b3288beca",
+      "firstStatus": 500,
+      "firstState": "failed",
+      "retryStatus": 200,
+      "finalState": "completed",
+      "attempts": 2,
+      "counts": {
+        "messages": 1,
+        "messagePersistedEvents": 1,
+        "conversationCreatedEvents": 1,
+        "unread": 1
+      }
+    },
+    {
+      "case": "AC1-crash-pos-commit",
+      "eventId": "prod07-postcommit-85d0c25c-e567-42f5-bea1-4d973bc6957c",
+      "retryStatus": 200,
+      "counts": {
+        "messages": 1,
+        "messagePersistedEvents": 0,
+        "conversationCreatedEvents": 0,
+        "unread": 0
+      },
+      "finalState": "completed",
+      "attempts": 2
+    },
+    {
+      "case": "AC3-replay-completed",
+      "eventId": "prod07-replay-492ee491-6425-4d02-b93f-db49e01d3e00",
+      "firstStatus": 200,
+      "replayStatus": 200,
+      "replayDeduplicated": true,
+      "counts": {
+        "messages": 1,
+        "messagePersistedEvents": 1,
+        "conversationCreatedEvents": 1,
+        "unread": 1
+      },
+      "attemptsAfterFirst": 1
+    },
+    {
+      "case": "AC3-mismatch",
+      "eventId": "prod07-mismatch-1a61eaa6-58ce-4c4b-963b-6fccc40fff7d",
+      "firstStatus": 200,
+      "mismatchStatus": 409,
+      "mismatchReason": "event_payload_mismatch",
+      "messageIdACount": 1,
+      "messageIdBCount": 0
+    },
+    {
+      "case": "AC1-crash-stale-e-in-progress",
+      "staleEventId": "prod07-stale-03407451-32fc-4867-845b-787f56ec6fcc",
+      "inProgressEventId": "prod07-inprogress-03407451-32fc-4867-845b-787f56ec6fcc",
+      "inProgressStatus": 409,
+      "inProgressReason": "event_in_progress",
+      "recoveredStatus": 200,
+      "staleAttempts": 2,
+      "staleState": "completed"
+    },
+    {
+      "case": "AC2-concorrencia",
+      "eventId": "prod07-concurrent-1e7fb412-90ce-4568-889f-806340dd2899",
+      "statuses": [
+        200,
+        409
+      ],
+      "rejectedReason": "event_in_progress",
+      "counts": {
+        "messages": 1,
+        "messagePersistedEvents": 1,
+        "conversationCreatedEvents": 1,
+        "unread": 1
+      }
+    },
+    {
+      "case": "AC2-erro-transitorio",
+      "eventId": "prod07-dberror-1c3c31e7-30e6-4679-8b75-bcccfb26c1b5",
+      "brokenStatus": 500,
+      "brokenBody": {
+        "error": "INTERNAL_ERROR",
+        "message": "Internal server error",
+        "statusCode": 500,
+        "timestamp": "2026-09-14T00:28:34.101Z"
+      },
+      "retryStatus": 200,
+      "finalState": "completed"
+    },
+    {
+      "case": "AC3-negativos",
+      "invalidSignature": {
+        "status": 401,
+        "reason": "invalid_signature"
+      },
+      "oldTimestamp": {
+        "status": 401,
+        "reason": "timestamp_too_old"
+      },
+      "futureTimestamp": {
+        "status": 401,
+        "reason": "timestamp_too_future"
+      },
+      "exactBytes": {
+        "status": 401,
+        "reason": "invalid_signature"
+      }
+    },
+    {
+      "case": "AC4-ttl-e-estado",
+      "eventId": "prod07-ttl-ae5f41f3-3792-4ab6-a996-8c4026a1f99a",
+      "state": "completed",
+      "attempts": 1,
+      "payloadHash": "6f99f67b21d46a059207dc40449357ae7f538d115cd7843b2291fa2d2362d114",
+      "hoursToExpiry": 24,
+      "completedBeforeExpiry": true
+    }
+  ]
+}

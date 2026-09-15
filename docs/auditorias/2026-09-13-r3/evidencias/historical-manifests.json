@@ -1,0 +1,19 @@
+[
+  {
+    "path": "docs/auditorias/2026-09-13",
+    "entries": 48,
+    "mismatches": []
+  },
+  {
+    "path": "docs/auditorias/2026-09-13-entregas",
+    "entries": 111,
+    "mismatches": []
+  },
+  {
+    "path": "docs/melhorias-2026-09-13",
+    "entries": 56,
+    "mismatches": [
+      "evidencias/VALIDACAO.md"
+    ]
+  }
+]

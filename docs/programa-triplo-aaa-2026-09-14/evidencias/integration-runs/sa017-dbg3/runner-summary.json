@@ -1,0 +1,54 @@
+{
+  "runId": "sa017-dbg3",
+  "workerIndex": 36,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_sa017_dbg3_w36",
+  "redisUrl": "redis://127.0.0.1:57040",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:49:56.287Z",
+  "finishedAt": "2026-09-15T01:50:29.225Z",
+  "command": "pnpm exec tsx scripts/tmp-sa017-debug.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_sa017_dbg3_w36",
+    "REDIS_URL": "redis://127.0.0.1:57040",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa017-dbg3",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa017-dbg3",
+    "AAA_WORKER_INDEX": "36"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:49:56.287Z",
+      "finishedAt": "2026-09-15T01:49:57.881Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:49:57.881Z",
+      "finishedAt": "2026-09-15T01:49:58.566Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm exec tsx scripts/tmp-sa017-debug.ts",
+      "startedAt": "2026-09-15T01:49:58.566Z",
+      "finishedAt": "2026-09-15T01:50:29.224Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "lateral []\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

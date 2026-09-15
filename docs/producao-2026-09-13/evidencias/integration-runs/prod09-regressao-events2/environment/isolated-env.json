@@ -1,0 +1,24 @@
+{
+  "runId": "prod09-regressao-events2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59032/cvg_aaa_prod09_regressao_events2_w26",
+  "databaseName": "cvg_aaa_prod09_regressao_events2_w26",
+  "databasePort": 59032,
+  "redisUrl": "redis://127.0.0.1:56940",
+  "redisPort": 56940,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2637682,
+    "dataDir": "/tmp/cvg-aaa-runs/prod09-regressao-events2/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2637719,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod09-regressao-events2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:23:15.368374-03"
+  }
+}

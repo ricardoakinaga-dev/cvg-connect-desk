@@ -1,0 +1,33 @@
+
+ RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api
+
+ ❯ src/__tests__/audit-20260912.tmp.test.ts (2 tests | 1 failed) 100ms
+   ✓ Audit reproductions: assertions describe observed defects, not acceptance > expired session is accepted for rotation 75ms
+   × Audit reproductions: assertions describe observed defects, not acceptance > message history accepts authenticated user with no roles and no sector permission check 24ms
+     → expected 401 to be 200 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/audit-20260912.tmp.test.ts > Audit reproductions: assertions describe observed defects, not acceptance > message history accepts authenticated user with no roles and no sector permission check
+AssertionError: expected 401 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 401
+
+ ❯ src/__tests__/audit-20260912.tmp.test.ts:25:137
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  17:02:29
+   Duration  1.01s (transform 165ms, setup 0ms, collect 616ms, tests 100ms, environment 0ms, prepare 83ms)
+
+undefined
+/home/ricardo/cvg-connect-desk/apps/desk-api:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/audit-20260912.tmp.test.ts

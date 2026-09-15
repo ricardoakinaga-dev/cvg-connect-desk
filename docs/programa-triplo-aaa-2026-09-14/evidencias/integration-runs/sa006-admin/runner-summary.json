@@ -1,0 +1,54 @@
+{
+  "runId": "sa006-admin",
+  "workerIndex": 28,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59232/cvg_aaa_sa006_admin_w28",
+  "redisUrl": "redis://127.0.0.1:56960",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:02:00.525Z",
+  "finishedAt": "2026-09-15T01:02:07.834Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-006-admin-atomic.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59232/cvg_aaa_sa006_admin_w28",
+    "REDIS_URL": "redis://127.0.0.1:56960",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa006-admin",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa006-admin",
+    "AAA_WORKER_INDEX": "28"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:02:00.525Z",
+      "finishedAt": "2026-09-15T01:02:02.310Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:02:02.310Z",
+      "finishedAt": "2026-09-15T01:02:03.054Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-006-admin-atomic.integration.test.ts",
+      "startedAt": "2026-09-15T01:02:03.054Z",
+      "finishedAt": "2026-09-15T01:02:07.834Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "equest completed\"}\n{\"level\":30,\"time\":1789434127647,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789434127649,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"userId\":\"fb5ad050-d603-4d0d-9aeb-014168ce60d5\",\"userRoles\":[\"SA006 User 125807\"],\"userPermissions\":0,\"requiredPermissions\":[\"admin:read\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789434127649,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"res\":{\"statusCode\":403},\"responseTime\":2.253548000000137,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789434127652,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/users/721c76df-e154-4fae-b839-5aad093be159\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789434127652,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/users/721c76df-e154-4fae-b839-5aad093be159\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789434127657,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"res\":{\"statusCode\":200},\"responseTime\":5.332279000000199,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789434127659,\"pid\":913745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":200},\"responseTime\":6.728282999999919,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-006-admin-atomic.integration.test.ts (6 tests) 1857ms\n   ✓ SA-006 — admin atômico e auditável (A07) > AC3: revogação de papel muda a decisão da sessão ativa (sem relogar)  500ms\n\n Test Files  1 passed (1)\n      Tests  6 passed (6)\n   Start at  22:02:03\n   Duration  4.08s (transform 884ms, setup 0ms, collect 1.87s, tests 1.86s, environment 0ms, prepare 143ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

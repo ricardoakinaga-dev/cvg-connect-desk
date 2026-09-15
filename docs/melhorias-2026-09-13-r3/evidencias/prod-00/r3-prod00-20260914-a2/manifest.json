@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-00",
+  "runId": "r3-prod00-20260914-a3",
+  "attempt": 3,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime CVG_EVIDENCE_SEGMENT=r3-prod00-20260914-a3 AAA_RUN_ID=r3-prod00-20260914-a3 AAA_WORKER_INDEX=7 AAA_ATTEMPT=3 node --test scripts/production/prod-00.test.mjs",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T00:13:00.583Z",
+  "finishedAt": "2026-09-14T00:14:42.988Z",
+  "durationMs": 102405,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "a8299e4f05b02782688442c5de546161d58a1fb822b81a86d87671a7243d1b3e",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod00-20260914-a3",
+    "attempt": "3",
+    "sealedAt": "2026-09-14T00:13:00.583Z"
+  },
+  "artifacts": [
+    {
+      "path": "baseline/candidate-manifest.json",
+      "sha256": "d18fb9f15983f43ec7a18b43a066def1c306f6af802ce717392f1fa701164e91"
+    },
+    {
+      "path": "baseline/git-status.txt",
+      "sha256": "159b23aea57ee9624d38c91c26946f7aefa97f8d79807ccb978b8806305f7b79"
+    },
+    {
+      "path": "baseline/diff-stat.txt",
+      "sha256": "df648fb09ae44b49273fd25099c93ecbc0c6eec17c83b553a479a05d5894d59d"
+    },
+    {
+      "path": "baseline/hash-before.txt",
+      "sha256": "0b1714c627789ad2619794772a6ca4a3120af42537dac40b13b3d4a80438fe05"
+    },
+    {
+      "path": "environment/availability.json",
+      "sha256": "ec6a1d92dcd6bf81c5baa3623582be59b8a999a1c6e788edbe33614f8430d999"
+    },
+    {
+      "path": "isolation/canary.json",
+      "sha256": "7544292b6e10c485dff8a6fcc599bda421b12b4260a3de0fe8f4dbcf005f6472"
+    },
+    {
+      "path": "harness/production-report.json",
+      "sha256": "ff8bc196aa6b281cf3818449c1ab73572ad0dd35416206c80e51ab86ad1e72bb"
+    },
+    {
+      "path": "harness/canary-report.json",
+      "sha256": "7ebd3f47ce2c730bfebf15599017de62b4a294674899bc2bc19d1df11b8b6e6b"
+    },
+    {
+      "path": "harness/http-positive.log",
+      "sha256": "56260ebcc70e5f44f9c3fcdbe1c6cd9ea21f2026650ed9d1cb99b58231b889c2"
+    },
+    {
+      "path": "harness/http-canary-negative.log",
+      "sha256": "13be7831c995fbda3f4ab2594eb234fb7a1dabbc4a1d556f71cc614b7bcc0a5a"
+    },
+    {
+      "path": "checks/evidence-index.json",
+      "sha256": "4d4b0a0157fc2f5613881caf636ba2569466c18bc05d39db9bc94e32493027c2"
+    },
+    {
+      "path": "checks/prod-00.test.log",
+      "sha256": "c7d9626bf7e9f6b5f39bcf3151b7c5c5359fbc5543705ef697d4cdfa9232e123"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis e Playwright locais isolados; Docker permanece BLOCKED, sem prova remota, provider/terceiros ou revisao independente."
+  ]
+}

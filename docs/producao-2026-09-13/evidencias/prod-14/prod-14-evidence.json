@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-09-14T07:39:00.745Z",
+  "runId": "prod14",
+  "workerIndex": 23,
+  "database": "cvg_aaa_prod14_w23",
+  "postgresPort": 58732,
+  "storage": {
+    "driver": "s3",
+    "endpoint": "",
+    "bucket": "",
+    "backend": "moto real (S3 protocol)"
+  },
+  "scanner": {
+    "driver": "clamav",
+    "host": "127.0.0.1",
+    "port": 53110,
+    "real": true
+  },
+  "users": {
+    "adminUserId": "",
+    "receptionistUserId": ""
+  },
+  "cases": []
+}

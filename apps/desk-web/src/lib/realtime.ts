@@ -7,6 +7,27 @@ export interface RealtimeEvent {
 
 export type RealtimeHandler = (event: RealtimeEvent) => void;
 
+/**
+ * Estado de conexão observável do cliente (AAA-20). Aditivo ao protocolo
+ * AAA-06: não altera resolução de URL, autenticação nem reconexão.
+ * - `idle`: sem sessão de tempo real iniciada ou encerrada pelo app;
+ * - `connecting`: socket/autenticação em andamento;
+ * - `connected`: socket aberto E autenticado (auth.success);
+ * - `reconnecting`: queda percebida; reconexão automática agendada/ativa;
+ * - `offline`: parado por credencial/URL ausente, auth rejeitada ou queda final.
+ */
+export type RealtimeConnectionStatus = 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'offline';
+
+export interface RealtimeConnectionState {
+  status: RealtimeConnectionStatus;
+  connected: boolean;
+  attempt: number;
+  reason?: string;
+  changedAt: number;
+}
+
+export type RealtimeConnectionListener = (state: RealtimeConnectionState) => void;
+
 interface RealtimeSocketLike {
   readyState: number;
   send(data: string): void;
@@ -19,6 +40,13 @@ interface RealtimeSocketLike {
 
 interface RealtimeClientOptions {
   baseUrl?: string;
+  /**
+   * Overrides de embed/teste; quando ausentes o construtor usa
+   * `VITE_REALTIME_URL`, `window.location` e `import.meta.env.DEV`.
+   */
+  envUrl?: string;
+  location?: RealtimeUrlLocation | null;
+  dev?: boolean;
   /** Base do backoff de reconexão (alias legado: reconnectDelayMs). */
   reconnectDelayMs?: number;
   baseReconnectDelayMs?: number;
@@ -41,6 +69,60 @@ interface RealtimeWireMessage {
 
 const defaultLogger: Pick<Console, 'log' | 'warn' | 'error' | 'debug'> = console;
 
+/**
+ * Alvo local de DEV. A condicional é substituída em build (`import.meta.env.DEV`
+ * vira `false`), permitindo ao bundler eliminar o literal `ws://localhost:8080`
+ * do artefato de produção (C08-AAA06, E5).
+ */
+const DEV_LOCAL_URL = import.meta.env.DEV ? 'ws://localhost:8080' : '';
+
+export interface RealtimeUrlLocation {
+  protocol: string;
+  host: string;
+}
+
+export interface RealtimeUrlContext {
+  baseUrl?: string;
+  envUrl?: string;
+  location?: RealtimeUrlLocation | null;
+  dev?: boolean;
+}
+
+function resolveSameOrigin(path: string, location?: RealtimeUrlLocation | null): string | null {
+  // `undefined` = usar o window atual; `null` explícito = sem origem → sem URL.
+  const loc = location !== undefined
+    ? location
+    : (typeof window !== 'undefined' ? window.location : null);
+  if (!loc?.host) {
+    return null;
+  }
+  const scheme = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${scheme}//${loc.host}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+const EMPTY_URL_WARNING =
+  '[Realtime] Cannot connect: realtime URL is not configured (set VITE_REALTIME_URL or provide a browser origin)';
+
+/**
+ * C08-AAA06 (DC08-1/2/9): precedência `baseUrl` → `VITE_REALTIME_URL`
+ * (absoluto literal; path resolvido na mesma origem) → mesma origem `/ws/`.
+ * Em DEV sem configuração, mantém o alvo local; em HTTPS, sempre `wss:`.
+ * Sem configuração e sem `location` (produção fora do navegador) devolve `''`
+ * como fallback explícito que não lança; `connect()` avisa e não conecta.
+ */
+export function resolveRealtimeUrl(context: RealtimeUrlContext = {}): string {
+  if (context.baseUrl) return context.baseUrl;
+
+  const configured = context.envUrl?.trim();
+  if (configured) {
+    if (!configured.startsWith('/')) return configured;
+    return resolveSameOrigin(configured, context.location) ?? '';
+  }
+
+  if (context.dev) return DEV_LOCAL_URL;
+  return resolveSameOrigin('/ws/', context.location) ?? '';
+}
+
 export class RealtimeClient {
   private ws: RealtimeSocketLike | null = null;
   private url: string;
@@ -59,9 +141,23 @@ export class RealtimeClient {
   private readonly staleTimeoutMs: number;
   private readonly socketFactory: (url: string) => RealtimeSocketLike;
   private readonly logger: Pick<Console, 'log' | 'warn' | 'error' | 'debug'>;
+  private connectionState: RealtimeConnectionState = {
+    status: 'idle',
+    connected: false,
+    attempt: 0,
+    changedAt: Date.now(),
+  };
+  private connectionListeners: Set<RealtimeConnectionListener> = new Set();
 
   constructor(options: RealtimeClientOptions = {}) {
-    this.url = options.baseUrl || import.meta.env.VITE_REALTIME_URL || 'ws://localhost:8080';
+    this.url = resolveRealtimeUrl({
+      baseUrl: options.baseUrl,
+      envUrl: options.envUrl ?? import.meta.env.VITE_REALTIME_URL,
+      location: options.location !== undefined
+        ? options.location
+        : (typeof window !== 'undefined' ? window.location : null),
+      dev: options.dev ?? import.meta.env.DEV,
+    });
     this.baseReconnectDelayMs = options.baseReconnectDelayMs ?? options.reconnectDelayMs ?? 5000;
     this.maxReconnectDelayMs = options.maxReconnectDelayMs ?? 30000;
     this.heartbeatIntervalMs = options.heartbeatIntervalMs ?? 25000;
@@ -70,21 +166,68 @@ export class RealtimeClient {
     this.logger = options.logger ?? defaultLogger;
   }
 
+  getConnectionState(): RealtimeConnectionState {
+    return { ...this.connectionState };
+  }
+
+  /** Observa mudanças de estado; devolve a função de cancelamento. */
+  subscribeConnectionState(listener: RealtimeConnectionListener): () => void {
+    this.connectionListeners.add(listener);
+    return () => {
+      this.connectionListeners.delete(listener);
+    };
+  }
+
+  private setConnectionState(status: RealtimeConnectionStatus, reason?: string) {
+    const next: RealtimeConnectionState = {
+      status,
+      connected: status === 'connected',
+      attempt: this.reconnectAttempt,
+      reason,
+      changedAt: Date.now(),
+    };
+    this.connectionState = next;
+    for (const listener of this.connectionListeners) {
+      try {
+        listener({ ...next });
+      } catch (error) {
+        this.logger.error('[Realtime] Connection state listener failed:', error);
+      }
+    }
+  }
+
   connect(token: string) {
     if (!token) {
       this.logger.warn('[Realtime] Cannot connect: missing auth token');
+      this.setConnectionState('offline', 'missing-token');
+      return;
+    }
+
+    if (!this.url) {
+      this.logger.warn(EMPTY_URL_WARNING);
+      this.setConnectionState('offline', 'missing-url');
+      return;
+    }
+
+    if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
       return;
     }
 
     this.shouldReconnect = true;
     this.reconnectAttempt = 0;
     this.authToken = token;
+    this.setConnectionState('connecting', 'connecting');
     this.attemptConnect();
   }
 
   private attemptConnect() {
     if (!this.authToken) {
       this.logger.warn('[Realtime] Cannot connect: missing auth token');
+      return;
+    }
+
+    if (!this.url) {
+      this.logger.warn(EMPTY_URL_WARNING);
       return;
     }
 
@@ -95,17 +238,21 @@ export class RealtimeClient {
     this.clearReconnectTimer();
     const wsUrl = this.url;
     this.logger.log('[Realtime] Connecting to', wsUrl);
+    this.setConnectionState(this.reconnectAttempt > 0 ? 'reconnecting' : 'connecting', this.reconnectAttempt > 0 ? 'retrying' : 'connecting');
 
     try {
       this.authenticated = false;
-      this.ws = this.socketFactory(wsUrl);
+      const socket = this.socketFactory(wsUrl);
+      this.ws = socket;
 
-      this.ws.onopen = () => {
+      socket.onopen = () => {
+        if (this.ws !== socket) return;
         this.logger.log('[Realtime] Connected');
-        this.sendAuth();
+        this.sendAuth(socket);
       };
 
-      this.ws.onmessage = (event) => {
+      socket.onmessage = (event) => {
+        if (this.ws !== socket) return;
         try {
           this.lastMessageAt = Date.now();
           const message = JSON.parse(event.data) as RealtimeWireMessage;
@@ -115,29 +262,35 @@ export class RealtimeClient {
         }
       };
 
-      this.ws.onclose = () => {
+      socket.onclose = (event?: CloseEvent) => {
+        if (this.ws !== socket) return;
         this.logger.log('[Realtime] Disconnected');
         this.ws = null;
         this.authenticated = false;
         this.stopHeartbeat();
 
         if (this.shouldReconnect) {
-          this.scheduleReconnect();
+          this.scheduleReconnect(event?.code === 4000 ? 'stale' : 'connection-lost');
+        } else if (!this.authToken) {
+          this.setConnectionState('idle', 'client-disconnect');
+        } else {
+          this.setConnectionState('offline', 'connection-lost');
         }
       };
 
-      this.ws.onerror = (error) => {
+      socket.onerror = (error) => {
+        if (this.ws !== socket) return;
         this.logger.error('[Realtime] WebSocket error:', error);
       };
     } catch (error) {
       this.logger.error('[Realtime] Failed to create WebSocket:', error);
-      this.scheduleReconnect();
+      this.scheduleReconnect('socket-error');
     }
   }
 
-  private sendAuth() {
-    if (this.ws?.readyState === WebSocket.OPEN && this.authToken) {
-      this.ws.send(JSON.stringify({ type: 'auth', token: this.authToken }));
+  private sendAuth(socket: RealtimeSocketLike | null = this.ws) {
+    if (socket?.readyState === WebSocket.OPEN && this.authToken) {
+      socket.send(JSON.stringify({ type: 'auth', token: this.authToken }));
     }
   }
 
@@ -149,10 +302,11 @@ export class RealtimeClient {
     return Math.max(0, Math.round(capped + jitter));
   }
 
-  private scheduleReconnect() {
+  private scheduleReconnect(reason = 'retrying') {
     this.clearReconnectTimer();
     const delay = this.nextReconnectDelayMs();
     this.reconnectAttempt += 1;
+    this.setConnectionState('reconnecting', reason);
     this.logger.log(`[Realtime] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempt})...`);
     this.reconnectTimer = setTimeout(() => {
       this.reconnectTimer = null;
@@ -169,6 +323,7 @@ export class RealtimeClient {
       this.authenticated = true;
       this.reconnectAttempt = 0;
       this.logger.log('[Realtime] Authenticated via message-based auth');
+      this.setConnectionState('connected', 'authenticated');
       this.startHeartbeat();
       this.resubscribe();
       return;
@@ -179,6 +334,7 @@ export class RealtimeClient {
       this.logger.warn('[Realtime] Authentication rejected by realtime service — not reconnecting');
       this.shouldReconnect = false;
       this.clearReconnectTimer();
+      this.setConnectionState('offline', 'unauthorized');
       return;
     }
 
@@ -294,8 +450,12 @@ export class RealtimeClient {
     this.stopHeartbeat();
     this.authenticated = false;
     this.authToken = null;
+    const hadSocket = !!this.ws;
     this.ws?.close();
     this.ws = null;
+    if (!hadSocket) {
+      this.setConnectionState('idle', 'client-disconnect');
+    }
   }
 }
 

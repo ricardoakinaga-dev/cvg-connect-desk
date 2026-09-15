@@ -1,0 +1,27 @@
+{
+  "card": "PROD-05",
+  "item": "UI01",
+  "modo": "estático + unit jsdom (sem browser real)",
+  "data": "2026-09-13",
+  "candidato": "754f9badac46278e77d21de91c58eedb15e80581 + worktree",
+  "achados": {
+    "tokenNaoEntraEmUrlNoHttp": {
+      "arquivo": "apps/desk-web/src/lib/api.ts",
+      "linhas": "85-96 (getToken de localStorage), 123-136 (Authorization header), 173-182 (upload com Authorization header)",
+      "evidencia": "grep -rn \"token=\" apps/desk-web/src -> unica ocorrencia e a assercao negativa em src/__tests__/realtime.test.ts:90"
+    },
+    "tokenNaoEntraEmUrlNoWs": {
+      "arquivo": "apps/desk-web/src/lib/realtime.ts",
+      "linhas": "199-218 connect(token) guarda em memoria; 288 sendAuth envia {type:'auth',token} por mensagem apos auth.required",
+      "evidencia": "teste apps/desk-web/src/__tests__/realtime.test.ts:83-95 'connects without token in the WebSocket URL and authenticates via message'"
+    },
+    "sessaoNaoDependeDeTokenExposto": {
+      "arquivo": "apps/desk-web/src/lib/api.ts",
+      "linhas": "138-140 e 184-186 tratam 401 via notifySessionExpired() sem expor token; token lido sob demanda de storage"
+    }
+  },
+  "comando": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/realtime.test.ts",
+  "resultado": "21 passed (21), exit 0",
+  "log": "logs/ui01-web-realtime.log",
+  "limitacao": "Nao houve execucao de browser real (Playwright); prova e estatica + unit jsdom. Browser real permanece com dono em PROD-38/G12."
+}

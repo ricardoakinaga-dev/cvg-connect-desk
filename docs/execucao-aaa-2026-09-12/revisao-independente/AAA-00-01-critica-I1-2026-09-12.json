@@ -1,0 +1,126 @@
+{
+  "review_id": "AAA-REVIEW-I1-2026-09-12",
+  "reviewer": "sessao critica independente (contexto novo, read-only sobre o produto)",
+  "independence": "I1 (mesma familia de modelo; nao e auditoria humana externa)",
+  "reviewed_at": "2026-09-12T21:05:47Z",
+  "base_revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "snapshot": {
+    "run_id": "aaa-20260912",
+    "database_url": "postgresql://cvg_aaa@127.0.0.1:56432/cvg_aaa_aaa_20260912",
+    "redis_url": "redis://127.0.0.1:56380",
+    "artifacts_sha256": {
+      "docs/execucao-aaa-2026-09-12/runtime/contracts/C01.md": "e59fe97e12dc21946570de8138bfbbda5dd18e5d4c6945676eb13a20aaeb8699",
+      "docs/execucao-aaa-2026-09-12/runtime/decisions/D01-session-policy.md": "c276f1dd232c6b9bb1c010380c257c31651f408ede38880c2073de8ef959c9f7",
+      "docs/execucao-aaa-2026-09-12/CONTRATOS.md": "6378e6235b11dccce5fbec7e2dd8b1701435688a1d854c3bba2d5c84dfe0c401",
+      "docs/execucao-aaa-2026-09-12/DECISOES.md": "355301d143d44f41a70950b207979463d8bc52cd4b1dc0b906ba82c25933b943",
+      "docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-01-contract-hashes.txt": "b2837e8224784f24f4d16cc2ce68a95941271a81998165488108d9367076217e",
+      "docs/execucao-aaa-2026-09-12/runtime/environment/isolated-env.json": "6ffb2cc5a8582075611c1b6cc7153edbb4a2a73bd2c7e596cc268519188dd0d5",
+      "docs/execucao-aaa-2026-09-12/runtime/ownership.json": "66d62d1fbacd8497513802d456f2311faefad8b86a5a42ad3f66a6147ec9997d",
+      "docs/execucao-aaa-2026-09-12/runtime/README.md": "e4485d8c63e5a6044402eb0616289d99ac45d4f51d47cd0d97be649bc559bf46",
+      "e2e/support/aaa/pg.ts": "656d065ad37e179b14bd6c9bf1c1a4651eaf36a16e59d068608409bd2d8bf74b",
+      "e2e/support/aaa/run-context.ts": "0fc0bc4e775723e8d7a5e9d689117057479524d8fad3b6f234803d80d80ce3c9",
+      "e2e/support/aaa/isolated-env.ts": "16f41169afa0d9d3636c475e0add38f0c1122039321da1170923f91e7aa2f7cc",
+      "playwright.aaa.config.ts": "8458f5204ca7f2dcd33df975043aa1205e5c2ca087727ffb458c1bd399218e69"
+    },
+    "moving_target_note": "O coordenador continuou escrevendo durante a revisao; veredictos valem para o snapshot acima."
+  },
+  "independent_verifications": [
+    {
+      "check": "produto nao modificado",
+      "command": "git diff --stat -- packages apps modules",
+      "result": "vazio"
+    },
+    {
+      "check": "relatorio preservado",
+      "command": "sha256sum docs/auditorias/2026-09-12/RELATORIO.md",
+      "result": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571 (igual a BACKLOG.audit_sha256)"
+    },
+    {
+      "check": "suite auth em PG proprio 56532",
+      "command": "DATABASE_URL=...56532/cvg_aaa_review_20260912 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/auth-routes.integration.test.ts",
+      "result": "exit 0; Test Files 1 passed; Tests 6 passed (6)"
+    },
+    {
+      "check": "caso negativo schema ausente",
+      "command": "DATABASE_URL=...56532/postgres pnpm --filter @cvg/desk-api exec vitest run src/__tests__/auth-routes.integration.test.ts",
+      "result": "exit 1; 6 skipped; relation audit_logs does not exist"
+    },
+    {
+      "check": "guardas de isolamento (5 casos)",
+      "command": "pnpm exec tsx /tmp/opencode/review-aaa/guard-check.ts",
+      "result": "guard_result=PASS failures=0"
+    },
+    {
+      "check": "controle negativo Playwright",
+      "command": "pnpm exec playwright test --config /tmp/opencode/review-aaa/canary.config.ts",
+      "result": "exit 1; stats unexpected=1 skipped=0 expected=0"
+    },
+    {
+      "check": "marcador e schema no PG oficial 56432",
+      "command": "psql ... -Atc 'select run_id,source_revision from aaa_environment_marker; select count(*) from information_schema.tables...'",
+      "result": "aaa-20260912|754f9bad...; 38"
+    }
+  ],
+  "verdicts": {
+    "AAA-00": {
+      "status": "PARTIAL",
+      "met": [
+        "commit/worktree/hashes registrados; relatorio e .gauntlet preservados; produto inalterado",
+        "PostgreSQL local dedicado com marcador de teste; guarda recusa banco sem marcador",
+        "teardown restrito documentado",
+        "falha deliberada comprovada (suite negativa + controle negativo Playwright, sem skip)"
+      ],
+      "gaps": [
+        "F1: Redis 56380 colide com docker-compose.staging.yml:31",
+        "fixtures sinteticas deterministicas ausentes",
+        "inventario de checks existentes ausente",
+        "dataset/perfil de benchmark fixado ausente",
+        "matriz de servicos por gate (MinIO/ClamAV/OTel) ausente",
+        "porta exclusiva por worker nao implementada (run unico)"
+      ]
+    },
+    "AAA-01": {
+      "status": "PARTIAL",
+      "C01": "APPROVE WITH CONDITIONS (v1.0.1 coerente com o baseline; condicoes em conditions_C01)",
+      "C00_C02_C09": "NOT VERIFIED / MISSING",
+      "met": [
+        "C01 v1.0.1 FROZEN com matriz semantica completa",
+        "D01 registrado; D02 registrado como bloqueio de mutacao de AAA-17",
+        "hashes AAA-01 atualizados e conferem"
+      ],
+      "gaps": [
+        "F3: C00 e C02-C09 sem contrato congelado/matriz; bloqueia AAA-02",
+        "F4: ownership incompleto para paths de AAA-02; README cita state.json e dispatch/AAA-03.md inexistentes; revisao da v1.0.0 nao arquivada",
+        "F5: constantes SESSION_TTL_MS/SESSION_ABSOLUTE_TTL_MS citadas mas inexistentes no baseline sem marcacao de 'a introduzir'",
+        "F6: CONTRATOS.md linha C01 ainda diz v1.0.0",
+        "D03/D04 sem decisao nem registro de dependente bloqueado"
+      ]
+    }
+  },
+  "findings": [
+    { "id": "F1", "severity": "high-for-execution", "title": "Redis 56380 colide com compose staging", "file": "docker-compose.staging.yml:31", "action": "mover para porta fora de qualquer compose publicado (ex.: 56680) e registrar reserva" },
+    { "id": "F2", "severity": "medium", "title": "Aceitacao integral de AAA-00 incompleta", "action": "produzir fixtures, inventario de checks, benchmark profile e matriz de servicos" },
+    { "id": "F3", "severity": "medium", "title": "C00/C02-C09 nao congelados", "action": "congelar C02/C03 antes de AAA-02; completar matriz C00-C09" },
+    { "id": "F4", "severity": "medium", "title": "Integridade documental (state.json/dispatch/README/ownership)", "action": "criar state.json e dispatches; corrigir README; completar ownership" },
+    { "id": "F5", "severity": "low-medium", "title": "Constantes de ambiente citadas sem existir no baseline", "file": "runtime/contracts/C01.md:29-51", "action": "explicitar que AAA-03 introduz as variaveis ou usar defaults hardcoded" },
+    { "id": "F6", "severity": "low", "title": "Versao divergente na tabela de CONTRATOS.md", "file": "CONTRATOS.md:10", "action": "atualizar linha C01 para v1.0.1" },
+    { "id": "F7", "severity": "low", "title": "Corrida residual no guard de lastSeenAt vs usuario ativo", "file": "runtime/contracts/C01.md:70-76", "action": "definir ordem ou aceitar a corrida explicitamente" },
+    { "id": "F8", "severity": "info", "title": "Manifesto de planejamento divergente em 4 arquivos", "action": "nenhuma; registrado no baseline" }
+  ],
+  "conditions_C01": [
+    "Corrigir F5 (redacao) e F6",
+    "Arquivar a revisao independente que revogou v1.0.0 e anexar esta critica como revisao da v1.0.1",
+    "Emitir despacho AAA-03 com revisao-base, hashes C01/D01, DB/porta exclusivos e escopo de escrita",
+    "Garantir que a 55433 permaneca reservada ao Compose de staging"
+  ],
+  "dispatch_readiness": {
+    "AAA-03": "READY_AFTER_FIXES",
+    "AAA-02": "NOT_READY (C02/C03 ausentes e ownership incompleto)"
+  },
+  "limits": [
+    "Nao executei o projeto 'aaa' completo do Playwright contra stack viva para nao colidir com o run do coordenador",
+    "Nao validei MinIO/ClamAV/OTel (ausentes no host)",
+    "Reproducao da suite auth feita em PG proprio 56532, nao no PG oficial 56432",
+    "Nao modifiquei artefatos do coordenador; snapshot pontual"
+  ]
+}

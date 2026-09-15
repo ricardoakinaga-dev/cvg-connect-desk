@@ -1,0 +1,54 @@
+{
+  "runId": "regress-r2-wave5",
+  "workerIndex": 49,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61332/cvg_aaa_regress_r2_wave5_w49",
+  "redisUrl": "redis://127.0.0.1:57170",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:15:33.555Z",
+  "finishedAt": "2026-09-15T04:16:34.253Z",
+  "command": "pnpm test:ci",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61332/cvg_aaa_regress_r2_wave5_w49",
+    "REDIS_URL": "redis://127.0.0.1:57170",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "regress-r2-wave5",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/regress-r2-wave5",
+    "AAA_WORKER_INDEX": "49"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:15:33.555Z",
+      "finishedAt": "2026-09-15T04:15:35.395Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:15:35.395Z",
+      "finishedAt": "2026-09-15T04:15:36.131Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm test:ci",
+      "startedAt": "2026-09-15T04:15:36.131Z",
+      "finishedAt": "2026-09-15T04:16:34.253Z",
+      "exitStatus": 1,
+      "signal": null,
+      "stdoutTail": "89445793258,\"pid\":2030841,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"res\":{\"statusCode\":200},\"responseTime\":0.8940729999999348,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789445793259,\"pid\":2030841,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"req\":{\"method\":\"GET\",\"url\":\"/metrics\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445793259,\"pid\":2030841,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"res\":{\"statusCode\":401},\"responseTime\":0.415271999999959,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789445793260,\"pid\":2030841,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"GET\",\"url\":\"/metrics\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789445793260,\"pid\":2030841,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":200},\"responseTime\":0.3604299999999512,\"msg\":\"request completed\"}\n ✓ src/__tests__/metrics.integration.test.ts (2 tests) 274ms\n ✓ src/__tests__/internal-auth.test.ts (3 tests) 6ms\n ✓ src/__tests__/runtime-config.test.ts (6 tests) 4ms\n ✓ src/__tests__/api-structure.test.ts (13 tests) 3ms\n ✓ src/__tests__/sanity.test.ts (1 test) 3ms\n\n Test Files  2 failed | 34 passed (36)\n      Tests  4 failed | 239 passed (243)\n   Start at  01:15:39\n   Duration  54.49s (transform 1.23s, setup 0ms, collect 26.35s, tests 21.49s, environment 6ms, prepare 2.01s)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --exclude **/aaa-04.integration.test.ts --exclude **/aaa-05.integration.test.ts --exclude **/aaa-09.integration.test.ts --exclude **/aaa-10.integration.test.ts --exclude **/aaa-11.integration.test.ts --exclude **/aaa-12.integration.test.ts --exclude **/aaa-17.integration.test.ts --exclude **/aaa-19.integration.test.ts --exclude **/production/**\n ELIFECYCLE  Command failed with exit code 1.\n",
+      "stderrTail": "|     expect(response.statusCode).toBe(200);\n       |                                 ^\n    190|     expect(response.json()).toMatchObject({\n    191|       success: true,\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯\n\n FAIL  src/__tests__/dead-letter-routes.integration.test.ts > Dead-letter routes integration > marks manual-only dead-letter entries as resolved\nAssertionError: expected 400 to be 200 // Object.is equality\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- 200\u001b[39m\n\u001b[31m+ 400\u001b[39m\n\n ❯ src/__tests__/dead-letter-routes.integration.test.ts:217:33\n    215|     });\n    216| \n    217|     expect(response.statusCode).toBe(200);\n       |                                 ^\n    218|     expect(response.json()).toMatchObject({\n    219|       success: true,\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯\n\n FAIL  src/__tests__/events-polling.integration.test.ts > Events polling integration > recusa polling interno sem a chave compartilhada\nAssertionError: expected 400 to be 401 // Object.is equality\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- 401\u001b[39m\n\u001b[31m+ 400\u001b[39m\n\n ❯ src/__tests__/events-polling.integration.test.ts:106:35\n    104|       headers: { 'x-internal-service-key': 'wrong-secret' },\n    105|     });\n    106|     expect(invalidKey.statusCode).toBe(401);\n       |                                   ^\n    107|   });\n    108| \n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯\n\n FAIL  src/__tests__/events-polling.integration.test.ts > Events polling integration > GET aluga eventos sem ACK destrutivo; POST /events/:id/ack confirma\nAssertionError: expected 400 to be 200 // Object.is equality\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- 200\u001b[39m\n\u001b[31m+ 400\u001b[39m\n\n ❯ src/__tests__/events-polling.integration.test.ts:167:36\n    165|       headers: internalHeaders,\n    166|     });\n    167|     expect(ackResponse.statusCode).toBe(200);\n       |                                    ^\n    168|     expect(ackResponse.json()).toMatchObject({ acknowledged: true, eve…\n    169| \n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 1
+}

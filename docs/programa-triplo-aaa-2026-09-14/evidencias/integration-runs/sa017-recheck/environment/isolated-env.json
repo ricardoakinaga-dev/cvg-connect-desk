@@ -1,0 +1,24 @@
+{
+  "runId": "sa017-recheck",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60832/cvg_aaa_sa017_recheck_w44",
+  "databaseName": "cvg_aaa_sa017_recheck_w44",
+  "databasePort": 60832,
+  "redisUrl": "redis://127.0.0.1:57120",
+  "redisPort": 57120,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3673113,
+    "dataDir": "/tmp/cvg-aaa-runs/sa017-recheck/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3673146,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa017-recheck",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-15 07:16:08.484922-03"
+  }
+}

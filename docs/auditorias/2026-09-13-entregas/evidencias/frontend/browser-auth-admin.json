@@ -1,0 +1,246 @@
+{
+  "fixture": "SYNTHETIC API MOCKS, real Vite frontend; no integration proof",
+  "captures": [
+    {
+      "name": "admin-correct-fixture-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/admin",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nGOVERNANÇA OPERACIONAL\nAdministração\n\nGerencie usuários, papéis, filas, times e dead-letters\n\nNovo usuário\nUsuários\nⓘ\nPapéis\nⓘ\nFilas\nⓘ\nTimes\nⓘ\nDead-letter\nⓘ\n Usuários: Pessoas que acessam o sistema (atendentes, veterinários, recepcionistas). Cada usuário tem login, senha e permissões específicas por setor.\nNOME\tEMAIL\tSTATUS\tCRIADO\tSETORES\tAÇÕES\nOperadora Sintética\toperadora@example.invalid\t\nAtivo\t10/09/2026, 09:00\t\nSetores\t"
+    },
+    {
+      "name": "admin-roles-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/admin",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nGOVERNANÇA OPERACIONAL\nAdministração\n\nGerencie usuários, papéis, filas, times e dead-letters\n\nNovo papel\nUsuários\nⓘ\nPapéis\nⓘ\nPapéis\nGrupos de permissões pré-definidos (ex: Admin, Veterinário, Recepcionista). Ao atribuir um papel a um usuário, ele ganha todas as permissões daquele papel automaticamente.\nFilas\nⓘ\nTimes\nⓘ\nDead-letter\nⓘ\n Papéis: Grupos de permissões pré-definidos (ex: Admin, Veterinário, Recepcionista). Ao atribuir um papel a um usuário, ele ganha todas as permissões daquele papel automaticamente.\nNOME\tDESCRIÇÃO\tAÇÕES\nAdmin\tFixture\t"
+    },
+    {
+      "name": "auth-boot-pending-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Validando sua sessão…"
+    },
+    {
+      "name": "boot-before-me",
+      "requests": [
+        {
+          "path": "/auth/me",
+          "query": "",
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "name": "auth-boot-confirmed-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\n2\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nCVG Connect Desk\n\nSelecione uma conversa na barra lateral\nou inicie uma nova conversa\n\nNova conversa"
+    },
+    {
+      "name": "auth-deeplink-denied-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/admin",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nGESTÃO\nSetores\nLabels\nGrupos\nOS\nOperadora Sintética\nAdmin\nSair com segurança\n\nAcesso negado\n\nSeu usuário não possui a capacidade admin:read para esta área."
+    },
+    {
+      "name": "auth-offline-retry-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Sessão não validada\n\nNão foi possível validar sua sessão. Verifique a conexão e tente novamente.\n\nTentar novamente"
+    },
+    {
+      "name": "shell-mobile-nav-open",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 375,
+        "innerWidth": 375,
+        "scrollHeight": 812
+      },
+      "body": "Ir para o conteúdo\nInbox\nReconectando\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\n2\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas"
+    },
+    {
+      "name": "nav-escape",
+      "focus": "Abrir navegação",
+      "inert": ""
+    }
+  ],
+  "logs": [
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:32893/ <--[HTTP]--> 127.0.0.1:32893/ (server)\n  (browser) 127.0.0.1:32893/ <--[WebSocket (failing)]--> 127.0.0.1:32893/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    },
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:32893/ <--[HTTP]--> 127.0.0.1:32893/ (server)\n  (browser) 127.0.0.1:32893/ <--[WebSocket (failing)]--> 127.0.0.1:32893/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    },
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:32893/ <--[HTTP]--> 127.0.0.1:32893/ (server)\n  (browser) 127.0.0.1:32893/ <--[WebSocket (failing)]--> 127.0.0.1:32893/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    },
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:32893/ <--[HTTP]--> 127.0.0.1:32893/ (server)\n  (browser) 127.0.0.1:32893/ <--[WebSocket (failing)]--> 127.0.0.1:32893/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "type": "console",
+      "message": "[vite] failed to connect to websocket.\nyour current setup:\n  (browser) 127.0.0.1:32893/ <--[HTTP]--> 127.0.0.1:32893/ (server)\n  (browser) 127.0.0.1:32893/ <--[WebSocket (failing)]--> 127.0.0.1:32893/ (server)\nCheck out your Vite / network configuration and https://vite.dev/config/server-options.html#server-hmr ."
+    }
+  ],
+  "requests": [
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    }
+  ]
+}

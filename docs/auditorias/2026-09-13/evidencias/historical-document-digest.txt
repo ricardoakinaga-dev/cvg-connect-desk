@@ -1,0 +1,1306 @@
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-02-aceito.md
+1: # AAA-02 — implementação recebida e aceite no worktree
+5: ## Integridade conferida
+13: ## Estado e limites
+19: ## Próxima ação do Agente 1
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-00-worker-recebido.md
+1: # AAA-00 — evidência de worker e fixtures recebida
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-liberacao-agentes-2-3.md
+1: # Retornos AAA-04/AAA-06 — desbloqueio de atribuição
+5: ## Fatos conferidos
+13: ## Instrução ao coordenador
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-builders-liberados.md
+1: # Agentes 2 e 3 — transferência e liberação recebidas
+7: ## Encaminhamento vigente
+15: ## Limites preservados
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-03.md
+1: # Retomada AAA-03 — conferência documental
+5: ## Conferência realizada
+16: ## Prompt de retomada do Agente 3
+20: Confira os hashes contra o despacho e verifique se há outro writer no seu escopo. Use apenas o ambiente atribuído, validando o marcador do run antes de qualquer escrita. As pendências integrais de AAA-00/AAA-01 têm liberação registrada para o recorte de sessão; não reabra o bloqueio antigo apenas por status PLANNED do catálogo.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/prompt-apoio-AAA-00-inventario.md
+1: # Tarefa para agente ocioso — inventário de checks e serviços AAA-00
+5: ## Prompt para copiar
+11: Leia as instruções aplicáveis, `docs/execucao-aaa-2026-09-12/tasks/AAA-00.md`, `BACKLOG.json`, `QUALIDADE.json`, os registros de ambiente em runtime e os arquivos reais de scripts, CI, testes, configuração Playwright/Vitest e compose. Use leituras e buscas; não execute suítes, instale dependências ou provisione serviços.
+15: 1. INVENTARIO_CHECKS.md: para cada check existente, comando exato e diretório de execução, arquivo/linha que o define, escopo, dependências de ambiente, efeitos de escrita/limpeza, limitações e se o script apenas imprime mensagem ou executa validação real. Cubra lint, typecheck, build, testes unitários, integração, E2E, segurança e verificações do harness. Distinga configuração existente de proposta e evidência histórica de execução atual. Não marque PASS sem execução.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-implemented.md
+1: # AAA-03 — recebimento de IMPLEMENTED
+5: ## Candidato e conferência
+13: ## Evidências lidas, sem reexecução nesta conversa
+25: ## Pontos para revisão e acompanhamento
+33: ## Próxima ação — Agente 1
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-integrado.md
+1: # AAA-03 — integração registrada pelo coordenador
+5: ## Conferência do candidato
+13: ## Avanços posteriores observados
+17: ## Próxima ação do coordenador
+19: Conferir e consolidar o aceite atual de AAA-02, identificar sua revisão integrada e emitir o despacho de AAA-04 quando seus predecessores, contrato, ownership e ambiente estiverem satisfeitos. Não reiniciar tarefas já recebidas. Manter explícitas as pendências de AAA-00 (fixtures, benchmark, isolamento por worker, provisionamento) e AAA-01.
+21: AAA-28 depende de todas as outras 31 tarefas conforme seu cartão. Ela não é a próxima revisão final imediatamente após AAA-02/AAA-04; revisões intermediárias podem ocorrer, mas o veredito final do programa exige os demais predecessores e critérios. Cobrir o artefato integrado v2 de AAA-03 e FIND-DB-001 na verificação apropriada, sem adiar correção necessária apenas por existir AAA-28.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-snapshot-recebido.md
+1: # AAA-04 — pacote de 11 arquivos recebido e worktree posterior
+5: ## Integridade
+13: ## Alcance das evidências
+19: ## Próxima ação do coordenador
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-rejeicoes-consolidadas.md
+1: # AAA-04 — retornos conflitantes, integração não autorizada
+5: ## Observação atual
+15: ## Correções a consolidar
+25: ## Controle de execução e próxima instrução ao Agente 1
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-erratas-inventario-reconciliadas.md
+1: # Aceite documental e erratas — reconciliação do retorno
+7: As pendências de fixtures, benchmark, isolamento por worker e provisionamento permanecem abertas. FIND-INV-001..007 estão vinculados aos cartões existentes. Os caminhos `scripts/otel-e2e-check.mjs` e `scripts/capture-design.mjs` exigem atribuição explícita pelo lead antes de implementação.
+9: ## Correção temporal do retorno AAA-02
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-02.md
+1: # AAA-02 — despacho conferido e reconciliação com AAA-03
+5: ## Conferência
+17: ## Reconciliação necessária
+23: ## Próximas ações
+26: - Agente 1: reconciliar AAA-03 como implementação recebida, conduzir revisão/integração e registrar MUD-CAT-001 e pendências conforme estado canônico. G-C02-1 continua em AAA-04 após AAA-02; não declarar autorização corrigida pela remoção do ciclo.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-v3-conferido.md
+1: # AAA-04 v3 — conferência de entrega
+11: Pendências de fechamento: crítico fresco avaliar v3 estável, mapa de requisitos/asserts, efeito dos vínculos múltiplos e permissões de ação; coordenador registrar ratificação de D-AUTHZ-01, incluindo alcance da política de contatos sem setor e coerência com as permissões globais. Se a decisão alterar materialmente o acesso autorizado em vez de preservar o comportamento já permitido, encaminhar a escolha ao responsável pelo produto, sem inventar aprovação.
+15: Próxima ação do Agente 1: arquivar pacote suplementar com logs sanitizados/hashes, concluir revisão e decisão por versão, tratar achados e integrar o candidato efetivamente aceito. Depois selecionar a próxima tarefa pelas dependências verificadas. AAA-28 permanece etapa final do programa; não substitui a revisão pendente de AAA-04.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-despacho-AAA-04-conferido.md
+1: # AAA-04 — despacho conferido
+11: Errata de continuidade: o despacho ainda agrupa inventário e matriz de serviços entre pendências de AAA-00; esses dois documentos já receberam aceite estático. A execução/provisionamento e demais critérios permanecem pendentes. O coordenador deve harmonizar os resumos sem reabrir a entrega documental aceita; isso não bloqueia AAA-04.
+15: ## Adendo — marco consolidado recebido
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-06-liberacao-conferida.md
+1: # AAA-06 — bloqueio histórico e liberação posterior conferida
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-implemented.md
+1: # AAA-04 — IMPLEMENTED recebido, integração pendente
+5: ## Integridade observada
+13: ## Resultado informado e limites
+19: ## Encaminhamento ao Agente 1
+
+docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-recebimento-inventario.md
+1: # Recebimento do pacote documental AAA-00
+5: ## Integridade conferida
+13: ## Conteúdo recebido e limites
+19: ## Encaminhamento dos achados
+26: Próxima ação: Agente 1 revisar/incorporar o inventário e matriz, atualizar pendências e rastreabilidade e continuar revisão/integração de AAA-03 e acompanhamento de AAA-02. Esta entrega não autoriza o agente documental a escrever código ou iniciar outra tarefa automaticamente.
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/RETORNO.md
+1: # RETORNO — pacote documental de apoio AAA-00 (inventário e matriz)
+9: ## 1. Arquivos produzidos (neste diretório)
+21: ## 2. Fontes determinantes consultadas
+32: ## 3. Comandos de inspeção executados e resultado
+48: ## 4. Lacunas (fatos não determinados)
+50: 1. **Nada foi executado** — por instrução, não há PASS. O inventário não confirma se os checks passam, se o ciclo de dependências foi eliminado pelo AAA-02 nem se as suítes de DB fecham.
+61: ## 5. Recomendações priorizadas (propostas)
+66: - **P1 — Fechar pendências documentais de AAA-00**: congelar perfil de benchmark e dataset (o gerador existe no harness), registrar serviços provisionados vs bloqueados por gate e documentar invocação explícita de `playwright.config.ts` (smoke) × `playwright.aaa.config.ts` (AAA).
+70: ## 6. Itens de AAA-00 que este pacote ajuda a atender
+80: ## 7. Declaração de entrega
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/INVENTARIO_CHECKS.md
+1: # INVENTARIO_CHECKS — checks existentes e configuração de teste (apoio AAA-00)
+10: ## 1. Scripts raiz (`package.json`)
+27: ## 2. CI (`.github/workflows/`)
+47: ## 3. Scripts por workspace (lint/build/typecheck/test)
+59: ## 4. Gates, observabilidade e scripts operacionais
+75: ## 5. Grupos de suíte por serviço (mapa estático)
+90: ## 6. Harness AAA-00 já existente (`e2e/support/aaa/**`)
+107: ## 7. Configuração existente × proposta × histórico
+113: ## 8. Verificações não executadas nesta entrega
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/MATRIZ_SERVICOS.md
+1: # MATRIZ_SERVICOS — serviços exigidos por grupo de check/gate (apoio AAA-00)
+8: ## 1. Tabela principal por grupo
+39: ## 2. Fallbacks de `DATABASE_URL`/`REDIS_URL` (fato observado)
+60: ## 3. Testes/rotinas que apagam ou sobrescrevem dados
+75: ## 4. Recursos compartilhados e riscos de colisão
+92: ## 5. Recomendações de isolamento por run/worker (propostas — não implementadas aqui)
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/01-DIAGNOSTICO.md
+1: # AAA-06 — Diagnóstico: URL de realtime no desenvolvimento, build e proxy
+5: ## 1. Rastreamento da URL
+24: ## 2. Onde `localhost`/protocolo errado chegam ao navegador
+32: ## 3. Evidências (estáticas; nada foi executado em imagem/serviço)
+38: ## 4. Reprodução negativa proposta (para o despacho)
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/06-PENDENCIAS.md
+1: # AAA-06 — Pendências exatas para implementar
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/05-DESPACHO-RASCUNHO.md
+1: # AAA-06 — Minuta de despacho (para emissão pelo coordenador)
+8: ## 1. Escopo de escrita (do cartão)
+19: ## 2. Objetivo e reprodução negativa
+27: ## 3. Implementação exigida
+35: ## 4. Testes e evidência
+41: ## 5. Critérios de aceite
+47: ## 6. Retorno exigido
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/04-CONTRATO-C08-RECORTE.md
+1: # AAA-06 — Recorte contratual de C08 (proposta para revisão do coordenador)
+3: ## 1. Situação
+9: ## 2. O que AAA-06 precisa de C08 (recorte mínimo `C08-AAA06`)
+24: ## 3. Matriz semântica do recorte (checklist de AAA-01)
+39: ## 4. Ação solicitada ao coordenador
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/README.md
+1: # Apoio AAA-06 — endereço de realtime na implantação web
+9: ## Índice
+18: | [06-PENDENCIAS.md](06-PENDENCIAS.md) | Pendências exatas para implementar |
+21: ## Conclusão executiva
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/03-TESTES.md
+1: # AAA-06 — Testes necessários e critérios verificáveis
+3: ## 1. Unitários — `apps/desk-web/src/__tests__/realtime.test.ts` (estender)
+20: ## 2. E2E — `e2e/smoke/aaa-06-remote.spec.ts` (TO_CREATE)
+32: ## 3. Harness e ambiente isolado necessários
+39: ## 4. Reprodução negativa antes/depois (obrigatória no despacho)
+45: ## 5. Critérios de aceite verificáveis (para o despacho)
+
+docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/02-PROPOSTA-SOLUCAO.md
+1: # AAA-06 — Solução proposta (origem pública, `/ws`, `ws/wss`)
+5: ## 1. Princípio
+19: ## 2. Diff proposto — `apps/desk-web/src/lib/realtime.ts`
+60: ## 3. Diff proposto — `apps/desk-web/Dockerfile`
+68: ## 4. Diff proposto — `docker-compose.yml` (base)
+82: ## 5. Nginx (`apps/desk-web/nginx.conf`)
+95: ## 6. Compatibilidade e migração
+106: ## 7. Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/README.md
+1: # Runtime de execução — programa AAA (2026-09-12)
+5: ## Run atual
+12: ## AAA-00 — ambiente isolado
+26: ## AAA-01 — contratos e decisões
+36: ## AAA-02 — implementado, revisado e aceito no worktree
+46: ## AAA-04 — implementado (aguardando revisão/integração)
+56: - Pendências que permanecem explícitas: AAA-00 `evidence-partial`, AAA-01 sem C00/C04–C09, `FIND-DB-001`, `FIND-INV-001..007`, `FIND-INV-010`. Revisão independente e integração são do coordenador.
+58: ## AAA-03 — implementado, revisado e integrado
+70: ## Regras
+
+docs/execucao-aaa-2026-09-12/runtime/COORDINATION.md
+1: # Coordenação de execução — escritor único e trilhas (2026-09-12, atualizado)
+5: ## 1. Escritores únicos
+14: ## 2. Resolução de rótulos duplicados (append-only)
+24: ## 3. Trilhas ativas
+32: ## 4. Dependências
+
+docs/execucao-aaa-2026-09-12/runtime/contracts/C08-AAA06.md
+1: # C08-AAA06 — Recorte de plataforma para a implantação web do realtime (FROZEN v1.0.0)
+9: ## 1. Escopo e consumidores
+14: ## 2. Decisões congeladas
+29: ## 3. Matriz semântica (checklist AAA-01)
+44: ## 4. Verificação sem Docker (alcance exato)
+50: ## 5. Rollback
+52: - Reverter apenas os arquivos do cartão; sem DDL; a mudança de lockfile é uma linha no Dockerfile e não altera resolução de dependências (congela a existente).
+
+docs/execucao-aaa-2026-09-12/runtime/contracts/C03.md
+1: # C03 — Transação, outbox, lease e ACK (FROZEN v1.0.1)
+10: ## 1. Escopo
+19: ## 2. Modelo canônico (baseline)
+27: ## 3. Decisões congeladas nesta versão
+40: ## 4. Assinaturas alvo (nominais)
+71: ## 5. Fronteira consumida por AAA-02
+78: **Lacuna conhecida (não silenciada):** a transação única de mensagem+estado+evento (D-C03-1) e o lease (D-C03-4/5) **não** existem no baseline; são alvo de AAA-07/AAA-06 conforme cartões. AAA-02 registra a dependência e não a declara resolvida.
+80: ## 6. Matriz semântica obrigatória
+95: ## 7. Exemplos aceitos e rejeitados (checklist)
+106: ## 8. Testes de consumidor
+112: ## 9. Rollback e versionamento
+
+docs/execucao-aaa-2026-09-12/runtime/contracts/C01.md
+1: # C01 — Contrato de sessão, validação e rotação (FROZEN v1.0.2)
+9: ## 1. Escopo
+20: ## 2. Modelo de token e armazenamento
+27: ## 3. Política temporal (defaults congelados)
+55: ## 4. Avaliação canônica (ordem fixa e observável)
+72: ## 5. `lastSeenAt`
+81: ## 6. Rotação atômica
+101: ## 7. Criação (login)
+107: ## 8. Logout e logout-all
+114: ## 9. Consumidores e implementação compartilhada
+120: ## 10. Harmonização C01 ⇄ C02
+128: ## 11. Compatibilidade
+135: ## 12. Matriz semântica obrigatória
+150: ## 13. Invariantes verificáveis (aceite AAA-03)
+
+docs/execucao-aaa-2026-09-12/runtime/contracts/C02.md
+1: # C02 — Autorização por recurso e entrega realtime (FROZEN v1.0.1)
+10: ## 1. Escopo
+17: ## 2. Modelo canônico (funções existentes; as decisões da §3 são alvo, não baseline)
+26: ## 3. Decisões congeladas nesta versão
+39: ## 4. Entrega realtime
+47: ## 5. Fronteira de composição Chat↔Gateway (recorte AAA-02)
+129: ## 6. Matriz semântica obrigatória
+144: ## 7. Exemplos aceitos e rejeitados (checklist)
+159: ## 8. Testes de consumidor
+165: ## 9. Compatibilidade e exceções
+171: ## 10. Rollback e versionamento
+
+docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-03/classification-preexisting.md
+1: # AAA-03 — classificação de falhas preexistentes
+5: ## 1. Falha de teardown em `labels-routes` com arquivos em paralelo
+12: ## 2. Diagnósticos TypeScript
+
+docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-00/worker-isolation/README.md
+1: # AAA-00 — isolamento por worker, fixtures e benchmark (evidência de execução)
+5: - Objetivo: fechar as pendências de AAA-00 "fixtures sintéticas", "dataset/perfil de benchmark fixado" e "isolamento por worker" com execução real.
+8: ## 1. Defeito encontrado e corrigido no harness
+34: ## 2. Execução (comandos e resultados)
+52: ## 3. Limites e pendências
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v3.md
+1: # Despacho cumulativo de correção — AAA-04 → v5 (Agente 3)
+9: ## 1. Escopo de escrita (formal, com ownership)
+22: ## 2. Correções exigidas
+31: ## 3. Flake de `contacts-routes` (FIND-AAA04-008) — causa confirmada e correção autorizada
+37: ## 4. Ambiente e credencial
+43: ## 5. Evidência obrigatória
+51: ## 6. Retorno e integração
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3-correcoes.md
+1: # Prompt de retomada — Agente 3 (correções AAA-04 → v5)
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2-aaa06.md
+1: # Prompt de retomada — Agente 2 (AAA-06)
+9: 3. `docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/` — diagnóstico, solução proposta, testes, pendências e hashes de baseline (`hashes-baseline.txt`).
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3.md
+1: # Prompt de retomada — Agente 3 (AAA-03)
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v2.md
+1: # Despacho de correção — AAA-04 v2 (fechar H2: escopo de setor nas listagens)
+7: ## 1. Escopo redistribuído para esta correção
+13: ## 2. Achado H2 (HIGH) a corrigir
+24: ## 3. Testes e evidência exigidos
+31: ## 4. Critérios de aceite desta correção
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03-correcoes.md
+1: # AAA-03 — pedido de correção pós-revisão independente (2026-09-12) — SUPERADO
+11: ## Correções exigidas
+13: ### C2 — Fuso horário × materialização de absoluto legado (obrigatória)
+19: ### C3 — Teste do guard de `lastSeenAt` com 0 linhas (obrigatória)
+23: ## Correções recomendadas (não bloqueiam o núcleo)
+30: ## Escopo e processo
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06-v2.md
+1: # Despacho de correção AAA-06 → v2 (Agente 2) — fecha crítica fresca 6/10
+9: ## 1. Escopo de escrita
+14: ## 2. Correções obrigatórias (da crítica fresca)
+24: ## 3. Aceite e evidência
+30: ## 4. Retorno
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v4.md
+1: # Despacho de correção AAA-04 → v6 (Agente 3) — fecha crítica fresca 5/10
+9: ## 1. Escopo de escrita (obrigatório, inclui extensão autorizada)
+18: ## 2. Correções obrigatórias (da crítica fresca)
+33: ## 3. Aceite e evidência
+41: ## 4. Retorno
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-02.md
+1: # Despacho AAA-02 — Eliminar o ciclo Chat↔Gateway
+8: ## 1. Pré-condições verificadas
+14: - **Liberação parcial formalizada:** AAA-00 segue `evidence-partial` (F2: fixtures/benchmark/inventário/matriz de serviços) e AAA-01 tem C00/C04–C09 não congelados. Nada disso bloqueia a fronteira do ciclo: C01/C02/C03, ambiente marcado, guardas e baseline de suítes estão comprovados; as pendências permanecem visíveis em `runtime/state.json` e não podem ser declaradas resolvidas por este cartão.
+17: ## 2. Escopo de escrita
+19: - Permitido: `modules/chat`, `modules/gateway-adapter`, `packages/messaging-contracts`, `pnpm-lock.yaml` (somente o necessário para as dependências de workspace afetadas) e `apps/desk-api/src/app.ts` (composição).
+25: ## 3. Locks e recursos
+36: ## 4. Objetivo e reprodução obrigatória
+38: Remover a dependência circular `@cvg/chat ↔ @cvg/gateway-adapter` preservando inbound, outbound, callbacks de status e handoff, com adapters dependentes de portas/contratos e composição explícita.
+45: ## 5. Implementação exigida
+47: 1. Declarar as portas de C02 §5 em `@cvg/messaging-contracts/src/ports.ts` (shapes estruturais; sem importar chat/gateway/shared; dependência apenas de `zod`) e exportá-las.
+55: 5. Remover as duas arestas de `package.json`; `modules/chat` adiciona `@cvg/messaging-contracts` (workspace); atualizar `pnpm-lock.yaml` sem novas dependências externas. Zero imports cruzados e zero `await import('@cvg/chat'|'@cvg/gateway-adapter')`.
+59: ## 6. Testes obrigatórios
+71: ## 7. Critérios de aceite
+79: ## 8. Retorno exigido (IMPLEMENTED/BLOCKED/FAILED — nunca DONE)
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-05.md
+1: # Despacho AAA-05 — Isolar canais e destinatários realtime
+7: ## 1. Escopo de escrita
+14: ## 2. Objetivo e correções exigidas (A03; C02 §realtime; áreas 3 e 8)
+23: ## 3. Ambiente e evidência
+30: ## 4. Retorno
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04.md
+1: # Despacho AAA-04 — Autorização por recurso em todas as rotas relacionadas
+8: ## 1. Pré-condições reconciliadas
+14: - **Pendências visíveis (não resolvidas por este cartão)**: AAA-00 `evidence-partial` (fixtures/benchmark/inventário/matriz de serviços/porta por worker); AAA-01 sem C00/C04–C09; `FIND-DB-001` (timestamps) com dono do schema; `FIND-INV-001..007` com seus donos. `FIND-INV-002` (fallbacks e ausência de guarda de marcador) vale para o ambiente deste cartão.
+16: ## 2. Escopo de escrita
+23: ## 3. Locks e ambiente isolado (verificado vivo)
+33: ## 4. Objetivo e reprodução obrigatória
+44: ## 5. Implementação exigida (C02 §3–§7; recorte HTTP)
+55: ## 6. Testes obrigatórios
+71: ## 7. Critérios de aceite
+80: ## 8. Retorno exigido (IMPLEMENTED/BLOCKED/FAILED — nunca DONE)
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4-correcoes.md
+1: # Prompt cumulativo — builder AAA-04 → v5
+21: 5. independência de ordem multi-setor comprovada com inserção invertida;
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v5.md
+1: # Despacho de correção AAA-04 → v7 (Agente 3) — fecha crítica v6 7.0/10
+9: ## 1. Escopo de escrita
+15: ## 2. Correções obrigatórias
+22: 6. **Notes sem conversa nem task:** `GET /notes/:id` deve negar (404) quando não houver conversa nem task vinculada, exceto Admin global ou `authorId === ator`; teste; registrar dependência de QA17 (autor controlado pelo cliente) no inventário.
+24: ## 3. Aceite e evidência
+31: ## 4. Retorno
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2.md
+1: # Prompt de retomada — Agente 2 (AAA-02)
+8: 4. Escrita permitida: `modules/chat/**`, `modules/gateway-adapter/**`, `packages/messaging-contracts/**`, `pnpm-lock.yaml` (somente dependências de workspace) e `apps/desk-api/src/app.ts`. **Reservas exclusivas**: `app.ts` e `pnpm-lock.yaml`. Proibido: `packages/auth/**`, `apps/realtime-service/**`, `packages/realtime/**`, `apps/desk-web/**`, `packages/database/**`, `e2e/**`, `docs/**`, `.gauntlet*`, `BACKLOG.json`.
+12: 8. Retorne **IMPLEMENTED** (nunca DONE), com ID, candidato identificado, arquivos/diff, mapas de dependência antes/depois, contratos usados, comandos com exit codes e logs sanitizados, limitações, riscos residuais e reversão. Revisão independente, integração e reteste são etapas do coordenador.
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03.md
+1: # Despacho AAA-03 — Unificar validação e renovação de sessões
+8: ## 1. Escopo de escrita exclusivo
+15: ## 2. Contratos congelados
+22: ## 3. Ambiente isolado (verificado)
+32: ## 4. Objetivo e reprodução obrigatória
+42: ## 5. Implementação exigida
+52: ## 6. Testes obrigatórios
+70: ## 7. Critérios de aceite
+78: ## 8. Retorno exigido (IMPLEMENTED/BLOCKED/FAILED — nunca DONE)
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4.md
+1: # Prompt de retomada — Agente 4 (AAA-04)
+18: - Pendências abertas que **não** bloqueiam este cartão: AAA-00 parcial, C00/C04–C09 não congelados, `FIND-DB-001` e `FIND-INV-001..007`.
+
+docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06.md
+1: # Despacho AAA-06 — Endereço de realtime na implantação web (origem pública, `/ws`, ws/wss)
+9: ## 1. Escopo de escrita (exato)
+20: ## 2. Objetivo e reprodução negativa (A05)
+28: ## 3. Implementação exigida (C08-AAA06)
+36: ## 4. Testes e aceite
+45: ## 5. Recursos e ambiente
+52: ## 6. Retorno
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/LEAD-NOTE.md
+1: # Nota de integração do lead + reconciliação do builder (2026-09-13)
+3: ## Nota original do lead
+11: ## Reconciliação (rodada de fechamento do builder)
+29: ## Fechamento do selo (lead, 2026-09-13)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/RETORNO.md
+1: # AAA-16 — RETORNO (builder) — IMPLEMENTED
+10: ## 1. Resultado (revisão final congelada)
+25: ## 2. Causas raiz corrigidas (amostra)
+38: ## 3. Achado relevante: artefatos compilados obsoletos no `src`
+44: ## 4. Comandos finais (revisão congelada)
+60: ## 5. Escopo exercido e integridade
+69: ## 6. Testes: 969 passam; falhas residuais são guardas de outros runs
+73: ### 6.1 Reprodução negativa (cópia isolada efêmera do `@cvg/shared`; logs selados em `raw/after/negative/`)
+85: ### 6.2 Testes comportamentais novos (rodada de correção, exigidos pela revisão)
+96: ### 6.3 Cobertura QA14 (código crítico tocado) — report-only
+106: ## 7. Limitações e riscos residuais
+117: ## 8. Roteamento de owners
+123: ## 9. Índice da evidência (`/tmp/cvg-aaa-returns/aaa-16/`)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/README.md
+1: # Candidato AAA-03 — pacote completo arquivado (2026-09-12)
+8: ## Conteúdo do pacote
+14: ## Verificações relatadas pelo builder (não reexecutadas nesta conferência documental)
+18: ## Revisão e integração
+24: ## Pendências conhecidas para a revisão
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/DELTA-v2.md
+1: # AAA-03 — delta pós-revisão (snapshot v2)
+22: Limitação de independência: o delta v1→v2 não foi submetido a novo crítico fresco; foi verificado pelo coordenador (regressão). O veredito PASS do crítico cobre v1; o delta é uma restrição a mais, alinhada ao C01 §7 vigente. Revisão final de AAA-28 deve cobrir o artefato integrado.
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-02/README.md
+1: # Candidato AAA-02 — pacote completo arquivado (2026-09-12)
+8: ## Conteúdo do pacote
+15: ## Revisão e integração
+22: ## Verificações do builder (logs em `/tmp/opencode/aaa-02-*.log`, sanitizados)
+36: ## Observações
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/RETORNO.md
+1: # AAA-10 — Retorno do builder
+8: ## 1. Escopo exercido (somente caminhos permitidos)
+30: ## 2. Reprodução negativa ANTES (evidência `before-baseline.log`)
+42: ## 3. Implementação (C05)
+81:   `MEDIA_PIPELINE_ENABLED=true`, `MALWARE_SCANNER=clamav`), dependência `clamav: service_healthy`.
+84: ## 4. Ambiente e substituições (obrigatório pelo enunciado)
+101: ## 5. Antes/depois das fronteiras reais (S3 + ClamAV)
+115: ## 6. Regressões
+127: ## 7. Limitações e riscos residuais
+149: ## 8. Rollback
+155: ## 9. Evidência
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/evidence/exits.md
+1: # AAA-10 — comandos executados, exit codes e logs
+3: ## Preparação de ambiente (nenhum serviço em 5432/6379 usado como fallback)
+17: ## Antes/depois (mesmo probe, código pré e pós)
+24: ## Testes e checks
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/migration-notes.md
+1: # AAA-12 — notas de migration / schema (rodada de correções)
+3: ## Migration
+10: ## Expand-safety (correção da crítica)
+36: ## Janela de rolling deploy (detecção do writer antigo)
+46: ### Segunda checagem na mesma transação (implementada)
+53: ### Ordem de deploy (obrigatória)
+60: ### Lacuna conhecida: exclusão de linha em formato antigo
+71: ## Tombstone, TTL e retenção
+82: ## Reconciliação explícita
+91: ## Rollback (manual, com o código anterior)
+99: ## Evidência de aplicação no ambiente
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/RETORNO.md
+1: # RETORNO AAA-12 — IMPLEMENTED, rodada de correções (não DONE, não integrado)
+11: ## 0. Rodada de correções (crítica fresca 7.0/10)
+35: ## 1. A11 reproduzido antes e resolvido depois
+55: ## 2. O que mudou (sha256 em `candidate-files.txt`)
+75: | `apps/desk-api/src/app.ts` | **Dependência AAA-02 pinada por hash** (composição `setGatewayOutboundPort(gatewayService)`), não é edição AAA-12. |
+80: ## 3. Suíte `aaa-12.integration.test.ts` (16 casos)
+101: ## 4. Comandos executados (exit codes) — rodada final
+122: ## 5. Compatibilidade, limites e riscos residuais
+155: ## 6. Manifesto da evidência (`/tmp/cvg-aaa-returns/aaa-12/evidence/`)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/evidence/previous-rounds/README.md
+1: # previous-rounds — evidência SUPERADA (NÃO é a revisão selada)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-31/RETORNO.md
+1: # AAA-31 — Retorno do builder
+11: ## 1. Escopo exercido (somente caminhos permitidos)
+39: ## 2. Reprodução negativa ANTES
+73: ## 3. Implementação (C09 × DESIGN_QA)
+75: ### 3.1 `/admin`
+102: ### 3.2 `/audit`
+112: ### 3.3 `/settings`
+121: ### 3.4 Acessibilidade e feedback (transversal)
+132: ## 4. Checks executados (exit codes, revisão final)
+155: ## 5. Evidência (auto-contida)
+171: ## 6. Limitações e riscos residuais
+192: ## 7. Integridade
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/RETORNO.md
+1: # AAA-13 — Retorno do builder
+8: ## 0. Rodadas de correções (críticas 8.0/10 e 8.5/10)
+20: ## 1. Escopo exercido (somente caminhos permitidos)
+40: ## 2. Reprodução negativa ANTES
+46: ## 3. Implementação
+48: ### C04 — uma chave por intenção (`Inbox.tsx` + `api.ts`)
+57: ### C05 — upload binário e limite
+63: ### C06 — histórico paginado
+68: ### Segurança de estado e offline
+73: ## 4. Fronteira real do backend (sonda, DB a13 + S3 + ClamAV reais)
+88: ## 5. Testes e regressão
+95: ### Comandos finais (exit codes)
+112: ## 6. Limitações e riscos residuais
+124: ## 7. Rollback
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/before2-README.md
+1: # Baseline negativa estendida — conjunto FINAL de testes contra HEAD (pré-fix)
+8: ## Como foi produzido (sem tocar a working tree compartilhada)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/superseded/README.md
+1: # Logs superados (quarentena) — AAA-13
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/migration-notes.md
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/RETORNO.md
+1: # AAA-11 — Paginar conversas e selecionar últimas mensagens no banco — RETORNO DO BUILDER
+15: ## 1. Reprodução negativa antes/depois (controlada, PostgreSQL real)
+37: ## 2. Implementação
+39: ### `modules/chat/src/infrastructure/repositories/conversation.repository.ts`
+53: ### `modules/chat/src/infrastructure/repositories/message.repository.ts`
+58: ### `modules/chat/src/presentation/http/outbound.controller.ts`
+67: ### `packages/database/supabase/migrations/0020_messages_keyset_indexes.sql` (+ `meta/_journal.json`)
+73: ## 3. Teste novo (negativos discriminantes)
+90: ## 4. Checks executados (comando, exit, evidência)
+110: ## 5. Cobertura da barra de aceite
+128: ## 6. Limitações e riscos residuais
+162: ## 7. Inventário da entrega
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-15/RETORNO.md
+1: # AAA-15 — RETORNO (builder) — IMPLEMENTED
+3: - Tarefa: AAA-15 "Atualizar dependências e triar alertas" (fase 1, R2, 5 pts) — achado A13 / área 16 / contrato C08.
+9: ## 1. Resultado da triagem
+19: Objetivo "zero High/Critical nas dependências implantadas" atingido; nenhum scanner suprimido (sem `ignore`/allowlist; apenas upgrades reais). Tabela completa de triagem, changelog por grupos, runtime e exceções em `docs/security/AAA-15-triagem-dependencias-2026-09-13.md`.
+25: ## 2. Arquivos alterados (candidato)
+40: | `modules/gateway-adapter/package.json` | removida dependência `uuid` não utilizada (já estava modificado por predecessor; ver `tracked.diff`) |
+41: | `docs/security/AAA-15-triagem-dependencias-2026-09-13.md` | novo; triagem/changelog/exceções (não colide com docs proibidos) |
+45: ## 3. Comandos e resultados (exits)
+61: | 12b | `pnpm lint` | 1 | 32/33; falha pré-existente só em `@cvg/desk-web#lint` (21 warnings de `no-explicit-any` em páginas, `--max-warnings 0`; CI usa `--max-warnings 100`). Não é regressão de dependência; fonte fora do ownership |
+71: Suítes por pacote com DB isolado (run AAA-15, C00): 29 tasks verdes. No run paralelo, `@cvg/desk-api` falhou 9 arquivos por **duas** causas: 7 guardas de isolamento de run de predecessor (aaa-04/05/09/10/11/12/19, que **exigem** `DATABASE_URL` próprio em `127.0.0.1:56432`, p.ex. `"[AAA-08] DATABASE_URL deve apontar para 127.0.0.1:56432"`) e 2 contenções de DB compartilhado entre suítes concorrentes — `privacy-dsar` (`23505` em `roles_name_unique`) e `transfers-routes` (`23503` FK de `user_roles`). O rerun sequencial do desk-api em banco recém-migrado (`raw/after/test-desk-api-sequential.log`) comprova que as 2 contenções não se reproduzem: `privacy-dsar` ✓ (3 testes) e `transfers-routes` ✓ (10 testes), 158 passed / 121 skipped, restando apenas os 7 arquivos guardados. Sem os guardas: desk-api 158 passed, chat 34 passed, events 156 passed, realtime-service 81 passed. Nenhuma falha de dependência ou de contrato trocado.
+75: ## 4. Evidência (índice)
+88: ## 5. Runtime pin (D04/C08)
+92: ## 6. Limitações / riscos residuais
+100: ## 7. Próxima ação
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/RETORNO.md
+1: # AAA-14 — RETORNO (builder, rodada 3) — IMPLEMENTED
+13: ## 1. Correções da rodada 3
+26: ## 2. Resultado dos gates (revisão congelada; `raw/final/`)
+46: ## 3. Reprodução negativa (cópia isolada `/tmp/cvg-aaa-negative`)
+60: ## 4. Breadth de CI e guardas (mantido)
+65: ## 5. Limitações e riscos residuais
+72: 6. Exceções de dependência EXC-AAA15-01/02/03 abertas com dono/prazo (AAA-15).
+75: ## 6. Roteamento de owners
+81: ## 7. Índice da evidência (`/tmp/cvg-aaa-returns/aaa-14/`)
+91: ## 8. Próxima ação
+95: ## 9. Teardown do ambiente
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/raw/final/triple-aaa-report-round3.md
+1: # Triple AAA Report — 754f9bad
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/raw/final/triple-aaa-report-round2.md
+1: # Triple AAA Report — 754f9bad
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-19/RETORNO.md
+1: # RETORNO AAA-19 — Vincular autoria de notas à identidade autenticada (rodada 2)
+11: ## 0. Correções da crítica (rodada 2)
+20: ## 1. Ambiente isolado (a19)
+33: ## 2. Implementação (arquivos e hashes em `candidate-files.txt`, 13/13 verificados)
+44: ## 3. Reprodução negativa controlada (antes/depois, mesmo teste final)
+53: ## 4. Checks executados (com exit codes e logs)
+72: ## 5. Mapa de aceite
+79: ## 6. Limitações e riscos residuais
+90: ## 7. Evidência
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-30/RETORNO.md
+1: # AAA-30 — Retorno do builder
+11: ## 1. Escopo exercido (somente caminhos permitidos)
+43: ## 2. Reprodução negativa ANTES
+69: ## 3. Implementação (C09 × DESIGN_QA)
+71: ### 3.1 `/tasks`
+85: ### 3.2 `/alerts`
+91: ### 3.3 `/sectors`
+98: ### 3.4 `/labels`
+106: ### 3.5 `/contact-groups`
+114: ### 3.6 `/kanban`
+126: ### 3.7 Transversal
+133: ## 4. Checks executados (exit codes, revisão final)
+160: ## 5. Evidência (auto-contida)
+176: ## 6. Limitações e riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/RETORNO.md
+1: # AAA-20 — Retorno do builder (rodada de correção)
+10: ## 1. Correções exigidas x executadas
+20: ## 2. Arquivos do candidato (24 hashes, ver `candidate-files.txt`)
+40: ## 3. Inventário antes/depois (candidato congelado)
+49: ## 4. Checks executados (exits)
+63: ## 5. Evidência (auto-contida no diretório de retorno)
+80: ## 6. Limitações e riscos residuais
+95: ## 7. Segunda rodada — integridade
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/docs/cvg-design-system.md
+1: # CVG Connect Desk — Design system operacional
+8: ## 1. Fonte de verdade e procedência
+22: ## 2. Tokens
+28: ### Cor
+42: ### Espaçamento, raio, tipografia, elevação, camadas e movimento
+60: ### Contraste (medido em `cvg-design-system.json`)
+66: ## 3. Primitivas
+72: ### Button (`ui-btn`)
+81: ### TextField (`ui-field` + `ui-input`)
+89: ### Card (`ui-card`)
+94: ### Badge (`ui-badge`)
+100: ### Estados (`LoadingState`, `EmptyState`, `ErrorState`)
+109: ### Conectividade (`ConnectionStatus` + `useRealtimeStatus`)
+126: ## 4. Estados e regras de comportamento
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/before/inventory.md
+1: # Inventário do design system — antes (AAA-20)
+5: ## Contagem por arquivo
+28: ## Cores literais: 323 distintas, 856 ocorrências
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/round1-logs/inventory/inventory.md
+1: # Inventário do design system — depois (AAA-20)
+5: ## Contagem por arquivo
+28: ## Cores literais: 310 distintas, 810 ocorrências
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-09/RETORNO.md
+1: # RETORNO AAA-09 — Corrigir readiness e dependências operacionais
+10: ## 1. Defeitos reproduzidos antes do fix (observação real, não prosa)
+22: ## 2. Implementação
+24: ### `packages/database/src/check-migrations.ts`
+35: ### `apps/desk-api/src/runtime-config.ts`
+44: ### `apps/desk-api/src/app.ts`
+46: - `/readiness` reescrita: DB + migrations via probe limitado; Redis (se `REDIS_URL`) degrada (`degraded:true`, 200) ou falha crítica (`status:'error'`, **503**) conforme `REDIS_REQUIRED`; Secretary vira `degraded` explícito com código. `criticalFailed` = database/migrations/redis-crítico → `reply.status(503)`. Log de criticidade com **apenas códigos** (`readiness: dependência crítica indisponível (503)`).
+50: ## 3. Mapa de aceite
+55: - **Dependências opcionais degradam explicitamente** → Secretary inalcançável: 200, `ready:true`, `degraded:true`, `code:SECRETARY_UNREACHABLE` (idem Redis não crítico).
+58: ## 4. Ambiente isolado (a9)
+72: ## 5. Checks executados (com exit codes e logs em `evidence/`)
+90: ## 6. Arquivos alterados (hashes em `candidate-files.txt`)
+99: ## 7. Limitações e riscos residuais
+110: ## 8. Evidência
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/RETORNO.md
+1: # RETORNO AAA-17 — Cobrir privacidade, retenção e cópias de dados
+10: ## 1. Ambiente isolado (a17)
+23: ## 2. Implementação (59 arquivos no manifesto, 59/59 conferidos)
+47: ## 3. Reprodução negativa (antes/depois, mesmo teste final)
+52: ## 4. Checks executados (com exit codes e logs)
+73: ## 5. Mapa de aceite
+81: ## 6. Limitações e riscos residuais
+94: ## 7. Roteamento de follow-ups
+103: ## 8. Evidência
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/D02-proposta.md
+1: # D02 — Proposta de política de privacidade e retenção por cópia (para ratificação do responsável pelos dados)
+10: ## 1. Inventário de cópias (observado no candidato AAA-17)
+28: ## 2. Matriz proposta (manter / pseudonimizar / apagar)
+43: ## 3. Defaults recomendados para ratificação (proposta técnica)
+57: ## 4. Semântica que a ratificação NÃO muda
+66: ## 5. Perguntas em aberto para o responsável pelos dados
+77: ## 6. Evidência de suporte (AAA-17)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/before-aaa17/docs/LGPD_DATA_SUBJECT_REQUESTS.md
+1: # LGPD_DATA_SUBJECT_REQUESTS — CVG Connect Desk (LGPD arts. 18–19)
+3: ## Direitos atendidos
+10: ## Anonimização (preferida à exclusão)
+18: ## Retention policy (base)
+24: ## Auditoria
+30: ## Não coberto (lacunas honestas)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v1/RETORNO.md
+1: # AAA-06 — Retorno do builder (Agente 2)
+6: ## 1. Reprodução negativa (antes)
+10: ## 2. Implementação (escopo estrito)
+18: ## 3. Verificações (todas executadas localmente)
+32: ## 4. Limitações (não certificado)
+39: ## 5. Candidato
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v2/RETORNO.md
+1: # AAA-06 correções v2 — Retorno do builder (Agente 2)
+10: ## 1. Correções obrigatórias 1–7 (fechamento da crítica)
+20: | 7 | DC08-6 (`--frozen-lockfile`) | **FECHADO (simulação fiel, sem Docker).** Cópia parcial exata do Dockerfile (root + `apps/desk-web/package.json` + `packages/` + `modules/`, sem `node_modules`/testes) → `pnpm install -r --frozen-lockfile` exit 0 (559 resolvidos, 555 reusados da store, 0 downloads). Discriminante negativo com dependência fantasma → exit 1 `ERR_PNPM_OUTDATED_LOCKFILE`. Execução da **imagem Docker continua não verificada** (permissão negada). |
+22: ## 2. Arquivos alterados (sha256; cópias em `files/`)
+36: ## 3. Semântica do fallback vazio (decisão documentada)
+43: ## 4. Checks executados (nenhuma declaração sem execução)
+57: | DC08-6 negativo | idem + dependência fantasma | 1 (esperado) | `ERR_PNPM_OUTDATED_LOCKFILE` | `logs/dc08-6-frozen-lockfile-negative.log` |
+60: ## 5. Bundles
+67: ## 6. Anotação do artefato stale (ação do coordenador)
+71: ## 7. Limitações e riscos residuais
+80: ## 8. Reprodução rápida
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/RECONCILIACAO.md
+1: # AAA-04 — reconciliação de versões, divergências e recongelamento (atualizado 2026-09-12)
+6: ## Versões do artefato
+15: ## Divergências reconciliadas
+21: ## Correções aplicadas pelo coordenador (com redistribuição de escopo registrada)
+28: ## Classificação de flake
+32: ## Integridade v4
+36: - **Pendência de integração:** H2 (listas `GET /tasks`, `GET /alerts`, `GET /contacts` sem escopo de setor) — achado HIGH da revisão v3, fora do escopo de presentation; corrigir via `runtime/dispatch/AAA-04-correcoes-v2.md`, seguido de revisão fresca do candidato final e regressão integrada.
+38: ## Recuperação 2.0 — rótulo v4 duplicado, perdas e despacho cumulativo (2026-09-12)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/README.md
+1: # Candidato AAA-04 — autorização por recurso + G-C02-1 (2026-09-12)
+8: ## Conteúdo
+15: ## Implementação (recorte HTTP de C02 §3–§7)
+23: ## Verificações (exit 0)
+35: ## Evidência antes/depois (controlada)
+41: ## Limitações e ressalvas
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/suplementar/RETORNO-AAA-04.md
+1: # RETORNO AAA-04 — IMPLEMENTED (não DONE)
+9: ## 1. Candidato (commitless)
+32: ## 2. Escopo e aderência
+37: ## 3. Reprodução antes/depois (controle)
+42: ## 4. Verificações desta sessão (exit 0)
+54: ## 5. Limitações e riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/RETORNO.md
+1: # RETORNO AAA-04 v6 — IMPLEMENTED (não DONE, não integrado)
+9: ## 1. Correções implementadas (1–12 do despacho)
+24: ## 2. Arquivos do candidato v6 (10; sha256 em `candidate-files.txt`)
+39: ## 3. Antes/depois controlado (restauração bit a bit)
+47: ## 4. Checks executados (com exit codes e logs)
+64: ## 5. Limitações e riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/route-authorization-inventory.md
+1: # Inventário rota × autorização — AAA-04 v6
+7: ## 1. Rotas do recorte (corrigidas / verificadas)
+60: ## 2. Reconcílição de tasks/alerts (crítica item 3 e 4)
+71: ## 3. Rotas fora do escopo de escrita (somente inventário, sem alteração; dono proposto)
+87: ## 4. Decisões e riscos residuais registrados
+89: ### 4.1 `GET /conversations?sectorId=<outro>` — 403 vs D-C02-2 (404)
+90: Decisão v6: **manter 403**. Motivos: (a) o teste congelado `apps/desk-api/src/__tests__/sector-authz.integration.test.ts:208-215` exige 403 para esse caso; (b) C02 §9 declara que `GET /conversations` "mantém o filtro default-deny por setor já iniciado", tratando a rota como compatibilidade. Alterar para 404 exigiria editar teste fora do escopo de escrita desta correção. Pendência para o lead: aceitar a exceção de compatibilidade ou autorizar o ajuste do teste e da rota em follow-up. Nenhum conteúdo é devolvido no 403.
+92: ### 4.2 Kanban — conversa sem setor
+95: ### 4.3 Kanban — consulta do board na apresentação
+98: ### 4.4 Contatos sem vínculo
+101: ### 4.5 Autor controlado pelo cliente (QA17)
+104: ### 4.6 Grupo de contatos sem dono de produto
+107: ### 4.7 Rate limit na suíte aaa-04
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/RETORNO-AAA-04-v5.md
+1: # RETORNO AAA-04 v5 — IMPLEMENTED (não DONE, não integrado)
+8: ## 1. Correções implementadas
+19: ## 2. Antes/depois controlado por caso
+26: ## 3. Regressões e flake
+39: ## 4. Limitações
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/route-authorization-inventory.md
+1: # Inventário rota × autorização — AAA-04 v5
+27: ## Rotas fora do recorte de escrita (pendência registrada, sem correção nesta versão)
+34: ## Garantias de política
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v4/INVENTARIO-ROTAS-AUTORIZACAO.md
+1: # AAA-04 — Inventário rota × autorização (fecha C1/H3)
+6: ## Rotas no escopo de AAA-04 (guarded no v4)
+21: ## Rotas com ID fora do escopo de escrita de AAA-04 (follow-up)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/RETORNO.md
+1: # RETORNO AAA-04 v7 — IMPLEMENTED (não DONE, não integrado)
+10: ## 1. Correções obrigatórias (despacho item 2) — todas implementadas
+17: 6. **Notes sem conversa nem task (item 2f).** `GET /notes/:id` aplica default-deny: **404** exceto Admin global ou `authorId === ator`. Teste cobre terceiro (404), autor (200) e admin (200); pré-fix terceiro recebia 200. Dependência de **QA17** (autor controlado pelo cliente) registrada no inventário §4.5.
+19: ## 2. Arquivos do candidato v7 (11; sha256 em `candidate-files.txt`)
+35: ## 3. Antes/depois controlado (restauração bit a bit)
+48: ## 4. Checks executados (com exit codes e logs; raiz com `DATABASE_URL` do run a4)
+67: ## 5. Limitações e riscos residuais
+70: - **Notes sem vínculo (QA17):** a leitura excepcional `note.authorId === ator` depende de campo controlado pelo cliente na criação; registrado no inventário §4.5 com recomendação de derivar o autor do principal em follow-up. Mesma dependência vale para `triggeredBy/acknowledgedBy/resolvedBy` de alerts.
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/route-authorization-inventory.md
+1: # Inventário rota × autorização — AAA-04 v7 (v3)
+8: ## 1. Rotas do recorte (corrigidas / verificadas)
+61: ## 2. Reconcílição (crítica v6, itens 1–6)
+73: ## 3. Rotas portadoras de ID fora do escopo de escrita (somente inventário; dono proposto)
+98: ## 4. Decisões e riscos residuais registrados
+100: ### 4.1 `GET /conversations?sectorId=<outro>` — 403 vs D-C02-2 (404)
+101: Decisão v6 mantida: **403**. Motivos: (a) o teste congelado `apps/desk-api/src/__tests__/sector-authz.integration.test.ts:208-215` exige 403 para esse caso; (b) C02 §9 declara que `GET /conversations` "mantém o filtro default-deny por setor já iniciado", tratando a rota como compatibilidade. Pendência para o lead: aceitar a exceção de compatibilidade ou autorizar o ajuste do teste e da rota em follow-up. Nenhum conteúdo é devolvido no 403.
+103: ### 4.2 Kanban — conversa sem setor: RESOLVIDO em v7 por D-AUTHZ-02
+106: ### 4.3 Kanban — consulta do board na apresentação
+109: ### 4.4 Contatos sem vínculo
+112: ### 4.5 Autor controlado pelo cliente (QA17)
+113: `authorId` de notes e `triggeredBy/acknowledgedBy/resolvedBy` de alerts continuam vindo do corpo; a autorização usa o principal autenticado, não esses campos. **Dependência v7:** `GET /notes/:id` de nota sem conversa nem task usa `note.authorId === ator` como critério de leitura (além de Admin global) — se o cliente mentir o `authorId` na criação, a leitura é concedida ao autor declarado. Recomendação para follow-up: derivar `authorId`/`triggeredBy` do principal no servidor e migrar o dado existente. Fora do escopo de escrita desta correção.
+115: ### 4.6 Grupo de contatos sem dono de produto
+118: ### 4.7 Rate limit na suíte aaa-04
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/RETORNO.md
+1: # RETORNO AAA-07 — IMPLEMENTED (não DONE, não integrado)
+10: ## 0. Delta pós-regressão de integração (a4) — 2026-09-12, segunda rodada
+91: ## 1. Problema A06 reproduzido antes e resolvido depois
+116: ## 2. Implementação (C03)
+149: ## 3. Arquivos do candidato (sha256 em `candidate-files.txt`)
+169: ## 4. Checks executados (com exit code e log)
+198: ## 5. Limitações e riscos residuais
+244: ## 6. Índice da evidência (`evidence/`)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/MIGRATION_0019.md
+1: # Migration 0019 — outbox lease/fencing (AAA-07 / C03)
+12: ## Forward DDL (aplicado)
+23: ## Semântica das colunas
+31: ## Verificação pós-migração
+43: ## Rollback documentado (manual; preferir roll-forward)
+59: ## Integridade
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-18/RETORNO.md
+1: # AAA-18 — Limitar cardinalidade e proteger métricas — RETORNO DO BUILDER
+12: ## 1. Arquivos alterados (manifesto enxuto, sem artefatos gerados)
+36: ## 2. Mudanças de comportamento (AAA-18)
+65: ## 3. Reprodução negativa × resultado final (mesmo arquivo de teste; 16 casos)
+82: ### 3.1 Divulgação: edição de asserção durante o run original
+92: ## 4. Comandos re-executados no fix round (raw logs em `logs/`)
+113: ## 5. Re-selagem e drift pós-freeze (item 2)
+129: ## 6. Cobertura de testes AAA-18 (16 casos)
+138: ## 7. Limitações, riscos residuais e follow-ups (dono)
+157: ## 8. Próxima ação
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/RETORNO.md
+1: # RETORNO AAA-08 — IMPLEMENTED (não DONE, não integrado)
+11: ## 1. Problema A07 reproduzido antes e resolvido depois
+33: ## 2. O que mudou
+35: ### Núcleo
+54: ### Invariante estrutural
+60: ## 3. Suíte julgada `aaa-08-atomicity.test.ts` (8 casos)
+81: ## 4. Comandos executados (exit codes)
+102: ## 5. Compatibilidade e limites declarados
+124: ## 6. Manifesto da evidência (`/tmp/cvg-aaa-returns/aaa-08/evidence/`)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/MIGRATION.md
+1: # AAA-08 — notas de migration / schema
+3: ## Decisão: nenhuma migration nova é necessária
+16: ## Rollback
+26: ## Evidência de aplicação no ambiente
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-21/RETORNO.md
+1: # AAA-21 — Retorno do builder
+10: ## 1. Escopo exercido (somente caminhos permitidos)
+41: ## 2. Reprodução negativa ANTES
+57: ## 3. Implementação (C09 × DESIGN_QA)
+59: ### 3.1 Sessão expirada (api.ts + auth.ts + App.tsx)
+69: ### 3.2 `/login`
+77: ### 3.3 `/inbox`
+97: ### 3.4 `/dashboard`
+105: ## 4. Checks executados (exit codes, revisão final)
+127: ## 5. Evidência (auto-contida)
+146: ## 6. Limitações e riscos residuais
+166: ## 7. Integridade
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-05/RETORNO.md
+1: # AAA-05 — Isolar canais e destinatários realtime — RETORNO DO BUILDER (round 3)
+9: ## 0-bis. Correção round 3 — hermeticidade do comando default (paralelo)
+40: ## 0. Correções da crítica fresca
+50: ## 1. Reprodução negativa antes/depois (revisões em `round2-revision.txt`)
+67: ## 2. Implementação (estado final)
+69: ### packages/realtime (puro)
+81: ### apps/realtime-service
+106: ## 3. Checks executados (round 2, com exit)
+126: ## 4. Cobertura de aceite
+142: ## 5. Limitações e riscos residuais
+165: ## 6. Inventário da entrega
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-29/RETORNO.md
+1: # AAA-29 — Retorno do builder
+11: ## 1. Escopo exercido (somente caminhos permitidos)
+39: ## 2. Reprodução negativa ANTES
+68: ## 3. Implementação (C09 × DESIGN_QA)
+70: ### 3.1 `/contacts`
+87: ### 3.2 `/tutors` e `/patients`
+100: ### 3.3 `/notes`
+110: ### 3.4 Acessibilidade e feedback (transversal)
+121: ## 4. Checks executados (exit codes, revisão final)
+146: ## 5. Evidência (auto-contida)
+164: ## 6. Limitações e riscos residuais
+182: ## 7. Integridade
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-7981f-s-×-5-viewports-axe-375x812-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+23: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-prefers-redu-45993-eradas-e-rolagem-sem-smooth-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+28: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-f7d8e-s-×-5-viewports-axe-390x844-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+23: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-contraste-re-b332c--fundo-em-16-rotas-1440x900-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+489: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-teclado-—-pa-c692d-Inbox-Escape-devolve-o-foco-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+21: # Page snapshot
+220: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-5b4cc--×-5-viewports-axe-768x1024-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+23: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-1862d--×-5-viewports-axe-1440x900-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+23: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-3b5df--×-5-viewports-axe-1024x768-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+23: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-teclado-—-tr-0af1c-or-Tab-em-16-rotas-1440x900-aaa/error-context.md
+1: # Instructions
+7: # Test info
+12: # Error details
+28: # Test source
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-entrega-coordenacao.md
+1: # Fechamento da coordenação — rodada 2026-09-12 (retomada pós-BLOCKED)
+6: ## 1. Reconciliação executada
+13: ## 2. Contratos e revisão independente
+20: ## 3. Despachos emitidos
+26: ## 4. Pendências que permanecem visíveis
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-marco-AAA-02-AAA-03.md
+1: # Marco AAA-02/AAA-03 — consolidação e liberação de AAA-04 (2026-09-12)
+5: ## 1. Situação consolidada
+12: ## 2. Correções desta consolidação
+18: ## 3. AAA-04 despachado
+25: ## 4. Pendências preservadas (não bloqueiam AAA-04)
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-02.md
+1: # AAA-02 — retorno recebido em 12/09/2026
+5: ## Estado e resultado informados
+13: ## Diagnóstico e proposta do agente
+17: Proposta ainda não aprovada: interfaces em `@cvg/messaging-contracts`, injeção de portas em Chat/Gateway e composição em `apps/desk-api/src/app.ts`, removendo as dependências recíprocas dos manifests e atualizando o lockfile. Preservar os exports usados por cinco mocks da API e verificar consumidores Contacts/Kanban. Remover somente o ciclo do Turbo não prova preservação de comportamento.
+19: ## Verificações relatadas — não reexecutadas nesta consolidação
+29: ## Inspeção documental pelo coordenador após o retorno
+38: ## Próxima ação do Agente 1
+40: Reconciliar identificação/ownership e evidências com o ambiente efetivamente adotado, diagnosticar a falha de guarda e produzir verificação atual. Concluir o recorte C02/C03 exigido pelo cartão, ou formalizar e revisar eventual ajuste de dependências; registrar revisão independente das pré-condições. Depois emitir despacho AAA-02 com escopo, contratos por hash, banco/portas e reservas exclusivas de composição, lockfile e grafo de dependências.
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-mudanca-catalogo-G-C02-1.md
+1: # Mudança de catálogo — G-C02-1 em AAA-04 (2026-09-12)
+8: ## Decisão
+16: ## Justificativa
+22: ## Impactos
+32: ## Reversão
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-proximo-prompt-agente-1.md
+1: # Próximo prompt — Agente 1
+5: Inspeção documental desta rodada: os logs agora registram `guard_result=PASS failures=0` e a baseline de autenticação/provas negativas na porta 56432. C01 está em v1.0.1 e exige revisão dessa versão. A listagem ainda não mostrou `state.json`, contratos C02/C03, despachos ou artefato de revisão, embora o README mencione alguns deles. São observações dos arquivos, sem reexecução dos testes ou confirmação de serviços vivos. Elas atualizam as pendências históricas do retorno AAA-02; revalidar antes de agir, pois há escrita concorrente.
+7: ## Prompt para copiar
+17: 3. Prepare a liberação de AAA-02. Finalize os contratos C02/C03 exigidos pelo cartão, com produtores, consumidores, tipos, erros, exemplos e critérios verificáveis, respeitando os contratos relacionados C04. A inversão de dependências deve preservar comportamento; não implemente silenciosamente as funcionalidades de autorização/outbox das tarefas seguintes. Se precisar ajustar dependências do plano para liberar um recorte, registre justificativa, impactos e revisão antes do despacho; não dispense gates informalmente.
+21: 5. Assim que cada tarefa satisfizer suas próprias pré-condições, emita runtime/dispatch/AAA-02.md e runtime/dispatch/AAA-03.md, respectivamente. Inclua responsável, escopo permitido/proibido, revisão e manifesto das mudanças locais, contratos por hash, evidências de revisão, ambiente isolado, comandos de verificação e aceite. Não aguarde pendências sem relação com a tarefa, mas formalize qualquer mudança no grafo de dependências. Não declare despacho emitido antes de o arquivo existir.
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-redistribuicao-AAA-04-fixtures.md
+1: # Redistribuição de escopo AAA-04 — fixtures de membership (2026-09-12)
+8: ## Decisão
+16: ## Impactos
+22: ## Reversão
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-parecer-I1.md
+1: # Recebimento do parecer AAA-00/AAA-01 — 12/09/2026
+5: ## Fontes conferidas
+13: ## Veredictos recebidos
+25: ## Achados e mudanças observadas durante a consolidação
+28: - F2/F3: manter pendências de AAA-00/AAA-01 explícitas. Para eventual liberação parcial de AAA-03, formalizar escopo e revisão da exceção às dependências, sem marcar as tarefas predecessoras integralmente concluídas.
+34: ## Limites da independência
+38: ## Próxima instrução para o coordenador paralelo
+
+docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-03.md
+1: # AAA-03 — retorno recebido em 12/09/2026
+7: ## Resultado informado pelo agente
+16: ## Reconciliação pelo coordenador
+24: ## Pendências e próxima ação
+
+docs/execucao-aaa-2026-09-12/runtime/findings/FIND-DB-001-timestamps.md
+1: # FIND-DB-001 — colunas de sessão `timestamptz` declaradas como `timestamp` no schema drizzle
+8: ## Evidência
+15: ## Impacto
+21: ## Correção proposta (fora do escopo de AAA-03)
+27: ## Rollback e risco
+
+docs/execucao-aaa-2026-09-12/runtime/findings/FIND-AAA04-002-rotas-id-fora-do-escopo.md
+1: # FIND-AAA04-002 — rotas com ID de recurso fora do escopo de AAA-04
+7: ## Rotas afetadas
+14: ## Impacto e recomendação
+
+docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-FIND-INV-009-010.md
+1: # FIND-INV-009 e FIND-INV-010 (2026-09-12)
+3: ## FIND-INV-009 — worker compartilhava data dir e passo de porta colidia com reservas por agente
+13: ## FIND-INV-010 — imports bare em `e2e/**` não resolvem fora dos pacotes do workspace
+19: - Critério verificável: `pnpm test:e2e` (smoke) executa com `DATABASE_URL` explícito da stack e alcança `/login`; nenhum import de workspace a partir de `e2e/**` depende de hoisting; evidência de execução registrada. Alternativa aceita: adicionar `e2e` como workspace package com dependências declaradas, se o lead optar — decisão de dono, não deste relatório.
+
+docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-achados-inventario-AAA-00.md
+1: # Achados do inventário AAA-00 — vínculos a tarefas existentes (2026-09-12)
+7: ## Tabela de vínculos
+21: ## Itens que permanecem abertos em AAA-00 (não fechados por este mapa)
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v2-2026-09-12.md
+1: # Crítica fresca AAA-05 (round 2 selado) — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+18: ## Limitação encontrada pelo lead na integração
+22: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v7-2026-09-12.md
+1: # Crítica fresca AAA-04 v7 — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+20: ## Observações não bloqueantes
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-v2-2026-09-12.md
+1: # Crítica fresca AAA-06 v2 — PASS / 9.0 de 10
+10: ## Observações não bloqueantes
+15: ## Limitações declaradas
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v6-2026-09-12.md
+1: # Crítica fresca AAA-04 v6 — REJECT / 7.0 de 10
+7: ## Lacunas que impedem >=9
+16: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-20 — REJECT / 7.0 de 10
+6: ## Aceito
+12: ## Correções exigidas
+20: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-condicoes-2026-09-12.md
+1: # AAA-02 — revisão independente dos contratos C02/C03 (2026-09-12)
+4: - Revisor: subagente **gauntlet-critic** dedicado, contexto novo, **read-only** (sem shell); independência **I1** (mesma família de modelo). Não é auditoria humana externa.
+8: ## 1. Snapshots e veredictos
+19: ## 2. Achados da v1.0.0 e correção na v1.0.1
+30: ## 3. Condição do reteste e fechamento
+37: ## 4. Limites da revisão
+42: - Independência I1: mesma família de modelo; AAA-28 exige crítico final distinto (sem reutilizar esta aprovação).
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-00-inventario-aceite-2026-09-12.md
+1: # AAA-00 — aceite documental do inventário de checks e da matriz de serviços (2026-09-12)
+8: ## 1. Integridade dos entregáveis
+19: ## 2. Verificação por amostragem dos fatos determinantes
+36: ## 3. Decisão de aceite
+43: ## 4. Errata e observações de revisão
+51: ## 5. Continuação de AAA-03 e AAA-02 no ato deste aceite
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v3-2026-09-12.md
+1: # Crítica fresca AAA-05 (round 3) — PASS / 9.5 de 10
+6: ## Fix do flake (lead) verificado
+13: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-06 — REJECT / 6.0 de 10
+7: ## Nota e justificativa
+11: ## Tabela de critérios
+13: | # | Critério | Veredito | Evidência |
+22: ## Correções exigidas (rodada AAA-06 v2)
+30: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-review-v3-2026-09-12.md
+1: # AAA-04 v3 — revisão independente fresca (2026-09-12)
+3: - Revisor: crítico fresco (gauntlet-critic), contexto novo, read-only, sem shell/sem execução de suíte. Independência I1.
+5: - **Veredito: REJECT para o snapshot v3** (o worktree foi marcado `INVALID` pelo revisor por estar em mutação ativa — v4 em produção pelo coordenador no momento da revisão).
+7: ## Achados
+14: | FIND-AAA04-005 | HIGH | Inventário rota×autorização ausente no pacote (§7/§8) e rotas com ID sem guarda fora do recorte (`labels`: `label.controller.ts:88-186`) sem registro de pendência/dono. | v3 `evidence/` sem artefato de inventário. Aberto. |
+19: ## Achados LOW (aceitos como resíduos)
+26: ## Itens confirmados pelo revisor (código v3)
+34: ## Limitações da revisão
+37: - Worktree mutável durante a revisão (v4) → veredito do snapshot v3 separado do veredito do worktree (`INVALID`).
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-07-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-07 — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+19: ## Observações não bloqueantes
+25: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-v2-2026-09-12.md
+1: # Crítica fresca AAA-20 v2 — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+17: ## Observações não bloqueantes
+23: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-v4-fresh-2026-09-12.md
+1: # AAA-04 — revisão fresca do snapshot de 24 casos (2026-09-12)
+8: ## Veredicto: **REJECT — NOT_READY para integração**
+18: | MEDIUM-2 | MÉDIA | independência de ordem ainda depende do heap do Postgres (sem `ORDER BY`) | FIND-AAA04-006 |
+23: ## Colisão de versões a resolver antes do novo selo
+28: ## Próximo despacho
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-precondicoes-2026-09-12.md
+1: # AAA-03 — registro de revisões independentes das pré-condições (2026-09-12)
+7: ## 1. Crítica fresca (gauntlet-critic) da v1.0.0 — REJECT
+9: - Independência: I1 (mesma família de modelo, contexto novo, read-only; sem shell na sessão, hashes/psql marcados como não verificados pelo próprio revisor).
+10: - Veredito: **REJECT**, antes do despacho.
+22: ## 2. Crítica I1 produzida em execução paralela — APPROVE WITH CONDITIONS
+25: - Independência: I1; a sessão crítica executou checks em PostgreSQL próprio (56532), guardas do harness, controle negativo Playwright e conferiu 17 hashes.
+26: - Veredito para C01 v1.0.1: **APPROVE WITH CONDITIONS**; AAA-00 baseline/ambiente: **PARTIAL**; C00/C02–C09: NOT VERIFIED/MISSING.
+36: ## 3. Verificação independente com agente de verificação (goal-verify)
+38: - Independência: I1; sessão sem shell e sem acesso a `/tmp`, portanto **FAIL por não-verificável**, com os mesmos achados F1/F6.
+42: ## 4. Revisão fresca com shell do delta v1.0.2 e do harness — PASS
+44: - Independência: I1, contexto novo, read-only, com fingerprint antes/depois.
+46: - Veredito: **PASS**, com 4 resíduos LOW (matriz §12 ainda v1.0.1; D01 citava v1.0.1; `environment.json` citava redis 56380 e revisão pendente). Todos corrigidos após o parecer; hashes atualizados em cadeia.
+49: ## 5. Conclusão operacional
+51: As condições 1–4 da crítica I1 estão fechadas e o delta v1.0.1→v1.0.2 é de redação/esclarecimento (F5/F7) mais a correção de integridade F6 e resíduos de versão, sem mudança semântica. A revisão fresca com shell aprovou o pacote. O despacho de AAA-03 fica autorizado com as pendências de AAA-00/AAA-01 registradas e visíveis em `state.json`; AAA-28 deve rever o candidato integrado.
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-19 — REJECT / 8.0 de 10
+6: ## Aceito
+10: ## Correções exigidas
+17: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-v2-2026-09-12.md
+1: # Crítica fresca AAA-19 v2 — PASS / 9.5 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+18: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-05 — REJECT / 8.0 de 10
+6: ## Lacunas que impedem >=9
+8: 1. **Permissão RBAC ausente no WS (maior lacuna):** porta realtime usa `authorizeConversationResource`/`authorizeSectorScope` (admin + membership), mas não exige a permissão usada no HTTP (`chat:read`, `outbound.controller.ts:112`). Usuário com membership sem papel/permissão passa no WS e falha no HTTP — critério "permission + membership" e matriz sem-role (QA03). Teste sem-role ausente.
+12: ## Correções exigidas
+20: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-11-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-11 — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+19: ## Condições de integração (não bloqueantes)
+24: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-04 v5 — REJECT / 5.0 de 10
+8: ## Nota e justificativa
+12: ## Tabela de critérios
+14: | # | Critério | Veredito | Evidência |
+27: ## Correções exigidas (rodada v6)
+38: ## Riscos residuais
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-review-2026-09-12.md
+1: # AAA-03 — revisão independente fresca (2026-09-12)
+5: - Independência efetiva: alta; hashes, suítes e probes executados pelo próprio revisor (probes em `evidence/AAA-03/critic-fresh/`).
+8: ## Veredito: PASS
+10: ## Verificações executadas (resumo)
+26: ## Achados
+36: ## Não verificado
+42: ## Limitação de independência
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-08-critica-fresca-2026-09-12.md
+1: # Crítica fresca AAA-08 — PASS / 9.0 de 10
+6: ## Critérios
+8: | # | Critério | Veredito |
+18: ## Observações não bloqueantes
+25: ## Riscos residuais
+27: - Corrida de nova conversa (hipótese de código); dados legados da janela A07 sem evento não reconciliados; `.js` stale podem sombrear `.ts` em outros pacotes; dependência do leitor com lease (AAA-07) no teste 6.
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-candidato-2026-09-12.md
+1: # AAA-03 — reconciliação da revisão do candidato (2026-09-12)
+
+docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-candidato-2026-09-12.md
+1: # Revisão independente e integração — candidato AAA-02 (2026-09-12)
+7: ## 1. Revisão independente (crítico fresco I1, read-only)
+15: ## 2. Reteste de comportamento e regressão (coordenador)
+29: ## 3. Veredicto de integração
+
+docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-01-contatos.md
+1: # D-AUTHZ-01 — Política de autorização de contatos
+6: ## Contexto
+10: ## Decisão
+17: 3. **Independência de ordem**: a decisão não depende da ordem dos vínculos (`contact_sectors`), coberta por teste com A(read) inserido antes de B(write).
+21: ## Evidência
+26: ## Ratificação (2026-09-12, pós-revisão independente)
+33: ## Rollback e revisão
+37: ## Adendo 1 — Filtro do detalhe do contato (fecha H1 da revisão v3)
+41: ## Adendo 2 — Ausência de permissão RBAC própria para contatos (M3 da revisão)
+45: ## Ratificação (coordenador, 2026-09-12)
+50:   2. FIND-AAA04-004: `POST /contacts/:id/start-conversation` deve aplicar `authorizeContactResource` (read) e só devolver conversa ativa existente se o ator estiver autorizado nela — pendência de AAA-04.
+51:   3. FIND-AAA04-003: a resolução de referência `referenceType:'task' + referenceId` no `POST /notes` deve entrar na guarda — pendência de AAA-04.
+
+docs/execucao-aaa-2026-09-12/runtime/decisions/D01-session-policy.md
+1: # D01 — Política de sessão (decisão registrada 2026-09-12)
+10: ## Alternativas consideradas
+17: ## Decisão
+38: ## Pendências explícitas (não bloqueiam AAA-03)
+44: ## Impactos e rollback
+
+docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-02-kanban-sem-setor.md
+1: # D-AUTHZ-02 — Kanban para conversa sem setor
+
+docs/execucao-aaa-2026-09-12/revisao-independente/AAA-00-01-critica-I1-2026-09-12.md
+1: # Crítica independente I1 — AAA-00 e AAA-01 (snapshot `aaa-20260912`)
+5: - Independência: I1 (mesma família de modelo). Não é auditoria humana externa.
+12: ## 1. Veredictos
+22: ## 2. Verificações independentes executadas
+36: ## 3. Achados
+38: ### F1 — Colisão de porta do harness com o Compose de staging (ALTO para execução)
+41: ### F2 — Aceitação integral de AAA-00 incompleta (MÉDIO)
+44: ### F3 — C00 e C02–C09 não congelados (MÉDIO; bloqueia AAA-02)
+45: A aceitação de AAA-01 pede matriz para **todos** os contratos (produtor/consumidores, schema, exemplos positivo/negativo, erro, teste de consumidor, compatibilidade, versão, pendência). Só C01 possui. Consequências: AAA-02 não tem C02/C03 para consumir; AAA-04/05/07/09/10/11 dependem de contratos ainda em “especificação alvo”.
+47: ### F4 — Erros de integridade documental (MÉDIO)
+52: ### F5 — Precisão do contrato C01 v1.0.1 (BAIXO/MÉDIO)
+55: ### F6 — Inconsistência de versão em `CONTRATOS.md` (BAIXO)
+58: ### F7 — Corrida residual no guard de `lastSeenAt` (BAIXO)
+61: ### F8 — Divergência do manifesto de planejamento (INFO)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/README.md
+1: # CVG Connect Desk
+5: ## Visão Geral
+9: ### Stack
+20: ## Arquitetura
+28: ### Serviços
+39: ## Início Rápido
+41: ### Pré-requisitos
+47: ### Instalação
+53: # Clonar
+56: # Instalar dependências
+61: # Configurar ambiente
+63: # Edite .env com suas configurações
+65: # Subir infraestrutura (Postgres + Redis)
+68: # Executar migrations e seed (via package database)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/CHANGELOG.md
+1: # Changelog
+3: ## [1.0.0] — 2026-03-30
+5: ### ✅ Fase 8 — Refinement & Deployment (Enterprise)
+46: ### Fases Anteriores (0–7)
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/DOCKER_SETUP.md
+1: # Docker Setup - Connect Desk
+5: ## Arquivos criados/alterados
+7: ### Novos Dockerfiles
+15: ### Compose atualizado
+18: ### Scripts auxiliares
+22: ## Pré-requisitos
+28: ## Como usar
+30: ### 1. Preparar variáveis de ambiente
+36: ### 2. Subir tudo
+48: ### 3. Verificar status
+54: ### 4. Acessar serviços
+65: ### 5. Logs
+72: ## Containers sobem
+86: ## Variáveis de ambiente obrigatórias
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/OBSERVABILITY.md
+1: # OBSERVABILITY — CVG Connect Desk
+3: ## Logs
+9: ## Métricas (`GET /metrics`, formato Prometheus)
+16: ## Tracing (OpenTelemetry — Final-2)
+28: ## Health
+33: ## Dashboards e alertas
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-18/RETORNO.md
+1: # AAA-18 — Limitar cardinalidade e proteger métricas — RETORNO DO BUILDER
+10: ## 1. Arquivos alterados
+23: ### 1.1 O que mudou
+40: ## 2. Ambiente
+47: ## 3. Reprodução negativa × resultado final (mesmo arquivo de teste)
+60: ## 4. Comandos executados e resultados (raw logs no diretório `logs/`)
+77: ### 4.1 Regressões — detalhe
+84: ## 5. Validação de implantação (estática, sem imagem)
+91: ## 6. Evidência e integridade
+100: ## 7. Limitações, riscos residuais e follow-ups (com dono)
+111: ## 8. Próxima ação
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/e2e/README.md
+1: # E2E Smoke Tests — CVG Connect Desk
+5: ## Setup
+7: ### 1. Instale dependências
+13: ### 2. Instale o browser do Playwright
+19: ### 3. Suba a infra base
+31: ### 4. Execute os smoke tests
+55: ## Fluxos cobertos
+63: ## Credenciais
+70: ## Estrutura
+83: ## Fixture de Conversa
+93: ## Variáveis relevantes
+103: ## Observações
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.gauntlet/progress.md
+1: # Gauntlet progress
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.gauntlet-v2-archive-20260912/progress.md
+1: # Gauntlet progress
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.agent/plans/2026-09-12-best-of-branches.md
+1: # Consolidação seletiva dos branches — ExecPlan
+3: ## Purpose / Big Picture
+7: ## Progress
+10: - [x] (2026-09-12T11:03:31-03:00) Baseline de `main` executado com `pnpm test`: 31 pacotes bem-sucedidos; aviso de dependência circular registrado.
+18: ## Surprises & Discoveries
+36: - Observation: os serviços de API, worker e realtime executam o código-fonte via `tsx` nas imagens atuais; com `pnpm --prod`, `tsx` precisava ser dependência de runtime.
+38:   Impact: `tsx` foi movido para `dependencies` e as imagens mantêm instalação somente de produção, sem carregar dependências de teste no runtime.
+48: ### Branch decision matrix
+61: ## Decision Log
+63: - Decision: manter `origin/main` como base canônica e usar cópia seletiva de comportamento, não merge cego dos branches.
+70: - Decision: preservar o hardening atual de `main` como requisito de não regressão.
+77: - Decision: qualquer mudança de schema, migração destrutiva, credencial ou produção fica fora desta execução sem autorização específica.
+84: ## Outcomes & Retrospective
+88: Incorporado: módulos Tutor/Paciente com CRUD protegido, validação, relacionamentos e telas; dashboard premium com resposta, handoff, backlog, aging e criticidade; `TRUST_PROXY` fail-secure; autenticação do polling interno; ACK/cursor e no-overlap no realtime HTTP/outbox; polling no-overlap e health endpoint do worker; dependência de runtime `tsx`; marcador `senderType=human` para outbound; correções de typecheck e documentação/env/compose.
+
+docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/infra/grafana/dashboards/README.md
+1: # Dashboards (dir) — pares/JSON importáveis via Grafana API/provisioning.
+2: # Grafana 11+: Data Sources (Prometheus http://prometheus:9090; Tempo http://tempo:3200)

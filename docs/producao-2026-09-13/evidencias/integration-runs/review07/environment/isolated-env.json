@@ -1,0 +1,24 @@
+{
+  "runId": "review07",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58232/cvg_aaa_review07_w18",
+  "databaseName": "cvg_aaa_review07_w18",
+  "databasePort": 58232,
+  "redisUrl": "redis://127.0.0.1:56860",
+  "redisPort": 56860,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "already-ours",
+    "pid": 2176568,
+    "dataDir": "/tmp/cvg-aaa-runs/review07/pg/data"
+  },
+  "redis": {
+    "status": "already-ours",
+    "pid": 2176593,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review07",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:30:18.607667-03"
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "route": "inbox",
+    "state": "loading",
+    "statuses": [
+      "Carregando sua sessão…"
+    ],
+    "alerts": [],
+    "hasPageStatus": true,
+    "hasPageAlert": false
+  },
+  {
+    "route": "inbox",
+    "state": "error500",
+    "statuses": [],
+    "alerts": [
+      "Sessão não validadaNão foi possível validar sua sessão. Verifique a conexão e tente novamente.Tentar novamente"
+    ],
+    "hasPageStatus": false,
+    "hasPageAlert": true
+  },
+  {
+    "route": "tasks",
+    "state": "loading",
+    "statuses": [
+      "Carregando sua sessão…"
+    ],
+    "alerts": [],
+    "hasPageStatus": true,
+    "hasPageAlert": false
+  },
+  {
+    "route": "tasks",
+    "state": "error500",
+    "statuses": [],
+    "alerts": [
+      "Sessão não validadaNão foi possível validar sua sessão. Verifique a conexão e tente novamente.Tentar novamente"
+    ],
+    "hasPageStatus": false,
+    "hasPageAlert": true
+  },
+  {
+    "route": "dashboard",
+    "state": "loading",
+    "statuses": [
+      "Carregando sua sessão…"
+    ],
+    "alerts": [],
+    "hasPageStatus": true,
+    "hasPageAlert": false
+  },
+  {
+    "route": "dashboard",
+    "state": "error500",
+    "statuses": [],
+    "alerts": [
+      "Sessão não validadaNão foi possível validar sua sessão. Verifique a conexão e tente novamente.Tentar novamente"
+    ],
+    "hasPageStatus": false,
+    "hasPageAlert": true
+  },
+  {
+    "route": "contacts",
+    "state": "loading",
+    "statuses": [
+      "Carregando sua sessão…"
+    ],
+    "alerts": [],
+    "hasPageStatus": true,
+    "hasPageAlert": false
+  },
+  {
+    "route": "contacts",
+    "state": "error500",
+    "statuses": [],
+    "alerts": [
+      "Sessão não validadaNão foi possível validar sua sessão. Verifique a conexão e tente novamente.Tentar novamente"
+    ],
+    "hasPageStatus": false,
+    "hasPageAlert": true
+  }
+]

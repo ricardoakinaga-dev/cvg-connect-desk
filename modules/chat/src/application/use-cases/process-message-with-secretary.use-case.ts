@@ -10,6 +10,8 @@ export interface ProcessMessageWithSecretaryInput {
   content: string;
   sender: string;
   evaluateOnly?: boolean;
+  /** PROD-10: identidade estável da invocação durável (replay reusa o id). */
+  invocationId?: string;
 }
 
 export interface ProcessMessageWithSecretaryOutput {
@@ -49,13 +51,14 @@ export async function processMessageWithSecretary(
       content: input.content,
       sender: input.sender,
       conversationHistory,
+      invocationId: input.invocationId,
     });
 
     if (secretaryResult.isErr()) {
-      return ok({
-        classified: false,
-        handoffTriggered: false,
-      });
+      // PROD-10/BE13: falha da IA PROPAGA (Err nunca vira sucesso). O worker
+      // classifica em retry/backoff ou falha permanente; o chamador síncrono
+      // legado não existe mais.
+      return err(secretaryResult.error);
     }
 
     const secretaryOutput = secretaryResult.value;

@@ -83,9 +83,9 @@ describe('ClamAV scanner (protocolo)', () => {
     expect(result.status).toBe('SCAN_FAILED');
   }, 30000);
 
-  it.skip(!STAGING, 'requer ClamAV real em staging (STAGING_SMOKE=1) — EICAR em clamd real');
-  it.skip(!STAGING, 'requer ClamAV real — clean em clamd real');
-  it.skip(!STAGING, 'requer ClamAV real — scanner real indisponível');
+  it.skipIf(!STAGING)('requer ClamAV real em staging (STAGING_SMOKE=1) — EICAR em clamd real');
+  it.skipIf(!STAGING)('requer ClamAV real — clean em clamd real');
+  it.skipIf(!STAGING)('requer ClamAV real — scanner real indisponível');
 });
 
 describe('ClamAV REAL (STAGING_SMOKE=1)', () => {
@@ -93,13 +93,13 @@ describe('ClamAV REAL (STAGING_SMOKE=1)', () => {
 
   maybe('EICAR real em clamd → INFECTED', async () => {
     const scanner = new ClamAVScanner(CLAMAV_HOST, CLAMAV_PORT);
-    const result = await scanner.scan(EICAR, 'eicar.txt');
+    const result = await scanner.scan(EICAR);
     expect(result.status).toBe('INFECTED');
   }, 60000);
 
   maybe('arquivo limpo real → CLEAN', async () => {
     const scanner = new ClamAVScanner(CLAMAV_HOST, CLAMAV_PORT);
-    const result = await scanner.scan(Buffer.from('hello clean world'), null as never);
+    const result = await scanner.scan(Buffer.from('hello clean world'));
     expect(result.status).toBe('CLEAN');
   }, 60000);
 

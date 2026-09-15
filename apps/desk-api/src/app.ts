@@ -1,4 +1,5 @@
-import Fastify, { type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
+import { randomUUID, timingSafeEqual } from 'node:crypto';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import helmet from '@fastify/helmet';
@@ -6,9 +7,126 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import 'dotenv/config';
-import { registerInboundWebhook, registerOutboundController } from '@cvg/chat';
+import { getMediaMaxBytes } from '@cvg/shared';
+import { registerInboundWebhook, registerOutboundController, registerMediaUploadController, registerMediaReadController, createChatPorts, setGatewayOutboundPort } from '@cvg/chat';
 
-import { isProduction, resolveTrustedProxies } from './runtime-config';
+import {
+  checkRedisDependency,
+  isProduction,
+  isRedisCritical,
+  redisTlsRejectUnauthorized,
+  resolveReadinessTimeouts,
+  resolveTrustedProxies,
+  validateProductionConfig,
+} from './runtime-config';
+
+const checkMigrationsModuleUrl = new URL('../../../packages/database/src/check-migrations.ts', import.meta.url).href;
+
+/**
+ * Label de rota para requests sem rota registrada (A15): a URL/PII do cliente
+ * nunca vira label; tudo colapsa numa série única e previsível.
+ */
+export const UNMATCHED_ROUTE_LABEL = 'unmatched';
+
+function resolveRouteLabel(request: { routeOptions?: { url?: string } }): string {
+  const registeredRoute = request.routeOptions?.url;
+  return typeof registeredRoute === 'string' && registeredRoute.length > 0
+    ? registeredRoute
+    : UNMATCHED_ROUTE_LABEL;
+}
+
+interface ParsedNetwork {
+  base: bigint;
+  bits: 32 | 128;
+  prefix: number;
+}
+
+function parseIpv4(address: string): bigint | null {
+  const parts = address.split('.');
+  if (parts.length !== 4) return null;
+  let value = 0n;
+  for (const part of parts) {
+    if (!/^\d{1,3}$/.test(part)) return null;
+    const octet = Number(part);
+    if (octet > 255) return null;
+    value = (value << 8n) | BigInt(octet);
+  }
+  return value;
+}
+
+function parseIpv6(address: string): bigint | null {
+  const zoneIndex = address.indexOf('%');
+  const literal = zoneIndex === -1 ? address : address.slice(0, zoneIndex);
+  const doubleColon = literal.indexOf('::');
+  const headText = doubleColon === -1 ? literal : literal.slice(0, doubleColon);
+  const tailText = doubleColon === -1 ? '' : literal.slice(doubleColon + 2);
+  const head = headText.length > 0 ? headText.split(':') : [];
+  const tail = tailText.length > 0 ? tailText.split(':') : [];
+
+  let groups: string[];
+  if (doubleColon === -1) {
+    if (head.length !== 8) return null;
+    groups = head;
+  } else {
+    if (head.length + tail.length > 8) return null;
+    groups = [...head, ...Array<string>(8 - head.length - tail.length).fill('0'), ...tail];
+  }
+
+  let value = 0n;
+  for (const group of groups) {
+    if (!/^[0-9a-fA-F]{1,4}$/.test(group)) return null;
+    value = (value << 16n) | BigInt(Number.parseInt(group, 16));
+  }
+  return value;
+}
+
+function parseIp(address: string): { value: bigint; bits: 32 | 128 } | null {
+  // IPv4 mapeado em IPv6 (::ffff:127.0.0.1) compara como IPv4.
+  const normalized = address.startsWith('::ffff:') && address.includes('.') ? address.slice(7) : address;
+  if (normalized.includes(':')) {
+    const value = parseIpv6(normalized);
+    return value === null ? null : { value, bits: 128 };
+  }
+  const value = parseIpv4(normalized);
+  return value === null ? null : { value, bits: 32 };
+}
+
+function parseNetwork(cidr: string): ParsedNetwork | null {
+  const [address, prefixText] = cidr.split('/');
+  if (!address) return null;
+  const parsed = parseIp(address);
+  if (!parsed) return null;
+  const prefix = prefixText === undefined || prefixText === '' ? parsed.bits : Number(prefixText);
+  if (!Number.isInteger(prefix) || prefix < 0 || prefix > parsed.bits) return null;
+  const shift = BigInt(parsed.bits - prefix);
+  return { base: shift === 0n ? parsed.value : (parsed.value >> shift) << shift, bits: parsed.bits, prefix };
+}
+
+function ipInNetwork(ip: string, network: ParsedNetwork): boolean {
+  const parsed = parseIp(ip);
+  if (!parsed || parsed.bits !== network.bits) return false;
+  const shift = BigInt(parsed.bits - network.prefix);
+  return (parsed.value >> shift) === (network.base >> shift);
+}
+
+function resolveAllowedNetworks(raw: string | undefined): { networks: ParsedNetwork[]; invalid: string[] } {
+  const entries = (raw ?? '').split(',').map((entry) => entry.trim()).filter(Boolean);
+  const networks: ParsedNetwork[] = [];
+  const invalid: string[] = [];
+  for (const entry of entries) {
+    const network = parseNetwork(entry);
+    if (network) networks.push(network);
+    else invalid.push(entry);
+  }
+  return { networks, invalid };
+}
+
+function safeEqualStrings(provided: string, expected: string): boolean {
+  const providedBuffer = Buffer.from(provided);
+  const expectedBuffer = Buffer.from(expected);
+  if (providedBuffer.length !== expectedBuffer.length) return false;
+  return timingSafeEqual(providedBuffer, expectedBuffer);
+}
 
 function warnOnProductionWebhookMisconfiguration(): void {
   const webhookSecret = process.env.WEBHOOK_SECRET;
@@ -42,27 +160,41 @@ import { registerSectorRoutes } from '@cvg/sectors';
 import { registerTransferRoutes } from '@cvg/transfers';
 import { registerContactGroupRoutes } from '@cvg/contact-groups';
 import { registerKanbanRoutes } from '@cvg/kanban';
-import { registerGatewayRoutes } from '@cvg/gateway-adapter';
+import { registerGatewayRoutes, gatewayService } from '@cvg/gateway-adapter';
 import { registerContactRoutes } from '@cvg/contacts';
 import { registerPrivacyRoutes } from '@cvg/privacy';
 import { registerPatientRoutes } from '@cvg/patients';
 import { registerTutorRoutes } from '@cvg/tutors';
 import { createInternalEventsGuard } from './internal-auth';
 
-export async function buildDeskApiApp(): Promise<FastifyInstance> {
+export interface DeskApiAppOptions {
+  /** Destino de log injetável (testes de vazamento); padrão = stdout/pino. */
+  loggerStream?: NodeJS.WritableStream;
+}
+
+export async function buildDeskApiApp(options: DeskApiAppOptions = {}): Promise<FastifyInstance> {
   warnOnProductionWebhookMisconfiguration();
   assertProductionEnv();
 
+  const loggerBase = {
+    level: process.env.LOG_LEVEL || 'info',
+    redact: (await import('@cvg/shared').then((m) => m.PINO_REDACT_PATHS).catch(() => [])) as string[],
+  };
   const app = Fastify({
-    logger: {
-      level: process.env.LOG_LEVEL || 'info',
-      redact: (await import('@cvg/shared').then((m) => m.PINO_REDACT_PATHS).catch(() => [])) as string[],
-      transport: process.env.NODE_ENV === 'development'
-        ? { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss', ignore: 'pid,hostname' } }
-        : undefined,
-    },
+    logger: options.loggerStream
+      ? { ...loggerBase, stream: options.loggerStream }
+      : {
+          ...loggerBase,
+          transport: process.env.NODE_ENV === 'development'
+            ? { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss', ignore: 'pid,hostname' } }
+            : undefined,
+        },
     trustProxy: resolveTrustedProxies(),
     bodyLimit: 1048576,
+    // SA-011/AC2: payload excedente deve ser REJEITADO com 400. O default do
+    // Ajv no Fastify é `removeAdditional: true`, que descarta campos extras
+    // silenciosamente; com `false`, `additionalProperties` é contrato real.
+    ajv: { customOptions: { removeAdditional: false } },
   }).withTypeProvider<ZodTypeProvider>();
 
   const { metrics, httpRequestsTotal, httpRequestDuration, rateLimitHitsTotal } = await import('@cvg/shared');
@@ -71,9 +203,31 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     (request as unknown as { metricsStartMs: number }).metricsStartMs = Date.now();
   });
 
+  // SA-011/AC2: validação central de parâmetros UUID. Rotas com `:id`/`:xId`
+  // (exceto identificadores textuais como eventId e entityType) respondem 400
+  // previsível ANTES de qualquer acesso ao banco, em vez de 500 por cast uuid.
+  const UUID_PARAM_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const UUID_PARAM_EXEMPTIONS = new Set(['eventId', 'entityType']);
+  // `:id` textual legítimo: identificadores da DLQ são strings (dlq_*), não UUID.
+  const NON_UUID_ID_ROUTE_PATTERNS = [/^\/admin\/dead-letters\//];
+  app.addHook('preValidation', async (request, reply) => {
+    const params = request.params as Record<string, unknown> | undefined;
+    if (!params || typeof params !== 'object') return;
+    const routeUrl = (request.routeOptions?.url ?? request.raw.url ?? '').split('?')[0];
+    const idRouteIsTextual = NON_UUID_ID_ROUTE_PATTERNS.some((pattern) => pattern.test(routeUrl));
+    for (const [key, value] of Object.entries(params)) {
+      if (typeof value !== 'string' || UUID_PARAM_EXEMPTIONS.has(key)) continue;
+      if (!/^(id|[a-z]+Id)$/.test(key)) continue;
+      if (key === 'id' && idRouteIsTextual) continue;
+      if (!UUID_PARAM_PATTERN.test(value)) {
+        return reply.status(400).send({ error: 'BAD_REQUEST', message: `Parâmetro ${key} inválido` });
+      }
+    }
+  });
+
   app.addHook('onResponse', async (request, reply) => {
     try {
-      const route = request.routeOptions?.url || request.url.split('?')[0];
+      const route = resolveRouteLabel(request);
       const method = request.method;
       const status = reply.statusCode;
       const started = (request as unknown as { metricsStartMs?: number }).metricsStartMs;
@@ -92,19 +246,39 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     // Sem schema de resposta: corpo é texto Prometheus puro (serialização
     // JSON corromperia a exposição com aspas).
     schema: {
-      description: 'Exposição Prometheus (Phase 6). Protegido por METRICS_TOKEN quando configurado.',
+      description: 'Exposição Prometheus (Phase 6). Exige METRICS_TOKEN (Bearer) e/ou METRICS_ALLOWED_CIDRS; em produção sem configuração explícita responde 503 (fail-closed).',
       tags: ['Observability'],
     },
   }, async (request, reply) => {
-    const token = process.env.METRICS_TOKEN;
-    if (token) {
-      const header = request.headers.authorization;
-      if (header !== `Bearer ${token}`) {
+    const token = (process.env.METRICS_TOKEN ?? '').trim();
+    const { networks, invalid } = resolveAllowedNetworks(process.env.METRICS_ALLOWED_CIDRS);
+    const production = isProduction();
+
+    if (invalid.length > 0) {
+      request.log.error(
+        { invalidEntries: invalid.length },
+        '[Metrics] METRICS_ALLOWED_CIDRS inválido — exposição negada (fail-closed)',
+      );
+      return reply.status(403).send({ error: 'FORBIDDEN', message: 'Metrics endpoint is not available' });
+    }
+
+    if (token.length > 0) {
+      const header = request.headers.authorization ?? '';
+      if (!safeEqualStrings(header, `Bearer ${token}`)) {
         return reply.status(401).send({ error: 'UNAUTHORIZED', message: 'Invalid metrics token' });
       }
-    } else if (isProduction()) {
-      request.log.warn('[Metrics] METRICS_TOKEN não configurado em produção — exposição aberta (restringir via rede/VPC)');
+    } else if (production && networks.length === 0) {
+      request.log.error(
+        '[Metrics] METRICS_TOKEN e METRICS_ALLOWED_CIDRS ausentes em produção — exposição negada (fail-closed)',
+      );
+      return reply.status(503).send({ error: 'METRICS_UNAVAILABLE', message: 'Metrics endpoint is not available' });
     }
+
+    if (networks.length > 0 && !networks.some((network) => ipInNetwork(request.ip, network))) {
+      request.log.warn('[Metrics] acesso negado pela allowlist de rede');
+      return reply.status(403).send({ error: 'FORBIDDEN', message: 'Metrics endpoint is not available' });
+    }
+
     return reply.type('text/plain; version=0.0.4').send(metrics.render());
   });
 
@@ -119,8 +293,37 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     }
   });
 
-  app.setErrorHandler((error, request, reply) => {
+  app.setErrorHandler<FastifyError>((error, request, reply) => {
     const statusCode = error.statusCode || 500;
+
+    // C05: contrato recuperável e explícito para excesso de payload
+    // (o parser JSON/DTO legado e o limite duro do parser binário caem aqui).
+    if (error.code === 'FST_ERR_CTP_BODY_TOO_LARGE') {
+      request.log.warn({ code: error.code, path: request.url }, 'payload excede o limite do parser');
+      const maxBytes = getMediaMaxBytes();
+      return reply.status(413).send({
+        error: 'PAYLOAD_TOO_LARGE',
+        message: `Request body exceeds the allowed limit (${maxBytes} bytes for media; base64/JSON transport no longer accepted)`,
+        statusCode: 413,
+        maxBytes,
+        recoverable: true,
+        retryable: false,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    if (error.code === 'FST_ERR_CTP_INVALID_MEDIA_TYPE' || statusCode === 415) {
+      const isUpload = request.url.includes('/media');
+      return reply.status(415).send({
+        error: 'UNSUPPORTED_MEDIA_TYPE',
+        message: isUpload
+          ? 'Upload de anexo usa Content-Type: application/octet-stream com X-Media-Mimetype/X-Media-Type'
+          : error.message,
+        statusCode: 415,
+        recoverable: false,
+        timestamp: new Date().toISOString(),
+      });
+    }
 
     if (statusCode >= 500) {
       request.log.error({ err: error, path: request.url, method: request.method }, 'Erro interno');
@@ -128,9 +331,19 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
       request.log.warn({ err: error, path: request.url }, 'Erro de requisição');
     }
 
+    if (statusCode >= 500) {
+      // SA-011/AC2: erro interno não vaza código/mensagem/stack de banco; o
+      // detalhe fica apenas no log do servidor.
+      reply.status(statusCode).send({
+        error: 'INTERNAL_ERROR',
+        message: 'Erro interno',
+      });
+      return;
+    }
+
     reply.status(statusCode).send({
-      error: error.code || 'INTERNAL_ERROR',
-      message: statusCode >= 500 ? 'Internal server error' : error.message,
+      error: error.code || 'BAD_REQUEST',
+      message: error.message,
       statusCode,
       timestamp: new Date().toISOString(),
       ...(process.env.NODE_ENV === 'development' && { stack: error.stack }),
@@ -164,7 +377,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   await app.register(cors, {
     origin: corsOrigin ? corsOrigin.split(',').map((o) => o.trim()).filter(Boolean) : false,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Webhook-Signature', 'X-Webhook-Timestamp', 'X-Webhook-Event-Id'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Webhook-Signature', 'X-Webhook-Timestamp', 'X-Webhook-Event-Id', 'Idempotency-Key', 'X-Media-Type', 'X-Media-Mimetype', 'X-Media-Filename'],
     credentials: true,
     maxAge: 86400,
   });
@@ -231,7 +444,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
 
   app.get('/health', {
     schema: {
-      description: 'Liveness check — verifica se o processo está vivo',
+      description: 'Liveness check — verifica se o processo está vivo (não depende de DB/Redis)',
       tags: ['Health'],
       response: { 200: { type: 'object', properties: { status: { type: 'string' }, timestamp: { type: 'string' }, uptime: { type: 'number' }, version: { type: 'string' } } } },
     },
@@ -242,100 +455,121 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
     version: process.env.npm_package_version || '1.0.0',
   }));
 
+  const readinessResponseSchema = {
+    type: 'object',
+    properties: {
+      ready: { type: 'boolean' },
+      degraded: { type: 'boolean' },
+      checks: { type: 'object', additionalProperties: true },
+      version: { type: 'string' },
+      timestamp: { type: 'string' },
+    },
+  };
+
   app.get('/readiness', {
     schema: {
-      description: 'Readiness check — verifica se o serviço está apto a operar',
+      description: 'Readiness check — 503 quando dependência crítica (DB, schema atrasado ou Redis crítico) está indisponível',
       tags: ['Health'],
       response: {
-        200: {
-          type: 'object',
-          properties: {
-            ready: { type: 'boolean' },
-            degraded: { type: 'boolean' },
-            checks: { type: 'object', additionalProperties: true },
-            version: { type: 'string' },
-            timestamp: { type: 'string' },
-          },
-        },
+        200: readinessResponseSchema,
+        503: readinessResponseSchema,
       },
     },
-  }, async () => {
-    const checks: Record<string, { status: 'ok' | 'error' | 'degraded'; latencyMs?: number; error?: string }> = {};
+  }, async (request, reply) => {
+    const timeouts = resolveReadinessTimeouts();
+    const checks: Record<string, {
+      status: 'ok' | 'error' | 'degraded';
+      latencyMs?: number;
+      code?: string;
+      applied?: number;
+      expected?: number;
+      missing?: string[];
+      mismatched?: string[];
+    }> = {};
 
-    const dbStart = Date.now();
-    try {
-      const dbModule = await import('@cvg/database');
-      const { db, schema: dbSchema } = dbModule;
-      await db.select().from(dbSchema.users).limit(1);
-      checks.database = { status: 'ok', latencyMs: Date.now() - dbStart };
-    } catch (err: any) {
-      checks.database = { status: 'error', latencyMs: Date.now() - dbStart, error: err?.message || 'db failed' };
-    }
-
-    if (process.env.REDIS_URL) {
-      const redisStart = Date.now();
-      try {
-        // PING real via TCP sem depender do pacote `redis` (evita dep nova no hot path).
-        const redisUrl = new URL(process.env.REDIS_URL);
-        const host = redisUrl.hostname || 'localhost';
-        const port = Number(redisUrl.port) || 6379;
-        const pong = await new Promise<string>((resolve, reject) => {
-          import('net').then(({ default: net }) => {
-            const socket = net.connect(port, host);
-            const timer = setTimeout(() => {
-              socket.destroy();
-              reject(new Error('redis ping timeout'));
-            }, 3000);
-            socket.on('connect', () => socket.write('PING\r\n'));
-            socket.on('data', (data: Buffer) => {
-              clearTimeout(timer);
-              socket.end();
-              resolve(data.toString());
-            });
-            socket.on('error', (err: Error) => {
-              clearTimeout(timer);
-              reject(err);
-            });
-          }).catch(reject);
-        });
-        checks.redis = pong.includes('PONG')
-          ? { status: 'ok', latencyMs: Date.now() - redisStart }
-          : { status: 'degraded', error: `unexpected redis reply: ${pong.slice(0, 32)}` };
-      } catch (err: any) {
-        checks.redis = { status: 'error', latencyMs: Date.now() - redisStart, error: err?.message || 'redis failed' };
+    if (isProduction() && process.env.NODE_ENV !== 'test') {
+      const configuration = validateProductionConfig(process.env);
+      if (configuration.length > 0) {
+        checks.configuration = {
+          status: 'error',
+          code: 'PRODUCTION_CONFIG_INVALID',
+          missing: configuration.map((issue) => issue.variable),
+        };
       }
     }
 
-    try {
-      const dbModule = await import('@cvg/database');
-      await (dbModule.db as unknown as { execute: (q: unknown) => Promise<unknown> }).execute('SELECT 1');
-      checks.migrations = { status: 'ok' };
-    } catch (err: any) {
-      checks.migrations = { status: 'error', error: err?.message || 'migration check failed' };
+    const { checkDatabaseReadiness } = await import(/* @vite-ignore */ checkMigrationsModuleUrl);
+    const database = await checkDatabaseReadiness({ timeoutMs: timeouts.databaseMs });
+    checks.database = database.database.status === 'ok'
+      ? { status: 'ok', latencyMs: database.database.latencyMs }
+      : { status: 'error', latencyMs: database.database.latencyMs, code: database.database.code };
+    checks.migrations = database.migrations.status === 'ok'
+      ? {
+          status: 'ok',
+          latencyMs: database.migrations.latencyMs,
+          applied: database.migrations.applied,
+          expected: database.migrations.expected,
+        }
+      : {
+          status: 'error',
+          latencyMs: database.migrations.latencyMs,
+          code: database.migrations.code,
+          applied: database.migrations.applied,
+          expected: database.migrations.expected,
+          ...(database.migrations.missing.length > 0 ? { missing: database.migrations.missing } : {}),
+          ...(database.migrations.mismatched.length > 0 ? { mismatched: database.migrations.mismatched } : {}),
+        };
+
+    const redisUrl = process.env.REDIS_URL;
+    if (redisUrl) {
+      const redis = await checkRedisDependency(redisUrl, {
+        timeoutMs: timeouts.redisMs,
+        tlsRejectUnauthorized: redisTlsRejectUnauthorized(),
+      });
+      checks.redis = redis.ok
+        ? { status: 'ok', latencyMs: redis.latencyMs }
+        : { status: isRedisCritical() ? 'error' : 'degraded', latencyMs: redis.latencyMs, code: redis.code };
     }
 
     const secretaryUrl = process.env.SECRETARY_URL;
     if (secretaryUrl) {
+      const secretaryStarted = Date.now();
       try {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 3000);
+        const timer = setTimeout(() => controller.abort(), timeouts.secretaryMs);
         const res = await fetch(`${secretaryUrl.replace(/\/$/, '')}/health`, { signal: controller.signal });
         clearTimeout(timer);
-        checks.secretary = res.ok ? { status: 'ok' } : { status: 'degraded', error: `http ${res.status}` };
-      } catch (err: any) {
-        checks.secretary = { status: 'degraded', error: err?.message || 'secretary unreachable' };
+        checks.secretary = res.ok
+          ? { status: 'ok', latencyMs: Date.now() - secretaryStarted }
+          : { status: 'degraded', latencyMs: Date.now() - secretaryStarted, code: `SECRETARY_HTTP_${res.status}` };
+      } catch {
+        checks.secretary = { status: 'degraded', latencyMs: Date.now() - secretaryStarted, code: 'SECRETARY_UNREACHABLE' };
       }
     }
 
-    const fatalFailed = ['database', 'migrations'].some((k) => checks[k]?.status === 'error');
-    const degraded = Object.values(checks).some((c) => c.status === 'degraded' || c.status === 'error') && !fatalFailed;
-    return {
-      ready: !fatalFailed,
+    const criticalFailed = ['configuration', 'database', 'migrations', 'redis']
+      .some((key) => checks[key]?.status === 'error');
+    const degraded = !criticalFailed && Object.values(checks).some((check) => check.status !== 'ok');
+    const body = {
+      ready: !criticalFailed,
       degraded,
       checks,
       version: process.env.npm_package_version || '1.0.0',
       timestamp: new Date().toISOString(),
     };
+
+    if (criticalFailed) {
+      request.log.warn(
+        {
+          database: checks.database?.code,
+          migrations: checks.migrations?.code,
+          redis: checks.redis?.code,
+        },
+        'readiness: dependência crítica indisponível (503)',
+      );
+      return reply.status(503).send(body);
+    }
+    return body;
   });
 
   app.get('/events', {
@@ -355,35 +589,53 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
           type: 'object',
           properties: {
             events: { type: 'array' },
+            leases: { type: 'array' },
             leaseSeconds: { type: 'integer' },
             ackEndpoint: { type: 'string' },
             serverTime: { type: 'string' },
           },
         },
+        400: {
+          type: 'object',
+          properties: {
+            error: { type: 'string' },
+            message: { type: 'string' },
+          },
+        },
       },
     },
-  }, async (request) => {
-    const { ConsumerAwareOutboxReader, CONSUMER_IDS } = await import('@cvg/events');
+  }, async (request, reply) => {
+    const { ConsumerAwareOutboxReader, CONSUMER_IDS, DEFAULT_LEASE_SECONDS } = await import('@cvg/events');
     const query = request.query as { since?: string; limit?: number };
 
+    // Validar `since` ANTES de reservar (C03 §4, MEDIUM-03): claim recebe o
+    // predicado OU o evento descartado ficaria preso até o lease expirar.
+    let since: Date | undefined;
+    if (query.since !== undefined) {
+      since = new Date(query.since);
+      if (Number.isNaN(since.getTime())) {
+        return reply.status(400).send({
+          error: 'INVALID_SINCE',
+          message: 'since deve ser um timestamp ISO válido',
+        });
+      }
+    }
+
+    const limit = Math.min(Math.max(Number(query.limit) || 50, 1), 100);
+    const leaseSeconds = DEFAULT_LEASE_SECONDS;
     const reader = new ConsumerAwareOutboxReader({
       consumerId: CONSUMER_IDS.HTTP_POLL,
-      batchSize: query.limit || 50,
+      batchSize: limit,
       maxRetries: 3,
     });
     // Semântica de lease: GET apenas aluga (claim); o ACK é explícito via POST /events/:id/ack.
-    let events = await reader.claimPendingEvents({ leaseOwner: 'http-poll', leaseSeconds: 120 });
-
-    if (query.since) {
-      const sinceDate = new Date(query.since);
-      events = events.filter((e) => e.occurredAt > sinceDate);
-    }
-
-    const envelopes = events.map((e) => reader.toEventEnvelope(e));
+    const owner = `http-poll:${randomUUID().slice(0, 8)}`;
+    const claimed = await reader.claim({ owner, leaseSeconds, limit, since });
 
     return {
-      events: envelopes,
-      leaseSeconds: 120,
+      events: claimed.map((entry) => entry.event),
+      leases: claimed.map((entry) => entry.lease),
+      leaseSeconds,
       ackEndpoint: '/events/:eventId/ack',
       serverTime: new Date().toISOString(),
     };
@@ -400,20 +652,46 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
         required: ['eventId'],
       },
     },
-  }, async (request) => {
+  }, async (request, reply) => {
     const { ConsumerAwareOutboxReader, CONSUMER_IDS } = await import('@cvg/events');
     const { eventId } = request.params as { eventId: string };
+    const body = (request.body ?? {}) as { owner?: unknown; generation?: unknown };
     const reader = new ConsumerAwareOutboxReader({
       consumerId: CONSUMER_IDS.HTTP_POLL,
       batchSize: 1,
       maxRetries: 3,
     });
-    await reader.acknowledge(eventId);
+
+    // Com token no corpo → fencing estrito. Sem token (compatibilidade),
+    // resolve o lease vigente do consumidor; reclaim acontecido antes da
+    // leitura faz o ACK recair sobre o lease novo e o fencing rejeita stale.
+    const hasToken = typeof body.owner === 'string' && Number.isInteger(body.generation);
+    const result = hasToken
+      ? await reader.acknowledge(eventId, {
+          owner: body.owner as string,
+          generation: body.generation as number,
+        })
+      : await reader.acknowledgeCurrentLease(eventId);
+
+    if (result === 'stale') {
+      return reply.status(409).send({ acknowledged: false, eventId, reason: 'stale' });
+    }
+    if (result === 'not_found') {
+      return reply.status(404).send({ acknowledged: false, eventId, reason: 'not_found' });
+    }
     return { acknowledged: true, eventId };
   });
 
+  // Composição explícita Chat↔Gateway (C02 §5): injeta o provedor outbound no
+  // chat e as implementações do chat nos handlers do gateway, sem imports
+  // cruzados entre os dois pacotes.
+  setGatewayOutboundPort(gatewayService);
+  const chatPorts = createChatPorts();
+
   await registerInboundWebhook(app);
   await registerOutboundController(app);
+  await registerMediaUploadController(app);
+  await registerMediaReadController(app);
   await registerTaskRoutes(app);
   await registerNoteRoutes(app);
   await registerAlertRoutes(app);
@@ -427,7 +705,7 @@ export async function buildDeskApiApp(): Promise<FastifyInstance> {
   await registerTransferRoutes(app);
   await registerContactGroupRoutes(app);
   await registerKanbanRoutes(app);
-  await registerGatewayRoutes(app);
+  await registerGatewayRoutes(app, chatPorts);
   await registerContactRoutes(app);
   await registerTutorRoutes(app);
   await registerPatientRoutes(app);

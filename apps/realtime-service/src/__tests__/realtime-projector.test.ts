@@ -7,7 +7,7 @@ describe('RealtimeServer projection behavior', () => {
     deadLetterStore.clear();
   });
 
-  it('does not create dead-letter entries for non-projectable events', () => {
+  it('does not create dead-letter entries for non-projectable events', async () => {
     const server = new RealtimeServer(8081);
     const event = {
       event_id: 'evt_realtime_skip_001',
@@ -20,7 +20,7 @@ describe('RealtimeServer projection behavior', () => {
       version: 1,
     } satisfies EventEnvelope;
 
-    const result = (server as unknown as { processEvent(event: EventEnvelope): boolean }).processEvent(event);
+    const result = await (server as unknown as { processEvent(event: EventEnvelope): Promise<boolean> }).processEvent(event);
 
     expect(result).toBe(false);
     expect(deadLetterStore.getStats()).toEqual({ total: 0, unresolved: 0, resolved: 0 });

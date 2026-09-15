@@ -1,0 +1,25 @@
+{
+  "runId": "prod11-before",
+  "workerIndex": 38,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60232/cvg_aaa_prod11_before_w38",
+  "redisUrl": "redis://127.0.0.1:57060",
+  "startedAt": "2026-09-13T17:45:51.454Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-11/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\n  \"runId\": \"prod11-before\",\n  \"prefix\": \"prod11-repro-prod11-before-763e3c69\",\n  \"conversationId\": \"4f7f4eeb-7038-48b0-a931-2f4c91250738\",\n  \"A_intencao_ambigua_callback\": {\n    \"sendOutcome\": \"unknown_reconciling\",\n    \"deliveryStatusBeforeReceipt\": \"unknown_reconciling\",\n    \"deliveryStatusAfterReceipt\": \"unknown_reconciling\",\n    \"messageStatusAfterReceipt\": \"pending\",\n    \"receiptUpdated\": false,\n    \"gatewaySends\": 1,\n    \"defect\": true\n  },\n  \"D_retry_sem_reenvio\": {\n    \"retryOutcome\": \"unknown_reconciling\",\n    \"retryDeduplicated\": true,\n    \"gatewaySends\": 1,\n    \"noBlindResend\": true\n  },\n  \"B_orfa_sem_reconciliacao\": {\n    \"messageId\": \"59c1e6f3-1e8b-4d3f-9160-612159ad110a\",\n    \"deliveryStatus\": \"unknown_reconciling\",\n    \"hasReceiptReconciler\": false,\n    \"hasOrphanList\": false,\n    \"hasExplicitResolve\": false,\n    \"defect\": true\n  },\n  \"C_retencao_sem_politica\": {\n    \"messageId\": \"f70f3c96-8ec6-40ba-96d0-d914e6cfc6c7\",\n    \"hasExpireStale\": false,\n    \"hasListExpired\": false,\n    \"hasPurge\": false,\n    \"unknownRetainedAfterTtl\": \"unknown_reconciling\",\n    \"defect\": true\n  },\n  \"verdict\": \"DEFECT_REPRODUCED\"\n}\n\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): gateway timeout após aceite\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): crash janela\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): ambiguo\n"
+    }
+  ],
+  "exitCode": 0
+}

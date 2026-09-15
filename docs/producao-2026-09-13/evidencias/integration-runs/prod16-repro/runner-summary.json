@@ -1,0 +1,30 @@
+{
+  "runId": "prod16-repro",
+  "workerIndex": 25,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_prod16_repro_w25",
+  "redisUrl": "redis://127.0.0.1:58842",
+  "startedAt": "2026-09-13T17:07:44.753Z",
+  "command": "pnpm --filter @cvg/privacy exec tsx ../../docs/producao-2026-09-13/evidencias/prod-16/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\n  \"generatedAt\": \"2026-09-13T17:07:14.709Z\",\n  \"boundary\": \"PostgreSQL isolado (runner AAA) + consultas com a semântica pré-delta + serviço NOVO\",\n  \"database\": \"postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_prod16_repro_w25\",\n  \"beforeFiles\": {\n    \"erasure-operation.ts\": {\n      \"sha256\": \"ff5fb6fa33388e8fd649a6a7fe9a2ca3a7952813adf762704294996349fd1ab8\"\n    },\n    \"privacy.controller.ts\": {\n      \"sha256\": \"5340e2a92814804409451e2fb5d8b261ea0d9f3dbfe5dee8799c0c1935afa65e\"\n    }\n  },\n  \"oldCode\": {\n    \"findOperationByRequestId\": {\n      \"line\": 489,\n      \"text\": \"async function findOperationByRequestId(requestId: string) {\"\n    },\n    \"globalDedupReturn\": {\n      \"line\": 527,\n      \"text\": \"return { ok: true, report: { ...reportFromRow(existing), deduplicated: true } };\"\n    },\n    \"resumeSignature\": {\n      \"line\": 651,\n      \"text\": \"export async function resumeContactErasure(operationId: string): Promise<RunErasureResult> {\"\n    },\n    \"getSignature\": {\n      \"line\": 736,\n      \"text\": \"export async function getPrivacyOperation(operationId: string): Promise<ErasureReport | null> {\"\n    },\n    \"controllerGetCall\": {\n      \"line\": 185,\n      \"text\": \"const report = await getPrivacyOperation(request.params.id);\"\n    },\n    \"controllerResumeCall\": {\n      \"line\": 209,\n      \"text\": \"const result = await resumeContactErasure(request.params.id);\"\n    }\n  },\n  \"oldRequestIdLeak\": {\n    \"callerActor\": \"e807e6c3-4206-4b63-8a65-47354f45c5de\",\n    \"callerScope\": [\n      \"c603fc0b-62bf-4eb2-934b-eceb12826564\"\n    ],\n    \"requestedContact\": \"e2d425b6-dffc-4f05-9678-c87f976e7d48\",\n    \"requestId\": \"repro16-7fe3601a-e3b5-4fa4-bf24-ff615faf1163\",\n    \"globalLookupReturnedOperationOf\": \"00d54cd3-da6d-49bf-bbb4-cd706fabf649\",\n    \"returnedOtherContactReport\": true,\n    \"leakedContactId\": \"00d54cd3-da6d-49bf-bbb4-cd706fabf649\",\n    \"status\": \"planned\"\n  },\n  \"oldResumeWithoutScope\": {\n    \"operationOfContact\": \"00d54cd3-da6d-49bf-bbb4-cd706fabf649\",\n    \"operationScope\": [\n      \"47c1e709-88e9-4612-91c4-fa0c75873bb8\"\n    ],\n    \"lookupByIdReturnedOperation\": true,\n    \"oldFunctionAcceptedOnly\": \"operationId\",\n    \"scopeCheck\": false\n  },\n  \"newBehavior\": {\n    \"incompatibleRequestId\": {\n      \"ok\": false,\n      \"reason\": \"conflict\"\n    },\n    \"outOfScopeRead\": {\n      \"ok\": false,\n      \"reason\": \"out_of_scope\"\n    }\n  }\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

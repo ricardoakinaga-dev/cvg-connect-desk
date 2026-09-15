@@ -6,6 +6,7 @@ import {
   buildWebhookSignaturePayload,
   extractWebhookEventId,
   getDefaultWebhookReplayStore,
+  setWebhookClaim,
   validateWebhookTimestamp,
 } from './webhook-anti-replay';
 
@@ -232,31 +233,82 @@ export function createWebhookGuard() {
     if (eventId) {
       const store = getDefaultWebhookReplayStore();
       const signatureHash = crypto.createHash('sha256').update(receivedHash, 'utf8').digest('hex');
-      const firstSeen = await store.add(eventId, signatureHash);
-      if (!firstSeen) {
-        request.log.warn({
+      const payloadHash = crypto.createHash('sha256').update(body, 'utf8').digest('hex');
+
+      // Recibo em duas fases (PROD-07): reivindica o eventId antes do handler;
+      // o controller conclui só após o negócio persistir. `claim` propaga erro
+      // transitório do store (5xx) — nunca vira 409 "duplicado".
+      const claim = await store.claim(eventId, signatureHash, payloadHash);
+
+      if (claim.action === 'duplicate') {
+        request.log.info({
           reason: 'duplicate_event_id',
           webhook_mode: 'hmac',
           has_secret: true,
-        }, '[WebhookGuard] Webhook event ID duplicado — replay rejeitado');
+        }, '[WebhookGuard] Webhook event ID já concluído — ACK idempotente');
         recordWebhookSecurityDecision({
           reason: 'duplicate_event_id',
+          allowed: true,
+          webhookMode: 'hmac',
+          hasSecret: true,
+          signaturePresent: true,
+          statusCode: 200,
+        });
+        try {
+          webhookRequestsTotal.inc({ decision: 'duplicate_event_id' });
+        } catch {
+          // Métricas nunca quebram o guard.
+        }
+        return reply.status(200).send({
+          success: true,
+          deduplicated: true,
+          eventId,
+        });
+      }
+
+      if (claim.action === 'mismatch' || claim.action === 'in_progress') {
+        const reason = claim.action === 'mismatch' ? 'event_payload_mismatch' : 'event_in_progress';
+        const message = claim.action === 'mismatch'
+          ? 'Webhook event ID reused with a different payload'
+          : 'Webhook event is already being processed';
+        request.log.warn({
+          reason,
+          webhook_mode: 'hmac',
+          has_secret: true,
+        }, `[WebhookGuard] ${message}`);
+        recordWebhookSecurityDecision({
+          reason,
           allowed: false,
           webhookMode: 'hmac',
           hasSecret: true,
           signaturePresent: true,
         });
         try {
-          webhookRequestsTotal.inc({ decision: 'duplicate_event_id' });
-          webhookReplayRejectedTotal.inc({ reason: 'duplicate_event_id' });
+          webhookRequestsTotal.inc({ decision: reason });
+          webhookReplayRejectedTotal.inc({ reason });
         } catch {
           // Métricas nunca quebram o guard.
         }
         return reply.status(409).send({
           error: 'CONFLICT',
-          reason: 'duplicate_event_id',
-          message: 'Duplicate webhook event',
+          reason,
+          message,
         });
+      }
+
+      setWebhookClaim(request, {
+        eventId,
+        signatureHash,
+        payloadHash,
+        recovered: claim.action === 'claimed_retry',
+      });
+
+      if (claim.action === 'claimed_retry') {
+        request.log.info({
+          event_id: eventId,
+          reason: 'replay_claim_recovered',
+          webhook_mode: 'hmac',
+        }, '[WebhookGuard] Recibo retryável reivindicado para reprocessamento');
       }
     }
 

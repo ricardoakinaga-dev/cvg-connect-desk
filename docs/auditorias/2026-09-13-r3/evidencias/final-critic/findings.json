@@ -1,0 +1,27 @@
+{
+  "review_verdict": "REVIEW_PASS",
+  "product_verdict": "NOT_READY",
+  "findings": [
+    {
+      "id": "R3-DOC-C01",
+      "severity": "High",
+      "blocking": false,
+      "status": "RESOLVED",
+      "title": "Aceites de PROD-05 e PROD-34 exigem prova de imagem posterior e invertem a sequência executável",
+      "sources": [
+        "docs/melhorias-2026-09-13-r3/BACKLOG.json: PROD-05-R3-AC1, PROD-34-R3-AC1 e dependências PROD-35/36",
+        "docs/melhorias-2026-09-13-r3/tasks/PROD-05.md",
+        "docs/melhorias-2026-09-13-r3/tasks/PROD-34.md",
+        "docs/melhorias-2026-09-13-r3/ROADMAP.md: sequência executável2"
+      ],
+      "evidence": "Os dois aceites exigem \"imagem final inicia com mesmo digest avaliado\". PROD-36 depende05; PROD-35 depende34 e36. ROADMAP reserva imagem para depois de05. DAG sintático válido não detecta a dependência semântica.",
+      "impact": "Execução literal não consegue encerrar05 sem antecipar parte do sucessor36, nem34 sem antecipar qualificação de imagem35; contradiz a separação explícita de bootstrap inicial e qualificação final.",
+      "requested_change": "Restringir05 a sessão/processo nativo e34 a gate/regressão nativa. Reservar boot de imagem candidata para36 e cadeia final de digest/scans/SBOM para35; regenerar cartões e validar.",
+      "closure_criteria": "Aceites05/34 deixam de exigir imagem final;35/36 continuam cobrindo a prova; ROADMAP e JSON concordam e plan.py validate passa.",
+      "closure_evidence": "Delta do integrador inspecionado:05 só CLI17casos;34 gate subprocesso;36 imagem/digest candidato para35posterior. plan.py validate exit0 após correção."
+    }
+  ],
+  "non_blocking_notes": [
+    "Manifestos finais pendentes foram excluídos do julgamento conforme brief. Nenhum link relativo quebrado encontrado no conjunto Markdown principal inspecionado."
+  ]
+}

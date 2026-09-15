@@ -17,12 +17,12 @@ describe('Alerts Module Structure', () => {
     expect(content).toContain('async create(');
   });
 
-  it('has acknowledge method', () => {
-    expect(content).toContain('async acknowledge(');
+  it('has acknowledgeIfActive method (CAS transacional)', () => {
+    expect(content).toContain('async acknowledgeIfActive(');
   });
 
-  it('has resolve method', () => {
-    expect(content).toContain('async resolve(');
+  it('has resolveIfNotResolved method (CAS transacional)', () => {
+    expect(content).toContain('async resolveIfNotResolved(');
   });
 
   it('has findById method', () => {

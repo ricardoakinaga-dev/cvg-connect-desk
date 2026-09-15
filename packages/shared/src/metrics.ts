@@ -1,3 +1,4 @@
+import { stripControlChars } from './redact';
 /**
  * Registro de métricas estilo Prometheus (Phase 6 §9.1).
  * In-process, sem dependências: counters, gauges e histogramas simplificados
@@ -5,9 +6,21 @@
  *
  * Escopo por processo: cada runtime (api/worker/realtime) expõe o seu.
  * Agregação cross-replica é papel do Prometheus (sum by).
+ *
+ * Proteção de cardinalidade (C08/AAA-18):
+ * - valores de label são saneados (sem controles) e truncados;
+ * - cada coletor tem teto de séries distintas; o excedente agrega em
+ *   `__other__`, então um bug de chamada não derruba a memória do processo.
  */
 
 export type LabelValues = Record<string, string | number | boolean>;
+
+/** Teto de séries distintas por coletor (backstop de cardinalidade). */
+export const METRICS_MAX_SERIES_PER_COLLECTOR = 1000;
+/** Comprimento máximo de um valor de label na exposição. */
+export const METRICS_MAX_LABEL_VALUE_LENGTH = 120;
+/** Valor usado ao agregar séries que excedem o teto do coletor. */
+export const METRICS_OVERFLOW_LABEL_VALUE = '__other__';
 
 function labelsKey(labels: LabelValues): string {
   return Object.keys(labels)
@@ -20,6 +33,58 @@ function escapeLabelValue(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
 }
 
+/** Remove controles (evita injeção de linhas) e limita o comprimento do valor. */
+export function sanitizeLabelValue(value: string | number | boolean): string {
+  const text = stripControlChars(String(value));
+  return text.length > METRICS_MAX_LABEL_VALUE_LENGTH
+    ? text.slice(0, METRICS_MAX_LABEL_VALUE_LENGTH)
+    : text;
+}
+
+function sanitizeLabels(labels: LabelValues): LabelValues {
+  const sanitized: LabelValues = {};
+  for (const [key, value] of Object.entries(labels)) {
+    sanitized[key] = sanitizeLabelValue(value);
+  }
+  return sanitized;
+}
+
+function overflowLabels(labels: LabelValues): LabelValues {
+  const overflow: LabelValues = {};
+  for (const key of Object.keys(labels)) {
+    overflow[key] = METRICS_OVERFLOW_LABEL_VALUE;
+  }
+  return overflow;
+}
+
+/**
+ * Resolve a série de `labels` ou agrega no bucket `__other__` quando o teto
+ * do coletor já foi atingido.
+ */
+function resolveSeries<T>(
+  map: Map<string, T>,
+  labels: LabelValues,
+  create: (labels: LabelValues) => T,
+): T {
+  const key = labelsKey(labels);
+  const existing = map.get(key);
+  if (existing) return existing;
+
+  if (map.size >= METRICS_MAX_SERIES_PER_COLLECTOR) {
+    const overflow = overflowLabels(labels);
+    const overflowKey = labelsKey(overflow);
+    const existingOverflow = map.get(overflowKey);
+    if (existingOverflow) return existingOverflow;
+    const entry = create(overflow);
+    map.set(overflowKey, entry);
+    return entry;
+  }
+
+  const entry = create(labels);
+  map.set(key, entry);
+  return entry;
+}
+
 export class Counter {
   private values = new Map<string, { labels: LabelValues; value: number }>();
 
@@ -29,14 +94,17 @@ export class Counter {
   ) {}
 
   inc(labels: LabelValues = {}, amount = 1): void {
-    const key = labelsKey(labels);
-    const entry = this.values.get(key) || { labels: { ...labels }, value: 0 };
+    const clean = sanitizeLabels(labels);
+    const entry = resolveSeries(this.values, clean, (seriesLabels) => ({ labels: seriesLabels, value: 0 }));
     entry.value += amount;
-    this.values.set(key, entry);
   }
 
   get(labels: LabelValues = {}): number {
-    return this.values.get(labelsKey(labels))?.value ?? 0;
+    return this.values.get(labelsKey(sanitizeLabels(labels)))?.value ?? 0;
+  }
+
+  get seriesCount(): number {
+    return this.values.size;
   }
 
   render(): string {
@@ -61,16 +129,17 @@ export class Gauge {
   set(a: LabelValues | number, b?: number): void {
     if (typeof a === 'number') {
       this.values.set('', { labels: {}, value: a });
-    } else {
-      this.values.set(labelsKey(a), { labels: { ...a }, value: b ?? 0 });
+      return;
     }
+    const clean = sanitizeLabels(a);
+    const entry = resolveSeries(this.values, clean, (seriesLabels) => ({ labels: seriesLabels, value: 0 }));
+    entry.value = b ?? 0;
   }
 
   inc(labels: LabelValues = {}, amount = 1): void {
-    const key = labelsKey(labels);
-    const entry = this.values.get(key) || { labels: { ...labels }, value: 0 };
+    const clean = sanitizeLabels(labels);
+    const entry = resolveSeries(this.values, clean, (seriesLabels) => ({ labels: seriesLabels, value: 0 }));
     entry.value += amount;
-    this.values.set(key, entry);
   }
 
   dec(labels: LabelValues = {}, amount = 1): void {
@@ -78,7 +147,11 @@ export class Gauge {
   }
 
   get(labels: LabelValues = {}): number {
-    return this.values.get(labelsKey(labels))?.value ?? 0;
+    return this.values.get(labelsKey(sanitizeLabels(labels)))?.value ?? 0;
+  }
+
+  get seriesCount(): number {
+    return this.values.size;
   }
 
   render(): string {
@@ -105,17 +178,22 @@ export class Histogram {
   }
 
   observe(value: number, labels: LabelValues = {}): void {
-    const key = labelsKey(labels);
-    let entry = this.counts.get(key);
-    if (!entry) {
-      entry = { labels: { ...labels }, counts: this.buckets.map(() => 0), sum: 0, total: 0 };
-      this.counts.set(key, entry);
-    }
+    const clean = sanitizeLabels(labels);
+    const entry = resolveSeries(this.counts, clean, (seriesLabels) => ({
+      labels: seriesLabels,
+      counts: this.buckets.map(() => 0),
+      sum: 0,
+      total: 0,
+    }));
     entry.total += 1;
     entry.sum += value;
     this.buckets.forEach((bound, i) => {
-      if (value <= bound) entry!.counts[i] += 1;
+      if (value <= bound) entry.counts[i] += 1;
     });
+  }
+
+  get seriesCount(): number {
+    return this.counts.size;
   }
 
   render(): string {
@@ -182,3 +260,15 @@ export const messagesOutboundTotal = metrics.counter('messages_outbound_total', 
 export const authFailuresTotal = metrics.counter('auth_failures_total', 'Falhas de autenticacao por motivo');
 export const rateLimitHitsTotal = metrics.counter('rate_limit_hits_total', 'Requests bloqueados por rate limit');
 export const authzDenialsTotal = metrics.counter('authz_denials_total', 'Negacoes de autorizacao por motivo');
+export const mediaRecoveryClaimsTotal = metrics.counter(
+  'media_recovery_claims_total',
+  'Itens de media inbound reclamados pelo recovery worker',
+);
+export const mediaRecoveryOutcomesTotal = metrics.counter(
+  'media_recovery_outcomes_total',
+  'Desfechos do recovery de media inbound',
+);
+export const mediaRecoveryInFlight = metrics.gauge(
+  'media_recovery_in_flight',
+  'Tarefas de media inbound em processamento neste processo',
+);

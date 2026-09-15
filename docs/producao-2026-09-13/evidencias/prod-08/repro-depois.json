@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-09-13T15:50:03.011Z",
+  "runId": "prod08-repro2",
+  "database": "postgresql://***@127.0.0.1:58132/cvg_aaa_prod08_repro2_w17",
+  "scenarioA": {
+    "winnerConversationId": "a865cc34-da7c-4719-add2-2cade9e55376",
+    "loserConversationId": null,
+    "messages": 1,
+    "orphanConversations": 0,
+    "orphanConversationCreatedEvents": 0,
+    "orphanStatusHistory": 0,
+    "winnerUnread": 1
+  },
+  "scenarioB": {
+    "iterations": 8,
+    "loserErrors": 0,
+    "bothOk": 8,
+    "maxConversations": 1,
+    "maxMessages": 1,
+    "sampleError": null
+  },
+  "defects": {
+    "orphanConversationsCommitted": false,
+    "orphanOutboxEventsCommitted": false,
+    "duplicateLogicalConversations": false,
+    "loserNotIdempotent": false
+  },
+  "verdict": "NO_DEFECT_OBSERVED"
+}

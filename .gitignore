@@ -136,3 +136,12 @@ redis-data/
 packages/database/src/*.d.ts
 packages/database/src/*.d.ts.map
 artifacts/
+
+# Saídas tsc in-place ao lado das fontes (ex.: packages/shared/src/metrics.js).
+# PERIGO: Vite resolve `.js` antes de `.ts` (resolve.extensions), então um
+# artefato velho esconde o fonte atualizado nas suítes. Nunca commitar;
+# apague/ignore antes de rodar gates. Ver docs/OBSERVABILITY.md.
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
+packages/*/src/**/*.d.ts
+packages/*/src/**/*.d.ts.map

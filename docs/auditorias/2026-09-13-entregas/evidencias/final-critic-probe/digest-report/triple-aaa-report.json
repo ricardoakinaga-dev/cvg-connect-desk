@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "repository": null,
+  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+  "sourceSha256": "70a313d9366ede714e81a51146ee778813de79b96f72be8d5b5686e473564dc5",
+  "imageDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "sealedAt": "2026-09-13T19:48:43.445Z",
+  "timestamp": "2026-09-13T19:48:43.523Z",
+  "evidenceDir": "/tmp/cvg-final-critic-deliveries-probe/digest-evidence",
+  "withExternalEvidence": false,
+  "counts": {
+    "pass": 1,
+    "fail": 0,
+    "blocked": 0,
+    "notRun": 0,
+    "skipped": 0,
+    "invalid": 0,
+    "missing": 0,
+    "notEvaluated": 0
+  },
+  "gates": {
+    "image": {
+      "required": true,
+      "status": "PASS",
+      "reasons": [],
+      "manifest": "../digest-evidence/image.json",
+      "metrics": null
+    }
+  },
+  "final": "VERIFIED_CANDIDATE",
+  "state": "VERIFIED_CANDIDATE",
+  "rejected": [],
+  "certification": {
+    "state": "NOT_ELIGIBLE_LOCAL",
+    "reason": "TRIPLE_AAA_CERTIFIED não pode ser emitido pelo gate local: exige política de release ratificada e verificação de tag/assinatura em fluxo dedicado.",
+    "requiredForCertification": [
+      "política de release definida e aprovada",
+      "tag de release assinada verificada no SHA do candidato",
+      "agregador CI no mesmo SHA (VERIFIED_CANDIDATE) com artefato de imagem conferido"
+    ]
+  },
+  "honesty": "Somente PASS vinculado ao mesmo candidato (commit/lock/source) com manifesto e log verificado. Ausência/FAIL/BLOCKED/NOT_RUN/SKIPPED/INVALID/MISSING de check requerido = FAILED, exit != 0. É vedado percentual de cobertura fixo: métricas vêm da medição.",
+  "artifactDir": "/tmp/cvg-final-critic-deliveries-probe/digest-report",
+  "liveCandidate": {
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+    "sourceSha256": "70a313d9366ede714e81a51146ee778813de79b96f72be8d5b5686e473564dc5",
+    "checkedAt": "2026-09-13T19:48:43.523Z"
+  },
+  "sealMissing": false,
+  "candidateDrift": []
+}

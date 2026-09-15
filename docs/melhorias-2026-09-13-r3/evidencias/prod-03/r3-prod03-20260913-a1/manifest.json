@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-03",
+  "runId": "r3-prod03-20260913-a1",
+  "attempt": 1,
+  "command": "node --test scripts/production/prod-03.test.mjs",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T23:40:04.831Z",
+  "finishedAt": "2026-09-13T23:40:05.089Z",
+  "durationMs": 258,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "1bf7b0478dce47d09fee2c229b2ac647b6f79de0a49a9ddac1176e667f8b8684",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod03-20260913-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-13T23:40:04.831Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-03.test.log",
+      "sha256": "a49d198eb50207bda350569f67c1370284e3db6b8ed0611e1de31cf25cc9d311"
+    }
+  ],
+  "limitations": [
+    "Fixtures GitHub sintéticas; rulesets/branch protection remotos não foram consultados."
+  ]
+}

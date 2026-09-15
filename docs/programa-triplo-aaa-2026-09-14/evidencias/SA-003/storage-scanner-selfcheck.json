@@ -1,0 +1,37 @@
+{
+  "runId": "sa003-guards",
+  "checkedAt": "2026-09-15T00:47:07.711Z",
+  "result": "PASS",
+  "results": [
+    {
+      "name": "porta_ocupada_aborta",
+      "expected": "PORT_BUSY",
+      "observed": "PORT_BUSY",
+      "ok": true
+    },
+    {
+      "name": "marcador_divergente_aborta",
+      "expected": "MARKER_CONFLICT",
+      "observed": "MARKER_CONFLICT",
+      "ok": true
+    },
+    {
+      "name": "teardown_recusa_projeto_alheio",
+      "expected": "MARKER_CONFLICT",
+      "observed": "MARKER_CONFLICT",
+      "ok": true
+    },
+    {
+      "name": "runid_invalido_aborta",
+      "expected": "RUN_ID_INVALID",
+      "observed": "RUN_ID_INVALID",
+      "ok": true
+    },
+    {
+      "name": "runid_sanitizado_pelo_contexto",
+      "expected": null,
+      "observed": null,
+      "ok": true
+    }
+  ]
+}

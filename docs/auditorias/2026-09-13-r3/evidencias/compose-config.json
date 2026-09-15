@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "docker",
+      "compose",
+      "--env-file",
+      "/tmp/cvg-audit-r3-dvlqz0my/compose-synthetic.env",
+      "-f",
+      "docker-compose.yml",
+      "config",
+      "--quiet"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "docker",
+      "compose",
+      "--env-file",
+      "/tmp/cvg-audit-r3-dvlqz0my/compose-synthetic.env",
+      "-f",
+      "docker-compose.staging.yml",
+      "config",
+      "--quiet"
+    ],
+    "exit": 0
+  }
+]

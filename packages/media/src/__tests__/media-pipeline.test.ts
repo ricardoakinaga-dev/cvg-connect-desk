@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   MemoryMediaStorage,
-  FakeScanner,
   ClamAVScanner,
   processInboundMedia,
   promoteQuarantinedAsset,
@@ -65,11 +64,12 @@ describe('media storage + quarantine pipeline', () => {
 
   it('clean bytes with fake scanner → STORED under media/', async () => {
     process.env.MALWARE_SCANNER = 'fake';
+    const jpeg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.from('fake-jpeg-bytes')]);
     const result = await processInboundMedia({
       mediaType: 'image',
       mimetype: 'image/jpeg',
       filename: 'foto.jpg',
-      bytes: Buffer.from('fake-jpeg-bytes'),
+      bytes: jpeg,
     });
     track(result);
     expect(result.storageStatus).toBe('STORED');
@@ -83,8 +83,8 @@ describe('media storage + quarantine pipeline', () => {
     const eicar = 'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
     const result = await processInboundMedia({
       mediaType: 'document',
-      mimetype: 'application/pdf',
-      filename: 'evil.pdf',
+      mimetype: 'text/plain',
+      filename: 'evil.txt',
       bytes: Buffer.from(eicar),
     });
     track(result);
@@ -99,11 +99,12 @@ describe('media storage + quarantine pipeline', () => {
     const result = await processInboundMedia({
       mediaType: 'document',
       mimetype: 'application/pdf',
-      bytes: Buffer.from('pdf-bytes'),
+      bytes: Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n'),
     });
     track(result);
     expect(result.blocked).toBe(true);
-    expect(result.reason).toMatch(/fail-secure/i);
+    expect(result.storageStatus).toBe('QUARANTINED');
+    expect(result.reasonCode).toBe('scanner_unavailable');
   });
 
   it('oversized and disallowed media blocked', async () => {

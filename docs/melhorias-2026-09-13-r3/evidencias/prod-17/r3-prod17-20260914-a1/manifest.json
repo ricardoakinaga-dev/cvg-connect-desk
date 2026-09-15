@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "task": "prod-17",
+  "runId": "r3-prod17-20260914-a1",
+  "attempt": 1,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_EVIDENCE_SEGMENT=r3-prod17-20260914-a1 AAA_RUN_ID=r3-prod17-20260914-a1 AAA_ATTEMPT=1 pnpm --filter @cvg/desk-web test",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T02:08:27.214Z",
+  "finishedAt": "2026-09-14T02:08:38.104Z",
+  "durationMs": 10890,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "774c6f05bf456908ad23b8a7c6c31f3f111ede1200a7f6d2e907b1581aa770d4",
+    "sourceFileCount": 1452,
+    "imageDigest": null,
+    "runId": "r3-prod17-20260914-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-14T02:08:26.714Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-17.test.log",
+      "sha256": "35105a42741f165876ad9b776b3278a82b5f3827d031f9078750f05b403585da"
+    }
+  ],
+  "limitations": [
+    "Vitest/jsdom com React Testing Library e mocks explícitos de auth/realtime; sem browser/API integrada, provider externo ou dados de produção.",
+    "Revisão independente e gates externos permanecem pendentes."
+  ]
+}

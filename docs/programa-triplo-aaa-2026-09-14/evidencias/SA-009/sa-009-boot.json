@@ -1,0 +1,230 @@
+{
+  "runId": "sa009-verified",
+  "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "imageTag": "cvg-aaa-sa009-realtime:sa009-verified",
+  "containerName": "cvg-aaa-sa009-sa009-verified",
+  "realtimePort": 5241,
+  "startedAt": "2026-09-15T01:36:06.264Z",
+  "checks": [
+    {
+      "name": "build_imagem",
+      "ok": true,
+      "exit": 0,
+      "stderr": "DEPRECATED: The legacy builder is deprecated and will be removed in a future release.\n            Install the buildx component to build images with BuildKit:\n            https://docs.docker.com/go/buildx/\n\n"
+    },
+    {
+      "name": "imagem_identificada",
+      "ok": true
+    },
+    {
+      "name": "db_types",
+      "ok": true,
+      "exit": 0
+    },
+    {
+      "name": "db_migrate",
+      "ok": true,
+      "exit": 0,
+      "tail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n"
+    },
+    {
+      "name": "config_ausente_falha_cedo",
+      "ok": true,
+      "exit": 1,
+      "noSecret": true
+    },
+    {
+      "name": "desk_api_real_pronta",
+      "ok": true,
+      "apiPort": 4940
+    },
+    {
+      "name": "container_iniciado",
+      "ok": true,
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "name": "health_ok",
+      "ok": true,
+      "last": {
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "service": "realtime-service",
+          "uptime": 0.427
+        }
+      }
+    },
+    {
+      "name": "readiness_ok_com_banco",
+      "ok": true,
+      "body": {
+        "status": "ok",
+        "ready": true,
+        "service": "realtime-service",
+        "uptime": 0.432,
+        "checks": {
+          "process": {
+            "status": "ok"
+          },
+          "websocket": {
+            "status": "ok"
+          },
+          "poller": {
+            "status": "ok",
+            "mode": "database",
+            "lastStartedAt": "2026-09-15T01:36:19.945Z",
+            "lastSucceededAt": "2026-09-15T01:36:19.957Z",
+            "ageMs": 118,
+            "consecutiveFailures": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "poller_modo_database",
+      "ok": true,
+      "pollerMode": "database"
+    },
+    {
+      "name": "evento_consumido_e_ackado",
+      "ok": true,
+      "rows": [
+        {
+          "processed_at": "2026-09-15T01:36:20.254Z",
+          "generation": 1,
+          "retry_count": 0
+        }
+      ]
+    },
+    {
+      "name": "ack_unico",
+      "ok": true,
+      "rows": [
+        {
+          "processed_at": "2026-09-15T01:36:20.254Z",
+          "generation": 1,
+          "retry_count": 0
+        }
+      ]
+    },
+    {
+      "name": "ws_auth_positiva_subscribe_autorizado",
+      "ok": true,
+      "detail": "ok",
+      "transcript": [
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.394Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"requiresAuth\":true}}}",
+        "{\"event\":\"auth.required\",\"data\":{\"type\":\"auth.required\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.395Z\",\"payload\":{\"error\":\"Authentication required. Send {type: \\\"auth\\\", token: \\\"<token>\\\"} after connecting.\"}}}",
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"authenticated\":true}}}",
+        "{\"event\":\"auth.success\",\"data\":{\"type\":\"auth.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"userId\":\"3ed92a5a-2282-4992-b379-093c38024e3e\"}}}",
+        "{\"event\":\"error\",\"data\":{\"type\":\"subscribe.error\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.454Z\",\"payload\":{\"error\":\"Channel not authorized\",\"channel\":\"conversation:9b4ac6d2-5355-4f8f-98dc-3b6fefd06ed0\"}}}",
+        "{\"event\":\"subscribed\",\"data\":{\"type\":\"subscription.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.455Z\",\"payload\":{\"channel\":\"conversation:4c30300c-b275-457b-b057-7114b6ae48fd\"}}}",
+        "{\"event\":\"conversation.status.changed\",\"data\":{\"type\":\"conversation.status.changed\",\"aggregateType\":\"Conversation\",\"aggregateId\":\"4c30300c-b275-457b-b057-7114b6ae48fd\",\"occurredAt\":\"2026-09-14T22:36:20.455Z\",\"payload\":{}}}"
+      ]
+    },
+    {
+      "name": "ws_acesso_cruzado_recusado",
+      "ok": true,
+      "detail": "ok",
+      "transcript": [
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.394Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"requiresAuth\":true}}}",
+        "{\"event\":\"auth.required\",\"data\":{\"type\":\"auth.required\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.395Z\",\"payload\":{\"error\":\"Authentication required. Send {type: \\\"auth\\\", token: \\\"<token>\\\"} after connecting.\"}}}",
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"authenticated\":true}}}",
+        "{\"event\":\"auth.success\",\"data\":{\"type\":\"auth.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"userId\":\"3ed92a5a-2282-4992-b379-093c38024e3e\"}}}",
+        "{\"event\":\"error\",\"data\":{\"type\":\"subscribe.error\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.454Z\",\"payload\":{\"error\":\"Channel not authorized\",\"channel\":\"conversation:9b4ac6d2-5355-4f8f-98dc-3b6fefd06ed0\"}}}",
+        "{\"event\":\"subscribed\",\"data\":{\"type\":\"subscription.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.455Z\",\"payload\":{\"channel\":\"conversation:4c30300c-b275-457b-b057-7114b6ae48fd\"}}}",
+        "{\"event\":\"conversation.status.changed\",\"data\":{\"type\":\"conversation.status.changed\",\"aggregateType\":\"Conversation\",\"aggregateId\":\"4c30300c-b275-457b-b057-7114b6ae48fd\",\"occurredAt\":\"2026-09-14T22:36:20.455Z\",\"payload\":{}}}"
+      ]
+    },
+    {
+      "name": "ws_delivery_autorizada_recebida",
+      "ok": true,
+      "detail": "ok",
+      "transcript": [
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.394Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"requiresAuth\":true}}}",
+        "{\"event\":\"auth.required\",\"data\":{\"type\":\"auth.required\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.395Z\",\"payload\":{\"error\":\"Authentication required. Send {type: \\\"auth\\\", token: \\\"<token>\\\"} after connecting.\"}}}",
+        "{\"event\":\"connected\",\"data\":{\"type\":\"connection.established\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"clientId\":\"client_1789436180394_xux7870\",\"authenticated\":true}}}",
+        "{\"event\":\"auth.success\",\"data\":{\"type\":\"auth.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.437Z\",\"payload\":{\"userId\":\"3ed92a5a-2282-4992-b379-093c38024e3e\"}}}",
+        "{\"event\":\"error\",\"data\":{\"type\":\"subscribe.error\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.454Z\",\"payload\":{\"error\":\"Channel not authorized\",\"channel\":\"conversation:9b4ac6d2-5355-4f8f-98dc-3b6fefd06ed0\"}}}",
+        "{\"event\":\"subscribed\",\"data\":{\"type\":\"subscription.success\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436180394_xux7870\",\"occurredAt\":\"2026-09-15T01:36:20.455Z\",\"payload\":{\"channel\":\"conversation:4c30300c-b275-457b-b057-7114b6ae48fd\"}}}",
+        "{\"event\":\"conversation.status.changed\",\"data\":{\"type\":\"conversation.status.changed\",\"aggregateType\":\"Conversation\",\"aggregateId\":\"4c30300c-b275-457b-b057-7114b6ae48fd\",\"occurredAt\":\"2026-09-14T22:36:20.455Z\",\"payload\":{}}}"
+      ]
+    },
+    {
+      "name": "readiness_degrada_sem_banco",
+      "ok": true,
+      "body": {
+        "status": "not_ready",
+        "ready": false,
+        "service": "realtime-service",
+        "uptime": 1.518,
+        "checks": {
+          "process": {
+            "status": "ok"
+          },
+          "websocket": {
+            "status": "ok"
+          },
+          "poller": {
+            "status": "error",
+            "mode": "database",
+            "lastStartedAt": "2026-09-15T01:36:21.145Z",
+            "lastSucceededAt": "2026-09-15T01:36:20.551Z",
+            "ageMs": 610,
+            "consecutiveFailures": 2,
+            "lastErrorCode": "OUTBOX_POLL_FAILED"
+          }
+        }
+      }
+    },
+    {
+      "name": "health_continua_vivo",
+      "ok": true
+    },
+    {
+      "name": "readiness_recupera",
+      "ok": true
+    },
+    {
+      "name": "sem_duplicacao_apos_recuperacao",
+      "ok": true,
+      "rows": [
+        {
+          "processed_at": "2026-09-15T01:36:20.254Z",
+          "generation": 1,
+          "retry_count": 0
+        }
+      ]
+    },
+    {
+      "name": "ws_sem_auth_recusado",
+      "ok": true,
+      "detail": "{\"event\":\"error\",\"data\":{\"type\":\"subscribe.error\",\"aggregateType\":\"Client\",\"aggregateId\":\"client_1789436181820_qbrhqui\",\"occurredAt\":\"2026-09-15T01:36:21.820Z\",\"payload\":{\"error\":\"Not authenticated\",\""
+    }
+  ],
+  "failures": [],
+  "imageId": "sha256:dbc230729c591eb131eeae675dc9755c044c549da0fdddc9fde8042c2cf0634c",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59532/cvg_aaa_sa009_verified_w31",
+  "redisUrl": "redis://127.0.0.1:56990",
+  "apiPid": 1113731,
+  "pgStopped": {
+    "stopped": true,
+    "pid": 1113073
+  },
+  "containerRemoved": true,
+  "apiStopped": true,
+  "teardown": {
+    "runId": "sa009-verified",
+    "redis": {
+      "stopped": true,
+      "pid": 1113104
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1114291
+    }
+  },
+  "finishedAt": "2026-09-15T01:36:22.145Z",
+  "result": "PASS"
+}

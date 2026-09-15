@@ -12,12 +12,12 @@ function sendError(reply: { status: (code: number) => { send: (body: unknown) =>
 
 export async function registerTutorRoutes(app: FastifyInstance): Promise<void> {
   app.get('/tutors/stats/overview', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {},
   }, async () => (await useCases.getTutorStats()).value);
 
   app.get('/tutors', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {
       querystring: {
         type: 'object',
@@ -35,7 +35,7 @@ export async function registerTutorRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.get('/tutors/:id', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {
       params: { type: 'object', required: ['id'], properties: { id: { type: 'string', format: 'uuid' } } },
     },
@@ -51,7 +51,7 @@ export async function registerTutorRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post('/tutors', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:write')],
     schema: {
       body: {
         type: 'object',
@@ -76,7 +76,7 @@ export async function registerTutorRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.put('/tutors/:id', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:write')],
     schema: {
       params: { type: 'object', required: ['id'], properties: { id: { type: 'string', format: 'uuid' } } },
       body: {

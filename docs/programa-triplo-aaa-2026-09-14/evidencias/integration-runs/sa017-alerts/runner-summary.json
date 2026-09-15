@@ -1,0 +1,54 @@
+{
+  "runId": "sa017-alerts",
+  "workerIndex": 35,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59932/cvg_aaa_sa017_alerts_w35",
+  "redisUrl": "redis://127.0.0.1:57030",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:52:48.250Z",
+  "finishedAt": "2026-09-15T01:52:53.955Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59932/cvg_aaa_sa017_alerts_w35",
+    "REDIS_URL": "redis://127.0.0.1:57030",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa017-alerts",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa017-alerts",
+    "AAA_WORKER_INDEX": "35"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:52:48.250Z",
+      "finishedAt": "2026-09-15T01:52:49.942Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:52:49.942Z",
+      "finishedAt": "2026-09-15T01:52:50.648Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts",
+      "startedAt": "2026-09-15T01:52:50.648Z",
+      "finishedAt": "2026-09-15T01:52:53.955Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "duct-Name\",\"reqId\":\"req-3\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/a62aaf19-ecb4-4d08-a1ef-dba709e5942d/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437173764,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/a62aaf19-ecb4-4d08-a1ef-dba709e5942d/resolve\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437173774,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"res\":{\"statusCode\":200},\"responseTime\":9.594855999999709,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437173774,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":409},\"responseTime\":9.88381500000014,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437173777,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/3059388e-da4a-40f5-8549-9e68bcfc100b/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437173782,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"res\":{\"statusCode\":409},\"responseTime\":5.166476999999759,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437173783,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"req\":{\"method\":\"POST\",\"url\":\"/alerts/e59abcb2-83c4-47c2-9ef9-813635d52826/acknowledge\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437173786,\"pid\":1204038,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"res\":{\"statusCode\":404},\"responseTime\":2.909306000000015,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-017-alerts.integration.test.ts (5 tests) 541ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  22:52:51\n   Duration  2.65s (transform 867ms, setup 0ms, collect 1.81s, tests 541ms, environment 0ms, prepare 84ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

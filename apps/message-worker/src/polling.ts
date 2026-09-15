@@ -10,6 +10,7 @@ export function createNoOverlapPoller(
   clearIntervalFunction: ClearIntervalFunction = clearInterval,
 ) {
   let running = false;
+  const idleWaiters: Array<() => void> = [];
   const timer = setIntervalFunction(() => {
     void run();
   }, intervalMs);
@@ -23,11 +24,19 @@ export function createNoOverlapPoller(
       return true;
     } finally {
       running = false;
+      for (const resolve of idleWaiters.splice(0)) resolve();
     }
+  }
+
+  function waitForIdle(): Promise<void> {
+    if (!running) return Promise.resolve();
+    return new Promise<void>((resolve) => idleWaiters.push(resolve));
   }
 
   return {
     run,
     stop: () => clearIntervalFunction(timer),
+    waitForIdle,
+    isRunning: () => running,
   };
 }

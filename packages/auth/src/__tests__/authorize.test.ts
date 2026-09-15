@@ -83,4 +83,48 @@ describe('authorize() central', () => {
     expect(SENSITIVE_ACTIONS['message.resend']).toBe('chat:write');
     expect(SENSITIVE_ACTIONS['sector.membership.change']).toBe('admin:write');
   });
+
+  it('permissões efetivas do banco são autoritativas (Admin sem a ação é negado)', async () => {
+    const denied = await authorize(
+      { id: 'u1', roles: ['Admin'], permissions: ['chat:read'] }, 'chat:write', null, null, allowSector,
+    );
+    expect(denied).toMatchObject({ allowed: false, reason: 'missing-permission' });
+
+    const allowed = await authorize(
+      { id: 'u1', roles: ['Custom'], permissions: ['chat:write'] }, 'chat:write', null, null, denySector,
+    );
+    expect(allowed).toMatchObject({ allowed: true, reason: 'permitted' });
+  });
+
+  it('instalação provisionada sem permissões nega até Admin (sem override legado)', async () => {
+    const denied = await authorize(
+      { id: 'u1', roles: ['Admin'], permissions: [], permissionsAuthoritative: true },
+      'chat:delete',
+      { type: 'conversation', sectorId: 's1' },
+      null,
+      denySector,
+    );
+    expect(denied).toMatchObject({ allowed: false, reason: 'missing-permission' });
+
+    const withPermission = await authorize(
+      { id: 'u1', roles: ['Admin'], permissions: ['chat:read'], permissionsAuthoritative: true },
+      'chat:read',
+      null,
+      null,
+      denySector,
+    );
+    expect(withPermission).toMatchObject({ allowed: true, reason: 'permitted' });
+  });
+
+  it('permissions vazio cai no catálogo estático apenas para built-in', async () => {
+    const builtIn = await authorize(
+      { id: 'u1', roles: ['Receptionist'], permissions: [] }, 'chat:read', null, null, denySector,
+    );
+    expect(builtIn).toMatchObject({ allowed: true, reason: 'permitted' });
+
+    const custom = await authorize(
+      { id: 'u1', roles: ['Custom'], permissions: [] }, 'chat:read', null, null, allowSector,
+    );
+    expect(custom).toMatchObject({ allowed: false, reason: 'missing-permission' });
+  });
 });

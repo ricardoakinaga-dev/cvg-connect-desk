@@ -1,0 +1,14 @@
+# Validação YAML — PROD-03 (2026-09-13T10:53:25-03:00)
+# actionlint: AUSENTE no ambiente — método alternativo: parser PyYAML 6.0.1 (python3)
+
+$ python3 -c "import glob,yaml; [yaml.safe_load(open(p, encoding=\"utf-8\")) for p in glob.glob(\".github/workflows/*.yml\")]; print(\"all workflows parse OK\")"
+all workflows parse OK
+
+.github/workflows/triple-aaa-gate.yml :: Triple AAA Gate
+   job critical-gates -> Critical gates (lint, typecheck, integration, migrations, build)
+   job migration-upgrade -> Migration upgrade (previous -> current)
+   job image-identity -> Image identity (build + digest)
+   job security-gate -> Security gate (audit high + secret scan)
+   job promotion-state -> Promotion state
+.github/workflows/triple-aaa-certification.yml :: Triple AAA Certification (aggregator)
+   job aggregate -> Aggregate required checks

@@ -1,0 +1,79 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Central instável
+    - text: Reconectando automaticamente
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - text: Atendimento
+  - heading "Conversas" [level=1]
+  - button "Iniciar nova conversa"
+  - button "Todos 3"
+  - button "Administrativo"
+  - button "Cirurgia"
+  - button "Clínica Médica"
+  - button "Comercial"
+  - button "Farmácia"
+  - button "Internação"
+  - button "Recepção"
+  - button "Setor A (fixture) 1"
+  - button "Setor B (fixture) 1"
+  - text: Pesquisar conversas
+  - textbox "Pesquisar conversas":
+    - /placeholder: Pesquisar conversas...
+  - text: Status
+  - combobox "Filtrar status":
+    - option "Todos os status" [selected]
+    - option "Abertas"
+    - option "Pendentes"
+    - option "Finalizadas"
+    - option "Arquivadas"
+  - 'button "C Contato Setor A 3h Nova conversa Status: novo"': C Contato Setor A 3h Nova conversa
+  - 'button "C Contato Setor B 3h [fixture] inbound B1 Status: novo"': C Contato Setor B 3h [fixture] inbound B1
+  - 'button "C Contato Setor A 3h [fixture] inbound A1 Status: novo"': C Contato Setor A 3h [fixture] inbound A1
+  - heading "CVG Connect Desk" [level=2]
+  - paragraph: Selecione uma conversa na barra lateral ou inicie uma nova conversa
+  - button "Nova conversa"

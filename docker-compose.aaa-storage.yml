@@ -1,0 +1,41 @@
+# docker-compose.aaa-storage.yml — storage/scanner efêmeros do runner isolado (SA-003).
+#
+# Não use `docker compose up` sem `-p`: o runner SEMPRE passa um projeto
+# exclusivo (`cvg-aaa-<runId>`) e portas derivadas do RunContext. Não há
+# `container_name` fixo — o nome deriva do projeto — e os dados ficam em tmpfs,
+# portanto o teardown `-p <projeto> down -v` não toca nenhum outro projeto.
+services:
+  minio:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${AAA_S3_ACCESS_KEY:?obrigatorio}
+      MINIO_ROOT_PASSWORD: ${AAA_S3_SECRET_KEY:?obrigatorio}
+    ports:
+      - "127.0.0.1:${AAA_S3_PORT:?obrigatorio}:9000"
+      - "127.0.0.1:${AAA_S3_CONSOLE_PORT:?obrigatorio}:9001"
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    networks:
+      - aaa-storage
+
+  clamav:
+    image: clamav/clamav:stable
+    ports:
+      - "127.0.0.1:${AAA_CLAMAV_PORT:?obrigatorio}:3310"
+    healthcheck:
+      test: ["CMD-SHELL", "test -S /run/clamav/clamd.ctl || true"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    networks:
+      - aaa-storage
+
+networks:
+  aaa-storage:
+    driver: bridge

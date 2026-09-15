@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "sa015-b1-20260915-r1",
+    "redis": {
+      "stopped": true,
+      "pid": 2157314
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 2157238
+    }
+  }
+}

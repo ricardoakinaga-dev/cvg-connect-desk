@@ -1,0 +1,213 @@
+{
+  "generatedAt": "2026-09-14T02:07:44.356Z",
+  "runId": "r3-prod14-20260914-a1",
+  "workerIndex": 23,
+  "database": "cvg_aaa_r3_prod14_20260914_a1_w23",
+  "postgresPort": 58732,
+  "storage": {
+    "driver": "s3",
+    "endpoint": "http://127.0.0.1:39543",
+    "bucket": "cvg-media-prod14-5bda7060",
+    "backend": "moto real (S3 protocol)"
+  },
+  "scanner": {
+    "driver": "clamav",
+    "host": "127.0.0.1",
+    "port": 53110,
+    "real": true
+  },
+  "users": {
+    "adminUserId": "8866496e-c64d-4e1f-8a28-0e762a844ab6",
+    "receptionistUserId": "a1bcb3b4-7b72-43b5-bcfe-014a9511207e"
+  },
+  "cases": [
+    {
+      "case": "AC1-clean-e2e",
+      "messageId": "7b43ee98-ce6d-4786-a1b6-d9dbbda24dec",
+      "conversationId": "f87ed3be-659f-49f6-aa49-7b6be4a9945c",
+      "assetId": "0a3ef6d3-4f2b-4fca-8bb5-d4a380917a8c",
+      "storageKey": "media/f87ed3be-659f-49f6-aa49-7b6be4a9945c/7b43ee98-ce6d-4786-a1b6-d9dbbda24dec/7b43ee98-ce6d-4786-a1b6-d9dbbda24dec-1c2cc43521f55249",
+      "scanStatus": "CLEAN",
+      "storageStatus": "STORED",
+      "mediaUrl": "asset://0a3ef6d3-4f2b-4fca-8bb5-d4a380917a8c",
+      "anonymousS3Status": 403,
+      "readStatus": 200,
+      "readCacheControl": "private, max-age=120",
+      "anonymousReadStatus": 401,
+      "outsiderReadStatus": 404
+    },
+    {
+      "case": "AC1-ssrf-negado",
+      "messageId": "ca76267d-7cdb-4329-be7c-d18c2b8a4f6f",
+      "state": "REJECTED",
+      "reasonCode": "unsafe_url",
+      "mediaUrl": null,
+      "assets": 0
+    },
+    {
+      "case": "AC1-fetch-falho-recuperavel",
+      "messageId": "2c2fd51a-0073-4a2e-96cf-799e4d70d6b6",
+      "state": "FAILED",
+      "reasonCode": "fetch_failed",
+      "recoveredCount": 1
+    },
+    {
+      "case": "AC1-eicar-real",
+      "messageId": "2ffc3f17-3351-408d-bab0-28aa5505f5df",
+      "assetId": "15d2d407-7b5d-4e7d-8066-31a9a7d58bc1",
+      "scanStatus": "INFECTED",
+      "storageStatus": "QUARANTINED",
+      "storageKey": "quarantine/918960f1-9194-4884-8aba-9a48ef397e78/2ffc3f17-3351-408d-bab0-28aa5505f5df/2ffc3f17-3351-408d-bab0-28aa5505f5df-275a021bbfb6489e",
+      "readStatus": 422,
+      "readCode": "MEDIA_ASSET_INFECTED"
+    },
+    {
+      "case": "AC1-scanner-ausente-fail-closed",
+      "messageId": "7cb5f00b-ef3f-4ac1-abad-859ec89c5bb4",
+      "scanStatus": "PENDING_SCAN",
+      "storageStatus": "QUARANTINED",
+      "readStatus": 409,
+      "readCode": "MEDIA_ASSET_PENDING_SCAN"
+    },
+    {
+      "case": "AC1-timeout-scanner",
+      "messageId": "068d7ddd-e296-49eb-99b9-52978024c85e",
+      "webhookElapsedMs": 9,
+      "scanTimeoutMs": 8000,
+      "scanStatus": "SCAN_FAILED",
+      "readStatus": 503,
+      "readCode": "MEDIA_ASSET_SCAN_FAILED"
+    },
+    {
+      "case": "BE-A04-recovery-duravel",
+      "pendingMessageId": "2f485c2b-4bc3-4aa0-9159-472acf2868ef",
+      "firstClaims": 1,
+      "secondClaims": 1,
+      "scanFailedClaims": 1,
+      "pendingStatus": "PENDING_SCAN/QUARANTINED",
+      "recoveredAssetId": "4c4709dc-2609-4043-a808-8a485db0a9f9",
+      "recoveredStatus": "CLEAN/STORED",
+      "concurrentClaims": 1,
+      "boundedRetry": {
+        "attempts": 1,
+        "nextAttemptAt": null,
+        "lastError": "retry_exhausted:scanner_unavailable"
+      }
+    },
+    {
+      "case": "AC2-limites-magic",
+      "oversized": {
+        "messageId": "7a968ec2-da2d-4025-8573-481c9eb37b6b",
+        "state": "REJECTED",
+        "reasonCode": "media_too_large"
+      },
+      "magicMismatch": {
+        "messageId": "c8892a7f-946e-4cc0-871f-cf22bd66e886",
+        "state": "REJECTED",
+        "reasonCode": "mime_magic_mismatch"
+      },
+      "maxBytes": 16777216,
+      "overLimitReason": "media_too_large"
+    },
+    {
+      "case": "AC2-cross-conversa-e-idempotencia",
+      "assetId": "7e1bcf18-6fd9-4c2b-be97-63d83011c483",
+      "ownerConversation": "908de847-8c19-4f8c-be5a-98107e368643",
+      "otherConversation": "4616ea8d-79ea-4ed6-97df-e3f33b8a3e20",
+      "crossReadStatus": 404,
+      "replayState": "CLEAN",
+      "assetCountAfterReplay": 1
+    },
+    {
+      "case": "AC3-flag-pipeline",
+      "messageId": "e09022a4-851f-49c7-8c1d-6f225f838476",
+      "state": "PIPELINE_DISABLED",
+      "mediaUrl": null,
+      "assets": 0,
+      "defaultEnabled": true
+    },
+    {
+      "case": "AC2-quarentena-bytes-preservados",
+      "messageId": "cb45507d-ad8d-4b0d-902a-9c72df903e1f",
+      "assetId": "10972601-7023-424e-9709-15aec43d8308",
+      "storageKey": "quarantine/27abe6c0-a14e-4061-9e81-8821ff0c3892/cb45507d-ad8d-4b0d-902a-9c72df903e1f/cb45507d-ad8d-4b0d-902a-9c72df903e1f-275a021bbfb6489e",
+      "bytesPreserved": 68,
+      "anonymousStatus": 403,
+      "publicObjectExists": false
+    },
+    {
+      "case": "AC4-dry-run-sem-mutacao",
+      "conversationId": "862bd8e0-c8e4-412a-b734-a2a037c13079",
+      "counts": {
+        "raw_http_url": 1,
+        "data_url": 2,
+        "other_url": 0,
+        "broken_asset": 1,
+        "external_asset": 1,
+        "pending_intake": 4
+      },
+      "totalCandidates": 9,
+      "zeroMutations": true,
+      "fixtures": 5
+    },
+    {
+      "case": "AC4-migracao-idempotente",
+      "conversationId": "862bd8e0-c8e4-412a-b734-a2a037c13079",
+      "published": [
+        {
+          "messageId": "0c7c2457-ebb0-4173-8108-d00875be98c3",
+          "assetId": "99670581-f6ce-47ae-a776-d88764707cc3",
+          "storageKey": "media/862bd8e0-c8e4-412a-b734-a2a037c13079/0c7c2457-ebb0-4173-8108-d00875be98c3/0c7c2457-ebb0-4173-8108-d00875be98c3-1c2cc43521f55249"
+        }
+      ],
+      "blocked": [
+        {
+          "messageId": "522f59ac-e7ef-412a-b355-14f401d938e6",
+          "scanStatus": "INFECTED",
+          "reasonCode": "infected"
+        }
+      ],
+      "pending": [
+        {
+          "messageId": "0863af3b-0d3c-4b97-9d82-e0752519267b",
+          "reasonCode": "fetch_failed"
+        },
+        {
+          "messageId": "2c2fd51a-0073-4a2e-96cf-799e4d70d6b6",
+          "reasonCode": "awaiting_revalidation"
+        },
+        {
+          "messageId": "7cb5f00b-ef3f-4ac1-abad-859ec89c5bb4",
+          "reasonCode": "awaiting_revalidation"
+        },
+        {
+          "messageId": "068d7ddd-e296-49eb-99b9-52978024c85e",
+          "reasonCode": "awaiting_revalidation"
+        },
+        {
+          "messageId": "4c6dfc0f-fe91-4f61-8b82-7d6635c9dbe6",
+          "reasonCode": "awaiting_revalidation"
+        }
+      ],
+      "unavailable": [
+        {
+          "messageId": "c2ad546d-cb51-4484-9a3e-91784fb5295a",
+          "reasonCode": "asset_unavailable"
+        }
+      ],
+      "http": {
+        "cleanRead": 200,
+        "eicarRead": 422,
+        "brokenRead": 404,
+        "pendingRead": 409
+      },
+      "idempotent": {
+        "assetsBefore": 14,
+        "assetsAfter": 14,
+        "messagesBefore": 20,
+        "messagesAfter": 20
+      },
+      "revalidated": 0
+    }
+  ]
+}

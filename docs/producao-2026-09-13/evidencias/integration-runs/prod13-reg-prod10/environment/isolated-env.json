@@ -1,0 +1,24 @@
+{
+  "runId": "prod13-reg-prod10",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60732/cvg_aaa_prod13_reg_prod10_w43",
+  "databaseName": "cvg_aaa_prod13_reg_prod10_w43",
+  "databasePort": 60732,
+  "redisUrl": "redis://127.0.0.1:57110",
+  "redisPort": 57110,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "already-ours",
+    "pid": 3292606,
+    "dataDir": "/tmp/cvg-aaa-runs/prod13-reg-prod10/pg/data"
+  },
+  "redis": {
+    "status": "already-ours",
+    "pid": 3292640,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod13-reg-prod10",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:45:55.844341-03"
+  }
+}

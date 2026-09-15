@@ -1,0 +1,32 @@
+[
+  {
+    "route": "inbox",
+    "overflowX": false,
+    "scrollWidth": 812,
+    "clientWidth": 812
+  },
+  {
+    "route": "contacts",
+    "overflowX": false,
+    "scrollWidth": 812,
+    "clientWidth": 812
+  },
+  {
+    "route": "dashboard",
+    "overflowX": false,
+    "scrollWidth": 812,
+    "clientWidth": 812
+  },
+  {
+    "route": "tasks",
+    "overflowX": false,
+    "scrollWidth": 812,
+    "clientWidth": 812
+  },
+  {
+    "route": "settings",
+    "overflowX": false,
+    "scrollWidth": 812,
+    "clientWidth": 812
+  }
+]

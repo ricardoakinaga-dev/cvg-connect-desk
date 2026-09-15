@@ -1,0 +1,30 @@
+{
+  "runId": "prod06-r2",
+  "workerIndex": 8,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57232/cvg_aaa_prod06_r2_w8",
+  "redisUrl": "redis://127.0.0.1:56760",
+  "startedAt": "2026-09-13T21:50:08.534Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-06.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ✓ src/__tests__/production/prod-06.test.ts (12 tests) 5405ms\n   ✓ PROD-06 AC1 — confronto schema × DDL e timezone de sessão > AC1.3 preserva instantes históricos em UTC e America/Sao_Paulo e nos deadlines  806ms\n   ✓ PROD-06 AC4 — migrations imutáveis, interrupção e roll-forward > AC4.2 interrupção durante a 0023 não deixa estado parcial e roll-forward recupera  1339ms\n\n Test Files  1 passed (1)\n      Tests  12 passed (12)\n   Start at  18:50:02\n   Duration  6.35s (transform 173ms, setup 0ms, collect 590ms, tests 5.40s, environment 0ms, prepare 87ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

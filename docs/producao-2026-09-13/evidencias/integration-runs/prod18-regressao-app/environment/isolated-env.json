@@ -1,0 +1,24 @@
+{
+  "runId": "prod18-regressao-app",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60832/cvg_aaa_prod18_regressao_app_w44",
+  "databaseName": "cvg_aaa_prod18_regressao_app_w44",
+  "databasePort": 60832,
+  "redisUrl": "redis://127.0.0.1:57120",
+  "redisPort": 57120,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3620877,
+    "dataDir": "/tmp/cvg-aaa-runs/prod18-regressao-app/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3620899,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod18-regressao-app",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 15:20:31.532112-03"
+  }
+}

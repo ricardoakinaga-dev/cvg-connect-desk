@@ -41,9 +41,10 @@ export async function registerAuthRoutes(app: FastifyInstance) {
         }
 
         if (!user.isActive) {
+          // SA-012/AC3: mesma resposta genérica (sem enumeração de contas).
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
-            message: 'User account is inactive',
+            message: 'Invalid credentials',
           });
         }
 

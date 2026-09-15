@@ -1,0 +1,595 @@
+{
+  "fixture": "SYNTHETIC API MOCKS, real Vite frontend; no integration proof",
+  "captures": [
+    {
+      "name": "inbox-375-list",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 375,
+        "innerWidth": 375,
+        "scrollHeight": 812
+      },
+      "body": "Ir para o conteúdo\nInbox\nReconectando\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\n2\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas"
+    },
+    {
+      "name": "inbox-375-selected",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 375,
+        "innerWidth": 375,
+        "scrollHeight": 812
+      },
+      "body": "Ir para o conteúdo\nInbox\nReconectando\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nM\nMaria — fixture sintética\n● Atendendo\nHoje\nexame-luna-fixture.pdfSegue o documento para leitura autorizada.\n12:00 ✓\nBom dia. Este histórico sintético é de 10 de setembro.\n09:00\n\nReconectando ao tempo real…\n\nMensagem\nCONTEXTO\nAtendimento\nM\nMaria — fixture sintética\n+55 11 99999-0000\nSTATUS\nAtendendo\nSETOR\nRecepção\nINÍCIO\n10 De Set., 09:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+    },
+    {
+      "name": "inbox-1024-list",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1024,
+        "innerWidth": 1024,
+        "scrollHeight": 768
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\n2\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nCVG Connect Desk\n\nSelecione uma conversa na barra lateral\nou inicie uma nova conversa\n\nNova conversa"
+    },
+    {
+      "name": "inbox-1024-selected",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1318,
+        "innerWidth": 1024,
+        "scrollHeight": 768
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nM\nMaria — fixture sintética\n+55 11 99999-0000\nRecepção\n● Atendendo\nHoje\nexame-luna-fixture.pdfSegue o documento para leitura autorizada.\n12:00 ✓\nBom dia. Este histórico sintético é de 10 de setembro.\n09:00\n\nReconectando ao tempo real…\n\nMensagem\nCONTEXTO\nAtendimento\nM\nMaria — fixture sintética\n+55 11 99999-0000\nSTATUS\nAtendendo\nSETOR\nRecepção\nINÍCIO\n10 De Set., 09:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+    },
+    {
+      "name": "inbox-1024-context",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1024,
+        "innerWidth": 1024,
+        "scrollHeight": 768
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nM\nMaria — fixture sintética\n+55 11 99999-0000\nRecepção\n● Atendendo\nHoje\nexame-luna-fixture.pdfSegue o documento para leitura autorizada.\n12:00 ✓\nBom dia. Este histórico sintético é de 10 de setembro.\n09:00\n\nReconectando ao tempo real…\n\nMensagem\nCONTEXTO\nAtendimento\nM\nMaria — fixture sintética\n+55 11 99999-0000\nSTATUS\nAtendendo\nSETOR\nRecepção\nINÍCIO\n10 De Set., 09:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+    },
+    {
+      "name": "context-escape",
+      "focus": "Abrir informações da conversa"
+    },
+    {
+      "name": "inbox-1440-list",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\n2\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nCVG Connect Desk\n\nSelecione uma conversa na barra lateral\nou inicie uma nova conversa\n\nNova conversa"
+    },
+    {
+      "name": "inbox-1440-selected",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/inbox",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nCentral instável\nReconectando automaticamente\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nATENDIMENTO\nConversas\nTodos\n2\nRecepção\n2\nPesquisar conversas\nM\nMaria — fixture sintética\n12/09\nResultado do exame de Luna está disponível?\nJ\nJoão — fixture sintética\n12/09\nAguardando confirmação de agendamento\nCarregar mais conversas\nM\nMaria — fixture sintética\n+55 11 99999-0000\nRecepção\n● Atendendo\nHoje\nexame-luna-fixture.pdfSegue o documento para leitura autorizada.\n12:00 ✓\nBom dia. Este histórico sintético é de 10 de setembro.\n09:00\n\nReconectando ao tempo real…\n\nMensagem\nCONTEXTO\nAtendimento\nM\nMaria — fixture sintética\n+55 11 99999-0000\nSTATUS\nAtendendo\nSETOR\nRecepção\nINÍCIO\n10 De Set., 09:00\nCANAL\nCVG Desk\nAbrir cadastro do contato"
+    },
+    {
+      "name": "tasks-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/tasks",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nNova tarefa\n1\nTOTAL\n1\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\n1\nVENCIDAS\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n1 tarefa exibida\nAlta · vencida\nPendente\nRetornar sobre exame — fixture\n\nDados sintéticos para auditoria\n\n12/09/2026 · Vencida\n10000000\nIniciar\nCancelar"
+    },
+    {
+      "name": "tasks-create-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/tasks",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nFLUXO DE TRABALHO\nTarefas\n\nGerencie as tarefas da operação\n\nCancelar\n1\nTOTAL\n1\nPENDENTES\n0\nEM ANDAMENTO\n0\nCONCLUÍDAS\n1\nVENCIDAS\nTítulo *\nDescrição (opcional)\nPrioridade\nBaixa\nMédia\nAlta\nUrgente\nPrazo (opcional)\nCriar\nStatus:\nTodas\nPendente\nEm Andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n1 tarefa exibida\nAlta · vencida\nPendente\nRetornar sobre exame — fixture\n\nDados sintéticos para auditoria\n\n12/09/2026 · Vencida\n10000000\nIniciar\nCancelar"
+    },
+    {
+      "name": "notes-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/notes",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nNova nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n1 nota\nConversa\n11 de set.\nNota sintética vinculada à conversa da Luna.\n#20000000"
+    },
+    {
+      "name": "notes-create-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/notes",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nMEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nCancelar\nConversa\nTarefa\nTutor\nPaciente\nSalvar Nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n1 nota\nConversa\n11 de set.\nNota sintética vinculada à conversa da Luna.\n#20000000"
+    },
+    {
+      "name": "alerts-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/alerts",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nCENTRAL DE ATENÇÃO\nAlertas\n\nMonitore alertas operacionais do sistema\n\n1\nTOTAL\n1\nATIVOS\n0\nRECONHECIDOS\n0\nRESOLVIDOS\nStatus:\nTodos\nAtivos\nReconhecidos\nResolvidos\nSeveridade:\nTodas\nCrítico\nErro\nAviso\nInfo\n1 alerta exibido\nAviso\nAtivo\nRetorno pendente — fixture\n\nVerificar retorno para a família de Luna.\n\nDEADLINE\n1d atrás\nReconhecer\nResolver"
+    },
+    {
+      "name": "admin-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/admin",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Algo deu errado\n\nCannot read properties of undefined (reading 'find')\n\nRecarregar página"
+    },
+    {
+      "name": "kanban-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/kanban",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nKanban\nTodos os Setores\nRecepção\nNovo:\n0\nEm atendimento:\n1\nPendente:\n0\nEm espera:\n0\nFinalizado:\n0\nArquivado:\n0\nNovo\n0\nNenhum atendimento\nEm atendimento\n1\nMaria — fixture sintética\n35min\nPrioridade Alta\nRecepção\nExame da Luna…\nOperadora\nMover para\nSelecionar status…\nPara Novo\nPara Pendente\nPara Em espera\nPara Finalizado\nPara Arquivado\nPendente\n0\nNenhum atendimento\nEm espera\n0\nNenhum atendimento\nFinalizado\n0\nNenhum atendimento\nArquivado\n0\nNenhum atendimento"
+    },
+    {
+      "name": "contacts-1440",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:32893/contacts",
+      "geometry": {
+        "scrollWidth": 1440,
+        "innerWidth": 1440,
+        "scrollHeight": 900
+      },
+      "body": "Ir para o conteúdo\nCVG Connect\nDESK OPERACIONAL\nTempo real inativo\nNenhuma sessão de tempo real ativa\nOPERAÇÃO\nInbox\nContatos\nTutores\nPacientes\nKanban\nTRABALHO\nTarefas\nNotas\nAlertas\nGESTÃO\nDashboard\nSetores\nLabels\nGrupos\nAdministração\nAuditoria\nOS\nOperadora Sintética\nAdmin\nSair com segurança\nContatos\n2 contatos\nM\nMaria — fixture sintética\n+55 11 99999-0000\nInvalid Date\nJ\nJoão — fixture sintética\n+55 11 99999-0001\nInvalid Date\n\nSelecione um contato\n\nEscolha um contato na lista para ver o perfil\n\nNovo contato"
+    }
+  ],
+  "logs": [
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'ws://localhost:8080/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'ws://localhost:8080/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'ws://localhost:8080/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "type": "console",
+      "message": "[Realtime] WebSocket error: Event"
+    },
+    {
+      "type": "pageerror",
+      "message": "Cannot read properties of undefined (reading 'find')"
+    },
+    {
+      "type": "pageerror",
+      "message": "Cannot read properties of undefined (reading 'find')"
+    },
+    {
+      "type": "console",
+      "message": "The above error occurred in the <Admin> component:\n\n    at Admin (http://127.0.0.1:32893/src/pages/Admin.tsx:156:25)\n    at CapabilityRoute (http://127.0.0.1:32893/src/App.tsx:138:28)\n    at RenderedRoute (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:6736:26)\n    at Outlet (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:7598:26)\n    at main\n    at div\n    at Layout (http://127.0.0.1:32893/src/components/layout/Layout.tsx:30:28)\n    at ProtectedRoute (http://127.0.0.1:32893/src/App.tsx:44:27)\n    at RenderedRoute (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:6736:26)\n    at Routes (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:7668:3)\n    at Router (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:7607:13)\n    at BrowserRouter (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/react-router-dom.js?v=cf159826:10912:3)\n    at ErrorBoundary (http://127.0.0.1:32893/src/components/ErrorBoundary.tsx:8:5)\n    at App\n\nReact will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary."
+    },
+    {
+      "type": "console",
+      "message": "ErrorBoundary caught an error: TypeError: Cannot read properties of undefined (reading 'find')\n    at http://127.0.0.1:32893/src/pages/Admin.tsx:338:23\n    at updateMemo (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:12258:27)\n    at Object.useMemo (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:12774:24)\n    at useMemo (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-7QQ3BKFG.js?v=c3165767:1094:29)\n    at Admin (http://127.0.0.1:32893/src/pages/Admin.tsx:337:30)\n    at renderWithHooks (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:11596:26)\n    at updateFunctionComponent (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:14630:28)\n    at beginWork (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:15972:22)\n    at beginWork$1 (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:19806:22)\n    at performUnitOfWork (http://127.0.0.1:32893/@fs/tmp/cvg-audit-deliveries-ufq9_ejh/frontend/vite-cache/deps/chunk-NMXH3SM7.js?v=c3165767:19251:20) {componentStack: \n    at Admin (http://127.0.0.1:32893/src/pages/Ad…/src/components/ErrorBoundary.tsx:8:5)\n    at App}"
+    }
+  ],
+  "requests": [
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/messages",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/read",
+      "query": "",
+      "method": "POST"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/messages",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/read",
+      "query": "",
+      "method": "POST"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/messages",
+      "query": "?limit=50",
+      "method": "GET"
+    },
+    {
+      "path": "/conversations/20000000-0000-0000-0000-000000000001/read",
+      "query": "",
+      "method": "POST"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/tasks",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/tasks",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/notes",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/notes",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/alerts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/alerts",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/users",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/roles",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/queues",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/teams",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "?all=true",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/dead-letters",
+      "query": "?limit=100",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/dead-letters/stats",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/webhook-security/stats",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/users",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/roles",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/queues",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/teams",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/sectors",
+      "query": "?all=true",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/dead-letters",
+      "query": "?limit=100",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/dead-letters/stats",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/admin/webhook-security/stats",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/kanban/board",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/kanban/board",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/auth/me",
+      "query": "",
+      "method": "GET"
+    },
+    {
+      "path": "/contacts",
+      "query": "",
+      "method": "GET"
+    }
+  ]
+}

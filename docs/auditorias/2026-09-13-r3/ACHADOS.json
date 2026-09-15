@@ -1,0 +1,1205 @@
+[
+  {
+    "id": "BE-A01",
+    "title": "Secretary reabre estado unknown e refaz chamada externa",
+    "severity": "High",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A01",
+      "status": "PARTIAL",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:190",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:224",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:340"
+      ],
+      "criteria": [
+        "PROD-10-AC2",
+        "PROD-10-R2-AC5",
+        "PROD-12-R2-AC5"
+      ],
+      "proof": "unknown e processing preservados; caller não chama provider nesses resultados; finalizações agora condicionam status processing e attemptCount. 10 testes unitários atuais de repo/caller passaram.",
+      "limitation": "Store simulado não prova crash/restart distribuído nem contrato oficial Secretary.",
+      "remaining": "R3-BE01: processing órfão é ACKed sem retomada/reconciliação. Resposta IA não recebe checkpoint antes da entrega; falha outbound classificada não ambígua marca failed e retry reexecuta IA. Separar resultado IA durável de delivery e ratificar reconciliação externa."
+    },
+    "tasks": [
+      "PROD-10",
+      "PROD-13",
+      "PROD-12"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "BE-A02",
+    "title": "Retry de webhook com timestamp renovado é rejeitado como payload diferente",
+    "severity": "High",
+    "status": "RESOLVED",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A02",
+      "status": "RESOLVED",
+      "evidence_state": "CURRENT",
+      "references": [
+        "packages/shared/src/webhook-anti-replay.ts:155",
+        "packages/shared/src/webhook-anti-replay.ts:247",
+        "packages/shared/src/webhook-anti-replay.ts:282",
+        "packages/shared/src/__tests__/webhook-guard.test.ts:346"
+      ],
+      "criteria": [
+        "PROD-07-R2-AC5"
+      ],
+      "proof": "InMemory e PG comparam payloadHash; assinatura atual é autenticada e armazenada na nova claim. Regressão renewed timestamp/signature passa; payload divergente continua negado.",
+      "limitation": "Resolução do defeito específico; testes PG aqui são mocks. HTTP+PG crash e contrato Gateway oficial continuam NOT_RUN nesta lane.",
+      "remaining": "Revalidar PROD-07-AC1..4 em PG/processos próprios e sandbox oficial; identidade/origem/retenção precisa contrato inteiro."
+    },
+    "tasks": [
+      "PROD-07"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "BE-A03",
+    "title": "Duplicata já commitada ainda recebe 409 contra o contrato C03",
+    "severity": "Medium",
+    "status": "RESOLVED",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A03",
+      "status": "RESOLVED",
+      "evidence_state": "CURRENT",
+      "references": [
+        "packages/shared/src/webhook-guard.ts:243",
+        "packages/shared/src/webhook-guard.ts:262",
+        "packages/shared/src/__tests__/webhook-guard.test.ts:291"
+      ],
+      "criteria": [
+        "PROD-07-AC4"
+      ],
+      "proof": "completed retorna HTTP200 success/deduplicated/eventId após autenticação; regressão unitária passa.",
+      "limitation": "ACK200 coerente C03 local não prova aceitação real do Gateway; teste usa reply simulado.",
+      "remaining": "Provar resposta perdida pós-commit seguida de redelivery oficial sem efeito duplicado."
+    },
+    "tasks": [
+      "PROD-07",
+      "PROD-01"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "BE-A04",
+    "title": "Recuperação de mídia não é acionada pelo runtime e exclui SCAN_FAILED",
+    "severity": "High",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A04",
+      "status": "PARTIAL",
+      "evidence_state": "CURRENT",
+      "references": [
+        "apps/message-worker/src/index.ts:226",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:398",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:409",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:457"
+      ],
+      "criteria": [
+        "PROD-14-AC3",
+        "PROD-14-R2-AC5"
+      ],
+      "proof": "Caller runtime existe; SQL claim SKIP LOCKED inclui SCAN_FAILED, lease owner único por lote, tentativa/backoff/limite duráveis e métricas. Lock de sessão por mensagem serializa publicação entre processos.",
+      "limitation": "Nenhum MinIO/ClamAV/PG/processo real foi executado nesta lane. Probe pool simulado reproduz R3-BE02.",
+      "remaining": "Corrigir contenção entre pool de lock e pool de trabalho; provar lote>=50 e scanner lento/crash real. Recuperação atual rebaixa à URL de origem para refetch mesmo com bytes em quarentena: verificar origem expirada e retomar bytes privados quando possível."
+    },
+    "tasks": [
+      "PROD-14"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "BE-A05",
+    "title": "Endpoint legado de anonimização contorna política e escopo de mutação",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A05",
+      "status": "OPEN",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/privacy/src/presentation/http/privacy.controller.ts:406",
+        "modules/privacy/src/presentation/http/privacy.controller.ts:445",
+        "modules/privacy/src/application/data-subject-service.ts:143",
+        "modules/privacy/src/application/data-subject-service.ts:157"
+      ],
+      "criteria": [
+        "PROD-16-R2-AC5",
+        "PROD-16-AC2",
+        "PROD-16-AC3",
+        "G02",
+        "G05"
+      ],
+      "proof": "Rota legada ainda chama anonymizeContactData sem scope/policy/confirm; função altera contato global e sender em todas conversas, sem transação de audit. Nenhuma correção observada nessa fronteira.",
+      "limitation": "CURRENT estático conectado; mutação HTTP/PG não executada.",
+      "remaining": "Bloquear legado com D02 OPEN ou delegar ao mesmo núcleo erasure; HTTP+PG A/B com contato compartilhado, dry-run e falha após primeira escrita/retry."
+    },
+    "tasks": [
+      "PROD-16",
+      "PROD-04"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "BE-A06",
+    "title": "CAS é opcional e cliente atual não envia versão",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "BE-A06",
+      "status": "OPEN",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/chat/src/application/use-cases/conversation-operations.use-case.ts:77",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:70",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:124",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:176"
+      ],
+      "criteria": [
+        "PROD-18-AC3",
+        "PROD-18-R2-AC5"
+      ],
+      "proof": "sameInstant(undefined) ainda true; schemas exigem somente novo valor. Busca de expectedUpdatedAt/expectedStatus/expectedHandler/expectedAssigned em apps/desk-web/src não retorna ocorrência.",
+      "limitation": "CURRENT estático; integração PROD05/18 executada por root. Passes que enviam expected* não cobrem omission bypass.",
+      "remaining": "Versão obrigatória e íntegra em DTO/API/web, rollout definido, sem-versão explicitamente rejeitado, dois operadores obsoleto recebe409 sem escrita. Versão inteira evita truncamento/mutações no mesmo ms."
+    },
+    "tasks": [
+      "PROD-18",
+      "PROD-19",
+      "PROD-27"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS01",
+    "title": "Digest esperado é ignorado na reavaliação",
+    "severity": "High",
+    "status": "RESOLVED",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS01",
+      "status": "RESOLVED",
+      "evidence": [
+        "scripts/triple-aaa-verify.mjs:159",
+        "scripts/production/prod-02.test.mjs:445",
+        "node-tests.log: OPS01 — reavaliação com imageDigest diferente reprova o candidato PASS"
+      ],
+      "assessment": "Drift compara agora imageDigest live e selado; regressão CLI executada rejeita troca exclusiva do digest.",
+      "tasks": [
+        "PROD-02",
+        "PROD-35"
+      ],
+      "limits": "Resolução do bypass do CLI; não prova identidade da imagem efetivamente entregue (OPS06)."
+    },
+    "tasks": [
+      "PROD-02",
+      "PROD-35"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS02",
+    "title": "Manifesto contraditório com log vazio recebe PASS",
+    "severity": "High",
+    "status": "RESOLVED",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS02",
+      "status": "RESOLVED",
+      "evidence": [
+        "scripts/production/evidence-gate.mjs:330",
+        "scripts/production/evidence-gate.mjs:741",
+        "scripts/production/prod-02.test.mjs:410",
+        "scripts/production/prod-02.test.mjs:455",
+        "node-tests.log"
+      ],
+      "assessment": "Reprodução original de manifesto de comando contraditório é rejeitada: comando/escopo, exit, conteúdo de log, futuro e metadados validados; coverage exige denominadores e tabela.",
+      "tasks": [
+        "PROD-02",
+        "PROD-34"
+      ],
+      "limits": "Resolução limitada ao manifesto de comando original. Via derivada de artefatos tem lacuna nova R3-OP02; não comprova coverage global real."
+    },
+    "tasks": [
+      "PROD-02",
+      "PROD-34"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS03",
+    "title": "Query-performance sem medição recebe PASS",
+    "severity": "High",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS03",
+      "status": "PARTIAL",
+      "evidence": [
+        "scripts/production/evidence-gate.mjs:496",
+        "scripts/production/evidence-gate.mjs:528",
+        "scripts/production/evidence-gate.mjs:970",
+        "query-probe.log"
+      ],
+      "assessment": "[{}] agora INVALID e 11 identidades são exigidas. Porém medições null, acima do orçamento e em 2099 ainda PASS no default evaluateCheck; detalhado R3-OP01.",
+      "tasks": [
+        "PROD-02",
+        "PROD-33"
+      ],
+      "limits": "Probe usa payload sintético e função real; nenhuma medição SQL/DB executada."
+    },
+    "tasks": [
+      "PROD-02",
+      "PROD-33"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS04",
+    "title": "Evento desconhecido cai silenciosamente em push",
+    "severity": "High",
+    "status": "RESOLVED",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS04",
+      "status": "RESOLVED",
+      "evidence": [
+        ".github/scripts/certification-aggregator.mjs:217",
+        ".github/scripts/certification-aggregator.mjs:484",
+        "scripts/production/prod-03.test.mjs:379",
+        "node-tests.log"
+      ],
+      "assessment": "main preserva evento solicitado; política desconhecida produz FAILED. Regressores de typo e main foram executados.",
+      "tasks": [
+        "PROD-03"
+      ],
+      "limits": "Política local comprovada; rulesets/checks required remotos não consultados."
+    },
+    "tasks": [
+      "PROD-03"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS05",
+    "title": "Smoke real MinIO não consegue provar delete",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS05",
+      "status": "OPEN",
+      "evidence": [
+        "scripts/staging-smoke.mjs:11",
+        "scripts/staging-smoke.mjs:42",
+        "scripts/staging-smoke.mjs:43"
+      ],
+      "assessment": "DeleteObjectCommand continua sem import; referência falha após put/get. HEAD de objeto apagado não trata 404 e condição mantém || true.",
+      "tasks": [
+        "PROD-32"
+      ],
+      "limits": "CURRENT_STATIC, não se contatou S3/ClamAV/collector. Não duplicar como novo achado."
+    },
+    "tasks": [
+      "PROD-32"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS06",
+    "title": "Prova de imagem identifica build local, sem ligação com boot/scan/entrega",
+    "severity": "High",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS06",
+      "status": "PARTIAL",
+      "evidence": [
+        ".github/workflows/triple-aaa-gate.yml:214",
+        ".github/workflows/triple-aaa-gate.yml:233",
+        ".github/scripts/certification-aggregator.mjs:164",
+        ".github/scripts/certification-aggregator.mjs:186"
+      ],
+      "assessment": "Manifesto ganhou source/lock/run/attempt/tempo e validação correspondente; permanece digest docker inspect .Id de build efêmero separado, sem prova de registry manifest ou igualdade boot/scan/E2E/entrega.",
+      "tasks": [
+        "PROD-03",
+        "PROD-35",
+        "PROD-38"
+      ],
+      "limits": "CURRENT_STATIC. Nenhum Docker build/push/boot ou CI remoto executado."
+    },
+    "tasks": [
+      "PROD-03",
+      "PROD-35",
+      "PROD-38"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS07",
+    "title": "Conjunto entregue não sela candidato atual",
+    "severity": "High",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS07",
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/producao-2026-09-13/evidencias/prod-00/baseline/candidate-manifest.json:1",
+        "baseline-drift.json",
+        "docs/producao-2026-09-13/evidencias/prod-36/prod-36-evidence.json:1"
+      ],
+      "assessment": "Baseline atual PROD00: 42/42 fileHashes correspondem aos arquivos presentes, zero drift (não repetir seis divergências antigas). PROD36 ainda commit string/resultado narrativo sem source/lock/digests/hashes de artefato e horários completos por run.",
+      "tasks": [
+        "PROD-00",
+        "PROD-36",
+        "PROD-40"
+      ],
+      "limits": "Não rodado PROD00 por escrita no repo; verificação estática de hashes não equivale a novo selo integrado nem qualifica todos os 481 paths de status Git."
+    },
+    "tasks": [
+      "PROD-00",
+      "PROD-36",
+      "PROD-40"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "OPS08",
+    "title": "DR usa bancos fixos destrutivos e prova de fixture insuficiente",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "OPS08",
+      "status": "OPEN",
+      "evidence": [
+        "infra/scripts/dr-e2e.sh:12",
+        "infra/scripts/dr-e2e.sh:30",
+        "infra/scripts/dr-e2e.sh:117",
+        "infra/scripts/dr-e2e.sh:135",
+        "infra/scripts/pg-restore.sh:16"
+      ],
+      "assessment": "Bancos src/dst fixos são apagados sem ownership; backup /tmp, integridade de fixture só grep tag, sem igualdade outbox/DLQ; pg-restore permite ausência de checksum.",
+      "tasks": [
+        "PROD-37"
+      ],
+      "limits": "CURRENT_STATIC, script destrutivo deliberadamente não executado. RPO/RTO e restore mídia/erasures não observados."
+    },
+    "tasks": [
+      "PROD-37"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "DOC01",
+    "title": "Documentação e metadados de execução contradizem as entregas",
+    "severity": "Medium",
+    "status": "PARTIAL",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "DOC01",
+      "status": "PARTIAL",
+      "assessment": "Documentos centrais reconciliados nesta R3. O snapshot recebido do backlog R2 permaneceu PLANNED apesar das entregas; não havia registro canônico de execução atualizado. A automação/disciplina de atualização e a documentação final continuam PROD-00/39.",
+      "references": [
+        "docs/melhorias-2026-09-13/BACKLOG.json",
+        "docs/ARCHITECTURE.md",
+        "docs/TEST_MATRIX.md"
+      ],
+      "limits": "Esta rodada corrige a referência documental atual; não marca implementação futura DONE."
+    },
+    "tasks": [
+      "PROD-00",
+      "PROD-01",
+      "PROD-39"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE01",
+    "title": "Drawer fechado amplia Inbox 1024 para 1318 pixels e continua no DOM acessível",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE01",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-29"
+      ],
+      "title": "Drawer fechado amplia Inbox 1024 para 1318 pixels e continua no DOM acessível",
+      "assessment_r3": "Fechado a 1024: scrollWidth=1318, rect x1038/right1318, inert=false e aria-hidden ausente; Tab chega ao botão Abrir cadastro do contato. Aberto estabiliza em1024 e Escape restaura foco, mas não corrige estado fechado.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1024-selected.png",
+        "focused-observations.json:closed-drawer-dom/closed-drawer-tab/context-escape-stable"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.css:17",
+        "apps/desk-web/src/pages/Inbox.tsx:1240"
+      ],
+      "remaining": "Fechar drawer com geometria contida e inert/aria-hidden conforme estado; medir scrollWidth e navegação por Tab nos breakpoints.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-29"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE02",
+    "title": "Operação no contexto incompleta: transferência desabilitada; cadastro abre lista genérica",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE02",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Operação no contexto incompleta: transferência desabilitada; cadastro abre lista genérica",
+      "assessment_r3": "Transferência permanece disabled; contexto mostra status/setor/início/canal e leva a /contacts genérico, sem atribuição/tags/handoff/tarefa/nota contextuais. Não basta backend operacional existir.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1440-selected.png",
+        "inbox-1024-context-stable.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1127",
+        "apps/desk-web/src/pages/Inbox.tsx:1249"
+      ],
+      "remaining": "Implementar atribuição/status/handoff/transferência/tags e links exatos; contexto de tarefa/nota/tutor/paciente via recursos autorizados.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-19"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE03",
+    "title": "Busca e contagens consideram apenas conversas carregadas; parâmetros de consulta não incluem busca/status/responsável/labels",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE03",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Busca e contagens consideram apenas conversas carregadas; parâmetros de consulta não incluem busca/status/responsável/labels",
+      "assessment_r3": "Busca sintética fora da primeira página gera zero request e mostra Nenhuma conversa; total2 continua derivado do lote. fetchConversations passa setor/limit/cursor; wrapper possui status mas tela não o envia.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "focused-observations.json:server-search",
+        "browser-observations.json:requests"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:335",
+        "apps/desk-web/src/pages/Inbox.tsx:880",
+        "apps/desk-web/src/pages/Inbox.tsx:894",
+        "apps/desk-web/src/lib/api.ts:524"
+      ],
+      "remaining": "Levar busca/filtros ao servidor autorizado e distinguir totais globais dos itens carregados.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-19"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE04",
+    "title": "Timeline rotula qualquer histórico como Hoje",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE04",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Timeline rotula qualquer histórico como Hoje",
+      "assessment_r3": "Histórico sintético de10/11 setembro continua sob separador literal Hoje em13 setembro. Não foi auditada ordem da timeline a partir desta fixture.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-375-selected.png",
+        "inbox-1440-selected.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1161"
+      ],
+      "remaining": "Agrupar por data local real e tratar timezone, mudança de dia e empates.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-20"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE05",
+    "title": "asset:// é chip sem ação; documento/vídeo não têm componente de leitura completo",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE05",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "asset:// é chip sem ação; documento/vídeo não têm componente de leitura completo",
+      "assessment_r3": "asset://fixture-doc renderiza exame-luna-fixture.pdf como chip sem link/botão de leitura/download. Componentes/estados de mídia completa e autorização real não demonstrados.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1440-selected.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1163",
+        "apps/desk-web/src/pages/Inbox.tsx:1164"
+      ],
+      "remaining": "Resolver leitura/download autorizado e estados pending/infected/revogado/expirado; não reconduzir mídia para URL arbitrária.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-20"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE06",
+    "title": "Rascunhos e intenções existem só em memória do Inbox; sair/remontar perde estado",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE06",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Rascunhos e intenções existem só em memória do Inbox; sair/remontar perde estado",
+      "assessment_r3": "RASCUNHO SINTETICO R3 desaparece após navegação SPA por links Inbox→Tarefas→Inbox (input vazio). useState/ref local continuam sendo donos de drafts e intenções. Não foi testado401/relogin integrado.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "focused-observations.json:draft-after-navigation",
+        "render-focused.cjs"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:246",
+        "apps/desk-web/src/pages/Inbox.tsx:274"
+      ],
+      "remaining": "Definir recuperação segura por identidade/conversa durante 401/relogin/navegação; preservar intenção idempotente sem compartilhar dados entre usuários.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-20"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE07",
+    "title": "Tarefa não permite atribuição/vínculos no formulário nem abrir conversa do card",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE07",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-21"
+      ],
+      "title": "Tarefa não permite atribuição/vínculos no formulário nem abrir conversa do card",
+      "assessment_r3": "Formulário só oferece título, descrição, prioridade e prazo; payload omite assignee/vínculos. Card mostra10000000 e não abre conversa vinculada.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "tasks-create-1440.png",
+        "tasks-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Tasks.tsx:129",
+        "apps/desk-web/src/pages/Tasks.tsx:357"
+      ],
+      "remaining": "Seletores humanos autorizados e edição/links de conversa/tutor/paciente/assignee; provar persistência e atualização.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-21"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE08",
+    "title": "Nota exige ID técnico e apresenta referência truncada sem navegação",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE08",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-22"
+      ],
+      "title": "Nota exige ID técnico e apresenta referência truncada sem navegação",
+      "assessment_r3": "Formulário exige ID da referência; card mostra #20000000 sem navegação. Seletores humanos/contextuais não implementados.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "notes-create-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Notes.tsx:95",
+        "apps/desk-web/src/pages/Notes.tsx:169",
+        "apps/desk-web/src/pages/Notes.tsx:243"
+      ],
+      "remaining": "Pesquisa/seletor por nomes, preseleção contextual e links exatos.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-22"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE09",
+    "title": "Ficha de contato carrega/cria notas apenas na primeira conversa",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE09",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-22",
+        "PROD-25"
+      ],
+      "title": "Ficha de contato carrega/cria notas apenas na primeira conversa",
+      "assessment_r3": "fetchContactDetail carrega notas apenas para data.conversations[0]?.id; criação também escolhe primeira conversa. Agregação/paginação de todas as conversas não existe nesse caminho.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Contacts.tsx:188",
+        "apps/desk-web/src/pages/Contacts.tsx:305",
+        "apps/desk-web/src/pages/Contacts.tsx:340"
+      ],
+      "remaining": "Agregar notas de todas conversas autorizadas com procedência e paginação; evitar escolha implícita da primeira conversa.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-22",
+      "PROD-25"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE10",
+    "title": "Alertas têm ack/resolve mas não navegam ao recurso relacionado",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE10",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-23"
+      ],
+      "title": "Alertas têm ack/resolve mas não navegam ao recurso relacionado",
+      "assessment_r3": "Alerta sintético tem conversationId/taskId, mas só expõe Reconhecer/Resolver. Não há navegação ao recurso exato.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "alerts-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Alerts.tsx:245",
+        "apps/desk-web/src/pages/Alerts.tsx:260"
+      ],
+      "remaining": "Adicionar links autorizados para tarefa/conversa e reconciliar status entre operadores.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-23"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE11",
+    "title": "Grupos só exibem membros; instrução para adicionar pela ficha não corresponde a controle ali",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE11",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-24"
+      ],
+      "title": "Grupos só exibem membros; instrução para adicionar pela ficha não corresponde a controle ali",
+      "assessment_r3": "ContactGroups lista membros sem mutação e orienta adicionar pela ficha; Contacts mostra badges sem controle correspondente de membership. Não há novo caminho frontend.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/ContactGroups.tsx:354",
+        "apps/desk-web/src/pages/ContactGroups.tsx:363",
+        "apps/desk-web/src/pages/Contacts.tsx:452"
+      ],
+      "remaining": "Conectar ações adicionar/remover membros e labels; editar grupo/setor conforme permissões e invalidar consultas.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-24"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE12",
+    "title": "Paciente ainda usa tutorId singular; N:N não representado pela UI",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE12",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-25"
+      ],
+      "title": "Paciente ainda usa tutorId singular; N:N não representado pela UI",
+      "assessment_r3": "Estado/formulário/payload de Patients mantêm tutorId singular. N:N e ratificação D03 não podem ser considerados entregues pela UI.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Patients.tsx:68",
+        "apps/desk-web/src/pages/Patients.tsx:144",
+        "apps/desk-web/src/pages/Patients.tsx:322"
+      ],
+      "remaining": "Resolver D03 e adaptar API/UI/migração compatível a múltiplos tutores; não declarar N:N entregue.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-25"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE13",
+    "title": "Admin não possui editor de permissões por papel/vínculo usuário-papel nem gestão completa de membros de times/filas",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE13",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-26"
+      ],
+      "title": "Admin não possui editor de permissões por papel/vínculo usuário-papel nem gestão completa de membros de times/filas",
+      "assessment_r3": "Usuários mantêm editor Setores e delete; papéis exibem nome/descrição/delete, sem editor de capacidades ou vínculo usuário↔papel. Filas/times continuam tabelas simples sem gestão completa de membros.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "admin-correct-fixture-1440.png",
+        "admin-roles-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Admin.tsx:739",
+        "apps/desk-web/src/pages/Admin.tsx:745",
+        "apps/desk-web/src/pages/Admin.tsx:756"
+      ],
+      "remaining": "Manter editor de setores existente, adicionar editor por capacidade efetiva, associação papel e membros com audit/revogação.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-26"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE14",
+    "title": "Kanban move por select/drag, mas card não abre conversa e só há filtro de setor",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE14",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-27"
+      ],
+      "title": "Kanban move por select/drag, mas card não abre conversa e só há filtro de setor",
+      "assessment_r3": "Kanban possui drag/select de mudança de status e filtro setor; card não abre conversa e faltam filtros agente/label/prioridade/período/grupo.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "kanban-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Kanban.tsx:92",
+        "apps/desk-web/src/pages/Kanban.tsx:265"
+      ],
+      "remaining": "Conectar deep-link de conversa e filtros agente/label/prioridade/período/grupo; manter alternativa teclado e feedback de falha.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    "tasks": [
+      "PROD-27"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE15",
+    "title": "Tasks/Alerts/Contacts/Kanban/Dashboard não assinam realtime nem executam polling bounded",
+    "severity": "High",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE15",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-30"
+      ],
+      "title": "Tasks/Alerts/Contacts/Kanban/Dashboard não assinam realtime nem executam polling bounded",
+      "assessment_r3": "Tasks/Alerts/Contacts/Kanban/Dashboard continuam fetch inicial, mutação ou refresh manual. Não há assinatura realtime/polling bounded nessas páginas; timers de feedback/debounce não atualizam dados de outro operador.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Tasks.tsx:84",
+        "apps/desk-web/src/pages/Alerts.tsx:76",
+        "apps/desk-web/src/pages/Contacts.tsx:198",
+        "apps/desk-web/src/pages/Kanban.tsx:108",
+        "apps/desk-web/src/pages/Dashboard.tsx:37"
+      ],
+      "remaining": "Invalidação ou polling limitado e estado stale/offline; preservar formulário sujo e reconciliar reconexão.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-30"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE16",
+    "title": "Monólitos de página e duplicação de estados continuam; features/inbox ausente",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE16",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-28"
+      ],
+      "title": "Monólitos de página e duplicação de estados continuam; features/inbox ausente",
+      "assessment_r3": "Inbox1254 linhas/Admin1342/Contacts682; apps/desk-web/src/features não existe e loadFailureFrom continua repetido. Primitivos/tokens existentes não fecham extração por ownership.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "source-hashes-before.json",
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1",
+        "apps/desk-web/src/pages/Admin.tsx:1",
+        "apps/desk-web/src/pages/Contacts.tsx:1"
+      ],
+      "remaining": "Extrações por ownership real de consultas/mutações e adoção de primitivos; preservar comportamento em capturas equivalentes.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-28"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "FE17",
+    "title": "Percurso E2E produção completo não está implementado na pasta de suites",
+    "severity": "Medium",
+    "status": "OPEN",
+    "origin": "R2",
+    "historical_title": true,
+    "current_review": {
+      "id": "FE17",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-38"
+      ],
+      "title": "Percurso E2E produção completo não está implementado na pasta de suites",
+      "assessment_r3": "e2e/production contém apenas01-harness-identity.spec.ts; config production inclui suites AAA existentes, mas não os novos percursos completos. reuseExistingServer:!CI permanece. Stack real não executado por esta lane.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "playwright.production.config.ts:41",
+        "e2e/production/01-harness-identity.spec.ts:1"
+      ],
+      "remaining": "Criar cenário de atendimento com serviços isolados identificados e impedir reutilização sem prova de identidade; esta auditoria não executou o stack.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    "tasks": [
+      "PROD-38"
+    ],
+    "historical_source": "../2026-09-13-entregas/ACHADOS.json",
+    "note": "Título identifica o achado histórico; a avaliação R3 determina o defeito atual/residual. RESOLVED encerra apenas a reprodução específica, não a tarefa completa."
+  },
+  {
+    "id": "R3-BE01",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Crash após admissão Secretary deixa processing órfão e redelivery reconhecida como concluída",
+    "references": [
+      "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:204",
+      "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:235",
+      "apps/message-worker/src/processor.ts:188",
+      "apps/message-worker/src/processor.ts:191"
+    ],
+    "criteria": [
+      "PROD-10-AC2",
+      "PROD-10-R2-AC5",
+      "G03"
+    ],
+    "evidence_kind": "CURRENT_CONNECTED_STATIC_AND_EXISTING_MOCK_TEST",
+    "proof": "Schedule: begin comita processing; processo cai antes/depois do provider; worker seguinte recebe in_progress sem idade/owner/checkpoint, caller retorna processing; processor faz ACK independente desse status. Teste unitário atual confirma retorno sem IA em processing, mas não exige job/reconciliação durável posterior.",
+    "impact": "Não duplica IA (correção positiva), mas pode perder processamento/resposta para sempre e remover evento pendente. Crash antes do provider e depois do efeito precisam estados diferentes.",
+    "proposed": "Preservar intenção/reconciliação pendente; adicionar checkpoint mínimo e política de abandono segura. processing órfão vira unknown auditável ou retomável apenas quando se comprova ausência do efeito; não reabrir cegamente.",
+    "acceptance": "Matar processo logo após begin, após resposta IA e antes da persistência/entrega; restart converge por resultado persistido ou reconciliação explicitamente pendente, nunca mero ACK de trabalho perdido; provar uma chamada externa.",
+    "limitation": "Sem crash de processo/PG real; achado derivado de caminho conectado e semântica atual. Complementa residual BE-A01, não refuta correção unknown.",
+    "status": "OPEN",
+    "origin": "R3",
+    "tasks": [
+      "PROD-10",
+      "PROD-12",
+      "PROD-13"
+    ]
+  },
+  {
+    "id": "R3-BE02",
+    "severity": "High",
+    "confidence": "high",
+    "title": "Recovery de mídia pode esgotar pool com locks que aguardam outra conexão do mesmo pool",
+    "references": [
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:145",
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:178",
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:488",
+      "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:518",
+      "packages/database/src/index.ts:12",
+      "apps/message-worker/src/index.ts:70"
+    ],
+    "criteria": [
+      "PROD-14-R2-AC5",
+      "PROD-14-AC3",
+      "G04"
+    ],
+    "evidence_kind": "CURRENT_EXTRACTED_FUNCTION_MOCKED_POOL_PROBE",
+    "proof": "withMessageLock segura pool.connect enquanto callback usa repositórios db do mesmo pool. Recovery dispara lote50 sem limite de concorrência; pool default10. Função real extraída/transpilada + pool capacidade10: concorrência1 completa1; concorrência10/50 completa0,10 clientes retidos e10/50 aguardando. Fonte em pool-probe.cjs e resultado pool-probe.json.",
+    "impact": "Espera circular até timeout de aquisição5s (default real), retries/falhas evitáveis e pressão que atinge worker/health; lotes podem gastar tentativas sem scan. Não alegar deadlock infinito, pois timeout existe.",
+    "proposed": "Evitar reaquisição do mesmo pool sob todos locks: passar executor da conexão de lock quando adequado ou limitar concorrência com capacidade reservada e timeout. Não resolver apenas elevando pool arbitrariamente.",
+    "acceptance": "PG isolado, pool10/lote50 e jobs normais concorrentes: todos progridem, nenhum connection timeout por auto-saturação; scanner lento, lease expiry, shutdown/restart, sem asset duplicado e retry budget só consumido por tentativas reais.",
+    "limitation": "Pool simulado prova interleaving possível, não taxa/frequência em PG real. Aquisição/queries dependem de timing; integrar teste real antes de fechar.",
+    "status": "OPEN",
+    "origin": "R3",
+    "tasks": [
+      "PROD-14",
+      "PROD-32"
+    ]
+  },
+  {
+    "id": "R3-OP01",
+    "severity": "High",
+    "confidence": "high",
+    "status": "OPEN",
+    "related_previous": "OPS03",
+    "title": "Query gate aceita medições nulas ou acima do orçamento e datas futuras",
+    "criterion": "G01/G11; PROD-02 adversariais e PROD-33 medição real",
+    "evidence_kind": "CURRENT_REPRO",
+    "references": [
+      "scripts/production/evidence-gate.mjs:528",
+      "scripts/production/evidence-gate.mjs:530",
+      "scripts/production/evidence-gate.mjs:532",
+      "/tmp/cvg-audit-r3-dvlqz0my/ops/query-probe.log"
+    ],
+    "reproduction": "node /tmp/cvg-audit-r3-dvlqz0my/ops/query-probe.mjs. Usa DEFAULT_CHECKS query-performance, 11 nomes obrigatórios e identidade coincidente. Cenários null-measurements, over-budget, future-measurements retornam PASS/reasons=[]. Controle [{}] retorna INVALID.",
+    "impact": "Gate pode aprovar alegação de performance sem números reais ou com números explicitamente fora do limite.",
+    "cause": "Number(null) vira 0; não compara totalCost/planRows ao budget; aceita withinBudget/acceptable declarativos; measuredAt só parseável. Não exige SQL/plano.",
+    "proposed": "Exigir tipos number finitos, linhas inteiras, identidade/SQL/plano, janela temporal, orçamento congelado e calcular aderência do número ao orçamento; negativos isolados para null, string vazia, excedente e futuro.",
+    "tasks": [
+      "PROD-02",
+      "PROD-33"
+    ],
+    "owner": "responsáveis PROD-02 e PROD-33",
+    "limits": "Fixture sintética exercita validador real; não significa produtor atual gera nulos ou que banco real excede orçamento.",
+    "origin": "R3"
+  },
+  {
+    "id": "R3-OP02",
+    "severity": "High",
+    "confidence": "high",
+    "status": "OPEN",
+    "related_previous": "OPS02 (via distinta da reprodução original corrigida)",
+    "title": "Artefato derivado dispensa runId/attempt exigidos pelo contrato de evidência",
+    "criterion": "G01/G12; CRITERIOS Estados e validade",
+    "evidence_kind": "CURRENT_REPRO",
+    "references": [
+      "scripts/production/evidence-gate.mjs:441",
+      "scripts/production/evidence-gate.mjs:551",
+      "scripts/production/evidence-gate.mjs:570",
+      "scripts/production/evidence-gate.mjs:690",
+      "/tmp/cvg-audit-r3-dvlqz0my/ops/query-probe.log"
+    ],
+    "reproduction": "Cenário missing-run-metadata remove runId/attempt do payload, preservando 11 queries numéricas válidas, identidade e data atual; evaluateCheck retorna PASS sem manifesto separado.",
+    "impact": "Manifesto de comando reprova ambiente sem run/attempt, mas mesma obrigação C10 é contornada para artefato derivado, impedindo atribuição confiável ao run/attempt.",
+    "cause": "Retorno precoce de deriveArtifactManifest não passa validateManifestShape; validateArtifactPayload ignora runId/attempt e derivado só contém kind/producer no environment.",
+    "proposed": "Validar run/attempt e vínculo esperado tanto no payload quanto no manifesto derivado; preservar metadados e exigir mesma semântica de identidade/tempo em todas vias.",
+    "tasks": [
+      "PROD-02",
+      "PROD-03",
+      "PROD-40"
+    ],
+    "owner": "responsável PROD-02, integração PROD-03, revisão PROD-40",
+    "limits": "Não é repetição de command=true/exit99/log vazio, que está corrigido. Probe local, sem falsificar prova externa.",
+    "origin": "R3"
+  },
+  {
+    "id": "R3-RT01",
+    "title": "Importação de metrics impede bootstrap nativo do realtime",
+    "severity": "High",
+    "priority": "P0",
+    "status": "OPEN",
+    "origin": "R3",
+    "confidence": "high",
+    "evidence_kind": "CURRENT_NATIVE_PROCESS_REPRO",
+    "references": [
+      "apps/realtime-service/src/index.ts:20",
+      "packages/shared/package.json",
+      "packages/shared/src/index.ts",
+      "apps/realtime-service/Dockerfile:60"
+    ],
+    "proof": "PROD-05 atual falha no beforeAll: subprocesso tsx encerra com SyntaxError de named export metrics. Reproduzido novamente com NODE_ENV=test e URL inválida loopback antes de qualquer I/O; exit1 em Node24.20.0. Dockerfile usa o mesmo comando tsx, mas Docker não foi executado.",
+    "impact": "Realtime não inicia pelo entrypoint nativo observado; /metrics, readiness e WebSocket ficam indisponíveis nesse processo. Vitest transpila a fronteira de módulos e seus 87/14 testes não detectam a falha.",
+    "proposed": "Corrigir a importação ESM/CommonJS preservando API compartilhada e métricas; adicionar regressão que inicia subprocesso pelo comando de runtime e depois verificar imagem real.",
+    "acceptance": "CLI nativa inicia com fixture própria; /readiness e /metrics respondem; produção sem token503, anônimo/inválido401 e válido200; PROD05 executa17/17; imagem final inicia com mesmo digest avaliado.",
+    "tasks": [
+      "PROD-44",
+      "PROD-05",
+      "PROD-34",
+      "PROD-36"
+    ],
+    "evidence": [
+      "evidencias/realtime-native-boot.log",
+      "evidencias/realtime-native-boot.json",
+      "evidencias/integration-05/output.log",
+      "evidencias/integration-05/evidencias/prod-05/logs/realtime-child.log"
+    ],
+    "limits": "Processo nativo host confirmado; imagem Docker e runtime remoto não exercitados. Nenhuma correção de produto feita na auditoria."
+  }
+]

@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, and, gte, lt, inArray, sql, desc, isNull, or } from 'drizzle-orm';
+import { eq, and, gte, lt, inArray, sql, isNull, or } from 'drizzle-orm';
 import type {
   ConversationMetrics,
   ConversationVolume,
@@ -53,11 +53,15 @@ export class DashboardRepository {
   }
 
   async getConversationVolume(timeRange: TimeRange, groupBy: 'day' | 'week' | 'month' = 'day'): Promise<ConversationVolume[]> {
+    // SA-022/A08: o formato entra como LITERAL validado (enum day|week|month);
+    // parâmetro vinculado não serve porque `to_char(x, $1)` e `to_char(x, $4)`
+    // são expressões diferentes para o GROUP BY do PostgreSQL.
     const format = groupBy === 'day' ? 'YYYY-MM-DD' : groupBy === 'week' ? 'IYYY-IW' : 'YYYY-MM';
+    const bucket = sql<string>`to_char(${schema.conversations.createdAt}, ${sql.raw(`'${format}'`)})`;
 
     const results = await db
       .select({
-        date: sql<string>`to_char(${schema.conversations.createdAt}, ${format})`,
+        date: bucket,
         count: sql<number>`count(*)`,
       })
       .from(schema.conversations)
@@ -65,8 +69,8 @@ export class DashboardRepository {
         gte(schema.conversations.createdAt, timeRange.start),
         lt(schema.conversations.createdAt, timeRange.end)
       ))
-      .groupBy(sql`to_char(${schema.conversations.createdAt}, ${format})`)
-      .orderBy(sql`to_char(${schema.conversations.createdAt}, ${format})`);
+      .groupBy(bucket)
+      .orderBy(bucket);
 
     return results.map(r => ({
       date: r.date,
@@ -251,7 +255,11 @@ export class DashboardRepository {
       .from(
         db.select({
           conversationId: schema.messages.conversationId,
-          inboundAt: schema.messages.createdAt,
+          // Drizzle preserves the physical column name when a table column is
+          // selected directly. The lateral query below references the stable
+          // public alias, so make it explicit instead of relying on the object
+          // key (`inboundAt`) to become SQL's `inbound_at`.
+          inboundAt: sql<Date>`${schema.messages.createdAt}`.as('inbound_at'),
         })
           .from(schema.messages)
           .where(eq(schema.messages.direction, 'inbound'))

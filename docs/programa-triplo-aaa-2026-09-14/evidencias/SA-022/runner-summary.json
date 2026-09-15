@@ -1,0 +1,54 @@
+{
+  "runId": "sa022-kpi",
+  "workerIndex": 37,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60132/cvg_aaa_sa022_kpi_w37",
+  "redisUrl": "redis://127.0.0.1:57050",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:56:18.812Z",
+  "finishedAt": "2026-09-15T01:56:24.092Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-022-kpis.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60132/cvg_aaa_sa022_kpi_w37",
+    "REDIS_URL": "redis://127.0.0.1:57050",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa022-kpi",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa022-kpi",
+    "AAA_WORKER_INDEX": "37"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:56:18.812Z",
+      "finishedAt": "2026-09-15T01:56:20.449Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:56:20.449Z",
+      "finishedAt": "2026-09-15T01:56:21.138Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-022-kpis.integration.test.ts",
+      "startedAt": "2026-09-15T01:56:21.138Z",
+      "finishedAt": "2026-09-15T01:56:24.092Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "00048,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437383926,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"req\":{\"method\":\"GET\",\"url\":\"/metrics/aging\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789437383928,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"userId\":\"dcc6d8e6-aeae-46bf-b0ad-0e92ee2e1565\",\"userRoles\":[\"SA022 NoRead 383517\"],\"userPermissions\":0,\"requiredPermissions\":[\"dashboard:read\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789437383929,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":403},\"responseTime\":2.744956000000002,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437383929,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"req\":{\"method\":\"GET\",\"url\":\"/metrics/conversations/volume?startDate=2026-01-01T00:00:00Z&endDate=2026-01-03T00:00:00Z&groupBy=day\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437383933,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"res\":{\"statusCode\":200},\"responseTime\":3.764216999999917,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437383934,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"req\":{\"method\":\"GET\",\"url\":\"/metrics/conversations/volume?startDate=2019-01-01T00:00:00Z&endDate=2019-01-02T00:00:00Z&groupBy=day\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437383937,\"pid\":1222284,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"res\":{\"statusCode\":200},\"responseTime\":2.4195199999999204,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-022-kpis.integration.test.ts (5 tests) 426ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  22:56:21\n   Duration  2.33s (transform 772ms, setup 0ms, collect 1.62s, tests 426ms, environment 0ms, prepare 91ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-09-13T19:35:59.677271+00:00",
+  "verdict": "NOT_READY",
+  "head": "754f9badac46278e77d21de91c58eedb15e80581",
+  "worktree_modified": true,
+  "test_summary": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "pure auth + ephemeral worker health HTTP/polling; NOT production integration"
+  },
+  "findings": [
+    {
+      "id": "BE-A01",
+      "severity": "P1",
+      "title": "Secretary reabre estado unknown e refaz chamada externa",
+      "confidence": "high",
+      "evidence_kind": "current-source-and-mocked-probe",
+      "references": [
+        "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:184",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:251",
+        "apps/message-worker/src/processor.ts:225",
+        "packages/integrations/src/secretary-client.ts:58"
+      ],
+      "detail_markdown": "**Confiança alta; CURRENT por revisão conectada + probe da função real com store simulado.**\n\n`modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:184` trata apenas denied/completed como terminais; `:192` converte qualquer outro estado, inclusive unknown e processing, em processing, incrementa attemptCount e apaga lastError/errorCode. `modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:251` classifica falha ambígua, persiste unknown e relança erro; `apps/message-worker/src/processor.ts:225` entra no retry. Na próxima tentativa o fluxo chega novamente a processMessageWithSecretary. Probe observou unknown→processing, alreadyCompleted=false e perda da causa.\n\n**Impacto:** timeout/5xx após processamento remoto pode provocar nova IA/custo/efeito; crash após envio antes de completar invocação pode recalcular resposta diferente e colidir no fingerprint outbound. O recibo local não é reconciliação externa. `packages/integrations/src/secretary-client.ts:58` envia POST sem invocationKey ou contrato explícito de idempotência remota.\n\n**PROPOSED:** preservar unknown como bloqueio de reexecução automática; obter reconciliação/idempotência oficial ou criar etapa durável de resultado com referência, separando IA de entrega. `processing` também precisa owner/generation/checkpoint para impedir dois executores após lease expirado. Provar timeout após efeito, crash após IA/antes gravação e redelivery concorrente. PROD10-AC2/3, PROD13, G03/G05."
+    },
+    {
+      "id": "BE-A02",
+      "severity": "P1",
+      "title": "Retry de webhook com timestamp renovado é rejeitado como payload diferente",
+      "confidence": "high",
+      "evidence_kind": "current-source-and-mocked-probe",
+      "references": [
+        "packages/shared/src/webhook-guard.ts:235",
+        "packages/shared/src/webhook-anti-replay.ts:243"
+      ],
+      "detail_markdown": "**Confiança alta; CURRENT com probe + SQL inspecionado.**\n\n`packages/shared/src/webhook-guard.ts:235` deriva signatureHash da assinatura HMAC; a assinatura inclui timestamp. `packages/shared/src/webhook-anti-replay.ts:243` exige assinatura **e** payload iguais. Evento failed com conteúdo idêntico mas timestamp/HMAC novos retorna mismatch. Probe: claimed_new → fail → nova assinatura/mismo payload = mismatch; assinatura original = claimed_retry. Depois de 300s a assinatura original passa a falhar pelo skew, de modo que uma entrega pendente pode ficar sem retry viável, dependendo do contrato real de redelivery.\n\n**PROPOSED:** autenticar cada tentativa pelo timestamp/HMAC atual; deduplicar identidade+origem+payload canônico estável, não a assinatura transitória. Exigir mismatch quando payload mudar, aceitar retry quando só timestamp/assinatura forem atualizados. Gateway oficial/sandbox continua necessário para fechar AC4. PROD07-AC1/2/3, G03."
+    },
+    {
+      "id": "BE-A03",
+      "severity": "P2",
+      "title": "Duplicata já commitada ainda recebe 409 contra o contrato C03",
+      "confidence": "high",
+      "evidence_kind": "current-source-connected-path",
+      "references": [
+        "packages/shared/src/webhook-guard.ts:243"
+      ],
+      "detail_markdown": "**Confiança alta; CURRENT estático, HTTP não executado.**\n\n`packages/shared/src/webhook-guard.ts:243`–`:265` responde 409 `duplicate_event_id` para completed. `CONTRATOS.md` C03 exige evento já aplicado → 2xx idempotente. O negócio não é duplicado (positivo), mas ACK perdido seguido de retry resulta em erro permanente e pode alimentar retries/DLQ do produtor.\n\n**PROPOSED:** retornar o ACK idempotente estável ou ratificar contrato real incompatível antes de alterar documentação; guardar resultRef do recibo se necessário. Não remover HMAC/skew para resolver. PROD07-AC4/G03."
+    },
+    {
+      "id": "BE-A04",
+      "severity": "P1",
+      "title": "Recuperação de mídia não é acionada pelo runtime e exclui SCAN_FAILED",
+      "confidence": "high",
+      "evidence_kind": "current-source-connected-path",
+      "references": [
+        "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts:139",
+        "inbound-media-pipeline.ts:257",
+        "legacy-media-migration.ts:325",
+        "inbound-media-pipeline.ts:335"
+      ],
+      "detail_markdown": "**Confiança alta; CURRENT por mapa completo de callers.**\n\n`modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts:139` agenda trabalho em memória após persistência; o pipeline mantém `inflight` local em `inbound-media-pipeline.ts:257`. `recoverPendingInboundMedia` em `:325` tem caller apenas em `legacy-media-migration.ts:325` e testes; busca global não encontrou boot/poller/worker/comando operacional conectado à recuperação. Logo crash entre commit e enqueue deixa mídia pendente até chamada manual da função. Além disso `inbound-media-pipeline.ts:335` seleciona somente PENDING_SCAN/FAILED, enquanto falha real de scanner produz SCAN_FAILED (`:250`): esse estado jamais entra na própria recuperação proposta. Falha é fail-closed (bytes não liberados), mas atendimento fica sem mídia.\n\n**PROPOSED:** conectar recuperação durável ao worker/poller com backoff, limite e observabilidade; incluir SCAN_FAILED retentável e evitar starvation de primeiras linhas permanentemente indisponíveis. Provar crash pós-commit/pré-enqueue, scanner indisponível→recuperado e reinício real. PROD14-AC3/G04. Não adicionar broker: fila PG/estado existente é baseline suficiente."
+    },
+    {
+      "id": "BE-A05",
+      "severity": "P1",
+      "title": "Endpoint legado de anonimização contorna política e escopo de mutação",
+      "confidence": "high",
+      "evidence_kind": "current-source-connected-path",
+      "references": [
+        "modules/privacy/src/presentation/http/privacy.controller.ts:406",
+        "modules/privacy/src/application/data-subject-service.ts:143",
+        "privacy-policy.ts:4"
+      ],
+      "detail_markdown": "**Confiança alta no caminho estático; HTTP/PG não executado.**\n\n`modules/privacy/src/presentation/http/privacy.controller.ts:406` mantém `/privacy/contacts/:id/anonymize`; `:431` verifica apenas se o contato possui algum vínculo dentro do escopo e `:445` chama `anonymizeContactData` sem passar escopo/política/confirmIrreversible. `modules/privacy/src/application/data-subject-service.ts:143` altera PII global; `:157` carrega **todas** as conversas do contato e `:164` altera remetentes em todas elas. Não há transação englobando contato/mensagens/audit, nem vínculo idempotente de requestId. `privacy-policy.ts:4` declara D02 não aprovada/default dry-run, mas este caminho não consulta a política.\n\n**Impacto:** um ator com admin:write setorial e contato compartilhado pode alterar cópias de mensagens em outro setor; mesmo global, o endpoint executa alteração irreversível fora da política dry-run/checkpoints. Falha após UPDATE contacts perde o telefone original necessário à limpeza de sender no retry. A nova rota erasure mais robusta não elimina o bypass legado.\n\n**PROPOSED:** rotear anonimização legada pelo mesmo núcleo de política, escopo, confirmação, transação/checkpoint e recibo da erasure, ou bloquear mutação enquanto D02 estiver OPEN. Testar contato compartilhado A/B, ator A, modo dry-run, falha após primeira escrita e retry. PROD16-AC1/2/3/4, G02/G05."
+    },
+    {
+      "id": "BE-A06",
+      "severity": "P1",
+      "title": "CAS é opcional e cliente atual não envia versão",
+      "confidence": "high",
+      "evidence_kind": "current-source-connected-path",
+      "references": [
+        "modules/chat/src/application/use-cases/conversation-operations.use-case.ts:67",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:70"
+      ],
+      "detail_markdown": "**Confiança alta no contrato estático; corrida HTTP/PG não executada.**\n\n`modules/chat/src/application/use-cases/conversation-operations.use-case.ts:67` retorna true quando expectedUpdatedAt está ausente. Campos expectedStatusV2/expectedAssignedUserId/expectedHandler também são opcionais. `modules/chat/src/presentation/http/conversation-operations.controller.ts:70`, `:124`, `:176` exigem apenas novo estado/assignee/handler. Busca em apps/desk-web/src não encontrou nenhum expectedUpdatedAt/expectedStatus/expectedHandler/expectedAssigned. SELECT FOR UPDATE serializa escrita, porém não impede operador antigo de sobrescrever uma alteração já commitada sem precondição.\n\n**PROPOSED:** exigir versão/precondição no endpoint operacional e propagá-la do DTO ao web, com 409/428 e refresh em conflito; usar versão inteira ou token que preserve precisão em vez de depender do Date truncado. Provar dois operadores: B salva, A envia estado antigo e recebe conflito sem sobrescrita. PROD18-AC3/G06."
+    }
+  ]
+}

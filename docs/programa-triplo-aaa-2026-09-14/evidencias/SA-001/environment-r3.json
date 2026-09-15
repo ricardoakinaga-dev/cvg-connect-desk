@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-001",
+  "run_id": "sa001-r3-a1-20260915",
+  "captured_at": "2026-09-15T09:54:15-03:00",
+  "owner": "lead/Codex",
+  "executor": "Codex em worktree compartilhado",
+  "repository": "/home/ricardo/cvg-connect-desk",
+  "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "candidate_artifact": "evidencias/SA-001/candidate-manifest-r3.json",
+  "candidate": {
+    "id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-bf108ab9840306b2",
+    "product_sha256": "bf108ab9840306b2e88acb58dcd3ea10daa05d07809c5e4549c257016f09d7ec",
+    "ledger_sha256": "7464625eb0c640ec2c7c7ef3ac57b1c01e47b2da8db60e825132665d6708dd0a"
+  },
+  "tools": {
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "python": "3.12.3",
+    "git": "2.43.0",
+    "os": "Linux 7.0.0-31-generic x86_64 GNU/Linux"
+  },
+  "commands": [
+    "python3 -m py_compile scripts/programa-triplo-aaa/candidate_manifest.py scripts/programa-triplo-aaa/test_candidate_manifest.py",
+    "python3 -m unittest -v scripts/programa-triplo-aaa/test_candidate_manifest.py",
+    "python3 scripts/programa-triplo-aaa/candidate_manifest.py --label SA-001-R3-A1 --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-001/candidate-manifest-r3.json",
+    "python3 scripts/programa-triplo-aaa/compare_source_manifest.py --baseline docs/auditorias/2026-09-14/evidencias/source-manifest.json --current docs/programa-triplo-aaa-2026-09-14/evidencias/SA-001/candidate-manifest-r3.json --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-001/source-manifest-comparison-r3.json"
+  ],
+  "scope": {
+    "product_prefix_exclusions": [
+      "docs/programa-triplo-aaa-2026-09-14/",
+      "docs/auditorias/"
+    ],
+    "ledger_prefixes": [
+      "docs/programa-triplo-aaa-2026-09-14/",
+      "docs/auditorias/"
+    ],
+    "ledger_generated_exclusions": [
+      "evidencias/",
+      "evidence/",
+      "artifacts/",
+      "candidate-manifest*.json",
+      "source-manifest.json",
+      "MANIFESTO.json",
+      "EVIDENCE-INVENTORY.json",
+      "ARTIFACTS.json"
+    ]
+  },
+  "limitations": [
+    "O worktree contém alterações e arquivos de outros trabalhos; o manifesto os inventaria e não os reverte.",
+    "Os resultados históricos de auditoria permanecem BASELINE/STALE e não são PASS do candidato corrente.",
+    "Nenhum valor de ambiente, token ou conteúdo secreto foi copiado para este artefato."
+  ]
+}

@@ -1,0 +1,43 @@
+/* Ajustes da página de tutores sobre EntityPages.css (somente tokens globais). */
+.entity-page .ui-alert {
+  max-width: 1280px;
+  margin: 0 auto var(--space-4);
+}
+
+.entity-card .ui-alert {
+  margin: var(--space-3) var(--space-4) 0;
+}
+
+.entity-modal .ui-alert {
+  margin: 0 0 var(--space-3);
+}
+
+.entity-table tbody tr.selected,
+.entity-table tbody tr.selected:hover {
+  background: var(--color-primary-soft);
+}
+
+.entity-row-detail {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: inherit;
+  color: var(--color-primary-text);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+}
+
+.entity-row-detail:hover {
+  text-decoration: underline;
+}
+
+.entity-row-detail:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.entity-detail .ui-state {
+  padding: var(--space-6) var(--space-3);
+}

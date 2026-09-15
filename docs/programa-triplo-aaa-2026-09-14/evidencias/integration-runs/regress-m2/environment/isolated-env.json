@@ -1,0 +1,24 @@
+{
+  "runId": "regress-m2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60432/cvg_aaa_regress_m2_w40",
+  "databaseName": "cvg_aaa_regress_m2_w40",
+  "databasePort": 60432,
+  "redisUrl": "redis://127.0.0.1:57080",
+  "redisPort": 57080,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1295793,
+    "dataDir": "/tmp/cvg-aaa-runs/regress-m2/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1295811,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "regress-m2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 23:07:26.961166-03"
+  }
+}

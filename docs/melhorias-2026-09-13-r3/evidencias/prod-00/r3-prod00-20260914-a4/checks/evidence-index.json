@@ -1,0 +1,48 @@
+{
+  "task": "PROD-00",
+  "generatedAt": "2026-09-14T00:25:50.439Z",
+  "command": "node --test scripts/production/prod-00.test.mjs",
+  "environment": "synthetic-isolated (PG/Redis por run, Docker bloqueado)",
+  "artifacts": {
+    "baseline/candidate-manifest.json": {
+      "sha256": "5099b6debd05749067f50baa676b4fb25a0d6a580f3007d2b678e59f5793db19",
+      "bytes": 81737
+    },
+    "baseline/git-status.txt": {
+      "sha256": "159b23aea57ee9624d38c91c26946f7aefa97f8d79807ccb978b8806305f7b79",
+      "bytes": 22210
+    },
+    "baseline/diff-stat.txt": {
+      "sha256": "df648fb09ae44b49273fd25099c93ecbc0c6eec17c83b553a479a05d5894d59d",
+      "bytes": 16190
+    },
+    "baseline/hash-before.txt": {
+      "sha256": "38f7a9959f07b48c375dd4cbc25d5523f18ff82343ba208a2f9a5ec0e646b02c",
+      "bytes": 4899
+    },
+    "environment/availability.json": {
+      "sha256": "0baf5ce8947240d4b1c9452fb240876b92686a09f8aaf53114e6884cb6233f45",
+      "bytes": 2632
+    },
+    "isolation/canary.json": {
+      "sha256": "989066d82faa68de1c57ec805a55cfab2694b9826c795a8031a2456924cc0db1",
+      "bytes": 2883
+    },
+    "harness/production-report.json": {
+      "sha256": "f3f8158830be51e48773f8736fb5390c5bdb2aac170df114c8a57af2e2825423",
+      "bytes": 11688
+    },
+    "harness/canary-report.json": {
+      "sha256": "08da7214b47aa18e2a65ff0bc89e5d5877b0b7a6a95b26a7c01d710239d7ee02",
+      "bytes": 8599
+    },
+    "harness/http-positive.log": {
+      "sha256": "b1a637b9fce6a1c831e1637a15b5dc305746db7f04c162c1b327ef70c0a34f58",
+      "bytes": 1756
+    },
+    "harness/http-canary-negative.log": {
+      "sha256": "60d7203f6d35ca88cbf8c7c60d9c472fb32b02a6f1d5f493710b32990692ad9d",
+      "bytes": 2938
+    }
+  }
+}

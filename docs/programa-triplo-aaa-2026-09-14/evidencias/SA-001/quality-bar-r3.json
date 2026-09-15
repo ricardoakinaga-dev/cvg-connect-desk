@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "bar_version": "SA-001-R3-v1",
+  "task": "SA-001",
+  "frozen_at": "2026-09-15T00:00:00-03:00",
+  "goal": "Restaurar uma identidade de candidato verificável sem misturar bytes de produto/configuração com o livro-caixa de execução.",
+  "criteria": [
+    {
+      "id": "SA-001-AC1-PRODUCT-SEAL",
+      "source_type": "REPO",
+      "source": "docs/programa-triplo-aaa-2026-09-14/tasks/SA-001.md; docs/programa-triplo-aaa-2026-09-14/AGENTE.md",
+      "target": "O manifesto inventaria commit, diff, arquivos rastreados/não rastreados, modos e symlinks; o selo de produto inclui bytes de configuração versionada como .env.production.example sem serializar conteúdo secreto; package.json, lockfile, turbo, Docker e fontes permanecem cobertos.",
+      "evidence_method": "Teste automatizado em repositório Git temporário com controles known-good/known-bad para conteúdo de mesmo tamanho, modo, adição/remoção e symlink; inspeção do JSON produzido.",
+      "required": true,
+      "priority": "critical",
+      "baseline": "FAIL: candidate_manifest.py grava sha256 null para .env.production.example e o tree_sha256 não muda quando seus bytes mudam.",
+      "validity_notes": "O fixture altera somente a entrada sob teste e rejeita um selo que preserve o mesmo digest.",
+      "status": "FROZEN"
+    },
+    {
+      "id": "SA-001-AC1-LEDGER-SEPARATION",
+      "source_type": "REPO",
+      "source": "docs/programa-triplo-aaa-2026-09-14/EXECUCAO.md; docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/RELATORIO.md",
+      "target": "O manifesto publica digests separados para produto e controle/livro-caixa, ligados pela mesma revisão, e documentos de auditoria não alteram o selo de produto.",
+      "evidence_method": "Teste automatizado que muta um documento em docs/auditorias e um documento canônico do programa, além de inspeção dos escopos declarados e ausência de autorreferência.",
+      "required": true,
+      "priority": "critical",
+      "baseline": "FAIL: documentos em docs/auditorias entram no tree_sha256; o selo anterior não separa produto de controle.",
+      "validity_notes": "A prova exige que a mutação de auditoria deixe product_sha256 estável e que a mutação de controle altere somente ledger_sha256.",
+      "status": "FROZEN"
+    },
+    {
+      "id": "SA-001-AC2",
+      "source_type": "REPO",
+      "source": "docs/programa-triplo-aaa-2026-09-14/evidencias/SA-001/findings-revalidation-r3.md; docs/auditorias/2026-09-15-checkpoint-triplo-aaa-r3/RELATORIO.md",
+      "target": "A01–A10 continuam explicitamente classificados contra a fonte atual; nenhuma aceitação é removida ou promovida por texto.",
+      "evidence_method": "Revisão documental atualizada com dez linhas rastreáveis e validação estrutural do programa.",
+      "required": true,
+      "priority": "high",
+      "baseline": "BASELINE: todos A01–A10 estavam ABERTOS no congelamento R3.",
+      "validity_notes": "A prova documental é limitada ao estado de revalidação; não substitui as tarefas produtoras de cada correção.",
+      "status": "FROZEN"
+    },
+    {
+      "id": "SA-001-AC3",
+      "source_type": "REPO",
+      "source": "docs/programa-triplo-aaa-2026-09-14/tasks/SA-001.md",
+      "target": "Ambiente, executor, comandos e limitações ficam registrados; artefatos históricos permanecem BASELINE e não são reutilizados como PASS do candidato atual.",
+      "evidence_method": "Manifesto de ambiente e registros JSONL com candidate_id atual, datas, exits, artefatos e limitações; inspeção de diff para preservar relatórios R3.",
+      "required": true,
+      "priority": "high",
+      "baseline": "BASELINE: registros R2/R3 usam candidatos antigos e reviewer pending.",
+      "validity_notes": "O candidato corrente muda quando o código/teste muda; qualquer prova anterior fica stale.",
+      "status": "FROZEN"
+    }
+  ],
+  "non_goals": [
+    "Não promover SA-001 para DONE sem crítica I1 posterior à última alteração.",
+    "Não reclassificar A01–A10 nem declarar G01/G12 aprovados por validação documental isolada.",
+    "Não alterar o produto visual; o design system existente fica fora do escopo desta correção de identidade/evidência."
+  ]
+}

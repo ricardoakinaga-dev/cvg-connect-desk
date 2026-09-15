@@ -1,6 +1,6 @@
 import { db } from '@cvg/database';
-import { conversations, contacts, labels, conversationLabels, sectors, users, messages } from '@cvg/database';
-import { eq, and, desc, sql, isNotNull } from 'drizzle-orm';
+import { conversations, contacts, labels, conversationLabels, sectors, users } from '@cvg/database';
+import { eq, and, desc, sql } from 'drizzle-orm';
 
 export class KanbanRepository {
   async getCards(filters?: { sectorId?: string; assignedUserId?: string; labelId?: string }) {
@@ -10,7 +10,7 @@ export class KanbanRepository {
     if (filters?.assignedUserId) conditions.push(eq(conversations.assignedUserId, filters.assignedUserId));
 
     // Buscar conversas com joins
-    let query = db.select({
+    const query = db.select({
       id: conversations.id,
       statusV2: conversations.statusV2,
       contactName: contacts.name,

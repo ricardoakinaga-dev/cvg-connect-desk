@@ -1,0 +1,76 @@
+PROD-02 — correção dos achados M1/M2/L2 da revisão independente do lote M0
+Candidato: 754f9badac46278e77d21de91c58eedb15e80581 + worktree
+Data: 2026-09-13
+
+ANTES (código anterior; repro completo em correcao-repro-antes.txt)
+--------------------------------------------------------------------
+$ node (repro M1/M2/L2/L5 sobre scripts/production/evidence-gate.mjs anterior)
+
+M1: hash antes  = fec9ddbbd822a71c65e583ed3f7b86aec258716f24a061065f52a95f3f669cf3 (1 arquivos)
+M1: hash depois = fec9ddbbd822a71c65e583ed3f7b86aec258716f24a061065f52a95f3f669cf3 (1 arquivos)
+M1: alterar untracked muda o hash? false
+M2: estado do gate com payload 2000/PASS/sem lock/source = VERIFIED_CANDIDATE (PASS)
+M2: reasons = []
+L2: unit DATABASE_URL = postgresql://postgres:postgres@localhost:5432/connect_desk_db
+L2: postgres-real DATABASE_URL = postgresql://postgres:postgres@localhost:5432/connect_desk_db
+L2: migration-check DATABASE_URL = postgresql://postgres:postgres@localhost:5432/connect_desk_db
+L5: EVENT inválido -> report.event=push requestedEvent=evento-invalido (sem erro)
+
+DEPOIS (corrigido; repro completo em correcao-repro-depois.txt)
+----------------------------------------------------------------
+$ node docs/producao-2026-09-13/evidencias/prod-02/repro-correcao.mjs ; echo exit=$?
+exit=0
+
+M1: hash antes  = 84d7e3c02509b711d31efb800d3acde600b5ba6614132d1e47cd5ec1aa8bc9df (2 arquivos)
+M1: hash depois = 372c92a64db0f299ce03eeffed04f4c61045d3312eceba2d29141c4f9179b2de (2 arquivos)
+OK   M1 untracked alterado muda sourceSha256
+M2: estado do gate com payload 2000/PASS/sem lock/source = FAILED (INVALID)
+M2: reasons = ["lockfileSha256 ausente no payload (identidade C10 obrigatória)",
+               "sourceSha256 ausente no payload (identidade C10 obrigatória)",
+               "payload anterior ao selo do candidato (STALE: 2000-01-01T00:00:00.000Z < ...)"]
+OK   M2 payload velho/sem identidade é rejeitado (nunca PASS)
+L2: unit DATABASE_URL fixado = ausente
+OK   L2 unit não fixa banco do host
+L2: postgres-real DATABASE_URL fixado = ausente
+OK   L2 postgres-real não fixa banco do host
+L2: migration-check DATABASE_URL fixado = ausente
+OK   L2 migration-check não fixa banco do host
+L5: EVENT inválido -> report.event=push requestedEvent=evento-invalido (sem erro; corrigir em PROD-03)
+
+RESULTADO: 5/5 verificações M1/M2/L2 OK
+
+PROVAS DE REGRESSÃO (scripts/production/prod-02.test.mjs)
+---------------------------------------------------------
+$ node --test scripts/production/prod-02.test.mjs
+ℹ tests 22
+ℹ pass 22
+ℹ fail 0
+exit=0  (log completo: correcao-prod-02.test.txt)
+
+Novos testes M1/M2/L2:
+- "M1 — sourceSha256 cobre untracked de repo git, com determinismo, e exclui evidências do repo"
+- "M1 — selo do CLI detecta alteração de untracked e ignora novas evidências no repo"
+- "AC1/M2 — artefato derivado PASS velho, sem lock/source ou futuro é rejeitado (nunca PASS)"
+- "AC2/M2 — externo derivado com identidade ausente ou velha é rejeitado (STALE no derivado)"
+- "L2 — defaults de banco exigem cvg_aaa_* em porta dedicada, nunca a instância do host"
+
+ESTABILIDADE NO REPO REAL (evidência gerada dentro do repo não invalida o selo)
+-------------------------------------------------------------------------------
+$ node scripts/triple-aaa-verify.mjs --evaluate --candidate 754f9ba --artifacts-dir <tmp A>
+$ echo probe > docs/producao-2026-09-13/evidencias/prod-02/.probe-hash.txt
+$ node scripts/triple-aaa-verify.mjs --evaluate --candidate 754f9ba --artifacts-dir <tmp B>
+sourceSha256 sem evidência: ba38f840f07cc57a99c1cdec75253ddcc9ff04fa0d23732b9c71db6ce7761114
+sourceSha256 com evidência: ba38f840f07cc57a99c1cdec75253ddcc9ff04fa0d23732b9c71db6ce7761114
+estável? true
+
+MUTAÇÃO (testes não são vacuosos; arquivo restaurado com hash idêntico)
+----------------------------------------------------------------------
+1) Reintroduzido `git ls-files -z` (só tracked) em evidence-gate.mjs:
+   $ node --test --test-name-pattern='M1' scripts/production/prod-02.test.mjs
+   ✖ M1 — sourceSha256 cobre untracked... ; ✖ M1 — selo do CLI detecta alteração...
+   pass 0 / fail 2
+2) Reintroduzida identidade opcional e removida a janela de horário (M2):
+   $ node --test --test-name-pattern='M2' scripts/production/prod-02.test.mjs
+   ✖ AC1/M2 — artefato derivado... ; ✖ AC2/M2 — externo derivado...
+   pass 0 / fail 2
+   Restauração confirmada: sha256=714d29eaada30671b35355b13de684aa4fd1d165ed850891d2a209009b78a4a4

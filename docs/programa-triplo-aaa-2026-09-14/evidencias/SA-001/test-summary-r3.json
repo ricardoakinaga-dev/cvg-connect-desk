@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-001",
+  "run_id": "sa001-r3-a1-20260915",
+  "command": "python3 -m unittest -v scripts/programa-triplo-aaa/test_candidate_manifest.py",
+  "exit_status": 0,
+  "result": "PASS",
+  "tests_run": 8,
+  "tests_failed": 0,
+  "tests": [
+    "test_known_good_is_stable_and_separates_product_from_ledger",
+    "test_same_size_versioned_env_mutation_changes_product_seal",
+    "test_audit_and_program_mutations_change_only_ledger",
+    "test_mode_symlink_and_add_remove_mutations_change_product_seal",
+    "test_staged_addition_is_visible_in_diff_and_inventory",
+    "test_unstaged_change_and_tracked_removal_are_visible",
+    "test_git_failure_is_closed",
+    "test_inventory_collection_is_closed_on_missing_entry"
+  ],
+  "candidate_artifact": "evidencias/SA-001/candidate-manifest-r3.json",
+  "limitations": [
+    "Fixture Git sintético; não substitui os gates funcionais G01/G12 nem a crítica I1.",
+    "A suíte verifica o gerador e o contrato de identidade, não o mérito de A01–A10."
+  ]
+}

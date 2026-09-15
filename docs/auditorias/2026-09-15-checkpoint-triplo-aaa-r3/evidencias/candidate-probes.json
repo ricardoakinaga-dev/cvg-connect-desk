@@ -1,0 +1,21 @@
+{
+  "audit_entry_reproduction": {
+    "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#c486a63f161da313",
+    "tree_sha256": "c486a63f161da3132019d2185203e8b28e0d547876b8334def5989d5ec614da0",
+    "result": "REPRODUCED_BEFORE_R3_PERSISTENCE"
+  },
+  "known_bad_secret_probe": {
+    "environment": "temporary isolated Git fixture",
+    "mutation": ".env.production.example: SECRET=value-one -> SECRET=value-two, same byte length",
+    "before_tree_sha256": "equal-to-after",
+    "after_tree_sha256": "equal-to-before",
+    "result": "FAIL_HARNESS_SECRET_BYTES_NOT_SEALED"
+  },
+  "scope_probe": {
+    "mutation": "persist audit-only files under docs/auditorias/",
+    "software_files_changed_in_step": false,
+    "result": "FAIL_SCOPE_ISOLATION_CANDIDATE_CHANGED"
+  },
+  "source": "scripts/programa-triplo-aaa/candidate_manifest.py",
+  "limitation": "Resumo persistido pelo lead a partir das execuções desta auditoria; SA-001 deve fornecer controles automatizados reproduzíveis antes de G01 PASS."
+}

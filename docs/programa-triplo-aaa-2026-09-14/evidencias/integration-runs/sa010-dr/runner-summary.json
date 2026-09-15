@@ -1,0 +1,54 @@
+{
+  "runId": "sa010-dr",
+  "workerIndex": 32,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59632/cvg_aaa_sa010_dr_w32",
+  "redisUrl": "redis://127.0.0.1:57000",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:20:58.379Z",
+  "finishedAt": "2026-09-15T01:21:01.369Z",
+  "command": "node infra/scripts/dr-verify-fixture.test.mjs --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-010/dr-verify-adversarial.json",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59632/cvg_aaa_sa010_dr_w32",
+    "REDIS_URL": "redis://127.0.0.1:57000",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa010-dr",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa010-dr",
+    "AAA_WORKER_INDEX": "32"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:20:58.379Z",
+      "finishedAt": "2026-09-15T01:21:00.206Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:21:00.206Z",
+      "finishedAt": "2026-09-15T01:21:00.923Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "node infra/scripts/dr-verify-fixture.test.mjs --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-010/dr-verify-adversarial.json",
+      "startedAt": "2026-09-15T01:21:00.923Z",
+      "finishedAt": "2026-09-15T01:21:01.369Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "{\n  \"runAt\": \"2026-09-15T01:21:01.364Z\",\n  \"tag\": \"dr-adv-1789435260967\",\n  \"result\": \"PASS\",\n  \"cases\": [\n    {\n      \"case\": \"fixture_completa_aprova\",\n      \"expectedNonZero\": false,\n      \"observedStatus\": 0,\n      \"ok\": true,\n      \"failedChecks\": 0\n    },\n    {\n      \"case\": \"sem_mensagem_reprova\",\n      \"expectedNonZero\": true,\n      \"observedStatus\": 1,\n      \"ok\": true,\n      \"failedChecks\": 4\n    },\n    {\n      \"case\": \"sem_evento_reprova\",\n      \"expectedNonZero\": true,\n      \"observedStatus\": 1,\n      \"ok\": true,\n      \"failedChecks\": 3\n    },\n    {\n      \"case\": \"sem_dlq_reprova\",\n      \"expectedNonZero\": true,\n      \"observedStatus\": 1,\n      \"ok\": true,\n      \"failedChecks\": 3\n    },\n    {\n      \"case\": \"valor_trocado_reprova\",\n      \"expectedNonZero\": true,\n      \"observedStatus\": 1,\n      \"ok\": true,\n      \"failedChecks\": 2\n    },\n    {\n      \"case\": \"backup_vazio_reprova\",\n      \"expectedNonZero\": true,\n      \"observedStatus\": 1,\n      \"ok\": true,\n      \"failedChecks\": 17\n    }\n  ]\n}\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

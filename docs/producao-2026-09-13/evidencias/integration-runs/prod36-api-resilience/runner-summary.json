@@ -1,0 +1,30 @@
+{
+  "runId": "prod36-api-resilience",
+  "workerIndex": 37,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60132/cvg_aaa_prod36_api_resilience_w37",
+  "redisUrl": "redis://127.0.0.1:57050",
+  "startedAt": "2026-09-13T19:11:24.093Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/resilience.integration.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n{\"level\":40,\"time\":1789326683520,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"msg\":\"[API] SECRETARY_URL or SECRETARY_API_KEY not set — Secretary integration disabled\"}\n{\"level\":30,\"time\":1789326683720,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"req\":{\"method\":\"POST\",\"url\":\"/webhook/inbound\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789326683736,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"reason\":\"signature_valid\",\"webhook_mode\":\"hmac\",\"has_secret\":true,\"algorithm\":\"sha256\",\"msg\":\"[WebhookGuard] Assinatura validada com sucesso\"}\n{\"level\":30,\"time\":1789326683754,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"res\":{\"statusCode\":200},\"responseTime\":34.00768500000004,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789326683866,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"req\":{\"method\":\"GET\",\"url\":\"/readiness\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789326683910,\"pid\":4023634,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-2\",\"res\":{\"statusCode\":200},\"responseTime\":44.004791999999725,\"msg\":\"request completed\"}\n ✓ src/__tests__/resilience.integration.test.ts (5 tests) 457ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  16:11:21\n   Duration  2.82s (transform 906ms, setup 0ms, collect 1.93s, tests 457ms, environment 0ms, prepare 131ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

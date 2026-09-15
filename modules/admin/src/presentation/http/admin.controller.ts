@@ -1,8 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import {
-  createUser, updateUser, deleteUser, assignRolesToUser,
+  createUser, updateUser, deleteUser,
   createRole, updateRole, deleteRole,
-  createPermission, deletePermission,
   createQueue, updateQueue, deleteQueue,
   createTeam, updateTeam, deleteTeam,
 } from '../../application/use-cases';
@@ -15,13 +14,51 @@ import { getWebhookSecurityStats } from '@cvg/shared';
 import type {
   CreateUserInput, UpdateUserInput,
   CreateRoleInput, UpdateRoleInput,
-  CreatePermissionInput,
   CreateQueueInput, UpdateQueueInput,
   CreateTeamInput, UpdateTeamInput,
-} from '../types';
+} from '../../types';
+import { toPublicUser } from '../../types';
 
 // User routes
 export async function registerAdminRoutes(app: FastifyInstance) {
+  /** Correlação estável da ação (PROD-18/AC2): header ou request id. */
+  const correlationOf = (request: FastifyRequest): string => {
+    const header = request.headers['x-correlation-id'];
+    return (typeof header === 'string' && header.trim()) || String(request.id);
+  };
+
+  /** Auditoria administrativa sem PII (nunca serializa hash de senha). */
+  const auditAdmin = async (
+    request: FastifyRequest,
+    entry: {
+      action: string;
+      entityType: string;
+      entityId?: string;
+      oldValue?: Record<string, unknown>;
+      newValue?: Record<string, unknown>;
+      metadata?: Record<string, unknown>;
+    },
+  ) => {
+    await createAuditLog({
+      userId: request.user?.id,
+      action: entry.action,
+      entityType: entry.entityType,
+      entityId: entry.entityId,
+      oldValue: entry.oldValue,
+      newValue: entry.newValue,
+      metadata: { ...(entry.metadata ?? {}), correlationId: correlationOf(request) },
+      correlationId: correlationOf(request),
+    });
+  };
+
+  /** Contexto de auditoria atômica repassado aos casos de uso de usuário. */
+  const adminContext = (request: FastifyRequest) => ({
+    actorId: request.user?.id,
+    correlationId: correlationOf(request),
+    ipAddress: request.ip,
+    userAgent: typeof request.headers['user-agent'] === 'string' ? request.headers['user-agent'] : undefined,
+  });
+
   // Users
   app.get('/admin/users', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -33,22 +70,38 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.get<{ Params: { id: string } }>('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:read')], schema: { params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] } } }, async (req, reply) => {
     try {
       const user = await adminRepository.userRepository.findById(req.params.id);
       if (!user) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'User not found' });
       }
-      return reply.status(200).send(user);
+      return reply.status(200).send(toPublicUser(user));
     } catch (error) {
       req.log.error(error);
       return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to fetch user' });
     }
   });
 
-  app.post('/admin/users', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateUserInput }>, reply: FastifyReply) => {
+  app.post<{ Body: CreateUserInput }>('/admin/users', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name', 'email', 'password'],
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 200 },
+          email: { type: 'string', format: 'email', maxLength: 320 },
+          password: { type: 'string', minLength: 8, maxLength: 200 },
+          roleIds: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 50 },
+          isActive: { type: 'boolean' },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
-      const result = await createUser(req.body);
+      const result = await createUser(req.body, adminContext(req));
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -56,6 +109,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to create user' });
       }
+      // A auditoria participa do mesmo commit do caso de uso (SA-006/AC2).
       return reply.status(201).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -63,9 +117,26 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateUserInput }>, reply: FastifyReply) => {
+  app.put<{ Params: { id: string }; Body: UpdateUserInput }>('/admin/users/:id', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] },
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 200 },
+          email: { type: 'string', format: 'email', maxLength: 320 },
+          password: { type: 'string', minLength: 8, maxLength: 200 },
+          roleIds: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 50 },
+          isActive: { type: 'boolean' },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
-      const result = await updateUser(req.params.id, req.body);
+      const result = await updateUser(req.params.id, req.body, adminContext(req));
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -80,9 +151,9 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete<{ Params: { id: string } }>('/admin/users/:id', { preHandler: [authenticate, requirePermission('admin:write')], schema: { params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] } } }, async (req, reply) => {
     try {
-      const result = await deleteUser(req.params.id);
+      const result = await deleteUser(req.params.id, adminContext(req));
       if (result.isErr()) {
         const error = result.error;
         if (error instanceof AppError) {
@@ -108,7 +179,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:read')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.get<{ Params: { id: string } }>('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:read')], schema: { params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] } } }, async (req, reply) => {
     try {
       const role = await adminRepository.roleRepository.findById(req.params.id);
       if (!role) {
@@ -121,7 +192,21 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/roles', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateRoleInput }>, reply: FastifyReply) => {
+  app.post<{ Body: CreateRoleInput }>('/admin/roles', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name'],
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 120 },
+          description: { type: 'string', maxLength: 500 },
+          permissionIds: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 200 },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
       const result = await createRole(req.body);
       if (result.isErr()) {
@@ -131,6 +216,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to create role' });
       }
+      await auditAdmin(req, {
+        action: 'admin.role.created',
+        entityType: 'role',
+        entityId: result.value.id,
+        newValue: { name: result.value.name, description: result.value.description },
+      });
       return reply.status(201).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -138,8 +229,24 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateRoleInput }>, reply: FastifyReply) => {
+  app.put<{ Params: { id: string }; Body: UpdateRoleInput }>('/admin/roles/:id', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] },
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 120 },
+          description: { type: 'string', maxLength: 500 },
+          permissionIds: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 200 },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
+      const before = await adminRepository.roleRepository.findById(req.params.id);
       const result = await updateRole(req.params.id, req.body);
       if (result.isErr()) {
         const error = result.error;
@@ -148,6 +255,14 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to update role' });
       }
+      await auditAdmin(req, {
+        action: 'admin.role.updated',
+        entityType: 'role',
+        entityId: result.value.id,
+        oldValue: before ? { name: before.name, description: before.description } : undefined,
+        newValue: { name: result.value.name, description: result.value.description },
+        metadata: { permissionsChanged: req.body.permissionIds !== undefined },
+      });
       return reply.status(200).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -155,8 +270,9 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete<{ Params: { id: string } }>('/admin/roles/:id', { preHandler: [authenticate, requirePermission('admin:write')], schema: { params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] } } }, async (req, reply) => {
     try {
+      const before = await adminRepository.roleRepository.findById(req.params.id);
       const result = await deleteRole(req.params.id);
       if (result.isErr()) {
         const error = result.error;
@@ -165,6 +281,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to delete role' });
       }
+      await auditAdmin(req, {
+        action: 'admin.role.deleted',
+        entityType: 'role',
+        entityId: req.params.id,
+        oldValue: before ? { name: before.name, description: before.description } : undefined,
+      });
       return reply.status(204).send();
     } catch (error) {
       req.log.error(error);
@@ -194,7 +316,20 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/queues', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateQueueInput }>, reply: FastifyReply) => {
+  app.post<{ Body: CreateQueueInput }>('/admin/queues', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name'],
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 120 },
+          description: { type: 'string', maxLength: 500 },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
       const result = await createQueue(req.body);
       if (result.isErr()) {
@@ -204,6 +339,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to create queue' });
       }
+      await auditAdmin(req, {
+        action: 'admin.queue.created',
+        entityType: 'queue',
+        entityId: result.value.id,
+        newValue: { name: result.value.name, description: result.value.description },
+      });
       return reply.status(201).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -211,8 +352,23 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateQueueInput }>, reply: FastifyReply) => {
+  app.put<{ Params: { id: string }; Body: UpdateQueueInput }>('/admin/queues/:id', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] },
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: { type: 'string', minLength: 1, maxLength: 120 },
+          description: { type: 'string', maxLength: 500 },
+        },
+      },
+    },
+  }, async (req, reply) => {
     try {
+      const before = await adminRepository.queueRepository.findById(req.params.id);
       const result = await updateQueue(req.params.id, req.body);
       if (result.isErr()) {
         const error = result.error;
@@ -221,6 +377,13 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to update queue' });
       }
+      await auditAdmin(req, {
+        action: 'admin.queue.updated',
+        entityType: 'queue',
+        entityId: result.value.id,
+        oldValue: before ? { name: before.name, description: before.description } : undefined,
+        newValue: { name: result.value.name, description: result.value.description },
+      });
       return reply.status(200).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -228,8 +391,9 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete<{ Params: { id: string } }>('/admin/queues/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
+      const before = await adminRepository.queueRepository.findById(req.params.id);
       const result = await deleteQueue(req.params.id);
       if (result.isErr()) {
         const error = result.error;
@@ -238,6 +402,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to delete queue' });
       }
+      await auditAdmin(req, {
+        action: 'admin.queue.deleted',
+        entityType: 'queue',
+        entityId: req.params.id,
+        oldValue: before ? { name: before.name, description: before.description } : undefined,
+      });
       return reply.status(204).send();
     } catch (error) {
       req.log.error(error);
@@ -256,7 +426,17 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/admin/teams', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Body: CreateTeamInput }>, reply: FastifyReply) => {
+  app.post<{ Body: CreateTeamInput }>('/admin/teams', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name'],
+        properties: { name: { type: 'string', minLength: 1, maxLength: 120 } },
+      },
+    },
+  }, async (req, reply) => {
     try {
       const result = await createTeam(req.body);
       if (result.isErr()) {
@@ -266,6 +446,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to create team' });
       }
+      await auditAdmin(req, {
+        action: 'admin.team.created',
+        entityType: 'team',
+        entityId: result.value.id,
+        newValue: { name: result.value.name },
+      });
       return reply.status(201).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -273,8 +459,20 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.put('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string }; Body: UpdateTeamInput }>, reply: FastifyReply) => {
+  app.put<{ Params: { id: string }; Body: UpdateTeamInput }>('/admin/teams/:id', {
+    preHandler: [authenticate, requirePermission('admin:write')],
+    schema: {
+      params: { type: 'object', properties: { id: { type: 'string', format: 'uuid' } }, required: ['id'] },
+      body: {
+        type: 'object',
+        additionalProperties: false,
+        minProperties: 1,
+        properties: { name: { type: 'string', minLength: 1, maxLength: 120 } },
+      },
+    },
+  }, async (req, reply) => {
     try {
+      const before = await adminRepository.teamRepository.findById(req.params.id);
       const result = await updateTeam(req.params.id, req.body);
       if (result.isErr()) {
         const error = result.error;
@@ -283,6 +481,13 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to update team' });
       }
+      await auditAdmin(req, {
+        action: 'admin.team.updated',
+        entityType: 'team',
+        entityId: result.value.id,
+        oldValue: before ? { name: before.name } : undefined,
+        newValue: { name: result.value.name },
+      });
       return reply.status(200).send(result.value);
     } catch (error) {
       req.log.error(error);
@@ -290,8 +495,9 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
   });
 
-  app.delete('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  app.delete<{ Params: { id: string } }>('/admin/teams/:id', { preHandler: [authenticate, requirePermission('admin:write')] }, async (req, reply) => {
     try {
+      const before = await adminRepository.teamRepository.findById(req.params.id);
       const result = await deleteTeam(req.params.id);
       if (result.isErr()) {
         const error = result.error;
@@ -300,6 +506,12 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         }
         return reply.status(500).send({ error: 'INTERNAL_ERROR', message: 'Failed to delete team' });
       }
+      await auditAdmin(req, {
+        action: 'admin.team.deleted',
+        entityType: 'team',
+        entityId: req.params.id,
+        oldValue: before ? { name: before.name } : undefined,
+      });
       return reply.status(204).send();
     } catch (error) {
       req.log.error(error);
@@ -369,10 +581,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       await publishToOutbox(entry.sourceEvent);
       deadLetterStore.resolve(id);
-      await createAuditLog({
-        userId: request.user?.id,
+      await auditAdmin(request, {
         action: 'dlq.replay',
         entityType: 'dead-letter',
+        entityId: id,
         metadata: { entryId: id },
       });
       return reply.status(200).send({
@@ -405,10 +617,10 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     }
 
     deadLetterStore.resolve(id);
-    await createAuditLog({
-      userId: request.user?.id,
+    await auditAdmin(request, {
       action: 'dlq.resolve',
       entityType: 'dead-letter',
+      entityId: id,
       metadata: { entryId: id },
     });
     return reply.status(200).send({
@@ -484,8 +696,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.setUserSectors(id, sectorPerms);
-      await createAuditLog({
-        userId: request.user?.id,
+      await auditAdmin(request, {
         action: 'sector.membership.change',
         entityType: 'user',
         entityId: id,
@@ -521,8 +732,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.addSectorPermission(id, sectorId, accessLevel || 'read');
-      await createAuditLog({
-        userId: request.user?.id,
+      await auditAdmin(request, {
         action: 'sector.membership.change',
         entityType: 'user',
         entityId: id,
@@ -549,8 +759,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     try {
       const { sectorPermissionService } = await import('@cvg/auth');
       await sectorPermissionService.removeSectorPermission(id, sectorId);
-      await createAuditLog({
-        userId: request.user?.id,
+      await auditAdmin(request, {
         action: 'sector.membership.change',
         entityType: 'user',
         entityId: id,

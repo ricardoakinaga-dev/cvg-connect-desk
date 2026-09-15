@@ -1,0 +1,17 @@
+{
+  "reviewer": "/root/report_critic",
+  "context_fork": "none",
+  "independence": "I1",
+  "decision": "APPROVE",
+  "material_corrections": [],
+  "scope": [
+    "55 IDs e notas MD/JSON/CSV",
+    "links existentes",
+    "inventario 593/308/291 e hashes atuais",
+    "logs atuais",
+    "amostra de fontes",
+    "distincao entrega/produto e limites"
+  ],
+  "limitation": "Não recertificou produto nem validou individualmente todas as 55 conclusões.",
+  "post_review_change": "Polimento de backticks nas tabelas e registro desta revisão, sem alterar notas ou achados."
+}

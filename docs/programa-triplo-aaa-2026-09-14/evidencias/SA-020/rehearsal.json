@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-09-15T03:31:55.444Z",
+  "databaseUrlHash": "41fc931f0c52beb2c49fadd3f33de2d00b53c05bd52df42d498f733c889aceb4",
+  "result": "PASS",
+  "checks": [
+    {
+      "name": "backfill_cria_vinculos_do_legado",
+      "ok": true,
+      "detail": {
+        "rowCount": 2
+      }
+    },
+    {
+      "name": "primario_marcado",
+      "ok": true
+    },
+    {
+      "name": "forward_idempotente",
+      "ok": true,
+      "detail": {
+        "total": 2
+      }
+    },
+    {
+      "name": "pk_composta_rejeita_duplicata",
+      "ok": true
+    },
+    {
+      "name": "um_primario_por_paciente",
+      "ok": true
+    },
+    {
+      "name": "n_n_dois_tutores_no_paciente",
+      "ok": true,
+      "detail": {
+        "total": 2
+      }
+    },
+    {
+      "name": "backfill_respeita_primario_divergente",
+      "ok": true,
+      "detail": {
+        "divergentBackfillOk": true,
+        "divergentError": null,
+        "rows": [
+          {
+            "tutor_id": "4831125a-2800-4a6c-90d3-52f265457804",
+            "is_primary": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "backfill_nao_promove_vinculo_nao_primario",
+      "ok": true,
+      "detail": {
+        "is_primary": false
+      }
+    },
+    {
+      "name": "rollback_perde_vinculo_n_n_por_desenho",
+      "ok": true,
+      "detail": {
+        "antes": 1,
+        "tabelaDepois": null
+      }
+    },
+    {
+      "name": "rollback_preserva_pacientes_e_tutor_legado",
+      "ok": true,
+      "detail": {
+        "4e15b687-0884-4fa5-aa3e-1486f30b6d5e": null,
+        "c81c12a2-c392-4a79-9890-06cda3ce8e4a": "4831125a-2800-4a6c-90d3-52f265457804",
+        "f64136af-693c-4aae-b2c2-7988b35116a5": "8c585407-2946-4cc6-8f08-f50ed8aafa67"
+      }
+    },
+    {
+      "name": "rollback_remove_tabela_nova",
+      "ok": true,
+      "detail": {
+        "reg": null
+      }
+    },
+    {
+      "name": "rollforward_reconstroi_legado_sem_perda",
+      "ok": true,
+      "detail": {
+        "links": 2,
+        "patients": 3
+      }
+    }
+  ]
+}

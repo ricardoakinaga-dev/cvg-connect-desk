@@ -1,0 +1,24 @@
+{
+  "runId": "prod13-reg-secretary2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61032/cvg_aaa_prod13_reg_secretary2_w46",
+  "databaseName": "cvg_aaa_prod13_reg_secretary2_w46",
+  "databasePort": 61032,
+  "redisUrl": "redis://127.0.0.1:57140",
+  "redisPort": 57140,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3349000,
+    "dataDir": "/tmp/cvg-aaa-runs/prod13-reg-secretary2/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3349036,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod13-reg-secretary2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:51:40.419076-03"
+  }
+}

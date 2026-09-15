@@ -1,0 +1,54 @@
+{
+  "runId": "sa017-dbg",
+  "workerIndex": 36,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_sa017_dbg_w36",
+  "redisUrl": "redis://127.0.0.1:57040",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T01:48:37.256Z",
+  "finishedAt": "2026-09-15T01:48:42.455Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts -t regras congeladas",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_sa017_dbg_w36",
+    "REDIS_URL": "redis://127.0.0.1:57040",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa017-dbg",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa017-dbg",
+    "AAA_WORKER_INDEX": "36"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T01:48:37.256Z",
+      "finishedAt": "2026-09-15T01:48:38.882Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T01:48:38.882Z",
+      "finishedAt": "2026-09-15T01:48:39.537Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-017-alerts.integration.test.ts -t regras congeladas",
+      "startedAt": "2026-09-15T01:48:39.537Z",
+      "finishedAt": "2026-09-15T01:48:42.454Z",
+      "exitStatus": 1,
+      "signal": null,
+      "stdoutTail": "apps/desk-api\n\n{\"level\":40,\"time\":1789436921954,\"pid\":1182745,\"hostname\":\"ricardo-System-Product-Name\",\"msg\":\"[API] SECRETARY_URL or SECRETARY_API_KEY not set — Secretary integration disabled\"}\n{\"level\":30,\"time\":1789436922158,\"pid\":1182745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"req\":{\"method\":\"POST\",\"url\":\"/auth/login\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789436922231,\"pid\":1182745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"userId\":\"5ac946b1-1914-4829-ada6-e5b113baecbf\",\"email\":\"sa017.user.921905@example.com\",\"action\":\"login\",\"msg\":\"User logged in\"}\n{\"level\":30,\"time\":1789436922234,\"pid\":1182745,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1\",\"res\":{\"statusCode\":200},\"responseTime\":74.81879100000015,\"msg\":\"request completed\"}\n ❯ src/__tests__/sa-017-alerts.integration.test.ts (5 tests | 1 failed | 4 skipped) 354ms\n   × SA-017 — alertas automáticos e corrida ack/resolve > regras congeladas geram alertas com vínculo e sem falso positivo 13ms\n     → expected [] to include 'conversation.unassigned'\n   ↓ SA-017 — alertas automáticos e corrida ack/resolve > repetir a varredura na MESMA janela não duplica alerta\n   ↓ SA-017 — alertas automáticos e corrida ack/resolve > resolve e próxima janela gera novo alerta (comportamento explícito)\n   ↓ SA-017 — alertas automáticos e corrida ack/resolve > ack/resolve concorrentes: um vence, o outro 409, estado anterior correto\n   ↓ SA-017 — alertas automáticos e corrida ack/resolve > ack de alerta resolvido → 409 e alerta inexistente → 404\n\n Test Files  1 failed (1)\n      Tests  1 failed | 4 skipped (5)\n   Start at  22:48:40\n   Duration  2.26s (transform 788ms, setup 0ms, collect 1.63s, tests 354ms, environment 0ms, prepare 98ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/sa-017-alerts.integration.test.ts -t regras congeladas\n",
+      "stderrTail": "\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/sa-017-alerts.integration.test.ts > SA-017 — alertas automáticos e corrida ack/resolve > regras congeladas geram alertas com vínculo e sem falso positivo\nAssertionError: expected [] to include 'conversation.unassigned'\n ❯ src/__tests__/sa-017-alerts.integration.test.ts:106:19\n    104|     const created = scanned.value.created.filter((entry) => !entry.ded…\n    105|     const rules = created.map((entry) => entry.rule).sort();\n    106|     expect(rules).toContain('conversation.unassigned');\n       |                   ^\n    107|     expect(rules).toContain('conversation.unanswered');\n    108|     expect(rules).toContain('task.overdue');\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 1
+}

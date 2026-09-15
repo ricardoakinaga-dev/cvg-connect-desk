@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { ErrorState } from './ui';
 
 interface Props {
   children: ReactNode;
@@ -26,36 +27,13 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: '#f8fafc',
-          color: '#ef4444',
-          padding: '32px',
-          textAlign: 'center',
-        }}>
-          <div>
-            <h1>Algo deu errado</h1>
-            <p style={{ marginTop: '12px', color: '#64748b' }}>
-              {this.state.error?.message || 'Erro desconhecido'}
-            </p>
-            <button 
-              onClick={() => window.location.reload()}
-              style={{
-                marginTop: '16px',
-                padding: '8px 16px',
-                background: '#2563eb',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-              }}
-            >
-              Recarregar página
-            </button>
-          </div>
+        <div className="ui-error-page">
+          <ErrorState
+            title="Algo deu errado"
+            message={this.state.error?.message || 'Erro desconhecido'}
+            onRetry={() => window.location.reload()}
+            retryLabel="Recarregar página"
+          />
         </div>
       );
     }

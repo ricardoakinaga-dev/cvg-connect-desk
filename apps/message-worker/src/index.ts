@@ -1,364 +1,294 @@
 import 'dotenv/config';
+import { randomUUID } from 'node:crypto';
 import { initTracing, withSpan, correlationAttributes } from '@cvg/tracing';
 import {
-  shouldRetry,
-  calculateNextDelay,
-  createRetryContext,
-  type RetryConfig,
-  type EventEnvelope,
   ConsumerAwareOutboxReader,
   CONSUMER_IDS,
+  type EventEnvelope,
+  type RetryConfig,
 } from '@cvg/events';
-import { createAlert } from '@cvg/alerts';
+import {
+  recoverPendingInboundMedia,
+  setGatewayOutboundPort,
+  waitForInboundMediaProcessing,
+} from '@cvg/chat';
+import { gatewayService } from '@cvg/gateway-adapter';
+import { initializeSecretaryFromEnv } from '@cvg/secretary-adapter';
+import { createEventProcessor, type ProcessEventOutcome } from './processor';
+import { createHandlers } from './handlers';
+import { redactErrorForLog } from './errors';
+import { consoleWorkerLogger, WORKER_EVENT_TYPES, type WorkerLogger } from './contract';
 import { recordWorkerDeadLetter } from './dead-letter';
-import { startWorkerHealthServer } from './health';
+import { createWorkerHealthTracker, startWorkerHealthServer, type WorkerHealthTracker } from './health';
 import { createNoOverlapPoller } from './polling';
 
+function envPositiveInt(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw === '') return fallback;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(`[Worker] ${name} deve ser inteiro positivo (recebido "${raw}")`);
+  }
+  return value;
+}
+
+function envPositiveNumber(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw === '') return fallback;
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`[Worker] ${name} deve ser numérico positivo (recebido "${raw}")`);
+  }
+  return value;
+}
+
+// Orçamento de retry do worker: o MESMO valor governa o backoff em processo e
+// o teto do consumidor no lease (outbox_consumer_acks.retry_count), de modo
+// que "tentativas esgotadas" tem um sentido único para o operador.
+const WORKER_MAX_RETRIES = envPositiveInt('WORKER_MAX_RETRIES', 3);
 const RETRY_CONFIG: RetryConfig = {
-  maxRetries: 3,
-  initialDelayMs: 1000,
-  maxDelayMs: 30000,
-  backoffMultiplier: 2,
+  maxRetries: WORKER_MAX_RETRIES,
+  initialDelayMs: envPositiveInt('WORKER_RETRY_INITIAL_DELAY_MS', 1000),
+  maxDelayMs: envPositiveInt('WORKER_RETRY_MAX_DELAY_MS', 30000),
+  backoffMultiplier: envPositiveNumber('WORKER_RETRY_BACKOFF_MULTIPLIER', 2),
 };
 
+const logger: WorkerLogger = consoleWorkerLogger;
+
+// Catálogo explícito do worker: só estes tipos são claimados (BK06).
 const workerReader = new ConsumerAwareOutboxReader({
   consumerId: CONSUMER_IDS.WORKER,
   batchSize: 50,
-  maxRetries: 3,
+  maxRetries: WORKER_MAX_RETRIES,
+  eventTypes: WORKER_EVENT_TYPES,
+});
+
+// Owner único do processo: fence de lease por (event_id, worker). Duas
+// instâncias nunca processam o mesmo lease (claim atômico C03 D-C03-4).
+const WORKER_OWNER = process.env.WORKER_OWNER || `worker-${process.pid}-${randomUUID().slice(0, 8)}`;
+const WORKER_LEASE_SECONDS = envPositiveInt('WORKER_LEASE_SECONDS', 120);
+const MEDIA_RECOVERY_BATCH_SIZE = envPositiveInt('MEDIA_RECOVERY_BATCH_SIZE', 50);
+const MEDIA_RECOVERY_LEASE_SECONDS = envPositiveInt('MEDIA_RECOVERY_LEASE_SECONDS', WORKER_LEASE_SECONDS);
+const MEDIA_RECOVERY_MAX_ATTEMPTS = envPositiveInt('MEDIA_RECOVERY_MAX_ATTEMPTS', 8);
+const MEDIA_RECOVERY_BACKOFF_BASE_MS = envPositiveInt('MEDIA_RECOVERY_BACKOFF_BASE_MS', 1000);
+const MEDIA_RECOVERY_BACKOFF_MAX_MS = envPositiveInt('MEDIA_RECOVERY_BACKOFF_MAX_MS', 300_000);
+const MEDIA_RECOVERY_OWNER = `${WORKER_OWNER}:media`;
+
+// Injeção de falha para PROVA de crash/retomada: `crash` encerra o processo
+// ANTES do efeito (entre o commit/claim do inbound e a invocação da Secretary).
+// Nunca configurar em produção.
+const FAULT_BEFORE_EFFECT = process.env.WORKER_FAULT_BEFORE_EFFECT;
+if (FAULT_BEFORE_EFFECT && FAULT_BEFORE_EFFECT !== 'crash') {
+  throw new Error(`[Worker] WORKER_FAULT_BEFORE_EFFECT inválido: "${FAULT_BEFORE_EFFECT}"`);
+}
+
+// Injeção de falha para PROVA de crash/retomada: `crash` encerra o processo
+// DEPOIS do efeito commitado e ANTES do ACK. Nunca configurar em produção.
+const FAULT_AFTER_EFFECT = process.env.WORKER_FAULT_AFTER_EFFECT;
+if (FAULT_AFTER_EFFECT && FAULT_AFTER_EFFECT !== 'crash') {
+  throw new Error(`[Worker] WORKER_FAULT_AFTER_EFFECT inválido: "${FAULT_AFTER_EFFECT}"`);
+}
+
+const handlers = createHandlers(logger);
+
+function faultBeforeEffect(event: EventEnvelope): void {
+  if (FAULT_BEFORE_EFFECT !== 'crash') return;
+  logger.error({
+    msg: '[Worker] fault injection: crashing before effect',
+    event_id: event.event_id,
+    event_type: event.event_type,
+    correlation_id: event.correlation_id,
+  });
+  process.exit(86);
+}
+
+function faultAfterEffect(event: EventEnvelope): void {
+  if (FAULT_AFTER_EFFECT !== 'crash') return;
+  logger.error({
+    msg: '[Worker] fault injection: crashing after effect before ACK',
+    event_id: event.event_id,
+    event_type: event.event_type,
+    correlation_id: event.correlation_id,
+  });
+  process.exit(86);
+}
+
+const processEvent = createEventProcessor({
+  handlers,
+  retryConfig: RETRY_CONFIG,
+  logger,
+  ports: {
+    // ACK cercado pelo token do lease (owner+generation): resultado observado
+    // pelo processador — `stale`/`not_found` nunca é relatado como concluído.
+    ack: (input) =>
+      workerReader.acknowledge(input.eventId, { owner: input.owner, generation: input.generation }),
+    nack: (input) => workerReader.nack(input),
+  },
+  onAfterEffect: faultAfterEffect,
+  onBeforeEffect: faultBeforeEffect,
+  onDeadLetter: ({ event, error, attempts, errorCode, handlerName }) => {
+    recordWorkerDeadLetter({ event, error, retryCount: attempts, handlerName, errorCode });
+  },
 });
 
 let workerPoller: ReturnType<typeof createNoOverlapPoller> | null = null;
 let workerHealthServer: ReturnType<typeof startWorkerHealthServer> | null = null;
+let workerHealthTracker: WorkerHealthTracker | null = null;
 
-async function handleHandoffCompleted(event: EventEnvelope): Promise<void> {
-  const payload = event.payload as {
-    conversationId: string;
-    previousHandler: 'bot' | 'human';
-    newHandler: 'bot' | 'human';
-    reason: string;
-    triggeredBy?: string;
-  };
-
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing handoff.completed',
-    event_type: event.event_type,
-    event_id: event.event_id,
-    correlation_id: event.correlation_id,
-    conversation_id: payload.conversationId,
-    previousHandler: payload.previousHandler,
-    newHandler: payload.newHandler,
-    level: 'info',
-  }));
-
-  if (payload.newHandler === 'human' && payload.reason) {
-    const alertResult = await createAlert({
-      conversationId: payload.conversationId,
-      type: 'handoff',
-      title: 'Conversa transferida para atendimento humano',
-      message: `Motivo: ${payload.reason}`,
-      severity: 'info',
-      triggeredBy: payload.triggeredBy,
-      metadata: {
-        previousHandler: payload.previousHandler,
-        newHandler: payload.newHandler,
-        eventId: event.event_id,
-      },
+async function processClaimedEvent(event: EventEnvelope, lease: Parameters<typeof processEvent>[1]): Promise<ProcessEventOutcome | null> {
+  try {
+    return await withSpan(
+      'worker.process',
+      async () => processEvent(event, lease),
+      correlationAttributes({
+        event_id: event.event_id,
+        event_type: event.event_type,
+        correlation_id: event.correlation_id,
+        causation_id: event.causation_id,
+      }),
+    );
+  } catch (error) {
+    // Falha de infraestrutura (ex.: banco indisponível no ACK/NACK): o lease
+    // expira e o evento é reclamado. Nenhum `catch` marca sucesso.
+    logger.error({
+      msg: '[Worker] Unexpected error processing event; lease will be recovered',
+      event_type: event.event_type,
+      event_id: event.event_id,
+      correlation_id: event.correlation_id,
+      error: redactErrorForLog(error instanceof Error ? error.message : String(error)),
     });
-
-    if (alertResult.isErr()) {
-      console.error(JSON.stringify({
-        msg: '[Worker] Failed to create alert for handoff',
-        conversation_id: payload.conversationId,
-        error: alertResult.error.message,
-        level: 'error',
-      }));
-    }
-  }
-}
-
-async function handleSecretaryInvocation(event: EventEnvelope): Promise<void> {
-  const payload = event.payload as {
-    conversationId: string;
-    status: 'requested' | 'success' | 'failed';
-    action: string;
-    errorMessage?: string;
-  };
-
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing secretary.invocation',
-    event_type: event.event_type,
-    event_id: event.event_id,
-    correlation_id: event.correlation_id,
-    conversation_id: payload.conversationId,
-    action: payload.action,
-    status: payload.status,
-    level: 'info',
-  }));
-
-  if (payload.status === 'failed' && payload.errorMessage) {
-    console.warn(JSON.stringify({
-      msg: '[Worker] Secretary invocation failed',
-      event_type: event.event_type,
-      event_id: event.event_id,
-      correlation_id: event.correlation_id,
-      conversation_id: payload.conversationId,
-      action: payload.action,
-      status: payload.status,
-      error: payload.errorMessage,
-      level: 'warn',
-    }));
-    const alertResult = await createAlert({
-      conversationId: payload.conversationId,
-      type: 'system',
-      title: 'Falha na chamada à Secretary',
-      message: `Action: ${payload.action}, Erro: ${payload.errorMessage}`,
-      severity: 'warning',
-      metadata: {
-        eventId: event.event_id,
-        action: payload.action,
-      },
-    });
-
-    if (alertResult.isErr()) {
-      console.error(JSON.stringify({
-        msg: '[Worker] Failed to create alert for secretary failure',
-        conversation_id: payload.conversationId,
-        error: alertResult.error.message,
-        level: 'error',
-      }));
-    }
-  }
-}
-
-async function handleMessagePersisted(event: EventEnvelope): Promise<void> {
-  const payload = event.payload as {
-    conversationId: string;
-    direction: 'inbound' | 'outbound';
-    content: string;
-  };
-
-  console.log(JSON.stringify({
-    msg: '[Worker] Processing message.persisted',
-    event_type: event.event_type,
-    event_id: event.event_id,
-    correlation_id: event.correlation_id,
-    conversation_id: payload.conversationId,
-    direction: payload.direction,
-    level: 'debug',
-  }));
-}
-
-const handlers: Record<string, (event: EventEnvelope) => Promise<void>> = {
-  'handoff.completed': handleHandoffCompleted,
-  'secretary.invocation': handleSecretaryInvocation,
-  'message.persisted': handleMessagePersisted,
-};
-
-async function processEventFromOutbox(eventId: string, event: EventEnvelope): Promise<void> {
-  const handler = handlers[event.event_type];
-  
-  if (!handler) {
-    console.warn(JSON.stringify({
-      msg: '[Worker] No handler for event type, acknowledging without processing',
-      event_type: event.event_type,
-      event_id: event.event_id,
-      correlation_id: event.correlation_id,
-      level: 'warn',
-    }));
-    await workerReader.acknowledge(eventId);
-    return;
-  }
-
-  let attempt = 0;
-
-  await withSpan(
-    'worker.process',
-    async () => {
-      await runHandlerWithRetry();
-    },
-    correlationAttributes({
-      event_id: event.event_id,
-      event_type: event.event_type,
-      correlation_id: event.correlation_id,
-      causation_id: event.causation_id,
-    }),
-  );
-
-  async function runHandlerWithRetry(): Promise<void> {
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      try {
-        await handler(event);
-        console.info(JSON.stringify({
-          msg: '[Worker] Successfully processed event',
-          event_type: event.event_type,
-          event_id: event.event_id,
-          correlation_id: event.correlation_id,
-          handler: handler.name || event.event_type,
-          level: 'info',
-        }));
-        await workerReader.acknowledge(eventId);
-        break;
-      } catch (error) {
-        const err = error as Error;
-        const failureCount = attempt + 1;
-        const updatedContext = createRetryContext(event, event.event_type, failureCount, err);
-
-        if (!shouldRetry(updatedContext, RETRY_CONFIG)) {
-          console.error(JSON.stringify({
-            msg: '[Worker] Non-retryable error — sending to dead-letter',
-            event_type: event.event_type,
-            event_id: event.event_id,
-            correlation_id: event.correlation_id,
-            handler: handler.name || event.event_type,
-            error: err.message,
-            retry_count: failureCount,
-            retry_decision: 'dead-letter',
-            failure_stage: 'worker-terminal',
-            level: 'error',
-          }));
-          await workerReader.acknowledgeWithError(eventId, err.message);
-          recordWorkerDeadLetter({
-            event,
-            error: err.message,
-            retryCount: failureCount,
-            handlerName: handler.name || event.event_type,
-          });
-          break;
-        }
-
-        attempt = failureCount;
-        const delay = calculateNextDelay(RETRY_CONFIG, attempt);
-
-        console.warn(JSON.stringify({
-          msg: '[Worker] Retrying event after error',
-          event_type: event.event_type,
-          event_id: event.event_id,
-          correlation_id: event.correlation_id,
-          handler: handler.name || event.event_type,
-          attempt,
-          max_retries: RETRY_CONFIG.maxRetries,
-          delay_ms: delay,
-          error: err.message,
-          level: 'warn',
-        }));
-
-        if (attempt >= RETRY_CONFIG.maxRetries) {
-          console.error(JSON.stringify({
-            msg: '[Worker] Max retries exceeded — sending to dead-letter',
-            event_type: event.event_type,
-            event_id: event.event_id,
-            correlation_id: event.correlation_id,
-            handler: handler.name || event.event_type,
-            error: err.message,
-            attempt,
-            max_retries: RETRY_CONFIG.maxRetries,
-            retry_decision: 'dead-letter',
-            failure_stage: 'worker-terminal',
-            level: 'error',
-          }));
-          await workerReader.acknowledgeWithError(eventId, err.message);
-          recordWorkerDeadLetter({
-            event,
-            error: err.message,
-            retryCount: attempt,
-            handlerName: handler.name || event.event_type,
-          });
-          break;
-        }
-
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
+    return null;
   }
 }
 
 async function startWorker(): Promise<void> {
   await initTracing();
+
+  // Composição explícita (C02 §5): o worker que envia a resposta da IA usa o
+  // MESMO provedor outbound da API (sem transporte paralelo) e inicializa o
+  // cliente da Secretary a partir do ambiente; ausência vira falha observável.
+  setGatewayOutboundPort(gatewayService);
+  const secretary = initializeSecretaryFromEnv();
+  if (secretary.configured) {
+    logger.info({ msg: '[Worker] Secretary client initialized' });
+  } else {
+    logger.warn({ msg: '[Worker] Secretary client NOT configured — invocations will fail observably', reason: secretary.reason });
+  }
+
   const outboxPollInterval = Number(process.env.OUTBOX_POLL_INTERVAL_MS || process.env.WORKER_POLL_INTERVAL_MS) || 500;
   const healthPort = Number(process.env.WORKER_HEALTH_PORT) || 9090;
+  workerHealthTracker = createWorkerHealthTracker({
+    pollIntervalMs: outboxPollInterval,
+    maxQueueAgeSeconds: Number(process.env.WORKER_MAX_QUEUE_AGE_SECONDS) || 300,
+  });
 
-  workerHealthServer = startWorkerHealthServer(healthPort);
+  workerHealthServer = startWorkerHealthServer(healthPort, () => workerHealthTracker!.snapshot());
   workerHealthServer.on('error', (error) => {
-    console.error(JSON.stringify({
+    logger.error({
       msg: '[Worker] Health server error',
       error: error instanceof Error ? error.message : String(error),
       port: healthPort,
-      level: 'error',
-    }));
+    });
   });
 
-  console.info(JSON.stringify({
+  logger.info({
     msg: '[Worker] Starting message worker',
     consumer_id: CONSUMER_IDS.WORKER,
-    handlers: ['handoff.completed', 'secretary.invocation', 'message.persisted'],
+    handlers: [...WORKER_EVENT_TYPES],
     poll_interval_ms: outboxPollInterval,
-    level: 'info',
-  }));
+    max_retries: WORKER_MAX_RETRIES,
+  });
 
   workerPoller = createNoOverlapPoller(async () => {
+    workerHealthTracker?.markLoopStarted();
     try {
-      const pendingEvents = await workerReader.fetchPendingEvents();
+      const pending = await workerReader.fetchPendingEvents();
+      const oldestPendingAt = pending[0]?.createdAt ?? null;
+      const claimed = await workerReader.claim({
+        owner: WORKER_OWNER,
+        leaseSeconds: WORKER_LEASE_SECONDS,
+        limit: 50,
+      });
 
-      if (pendingEvents.length > 0) {
-        console.info(JSON.stringify({
-          msg: '[Worker] Fetched pending events from outbox',
-          count: pendingEvents.length,
-          level: 'info',
-        }));
+      if (claimed.length > 0) {
+        logger.info({
+          msg: '[Worker] Claimed events from outbox with lease',
+          count: claimed.length,
+          owner: WORKER_OWNER,
+          lease_seconds: WORKER_LEASE_SECONDS,
+        });
 
-        for (const outboxEvent of pendingEvents) {
-          const eventEnvelope = workerReader.toEventEnvelope(outboxEvent);
-          await processEventFromOutbox(outboxEvent.eventId, eventEnvelope);
+        for (const { event, lease } of claimed) {
+          await processClaimedEvent(event, lease);
         }
       }
+
+      const recoveredMedia = await recoverPendingInboundMedia(MEDIA_RECOVERY_BATCH_SIZE, {
+        owner: MEDIA_RECOVERY_OWNER,
+        leaseSeconds: MEDIA_RECOVERY_LEASE_SECONDS,
+        maxAttempts: MEDIA_RECOVERY_MAX_ATTEMPTS,
+        backoffBaseMs: MEDIA_RECOVERY_BACKOFF_BASE_MS,
+        backoffMaxMs: MEDIA_RECOVERY_BACKOFF_MAX_MS,
+      });
+      if (recoveredMedia > 0) {
+        logger.info({
+          msg: '[Worker] Recovered inbound media intake',
+          count: recoveredMedia,
+          owner: MEDIA_RECOVERY_OWNER,
+        });
+      }
+      workerHealthTracker?.markLoopSucceeded({
+        pendingCount: pending.length,
+        oldestPendingAt,
+      });
     } catch (error) {
-      console.error(JSON.stringify({
+      workerHealthTracker?.markLoopFailed(error);
+      logger.error({
         msg: '[Worker] Error polling outbox',
         error: (error as Error).message,
-        level: 'error',
-      }));
+      });
     }
   }, outboxPollInterval);
 
-  console.info(JSON.stringify({
-    msg: '[Worker] Worker started successfully',
-    level: 'info',
-  }));
+  logger.info({ msg: '[Worker] Worker started successfully' });
 }
 
-function stopWorker(): void {
-  workerPoller?.stop();
+async function stopWorker(): Promise<void> {
+  workerHealthTracker?.markStopping();
+  const poller = workerPoller;
+  poller?.stop();
   workerPoller = null;
-  workerHealthServer?.close();
+  await poller?.waitForIdle();
+  await waitForInboundMediaProcessing(undefined, WORKER_LEASE_SECONDS * 1000);
+  const healthServer = workerHealthServer;
   workerHealthServer = null;
+  await new Promise<void>((resolve) => {
+    if (!healthServer) {
+      resolve();
+      return;
+    }
+    healthServer.close(() => resolve());
+  });
+  workerHealthTracker = null;
 }
 
 startWorker().catch(error => {
-  console.error(JSON.stringify({
+  logger.error({
     msg: '[Worker] Failed to start worker',
     error: error instanceof Error ? error.message : String(error),
-    level: 'error',
-  }));
+  });
   process.exit(1);
 });
 
-process.on('SIGTERM', () => {
-  console.info(JSON.stringify({
-    msg: '[Worker] Received SIGTERM, shutting down gracefully',
-    level: 'info',
-  }));
-  stopWorker();
-  process.exit(0);
-});
+let shutdownPromise: Promise<void> | null = null;
 
-process.on('SIGINT', () => {
-  console.info(JSON.stringify({
-    msg: '[Worker] Received SIGINT, shutting down gracefully',
-    level: 'info',
-  }));
-  stopWorker();
-  process.exit(0);
-});
+function requestShutdown(signal: NodeJS.Signals): void {
+  logger.info({ msg: `[Worker] Received ${signal}, shutting down gracefully` });
+  shutdownPromise ??= stopWorker();
+  void shutdownPromise.then(() => process.exit(0));
+}
 
-export { startWorker };
+process.on('SIGTERM', () => requestShutdown('SIGTERM'));
+process.on('SIGINT', () => requestShutdown('SIGINT'));
+
+export { startWorker, processEvent };

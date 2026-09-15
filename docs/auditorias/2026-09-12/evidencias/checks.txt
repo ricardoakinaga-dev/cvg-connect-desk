@@ -1,0 +1,19 @@
+• turbo 2.8.21
+ WARNING  Circular package dependency detected: @cvg/gateway-adapter, @cvg/chat
+  x Cyclic dependency detected:
+  | 	@cvg/gateway-adapter#lint, @cvg/chat#lint
+  | 
+  | The cycle can be broken by removing any of these sets of dependencies:
+  | 	@cvg/gateway-adapter#lint -> @cvg/chat#lint
+  | 	@cvg/chat#lint -> @cvg/gateway-adapter#lint
+  | 	@cvg/gateway-adapter#typecheck, @cvg/chat#typecheck
+  | 
+  | The cycle can be broken by removing any of these sets of dependencies:
+  | 	@cvg/chat#typecheck -> @cvg/gateway-adapter#typecheck
+  | 	@cvg/gateway-adapter#typecheck -> @cvg/chat#typecheck
+  | 	@cvg/gateway-adapter#build, @cvg/chat#build
+  | 
+  | The cycle can be broken by removing any of these sets of dependencies:
+  | 	@cvg/chat#build -> @cvg/gateway-adapter#build
+  | 	@cvg/gateway-adapter#build -> @cvg/chat#build
+

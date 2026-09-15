@@ -1,0 +1,24 @@
+{
+  "runId": "prod10-reg-worker",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_prod10_reg_worker_w25",
+  "databaseName": "cvg_aaa_prod10_reg_worker_w25",
+  "databasePort": 58932,
+  "redisUrl": "redis://127.0.0.1:56930",
+  "redisPort": 56930,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3002035,
+    "dataDir": "/tmp/cvg-aaa-runs/prod10-reg-worker/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3002080,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod10-reg-worker",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:05:40.581281-03"
+  }
+}

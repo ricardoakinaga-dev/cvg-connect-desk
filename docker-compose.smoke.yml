@@ -1,6 +1,4 @@
 # docker-compose.smoke.yml — Stack mínima dedicada ao smoke E2E
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15-alpine

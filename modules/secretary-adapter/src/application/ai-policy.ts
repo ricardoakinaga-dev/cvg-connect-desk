@@ -17,6 +17,30 @@ export type AIActionClass =
 
 export type AIDecision = 'allow' | 'deny';
 
+export type AIDenyReasonCode =
+  | 'ACTION_FORBIDDEN'
+  | 'CONTENT_BUDGET'
+  | 'HISTORY_BUDGET'
+  | 'INVOCATION_BUDGET';
+
+/**
+ * PROD-13 / C08 — bloqueio do orçamento DURÁVEL por conversa (`denied` em
+ * `secretary_invocations`). Erro tipado, permanente e mapeável a 403
+ * `AI_POLICY_DENIED`; a superfície assíncrona (worker) o converte em estado
+ * `denied` durável, sem retry infinito e sem DLQ ruidosa.
+ */
+export class AIBudgetExhaustedError extends Error {
+  readonly errorCode = 'AI_BUDGET_EXHAUSTED';
+  readonly permanent = true;
+  readonly statusCode = 403;
+
+  constructor(message = 'invocation budget exhausted for conversation') {
+    super(message);
+    this.name = 'AIBudgetExhaustedError';
+    Object.setPrototypeOf(this, AIBudgetExhaustedError.prototype);
+  }
+}
+
 export interface AIBudgetLimits {
   maxContentChars: number;
   maxHistoryItems: number;
@@ -76,32 +100,61 @@ export function clearAIDecisions(): void {
   decisionLog.length = 0;
 }
 
-/** Sanitiza argumentos para o registro de decisão: sem prompt integral, sem PII. */
-export function sanitizeAIArgs(args: Record<string, unknown>): Record<string, unknown> {
+/** Sanitiza argumentos para o registro de decisão: sem prompt integral, sem PII.
+ *
+ * PROD-13: a sanitização é RECURSIVA — objetos/arrays aninhados não podem
+ * vazar telefone, e-mail, conteúdo ou prompt (AC4). O nome do campo é avaliado
+ * em qualquer profundidade; strings longas são truncadas.
+ */
+const MAX_SANITIZE_DEPTH = 8;
+
+function isPhoneKey(loweredKey: string): boolean {
+  return loweredKey === 'contactphone' || loweredKey === 'sender' || loweredKey === 'phone'
+    || loweredKey === 'recipient' || loweredKey.endsWith('phone') || loweredKey.endsWith('telefone');
+}
+
+function isEmailKey(loweredKey: string): boolean {
+  return loweredKey === 'email' || loweredKey.endsWith('email');
+}
+
+function sanitizeValue(value: unknown, depth: number): unknown {
+  if (depth >= MAX_SANITIZE_DEPTH) return '[TRUNCATED_DEPTH]';
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeValue(item, depth + 1));
+  }
+  if (value !== null && typeof value === 'object') {
+    return sanitizeRecord(value as Record<string, unknown>, depth + 1);
+  }
+  if (typeof value === 'string' && value.length > 500) {
+    return `${value.slice(0, 200)}…[TRUNCATED ${value.length} chars]`;
+  }
+  return value;
+}
+
+function sanitizeRecord(record: Record<string, unknown>, depth: number): Record<string, unknown> {
   const out: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(args)) {
+  for (const [key, value] of Object.entries(record)) {
     const lowered = key.toLowerCase();
     if (key === 'content' && typeof value === 'string') {
       out.contentPreview = value.slice(0, 200);
       out.contentChars = value.length;
     } else if (key === 'conversationHistory' && Array.isArray(value)) {
       out.historyItems = value.length;
-    } else if (
-      lowered === 'contactphone' || lowered === 'sender' || lowered === 'phone' ||
-      lowered === 'recipient' || lowered.endsWith('phone') || lowered.endsWith('telefone')
-    ) {
+    } else if (isPhoneKey(lowered)) {
       out[key] = '[PHONE]';
-    } else if (lowered === 'email' || lowered.endsWith('email')) {
+    } else if (isEmailKey(lowered)) {
       out[key] = '[EMAIL]';
     } else if (key === 'context' || key === 'prompt') {
       out[key] = '[OMITTED]';
-    } else if (typeof value === 'string' && value.length > 500) {
-      out[key] = `${value.slice(0, 200)}…[TRUNCATED ${value.length} chars]`;
     } else {
-      out[key] = value;
+      out[key] = sanitizeValue(value, depth);
     }
   }
   return out;
+}
+
+export function sanitizeAIArgs(args: Record<string, unknown>): Record<string, unknown> {
+  return sanitizeRecord(args, 0);
 }
 
 export interface AIPolicyInput {
@@ -115,21 +168,46 @@ export interface AIPolicyInput {
 }
 
 /** Avalia a policy. Retorna allow/deny com motivo auditável. */
-export function evaluateAIPolicy(input: AIPolicyInput): { decision: AIDecision; classification: AIActionClass; reason?: string } {
+export function evaluateAIPolicy(input: AIPolicyInput): {
+  decision: AIDecision;
+  classification: AIActionClass;
+  reason?: string;
+  reasonCode?: AIDenyReasonCode;
+} {
   const classification = classifyAIAction(input.action);
   if (classification === 'FORBIDDEN') {
-    return { decision: 'deny', classification, reason: `unknown action: ${input.action}` };
+    return {
+      decision: 'deny',
+      classification,
+      reason: `unknown action: ${input.action}`,
+      reasonCode: 'ACTION_FORBIDDEN',
+    };
   }
 
   const limits = getAIBudgetLimits();
   if (input.contentChars > limits.maxContentChars) {
-    return { decision: 'deny', classification, reason: `content exceeds ${limits.maxContentChars} chars` };
+    return {
+      decision: 'deny',
+      classification,
+      reason: `content exceeds ${limits.maxContentChars} chars`,
+      reasonCode: 'CONTENT_BUDGET',
+    };
   }
   if (input.historyItems > limits.maxHistoryItems) {
-    return { decision: 'deny', classification, reason: `history exceeds ${limits.maxHistoryItems} items` };
+    return {
+      decision: 'deny',
+      classification,
+      reason: `history exceeds ${limits.maxHistoryItems} items`,
+      reasonCode: 'HISTORY_BUDGET',
+    };
   }
   if (input.priorInvocations >= limits.maxInvocationsPerConversation) {
-    return { decision: 'deny', classification, reason: 'invocation budget exhausted for conversation' };
+    return {
+      decision: 'deny',
+      classification,
+      reason: 'invocation budget exhausted for conversation',
+      reasonCode: 'INVOCATION_BUDGET',
+    };
   }
   return { decision: 'allow', classification };
 }

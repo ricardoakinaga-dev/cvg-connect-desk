@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 export type MediaAsset = typeof schema.mediaAssets.$inferSelect;
 
@@ -48,6 +48,21 @@ export const mediaAssetRepository = {
 
   async findByMessageId(messageId: string): Promise<MediaAsset[]> {
     return db.select().from(schema.mediaAssets).where(eq(schema.mediaAssets.messageId, messageId));
+  },
+
+  async findByStorageKey(storageKey: string): Promise<MediaAsset | null> {
+    const [row] = await db.select().from(schema.mediaAssets).where(eq(schema.mediaAssets.storageKey, storageKey));
+    return row || null;
+  },
+
+  /** Identidade estável para reprocessar o mesmo bytes sem criar outro asset. */
+  async findByMessageIdAndSha256(messageId: string, sha256: string): Promise<MediaAsset | null> {
+    const [row] = await db
+      .select()
+      .from(schema.mediaAssets)
+      .where(and(eq(schema.mediaAssets.messageId, messageId), eq(schema.mediaAssets.sha256, sha256)))
+      .limit(1);
+    return row || null;
   },
 
   async updateStatus(

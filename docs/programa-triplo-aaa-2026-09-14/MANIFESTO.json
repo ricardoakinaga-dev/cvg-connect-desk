@@ -1,0 +1,371 @@
+{
+  "kind": "program-documentation-checkpoint-r3",
+  "created_at": "2026-09-15T10:52:23.051854Z",
+  "scope": "Arquivos normativos e derivados do programa; exclui MANIFESTO.json, caches e evidencias/ mutáveis.",
+  "files": {
+    "AGENTE.md": {
+      "size": 7956,
+      "sha256": "1c5b797b49275d5b6774601427dbfcfd9fc8df586f7dc98e17b690f709e659f0"
+    },
+    "AUTORIZACAO-MATRIZ.md": {
+      "size": 23022,
+      "sha256": "dfe19f514de57d37cc178172e46c6d2a8d63922b1e0925237b7ef08b11784d19"
+    },
+    "BACKLOG.json": {
+      "size": 180374,
+      "sha256": "48e01cbbe9bb905339f5882babc855f3e162b8a5f815b448badca5e12407bd89"
+    },
+    "BACKLOG.md": {
+      "size": 9762,
+      "sha256": "95062ad1dc098126f8a25f091428d07329c963d4a987e519091b057d3dcb3b71"
+    },
+    "CONTRATOS.md": {
+      "size": 10737,
+      "sha256": "b4485ed786deb80b15ddedba27155d3bc14d54c45e27af6381fcd99faaa3154e"
+    },
+    "CRITERIOS.md": {
+      "size": 14171,
+      "sha256": "6619fc0c038d502dabec9a128c16dac877aaf976e026796333c71ed5dda1ee6a"
+    },
+    "DECISOES.md": {
+      "size": 5564,
+      "sha256": "e19ca45d95b373da7d723ab725fb905c2c26094436e5825218e23f96b8c13978"
+    },
+    "EXECUCAO.md": {
+      "size": 5703,
+      "sha256": "4b4bb5616dcbec4e0ab3659e3dcbf573ac7ef83b1d969a18650bca3356e07576"
+    },
+    "PLANO-EXECUTIVO.md": {
+      "size": 13636,
+      "sha256": "3044b58dab5caf92a9c8df5b1376b23d44407e4accb0cf03f8b9410086bc846e"
+    },
+    "RASTREABILIDADE.md": {
+      "size": 14184,
+      "sha256": "cb78796dc3c282d3c86b2431e43d12617e918d8d0e1d941aaa4d2c77bb89ba2d"
+    },
+    "README.md": {
+      "size": 3750,
+      "sha256": "5bfff39a2ec25cf95ba52301a7b3f55a7c9134fe76dcc06349549d131b0777f0"
+    },
+    "REQUISITOS.json": {
+      "size": 20422,
+      "sha256": "e9824616c9498795c29728da0b6c4f2675205085a926f70ee21343dcff5bdc2c"
+    },
+    "ROADMAP.md": {
+      "size": 4831,
+      "sha256": "aca3433041d68c722fe828987d57f2a5c14ac8f4f5db4093a3bb5bb2c9be53c6"
+    },
+    "VALIDACAO.md": {
+      "size": 2181,
+      "sha256": "b198de1d5557f44310b5605e5d324b945ac745229eda43ce1af94f97d1e65a99"
+    },
+    "decisoes/D03-relacao-tutor-paciente.md": {
+      "size": 8157,
+      "sha256": "c130c5bbce38f58e6b717fc1132fa2a80342e7bc75050528aecae4589257aa39"
+    },
+    "decisoes/d03/001_patient_tutor_links.sql": {
+      "size": 1469,
+      "sha256": "cebedb9353ec5a27428a4e46da4a3348715d4d8534132ca26343861a5d3d705f"
+    },
+    "decisoes/d03/001_rollback.sql": {
+      "size": 359,
+      "sha256": "f6fb70a11f00f732a6b0e7fe0e6c4c308e04ba94b7a1a09c2123dee69b634f8a"
+    },
+    "decisoes/d03/inventory-tutor-id.txt": {
+      "size": 14414,
+      "sha256": "c557692b112b980bb5ba0e0df726d30ad3bc25962d06daa0872e6fdc6e140f79"
+    },
+    "evidencias-planejamento/estrutura-final.json": {
+      "size": 723,
+      "sha256": "ec4da5b2f1e3959228048a00b1abf324e73053e0c279eb582488cbd94d60cd45"
+    },
+    "evidencias-planejamento/fontes-antes.json": {
+      "size": 96539,
+      "sha256": "5eebcfa72c2aa08e839cb462a31f151ca126de27b31407217fba62564cf43b1b"
+    },
+    "evidencias-planejamento/validacao.json": {
+      "size": 1277,
+      "sha256": "7c9d85575868edd5c781a0050e1fcabb296374019c145e20c5828537b7eabd15"
+    },
+    "programa.py": {
+      "size": 10013,
+      "sha256": "2440459d536a1ffcba3d2fa7873af6e5720bf1262f1302b60fd468e72cf1a3a4"
+    },
+    "rodadas/R2/BACKLOG-R2.md": {
+      "size": 2518,
+      "sha256": "9418c2c71c603f9aced805db68cf7119231b21cd50b2268c5deb4ea2c20be9a4"
+    },
+    "rodadas/R2/README.md": {
+      "size": 787,
+      "sha256": "fde1c2f5316c6013dd6c635183afcd2f696e42acf17315e37a5b0ffb034d4e78"
+    },
+    "rodadas/R2/ROADMAP-R2.md": {
+      "size": 2304,
+      "sha256": "e72c8582efdd36a83d3f54fc09bfdeee7fad66a935f0a242d79f8352b98c0be1"
+    },
+    "rodadas/R3/BACKLOG-R3.md": {
+      "size": 3521,
+      "sha256": "0675a01aef8814b8917603f33b4a2d9f53087622dbcf7aa57529da2b85194066"
+    },
+    "rodadas/R3/README.md": {
+      "size": 886,
+      "sha256": "fc2e46fee8c9242a5b4baef2013be93fc13cbc3735d72630df272c581735a65a"
+    },
+    "rodadas/R3/ROADMAP-R3.md": {
+      "size": 2676,
+      "sha256": "a27af7978afb4608cf54e7363c6e644234ca1b8b60c36906daf30361155070a7"
+    },
+    "tasks/SA-001.md": {
+      "size": 3637,
+      "sha256": "1c6cccfb1f63ead506a61710b729ee56175fd5306242adb02f17e8eee2ce95c1"
+    },
+    "tasks/SA-002.md": {
+      "size": 3464,
+      "sha256": "6ed61c18c52af3ee5f00f027f6b90c3d1d02295f6cc0e8fe5041673cbcba68e0"
+    },
+    "tasks/SA-003.md": {
+      "size": 3680,
+      "sha256": "87bdbf1ed3ce06c31eb1ad56f8c0da80e9997649c1f37d15a47ea6c0a12adc9b"
+    },
+    "tasks/SA-004.md": {
+      "size": 3425,
+      "sha256": "2212464e0134082dd0a41ce7ab27092284307bf2c0dd5818e5775c3a1d6498bd"
+    },
+    "tasks/SA-005.md": {
+      "size": 3775,
+      "sha256": "3cf87a2f20739fb56da7d6e28fce13709a7563fef027f386f17584608072467d"
+    },
+    "tasks/SA-006.md": {
+      "size": 3392,
+      "sha256": "7145c6a7faef2d9b03f69043cf3f47a9ef8cd49b5acbed9b4f66146dfc5ec3ca"
+    },
+    "tasks/SA-007.md": {
+      "size": 3418,
+      "sha256": "42ab751a186257f7c21b90afc202c0e57bb8008f917b46ec3fd91aa33de80d64"
+    },
+    "tasks/SA-008.md": {
+      "size": 4014,
+      "sha256": "22b1e61af529f44260bbb35d79eba1be2f71fa046ec236580397866fb690b245"
+    },
+    "tasks/SA-009.md": {
+      "size": 3458,
+      "sha256": "968b695870eb8c74dc40e5c2335c92411bf482ee349a1ac5a99eb5fe24204439"
+    },
+    "tasks/SA-010.md": {
+      "size": 3356,
+      "sha256": "c0da99cd53864508a1f7bcbde003b3b078d4bc2eb82f6ca72ebcdaa62a612d7a"
+    },
+    "tasks/SA-011.md": {
+      "size": 3491,
+      "sha256": "92ac6443c1610e729db2898d7a910bbb6b6adcc51d513905f63308656f56d0cf"
+    },
+    "tasks/SA-012.md": {
+      "size": 3473,
+      "sha256": "2a7d2eb3c93e3f428b3487dff8396afb9929e5d41126532fc10ca528dab83957"
+    },
+    "tasks/SA-013.md": {
+      "size": 3536,
+      "sha256": "6de94296ff6527252950b1307d02f9502f7f4422dddf6ba8488cd4a69997d202"
+    },
+    "tasks/SA-014.md": {
+      "size": 3677,
+      "sha256": "7e0fb59c269c77bc58375f97d043d39b3a135dbb39730da4fe014a46780827c2"
+    },
+    "tasks/SA-015.md": {
+      "size": 3350,
+      "sha256": "b8387e71fc7a462455252115d24e1538be457e876acd8d2ef9cfccadbacde171"
+    },
+    "tasks/SA-016.md": {
+      "size": 3023,
+      "sha256": "ce9fc5362d549797093bf16c14dd9a25f7a3b90b0d6521e1c5d14e06f04191cf"
+    },
+    "tasks/SA-017.md": {
+      "size": 3149,
+      "sha256": "c67431e3fdb7ba49746da30b70312546ee6ee7f969e743af95decb288f1ee115"
+    },
+    "tasks/SA-018.md": {
+      "size": 3150,
+      "sha256": "b49e1686959cd56e27cbb497a46c3edf7abfef7503b0f9125f12db8e3e527606"
+    },
+    "tasks/SA-019.md": {
+      "size": 3348,
+      "sha256": "ffdbdf68e34db36ba23336026b76405a2cbe5bdf44e0a14263f34404864343b5"
+    },
+    "tasks/SA-020.md": {
+      "size": 3373,
+      "sha256": "f4147cdbe6e9f45e60a8e036538a8ac9cd962209a44dae1c1e20dad481a075e7"
+    },
+    "tasks/SA-021.md": {
+      "size": 3117,
+      "sha256": "eb882d273325d6441caac9c281e43c316d99b2c601d6f2399f53d5638f4e9eba"
+    },
+    "tasks/SA-022.md": {
+      "size": 2943,
+      "sha256": "6a31a4cfbab7216d4aeaba1d49c1ff9517f79857eefda636db43f5a19475642e"
+    },
+    "tasks/SA-023.md": {
+      "size": 3220,
+      "sha256": "a72726cfbbf7b53f0f4528fd377dba0beec4732560ef1dbb53880176080364c8"
+    },
+    "tasks/SA-024.md": {
+      "size": 3353,
+      "sha256": "2e3631ee309eaeb423173134eac3e8608bdc966afcda01bb7f932695d328fbef"
+    },
+    "tasks/SA-025.md": {
+      "size": 3076,
+      "sha256": "65b94c9d50e896d8f9e61473c290f276b9a3ab8672aad853ab2a2c366d840417"
+    },
+    "tasks/SA-026.md": {
+      "size": 3038,
+      "sha256": "85bd6726d0ad1ff1f2282d6c9f0e04bf156c21218d23a9606dbebeab0ce09e40"
+    },
+    "tasks/SA-027.md": {
+      "size": 3115,
+      "sha256": "e38f5be35da1151dae421353633ba6fd06390b0c8851fa61685f4176eb0287bc"
+    },
+    "tasks/SA-028.md": {
+      "size": 3155,
+      "sha256": "8d7f9679d164e8a1dfff5ed229a8af3d09442ba505755c93b924fdfc4e5a1df9"
+    },
+    "tasks/SA-029.md": {
+      "size": 3090,
+      "sha256": "c1714dbdeff8c1048800dfa405ee78d2649c5d1af4be03c8a5c10c2827107ae2"
+    },
+    "tasks/SA-030.md": {
+      "size": 3125,
+      "sha256": "0a939223d3e89ab6e33e3f7384ea37ca546e9dbf90e8b761916678539acfb294"
+    },
+    "tasks/SA-031.md": {
+      "size": 3182,
+      "sha256": "9fb48493688f64499367efa2e7e26c3775d7296a858bb30017cac6955b24f107"
+    },
+    "tasks/SA-032.md": {
+      "size": 3460,
+      "sha256": "381c3a83f27afcedec64f42c5bb36cdb56058fb3cbadef42b7caa36cb81e7d24"
+    },
+    "tasks/SA-033.md": {
+      "size": 3337,
+      "sha256": "b5bf41028799a50ff2fbbf418a132423940bb7107fe24294afd2b4eceab09d54"
+    },
+    "tasks/SA-034.md": {
+      "size": 3122,
+      "sha256": "6ccee30f9f3353d498bdc5daa0c8ee2b313d016c19f36c94c66b9e213d1c30a6"
+    },
+    "tasks/SA-035.md": {
+      "size": 3315,
+      "sha256": "93544269ed3b5a93aa8e54885583ecfcfde025e553fe1050aecc8e4f789a2fd9"
+    },
+    "tasks/SA-036.md": {
+      "size": 3274,
+      "sha256": "5631f16a2518ebd00f5cc6783954af0031051989a4a69a6056189d914ceadb47"
+    },
+    "tasks/SA-037.md": {
+      "size": 3130,
+      "sha256": "0c76e1688a59847e6b6031724c4aeeb163a3f0906fa223b78b3ee31eee1e27c3"
+    },
+    "tasks/SA-038.md": {
+      "size": 3031,
+      "sha256": "ee9a28fdfa4ccf370492974499ec6182078ae177a918a29b0f0dc93ded635bd8"
+    },
+    "tasks/SA-039.md": {
+      "size": 3003,
+      "sha256": "fc96134303d7273e23f7f6f54beab89739511a07b965f4c042e67035700be134"
+    },
+    "tasks/SA-040.md": {
+      "size": 3038,
+      "sha256": "d7cb5fb2d1cd7b64cb756e7c760b7c043429ac4aae76dc17ed41da5d93dcf022"
+    },
+    "tasks/SA-041.md": {
+      "size": 3037,
+      "sha256": "568982eae773fdb0fdd5c44c986ccd65261c17156a42a846646e216d32d746a2"
+    },
+    "tasks/SA-042.md": {
+      "size": 3006,
+      "sha256": "a33cdd4408887a2f3d1d4d5150d2d6b818e7287ca4cd2ed5edf08352ddebb85a"
+    },
+    "tasks/SA-043.md": {
+      "size": 3115,
+      "sha256": "c1256e30bd500a0e45bd8bc0d4b4d672ecaa98946f21d629779a6be9694dfa6d"
+    },
+    "tasks/SA-044.md": {
+      "size": 3420,
+      "sha256": "6ad44eb514d2da7b1c0ee6522416a4a2919254fb55b6ce62d36027681df288a1"
+    },
+    "tasks/SA-045.md": {
+      "size": 3119,
+      "sha256": "961c19d4e3c4cc80019f1723a9cc9ec9b1b7d09538526f3b0601562374fb6f01"
+    },
+    "tasks/SA-046.md": {
+      "size": 3037,
+      "sha256": "379465a604b2334b48b4f25783c7fe9ca9ca67761945df585e0760321663dd38"
+    },
+    "tasks/SA-047.md": {
+      "size": 3437,
+      "sha256": "e26e54b59209d55f2f57b46063997831173a480f3a012e109d228d8e59813413"
+    },
+    "tasks/SA-048.md": {
+      "size": 3449,
+      "sha256": "ec5bf4592dc2318d7334c0f47bd48033cee1c2ce7ab8c0fcb629cab9b1354a8f"
+    },
+    "tasks/SA-049.md": {
+      "size": 3139,
+      "sha256": "2d2c8c494667fd95ed84844f296946aa4d7a681b89b4e633930f335aba80d418"
+    },
+    "tasks/SA-050.md": {
+      "size": 3594,
+      "sha256": "18ebce2281ef1867e8a05c8d156900d44e0fec8dd5020895448be7e308e6bd5f"
+    },
+    "tasks/SA-051.md": {
+      "size": 3176,
+      "sha256": "6a3f1fcb3be36c58d6cb848004ac74ffa07d59e30419077f85c0293c485dc551"
+    },
+    "tasks/SA-052.md": {
+      "size": 3225,
+      "sha256": "c46fb705db4cbce025e5429b6b825b748181b3c130f76d1fba7ca5d2b66cf427"
+    },
+    "tasks/SA-053.md": {
+      "size": 3157,
+      "sha256": "ccc9dda75865fbdff7bad5a3a3152f72da53cbabf6100fd3fa7a687a8f49b96b"
+    },
+    "tasks/SA-054.md": {
+      "size": 3053,
+      "sha256": "5b35b5f20f2f1c5d98add4b7f46039c70d92ec8009d5620e01c0643a356e2a40"
+    },
+    "tasks/SA-055.md": {
+      "size": 3117,
+      "sha256": "617364edb59c89ca42240bb88570c6722912a03806c4979be1fa668785ade238"
+    },
+    "tasks/SA-056.md": {
+      "size": 3345,
+      "sha256": "860173c02239e888f7a3bc9ddb270b8d8ab46fec13f9dfbfca181ba47b295a6c"
+    },
+    "tasks/SA-057.md": {
+      "size": 3250,
+      "sha256": "983531249a606443c48384ec4d7131a38738bbe0abe3255dccb4b0409e5d535d"
+    },
+    "tasks/SA-058.md": {
+      "size": 3420,
+      "sha256": "2f0e0ed956fdd72054ec9348d5b774a86e467e746de8cd7c1830b6e3a024294b"
+    },
+    "tasks/SA-059.md": {
+      "size": 4701,
+      "sha256": "ce15e53dda7f1d80818b0189472f9f531030a0c564d917154966ad8bde8a2fe0"
+    },
+    "tasks/SA-060.md": {
+      "size": 3119,
+      "sha256": "743d2755ca08ad0ea678788c8cba19b76259b5b7ef0f09197620863870967cdb"
+    },
+    "tasks/SA-061.md": {
+      "size": 2963,
+      "sha256": "4f0069ccdf192dd44d80ae4dfcee5a817cd1c7ad2508e4485940326ee7a20c49"
+    },
+    "tasks/SA-062.md": {
+      "size": 3123,
+      "sha256": "49b7eb7330f7f3bd4130b8a4ff19c3d25b1d8cc899afb36cd5092b90f08a00e3"
+    },
+    "tasks/SA-063.md": {
+      "size": 3124,
+      "sha256": "63bd91a5317887c8fdd998d5e46bd267b906d2b1890515401a1e5f9aef2548c1"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { db } from '@cvg/database';
 import { userSectors, sectors } from '@cvg/database';
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export type AccessLevel = 'read' | 'write' | 'admin';
 

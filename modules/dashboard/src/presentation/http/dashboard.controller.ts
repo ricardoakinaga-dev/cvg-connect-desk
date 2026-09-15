@@ -53,7 +53,16 @@ export async function registerDashboardRoutes(app: FastifyInstance): Promise<voi
     return result.value;
   });
 
-  app.get<{ Querystring: { limit?: string } }>('/metrics/aging', { preHandler: dashboardAuth }, async (request) => {
+  app.get<{ Querystring: { limit?: string } }>('/metrics/aging', {
+    preHandler: dashboardAuth,
+    schema: {
+      querystring: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { limit: { type: 'integer', minimum: 1, maximum: 100, default: 20 } },
+      },
+    },
+  }, async (request) => {
     const rawLimit = request.query.limit;
     const limit = rawLimit === undefined ? 20 : Number(rawLimit);
     if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
@@ -88,15 +97,34 @@ export async function registerDashboardRoutes(app: FastifyInstance): Promise<voi
 
   app.get<{ Querystring: { startDate: string; endDate: string; groupBy?: 'day' | 'week' | 'month' } }>(
     '/metrics/conversations/volume',
-    { preHandler: [authenticate, requirePermission('dashboard:read')] },
+    {
+      preHandler: [authenticate, requirePermission('dashboard:read')],
+      // SA-022/A08: entradas validadas no schema (400 previsível) e intervalo
+      // consistente; nada de erro genérico nem agrupamento silencioso.
+      schema: {
+        querystring: {
+          type: 'object',
+          required: ['startDate', 'endDate'],
+          additionalProperties: false,
+          properties: {
+            startDate: { type: 'string', format: 'date-time' },
+            endDate: { type: 'string', format: 'date-time' },
+            groupBy: { type: 'string', enum: ['day', 'week', 'month'], default: 'day' },
+          },
+        },
+      },
+    },
     async (request) => {
       const { startDate, endDate, groupBy = 'day' } = request.query;
 
       const start = new Date(startDate);
       const end = new Date(endDate);
 
-      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-        throw new Error('Invalid date format. Use ISO 8601.');
+      if (start.getTime() > end.getTime()) {
+        throw new BadRequestError('startDate deve ser anterior ou igual a endDate', 'INVALID_RANGE');
+      }
+      if (end.getTime() - start.getTime() > 366 * 24 * 60 * 60 * 1000) {
+        throw new BadRequestError('Intervalo máximo de 366 dias', 'INVALID_RANGE');
       }
 
       const result = await getConversationVolume(start, end, groupBy);

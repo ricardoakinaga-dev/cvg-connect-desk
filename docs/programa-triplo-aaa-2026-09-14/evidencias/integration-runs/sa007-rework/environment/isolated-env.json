@@ -1,0 +1,24 @@
+{
+  "runId": "sa007-rework",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60732/cvg_aaa_sa007_rework_w43",
+  "databaseName": "cvg_aaa_sa007_rework_w43",
+  "databasePort": 60732,
+  "redisUrl": "redis://127.0.0.1:57110",
+  "redisPort": 57110,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1507719,
+    "dataDir": "/tmp/cvg-aaa-runs/sa007-rework/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1507737,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa007-rework",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 23:50:54.388256-03"
+  }
+}

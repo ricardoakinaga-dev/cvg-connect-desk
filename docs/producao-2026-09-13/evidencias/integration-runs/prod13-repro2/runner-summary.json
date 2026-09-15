@@ -1,0 +1,30 @@
+{
+  "runId": "prod13-repro2",
+  "workerIndex": 39,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60332/cvg_aaa_prod13_repro2_w39",
+  "redisUrl": "redis://127.0.0.1:57070",
+  "startedAt": "2026-09-13T17:33:55.178Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-13/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\n  \"generatedAt\": \"2026-09-13T17:33:54.696Z\",\n  \"runId\": \"prod13-repro2\",\n  \"workerIndex\": \"39\",\n  \"database\": \"postgresql://***@127.0.0.1:60332/cvg_aaa_prod13_repro2_w39\",\n  \"scenarios\": {\n    \"A_budget_ignorado\": {\n      \"priorInvocationsPersistidas\": 3,\n      \"limiteConfigurado\": 1,\n      \"chamadasSecretary\": 1,\n      \"resultado\": \"allow\",\n      \"defect\": true\n    },\n    \"B_hash_colide_apos_sanitizacao\": {\n      \"hashPhoneA\": \"33b5998559343f20312571ae719a119604ba27ad668d0c0f3438b5f9f8442229\",\n      \"hashPhoneB\": \"33b5998559343f20312571ae719a119604ba27ad668d0c0f3438b5f9f8442229\",\n      \"mesmosArgsSanitizados\": true,\n      \"defect\": true\n    },\n    \"C_aprovacao_sem_uso_unico\": {\n      \"primeiraChamada\": \"allow\",\n      \"segundaChamada\": \"allow\",\n      \"defect\": true\n    },\n    \"D_registry_sem_chamador\": {\n      \"arquivosDeProducaoComInvokeAITool\": [],\n      \"defect\": true\n    }\n  },\n  \"verdict\": \"DEFECT_REPRODUCED\",\n  \"defectCount\": 4\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

@@ -1,0 +1,38 @@
+{
+  "runId": "sa003-selftest",
+  "workerIndex": 21,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58532/cvg_aaa_sa003_selftest_w21",
+  "redisUrl": "redis://127.0.0.1:56890",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T00:47:37.062Z",
+  "finishedAt": "2026-09-15T00:47:37.084Z",
+  "command": "",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:58532/cvg_aaa_sa003_selftest_w21",
+    "REDIS_URL": "redis://127.0.0.1:56890",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa003-selftest",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa003-selftest",
+    "AAA_WORKER_INDEX": "21"
+  },
+  "steps": [
+    {
+      "label": "self-test-failure",
+      "command": "/home/ricardo/.nvm/versions/node/v24.20.0/bin/node -e process.exit(7)",
+      "startedAt": "2026-09-15T00:47:37.062Z",
+      "finishedAt": "2026-09-15T00:47:37.084Z",
+      "exitStatus": 7,
+      "signal": null,
+      "stdoutTail": "",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": {
+    "expectedExit": 7,
+    "observedExit": 7,
+    "ok": true
+  },
+  "exitCode": 0
+}

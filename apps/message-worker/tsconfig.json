@@ -25,6 +25,10 @@
       "@cvg/chat": ["../../modules/chat/src"]
     }
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "../../modules/chat/src/types/**/*.d.ts",
+    "../../modules/gateway-adapter/src/types/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist", "src/__tests__"]
 }

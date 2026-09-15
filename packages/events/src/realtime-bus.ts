@@ -80,6 +80,13 @@ export class RedisRealtimeBus implements RealtimeBus {
     if (this.started) return;
     this.publisher = await createRedisClient(this.url, this.logger);
     this.subscriber = this.publisher.duplicate();
+    // O `duplicate()` do node-redis não herda listeners: sem handler próprio,
+    // o socket do subscriber emite 'error' sem tratamento quando o Redis cai
+    // ou é encerrado e derruba o processo (F4). O caminho durável segue no
+    // polling do outbox.
+    this.subscriber.on('error', (error: Error) => {
+      this.logger(`[RealtimeBus] redis subscriber error (degraded, outbox poll covers): ${error.message}`);
+    });
     const timeoutMs = Number(process.env.REALTIME_BUS_CONNECT_TIMEOUT_MS) || 8000;
     try {
       await withTimeout(this.publisher.connect(), timeoutMs, 'realtime bus publisher connect timed out');
@@ -167,6 +174,28 @@ export class NoopRealtimeBus implements RealtimeBus {
 }
 
 let sharedBus: RealtimeBus | null = null;
+
+/**
+ * Configura o barramento do processo (D-C03-2). `null` restaura o singleton
+ * preguiçoso baseado em `REDIS_URL`. Usado pelos hosts e por testes da
+ * fronteira "hint só após commit" / "hint perdido não perde o evento".
+ */
+export function setSharedRealtimeBus(bus: RealtimeBus | null): void {
+  sharedBus = bus;
+}
+
+/**
+ * Para o barramento compartilhado, se existir, SEM criá-lo. Fechamento
+ * explícito para hosts/testes que precisam encerrar o subscriber antes de
+ * derrubar o Redis (senão o socket cai com o serviço ainda aberto).
+ */
+export async function stopSharedRealtimeBus(): Promise<void> {
+  const bus = sharedBus;
+  sharedBus = null;
+  if (bus) {
+    await bus.stop().catch(() => {});
+  }
+}
 
 /** Singleton preguiçoso do processo publicador (API). Best-effort, nunca lança. */
 export async function getSharedRealtimeBus(): Promise<RealtimeBus> {

@@ -1,0 +1,26 @@
+test_area_coverage (test_plan.PlanningTests.test_area_coverage) ... ok
+test_area_exact_relationship (test_plan.PlanningTests.test_area_exact_relationship) ... ok
+test_audit_tampering (test_plan.PlanningTests.test_audit_tampering) ... ok
+test_brief_conditions_and_checks (test_plan.PlanningTests.test_brief_conditions_and_checks) ... ok
+test_check_availability_required (test_plan.PlanningTests.test_check_availability_required) ... ok
+test_cycle (test_plan.PlanningTests.test_cycle) ... ok
+test_dag_without_loss_or_mutation (test_plan.PlanningTests.test_dag_without_loss_or_mutation) ... ok
+test_duplicate_id (test_plan.PlanningTests.test_duplicate_id) ... ok
+test_exclusivity (test_plan.PlanningTests.test_exclusivity) ... ok
+test_findings_coverage (test_plan.PlanningTests.test_findings_coverage) ... ok
+test_forbidden_parent (test_plan.PlanningTests.test_forbidden_parent) ... ok
+test_lock (test_plan.PlanningTests.test_lock) ... ok
+test_missing_contract (test_plan.PlanningTests.test_missing_contract) ... ok
+test_missing_dependency (test_plan.PlanningTests.test_missing_dependency) ... ok
+test_no_runtime_status (test_plan.PlanningTests.test_no_runtime_status) ... ok
+test_ownership_parent_child_and_boundary (test_plan.PlanningTests.test_ownership_parent_child_and_boundary) ... ok
+test_path_traversal (test_plan.PlanningTests.test_path_traversal) ... ok
+test_render_check_write_and_manual_preservation (test_plan.PlanningTests.test_render_check_write_and_manual_preservation) ... ok
+test_render_rejects_symlink_to_manual (test_plan.PlanningTests.test_render_rejects_symlink_to_manual) ... ok
+test_symlink_escape (test_plan.PlanningTests.test_symlink_escape) ... ok
+test_valid (test_plan.PlanningTests.test_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.022s
+
+OK

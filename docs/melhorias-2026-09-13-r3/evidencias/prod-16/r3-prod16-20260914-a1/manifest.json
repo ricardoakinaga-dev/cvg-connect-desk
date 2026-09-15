@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "task": "prod-16",
+  "runId": "r3-prod16-20260914-a1",
+  "attempt": 1,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-16/r3-prod16-20260914-a1/runtime CVG_EVIDENCE_SEGMENT=r3-prod16-20260914-a1 AAA_RUN_ID=r3-prod16-20260914-a1 AAA_WORKER_INDEX=25 AAA_ATTEMPT=1 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-16.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T02:08:14.398Z",
+  "finishedAt": "2026-09-14T02:08:19.958Z",
+  "durationMs": 5560,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "774c6f05bf456908ad23b8a7c6c31f3f111ede1200a7f6d2e907b1581aa770d4",
+    "sourceFileCount": 1452,
+    "imageDigest": null,
+    "runId": "r3-prod16-20260914-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-14T02:08:13.898Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-16.test.log",
+      "sha256": "5d538fdcf04136245761dbb33c79ae1f78e7cc6621a2cabadccf3a084b9de136"
+    },
+    {
+      "path": "prod-16-evidence.json",
+      "sha256": "9aef7db24a625ea805ba23e7d5985bd6734338e8773a4831b2c24c6d7ad2c7e7"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "9c718f899b12fe08a07ea39c387e7e3b5f7c22dadb7afa2bc2320baef02958a4"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL local isolado e HTTP real via app.inject; D02 permanece OPEN em modo dry-run, sem eliminação irreversível; Secretary/provider externo mockado por contrato, sem dados de produção.",
+    "BE-A05/bypass legado, revisão independente e gates externos permanecem pendentes."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "runId": "prod04-kanban",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57732/cvg_aaa_prod04_kanban_w13",
+  "databaseName": "cvg_aaa_prod04_kanban_w13",
+  "databasePort": 57732,
+  "redisUrl": "redis://127.0.0.1:56810",
+  "redisPort": 56810,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2109204,
+    "dataDir": "/tmp/cvg-aaa-runs/prod04-kanban/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2109222,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod04-kanban",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:20:26.351651-03"
+  }
+}

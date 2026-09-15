@@ -1,0 +1,94 @@
+{
+  "task": "PROD-44",
+  "status": "FAIL",
+  "error": "shutdown inválido: {\"code\":null,\"signal\":\"SIGTERM\"}",
+  "startedAt": "2026-09-13T23:03:47.826Z",
+  "finishedAt": "2026-09-13T23:03:49.146Z",
+  "execution": {
+    "runId": "r3-prod44-20260913-a1",
+    "attempt": 1,
+    "evidenceSegment": "r3-prod44-20260913-a1"
+  },
+  "candidate": {
+    "head": "754f9badac46278e77d21de91c58eedb15e80581",
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "sourceSha256": {
+      "apps/realtime-service/src/index.ts": "c8d100bd8a83378530e55e18d5daed637d46862fa0ff8d51fd5cd09e689080cc",
+      "apps/realtime-service/src/authorization.ts": "1315f1e296be02f9370925f216326b4b5491bccf0e90f21a50deea1783039cd6",
+      "apps/realtime-service/package.json": "ccb449ea9d4f668f600a63493bc2420122fcc833d2a7de53b71d97afb0b86f65",
+      "apps/realtime-service/Dockerfile": "10ecbe3fef252715620a22f1c69a416ffcb0a01ef5e51baf870b1371c016675c",
+      "packages/shared/src/index.ts": "2dc91aa40074d5db2b30ed8e239e0bf3c2587cbcf1f2294f0a37fe77dd4a3c12",
+      "packages/shared/src/metrics.ts": "f80efc65ede04eb7c01c7b4a48ef879ff98b2e92abb5d56439303aa54eea11be",
+      "packages/shared/package.json": "5db44b84006f638173629addc6bc8f1c3d69ed7e9ee9e12b4c3a2237db3234cf",
+      "pnpm-lock.yaml": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba"
+    }
+  },
+  "command": {
+    "executable": "pnpm",
+    "args": [
+      "--filter",
+      "@cvg/realtime-service",
+      "exec",
+      "tsx",
+      "src/index.ts"
+    ],
+    "cwd": "/home/ricardo/cvg-connect-desk"
+  },
+  "syntheticApi": {
+    "url": "http://127.0.0.1:40399",
+    "host": "127.0.0.1",
+    "purpose": "empty events response only"
+  },
+  "cases": [
+    {
+      "port": 44359,
+      "pid": 1615911,
+      "startedAt": "2026-09-13T23:03:47.839Z",
+      "tokenConfigured": false,
+      "health": {},
+      "readiness": {},
+      "metrics": {
+        "unavailable": {
+          "status": 503,
+          "body": {
+            "error": "METRICS_UNAVAILABLE"
+          }
+        }
+      },
+      "exit": {
+        "code": null,
+        "signal": "SIGTERM"
+      },
+      "stdout": "{\"msg\":\"[Realtime] HTTP polling started\",\"api_url\":\"http://127.0.0.1:40399\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Event polling started\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Redis bus subscribed\",\"instance_id\":\"rt-f840815c\",\"channel\":\"cvg:realtime\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] HTTP/WebSocket server listening\",\"port\":44359,\"level\":\"info\"}\n{\"msg\":\"[Realtime] Received SIGTERM, shutting down\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n",
+      "stderr": "",
+      "healthBody": {
+        "status": "ok",
+        "service": "realtime-service",
+        "uptime": 0.047
+      },
+      "readinessBody": {
+        "status": "ok",
+        "ready": true,
+        "service": "realtime-service",
+        "uptime": 0.055,
+        "checks": {
+          "process": {
+            "status": "ok"
+          },
+          "websocket": {
+            "status": "ok"
+          },
+          "poller": {
+            "status": "ok",
+            "mode": "http",
+            "lastStartedAt": "2026-09-13T23:03:49.036Z",
+            "lastSucceededAt": "2026-09-13T23:03:49.055Z",
+            "ageMs": 1,
+            "consecutiveFailures": 0
+          }
+        }
+      }
+    }
+  ]
+}

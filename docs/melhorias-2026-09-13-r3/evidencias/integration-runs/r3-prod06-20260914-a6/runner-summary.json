@@ -1,0 +1,30 @@
+{
+  "runId": "r3-prod06-20260914-a6",
+  "workerIndex": 6,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57032/cvg_aaa_r3_prod06_20260914_a6_w6",
+  "redisUrl": "redis://127.0.0.1:56740",
+  "startedAt": "2026-09-14T03:15:52.474Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-06.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 1,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ❯ src/__tests__/production/prod-06.test.ts (12 tests | 1 failed) 4755ms\n   ✓ PROD-06 AC1 — confronto schema × DDL e timezone de sessão > AC1.1 confronta o schema completo com o DDL real; sessões são timestamptz 23ms\n   ✓ PROD-06 AC1 — confronto schema × DDL e timezone de sessão > AC1.2 FKs declaradas existem no DDL real (incluindo resolved_by da 0023) 9ms\n   ✓ PROD-06 AC1 — confronto schema × DDL e timezone de sessão > AC1.3 preserva instantes históricos em UTC e America/Sao_Paulo e nos deadlines  604ms\n   ✓ PROD-06 AC1 — confronto schema × DDL e timezone de sessão > AC1.4 rotação/expiração pelo repositório real preserva o deadline absoluto 33ms\n   ✓ PROD-06 AC2 — invariantes, migração fresh/upgrade e readiness > AC2.1 fresh: ledger completo, hashes conferem e readiness saudável 22ms\n   ✓ PROD-06 AC2 — invariantes, migração fresh/upgrade e readiness > AC2.2 violações de FK/unique falham e delete cascateia arquivando tombstone 40ms\n   ✓ PROD-06 AC2 — invariantes, migração fresh/upgrade e readiness > AC2.3 upgrade de cópia populada preserva dados e aplica 0019..0023 14ms\n   ✓ PROD-06 AC2 — invariantes, migração fresh/upgrade e readiness > AC2.4 checksum divergente e drift físico bloqueiam readiness 75ms\n   ✓ PROD-06 AC2 — invariantes, migração fresh/upgrade e readiness > AC2.5 db:migrate e db:check reais no PG isolado encerram com sucesso 5ms\n   ✓ PROD-06 AC3 — inventário tutor_patients N:N × patient.tutorId > AC3.1 documenta o N:N, registra o 1:N implementado e não implementa N:N 1ms\n   × PROD-06 AC4 — migrations imutáveis, interrupção e roll-forward > AC4.1 migrations 0000-0022 mantêm o hash do baseline do PROD-00 4ms\n     → ENOENT: no such file or directory, open '/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/baseline/migration-ledger.txt'\n   ✓ PROD-06 AC4 — migrations imutáveis, interrupção e roll-forward > AC4.2 interrupção durante a 0023 não deixa estado parcial e roll-forward recupera  1304ms\n\n Test Files  1 failed (1)\n      Tests  1 failed | 11 passed (12)\n   Start at  00:15:46\n   Duration  5.94s (transform 258ms, setup 0ms, collect 649ms, tests 4.76s, environment 0ms, prepare 227ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/production/prod-06.test.ts\n\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/production/prod-06.test.ts > PROD-06 AC4 — migrations imutáveis, interrupção e roll-forward > AC4.1 migrations 0000-0022 mantêm o hash do baseline do PROD-00\nError: ENOENT: no such file or directory, open '/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/baseline/migration-ledger.txt'\n ❯ src/__tests__/production/prod-06.test.ts:1326:22\n    1324| describe('PROD-06 AC4 — migrations imutáveis, interrupção e roll-forwa…\n    1325|   it('AC4.1 migrations 0000-0022 mantêm o hash do baseline do PROD-00'…\n    1326|     const baseline = readFileSync(BASELINE_LEDGER, 'utf8')\n       |                      ^\n    1327|       .split('\\n')\n    1328|       .filter((line) => line.trim().length > 0)\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "exitCode": 1
+}

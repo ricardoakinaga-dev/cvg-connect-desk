@@ -1,0 +1,54 @@
+{
+  "runId": "contacts-regress",
+  "workerIndex": 41,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60532/cvg_aaa_contacts_regress_w41",
+  "redisUrl": "redis://127.0.0.1:57090",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T02:06:04.830Z",
+  "finishedAt": "2026-09-15T02:06:10.281Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/contacts-routes.integration.test.ts src/__tests__/kanban-routes.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60532/cvg_aaa_contacts_regress_w41",
+    "REDIS_URL": "redis://127.0.0.1:57090",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "contacts-regress",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/contacts-regress",
+    "AAA_WORKER_INDEX": "41"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T02:06:04.830Z",
+      "finishedAt": "2026-09-15T02:06:06.438Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T02:06:06.438Z",
+      "finishedAt": "2026-09-15T02:06:07.113Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/contacts-routes.integration.test.ts src/__tests__/kanban-routes.integration.test.ts",
+      "startedAt": "2026-09-15T02:06:07.113Z",
+      "finishedAt": "2026-09-15T02:06:10.280Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "30,\"time\":1789437970055,\"pid\":1287632,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"res\":{\"statusCode\":403},\"responseTime\":3.0051370000001043,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437970056,\"pid\":1287632,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-7\",\"req\":{\"method\":\"GET\",\"url\":\"/kanban/board\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437970068,\"pid\":1287632,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-7\",\"res\":{\"statusCode\":200},\"responseTime\":11.25983099999985,\"msg\":\"request completed\"}\n ✓ src/__tests__/kanban-routes.integration.test.ts (3 tests) 533ms\n{\"level\":30,\"time\":1789437970093,\"pid\":1287631,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":201},\"responseTime\":109.9832120000001,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437970107,\"pid\":1287631,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"req\":{\"method\":\"POST\",\"url\":\"/contacts/1a5d4982-8015-48f9-b74c-955a2daba17b/start-conversation\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437970110,\"pid\":1287631,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"res\":{\"statusCode\":404},\"responseTime\":2.979608999999982,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437970112,\"pid\":1287631,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"req\":{\"method\":\"GET\",\"url\":\"/contacts/stats/overview\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437970115,\"pid\":1287631,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"res\":{\"statusCode\":200},\"responseTime\":2.7447520000000623,\"msg\":\"request completed\"}\n ✓ src/__tests__/contacts-routes.integration.test.ts (14 tests) 577ms\n\n Test Files  2 passed (2)\n      Tests  17 passed (17)\n   Start at  23:06:07\n   Duration  2.52s (transform 825ms, setup 0ms, collect 3.32s, tests 1.11s, environment 0ms, prepare 155ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,24 @@
+{
+  "runId": "prod04-regressao2",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57832/cvg_aaa_prod04_regressao2_w14",
+  "databaseName": "cvg_aaa_prod04_regressao2_w14",
+  "databasePort": 57832,
+  "redisUrl": "redis://127.0.0.1:56820",
+  "redisPort": 56820,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2139863,
+    "dataDir": "/tmp/cvg-aaa-runs/prod04-regressao2/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2139904,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod04-regressao2",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:25:11.018332-03"
+  }
+}

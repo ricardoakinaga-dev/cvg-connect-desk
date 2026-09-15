@@ -1,0 +1,26 @@
+STATE=VERIFIED_CANDIDATE
+SUMMARY=lint=PASS typecheck=PASS unit=PASS integration=PASS contracts=PASS coverage-shared=PASS migrations-fresh=PASS build=PASS audit=PASS docker=PASS ci-aggregate=PASS image-identity=PASS boot-smoke=PASS sbom-ci=PASS postgres-real=PASS migrations-upgrade=PASS codeql=PASS gitleaks=PASS trivy=PASS sbom-security=PASS pnpm-audit-security=PASS critical-gates=PASS security-gate=PASS promotion-state=PASS staging-real=PASS dependency-review=WAIVED_WITH_SUBSTITUTE coverage-global=NOT_APPLICABLE dr-e2e=NOT_APPLICABLE load=NOT_APPLICABLE
+✔ AC1 — inventário cobre Docker/boot, staging, coverage global, migrations fresh/upgrade, E2E, carga/DR e segurança (1.330624ms)
+✔ AC1 — falha de dependente não é escondida por job agregado (2.633547ms)
+✔ AC2 — PR exige dependency-review; push não fica impossível; release não dispensa em silêncio (0.335263ms)
+✔ AC2 — push com dependency-review skip e audit verde é aceito; sem substituto reprova (1.848557ms)
+✔ AC2 — release sem prova obrigatória fica BLOCKED com dono e motivo (não silencioso) (0.593393ms)
+✔ AC2 — scheduled avalia apenas gates agendados e nunca promove candidato (0.313173ms)
+✔ AC3 — consulta paginada junta runs/jobs no SHA correto (100 por página) (0.40342ms)
+✔ AC3 — imagem testada exige digest do mesmo candidato e sem duplicidade (0.241579ms)
+✔ AC3 — adversarial Docker+aggregate falham e staging ausente: rejeitado (reprodução da auditoria) (0.369788ms)
+✔ AC3 — sucesso antigo, cancelamento, duplicado, renomeado e skip são rejeitados (4.667739ms)
+✔ AC3 — payload malformado é rejeitado sem crash (0.779379ms)
+✔ AC4 — todos os requeridos verdes são aceitos e main() publica relatório (3.314964ms)
+✔ AC4 — configuração required por evento vincula workflows reais e eventos válidos (0.403861ms)
+✔ YAML — workflows parseiam e contêm os jobs requeridos (parser python3 yaml) (149.669016ms)
+✔ AC4 — nenhum arquivo auxiliar de worktree ficou para trás no upgrade job (0.403079ms)
+✔ cleanup — diretórios temporários do teste não vazam para o repo (0.543962ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 235.845715

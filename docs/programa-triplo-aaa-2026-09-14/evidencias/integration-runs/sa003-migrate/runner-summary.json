@@ -1,0 +1,54 @@
+{
+  "runId": "sa003-migrate",
+  "workerIndex": 24,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_sa003_migrate_w24",
+  "redisUrl": "redis://127.0.0.1:56920",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T00:47:33.184Z",
+  "finishedAt": "2026-09-15T00:47:36.246Z",
+  "command": "node --input-type=module -e import pg from 'pg'; const c=new pg.Pool({connectionString:process.env.DATABASE_URL}); const r=await c.query(\"select count(*)::int as n from information_schema.tables where table_schema='public'\"); const m=await c.query(\"select count(*)::int as n from aaa_environment_marker\"); console.log(JSON.stringify({url:process.env.DATABASE_URL.replace(/:[^:@\\/]*@/,':***@'),tables:r.rows[0].n,markerRows:m.rows[0].n})); await c.end();",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_sa003_migrate_w24",
+    "REDIS_URL": "redis://127.0.0.1:56920",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa003-migrate",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa003-migrate",
+    "AAA_WORKER_INDEX": "24"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T00:47:33.184Z",
+      "finishedAt": "2026-09-15T00:47:35.377Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T00:47:35.377Z",
+      "finishedAt": "2026-09-15T00:47:36.178Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "node --input-type=module -e import pg from 'pg'; const c=new pg.Pool({connectionString:process.env.DATABASE_URL}); const r=await c.query(\"select count(*)::int as n from information_schema.tables where table_schema='public'\"); const m=await c.query(\"select count(*)::int as n from aaa_environment_marker\"); console.log(JSON.stringify({url:process.env.DATABASE_URL.replace(/:[^:@\\/]*@/,':***@'),tables:r.rows[0].n,markerRows:m.rows[0].n})); await c.end();",
+      "startedAt": "2026-09-15T00:47:36.178Z",
+      "finishedAt": "2026-09-15T00:47:36.246Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "{\"url\":\"postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_sa003_migrate_w24\",\"tables\":42,\"markerRows\":1}\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

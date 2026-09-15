@@ -1,0 +1,54 @@
+{
+  "runId": "sa007-contacts",
+  "workerIndex": 29,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59332/cvg_aaa_sa007_contacts_w29",
+  "redisUrl": "redis://127.0.0.1:56970",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T02:05:06.134Z",
+  "finishedAt": "2026-09-15T02:05:11.516Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-007-start-conversation.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59332/cvg_aaa_sa007_contacts_w29",
+    "REDIS_URL": "redis://127.0.0.1:56970",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa007-contacts",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa007-contacts",
+    "AAA_WORKER_INDEX": "29"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T02:05:06.134Z",
+      "finishedAt": "2026-09-15T02:05:07.752Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T02:05:07.752Z",
+      "finishedAt": "2026-09-15T02:05:08.429Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-007-start-conversation.integration.test.ts",
+      "startedAt": "2026-09-15T02:05:08.429Z",
+      "finishedAt": "2026-09-15T02:05:11.515Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "ode\":201},\"responseTime\":17.68467899999996,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911312,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-7\",\"res\":{\"statusCode\":201},\"responseTime\":19.66245200000003,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911313,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-8\",\"res\":{\"statusCode\":201},\"responseTime\":20.400166999999783,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911313,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"res\":{\"statusCode\":201},\"responseTime\":20.49959200000012,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911313,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"res\":{\"statusCode\":201},\"responseTime\":21.393516999999974,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911319,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"req\":{\"method\":\"POST\",\"url\":\"/contacts/204b124f-9492-4804-afc1-a3735cc50499/start-conversation\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437911327,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"res\":{\"statusCode\":500},\"responseTime\":7.942724999999882,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789437911329,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"req\":{\"method\":\"GET\",\"url\":\"/contacts?search=SA007%20Contato%20910827\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789437911333,\"pid\":1280072,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"res\":{\"statusCode\":200},\"responseTime\":3.8600790000000416,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-007-start-conversation.integration.test.ts (5 tests) 514ms\n\n Test Files  1 passed (1)\n      Tests  5 passed (5)\n   Start at  23:05:08\n   Duration  2.45s (transform 770ms, setup 0ms, collect 1.62s, tests 514ms, environment 0ms, prepare 71ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

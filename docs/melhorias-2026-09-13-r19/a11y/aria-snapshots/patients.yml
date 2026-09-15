@@ -1,0 +1,83 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - heading "Pacientes" [level=1]
+  - paragraph: Organize pets, espécies e o responsável por cada atendimento.
+  - textbox "Buscar pacientes":
+    - /placeholder: Buscar por nome ou espécie
+  - combobox "Filtrar espécie":
+    - option "Todas as espécies" [selected]
+    - option "Cachorro"
+    - option "Gato"
+    - option "Pássaro"
+    - option "Coelho"
+  - button "Novo paciente"
+  - region "Lista de pacientes":
+    - table:
+      - rowgroup:
+        - row "Paciente Espécie Raça Tutor Ações":
+          - columnheader "Paciente"
+          - columnheader "Espécie"
+          - columnheader "Raça"
+          - columnheader "Tutor"
+          - columnheader "Ações"
+      - rowgroup:
+        - row "Paciente Fixture A canino — Tutor Fixture A Editar Excluir":
+          - cell "Paciente Fixture A":
+            - button "Paciente Fixture A"
+          - cell "canino"
+          - cell "—"
+          - cell "Tutor Fixture A"
+          - cell "Editar Excluir":
+            - button "Editar"
+            - button "Excluir"
+  - complementary:
+    - paragraph: Selecione um paciente
+    - paragraph: Os detalhes aparecerão aqui.

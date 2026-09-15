@@ -1,0 +1,41 @@
+{
+  "runId": "regress-r2-final",
+  "workerIndex": "49",
+  "generatedAt": "2026-09-15T10:32:09.061Z",
+  "defects": [
+    "D1 tutorId inexistente: AC1 exige 4xx; observado no probe",
+    "D2 patientId inexistente: AC1 exige 4xx; observado no probe",
+    "D3 assignedTo fora do setor da conversa: AC1 exige rejeição; observado no probe",
+    "D4 dueAt inválido: C01 exige 4xx; observado no probe"
+  ],
+  "observations": [
+    {
+      "probe": "tutor-inexistente",
+      "httpStatus": 404
+    },
+    {
+      "probe": "paciente-inexistente",
+      "httpStatus": 404
+    },
+    {
+      "probe": "responsavel-inexistente",
+      "httpStatus": 400
+    },
+    {
+      "probe": "d1-tutor-inexistente-espera-4xx",
+      "httpStatus": 404
+    },
+    {
+      "probe": "d2-paciente-inexistente-espera-4xx",
+      "httpStatus": 404
+    },
+    {
+      "probe": "d3-assignee-fora-do-setor-espera-400-403",
+      "httpStatus": 400
+    },
+    {
+      "probe": "d4-dueat-invalido-espera-4xx",
+      "httpStatus": 400
+    }
+  ]
+}

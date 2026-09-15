@@ -1,0 +1,8 @@
+import './integration-mocks';
+import { it, expect, vi } from 'vitest';
+vi.mock('@cvg/database', async (original) => ({...await original<any>(), db:{select:()=>({from:()=>({limit:async()=>{throw new Error('synthetic database outage');}})}),execute:async()=>{throw new Error('synthetic database outage');}}}));
+import { buildDeskApiApp } from '../app';
+it('audit: readiness returns HTTP 200 despite database outage', async()=>{
+ const app=await buildDeskApiApp();
+ try{const r=await app.inject({method:'GET',url:'/readiness'});expect(r.statusCode).toBe(200);expect(r.json().ready).toBe(false);expect(r.json().checks.database.status).toBe('error');}finally{await app.close();}
+});

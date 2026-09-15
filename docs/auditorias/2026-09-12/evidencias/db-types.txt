@@ -1,0 +1,4 @@
+
+> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database
+> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck
+

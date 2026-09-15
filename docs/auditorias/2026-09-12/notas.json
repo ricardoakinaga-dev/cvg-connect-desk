@@ -1,0 +1,117 @@
+{
+  "audit_id": "AUDIT-CVG-20260912",
+  "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "method": "equal-weight arithmetic mean; technical judgment, not test coverage",
+  "overall": 53,
+  "unrounded": 53.05555555555556,
+  "items": [
+    {
+      "item": "Arquitetura e modularidade",
+      "score": 65,
+      "reason": "Boa separação em 33 pacotes; ciclo Chat ↔ Gateway impede o grafo de tarefas.",
+      "findings": "A04"
+    },
+    {
+      "item": "Autenticação e sessões",
+      "score": 45,
+      "reason": "Tokens aleatórios com hash e expiração; renovação aceita sessão expirada.",
+      "findings": "A01"
+    },
+    {
+      "item": "Autorização e isolamento por setor",
+      "score": 25,
+      "reason": "Há RBAC central, mas histórico de mensagens e eventos globais contornam o isolamento.",
+      "findings": "A02, A03"
+    },
+    {
+      "item": "API, validação e proteção de webhooks",
+      "score": 75,
+      "reason": "HMAC, antirreplay, CORS e limites existem; aplicação dos controles é desigual.",
+      "findings": "A02, A09"
+    },
+    {
+      "item": "Banco de dados e integridade",
+      "score": 60,
+      "reason": "Schemas, índices, migrations e timeouts; gravação de mensagem e evento não é atômica.",
+      "findings": "A07"
+    },
+    {
+      "item": "Eventos, filas e idempotência",
+      "score": 45,
+      "reason": "Outbox, ACK por consumidor e DLQ; reserva concorrente não está implementada.",
+      "findings": "A06, A07, A11"
+    },
+    {
+      "item": "Integrações Gateway e Secretary",
+      "score": 65,
+      "reason": "Adapters, contratos e política de retries; dependência circular e integrações reais não revalidadas.",
+      "findings": "A04, A07"
+    },
+    {
+      "item": "Atualizações em tempo real",
+      "score": 35,
+      "reason": "Autenticação e revalidação passam nos testes; transmissão global sem autorização por recurso.",
+      "findings": "A03, A05"
+    },
+    {
+      "item": "Frontend e fluxos operacionais",
+      "score": 70,
+      "reason": "Compilação e 47 testes aprovados; envio não apresenta adequadamente erros e não usa chave idempotente.",
+      "findings": "A09, A11"
+    },
+    {
+      "item": "Acessibilidade técnica",
+      "score": 65,
+      "reason": "Botões semânticos, aria-label e controle de foco presentes; avaliação limitada ao código e testes existentes.",
+      "findings": "L01"
+    },
+    {
+      "item": "Anexos e segurança de mídia",
+      "score": 45,
+      "reason": "Validação e pipeline de scanner existem; limite da interface conflita com o limite HTTP.",
+      "findings": "A09"
+    },
+    {
+      "item": "Desempenho e escalabilidade",
+      "score": 50,
+      "reason": "Consultas agrupadas reduzem N+1, mas carregam o histórico completo para obter a última mensagem.",
+      "findings": "A10, A06"
+    },
+    {
+      "item": "Observabilidade e disponibilidade",
+      "score": 60,
+      "reason": "Métricas, tracing e healthchecks; readiness sinaliza falha com HTTP 200.",
+      "findings": "A08, A15"
+    },
+    {
+      "item": "Testes e evidência de qualidade",
+      "score": 65,
+      "reason": "149 testes existentes aprovados nesta auditoria; faltam verificações negativas essenciais e banco real atual.",
+      "findings": "A01–A03, L01"
+    },
+    {
+      "item": "Build, CI e implantação",
+      "score": 30,
+      "reason": "Grafo circular, 220 erros de TypeScript na API, lint divergente e Docker sem lockfile congelado.",
+      "findings": "A04, A05, A12"
+    },
+    {
+      "item": "Dependências e cadeia de fornecimento",
+      "score": 40,
+      "reason": "Scanners e ações fixadas por SHA; audit aponta 8 alertas altos no recorte de produção.",
+      "findings": "A13"
+    },
+    {
+      "item": "Privacidade e rastreabilidade",
+      "score": 50,
+      "reason": "Exportação, anonimização parcial e trilha existem; cópias de dados e autoria precisam de revisão.",
+      "findings": "A14, A16"
+    },
+    {
+      "item": "Documentação e recuperação",
+      "score": 65,
+      "reason": "Runbooks, ADRs e scripts de backup/restore; parte das afirmações diverge do código atual.",
+      "findings": "A06, A12, L01"
+    }
+  ]
+}

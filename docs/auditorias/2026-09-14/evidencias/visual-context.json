@@ -1,0 +1,35 @@
+[
+  {
+    "target": "tasks",
+    "requests": [
+      "http://127.0.0.1:5199/auth/me",
+      "http://127.0.0.1:5199/tasks",
+      "http://127.0.0.1:5199/conversations?limit=100",
+      "http://127.0.0.1:5199/tutors",
+      "http://127.0.0.1:5199/patients",
+      "http://127.0.0.1:5199/tasks",
+      "http://127.0.0.1:5199/conversations?limit=100",
+      "http://127.0.0.1:5199/tutors",
+      "http://127.0.0.1:5199/patients"
+    ],
+    "body": "FLUXO DE TRABALHO\nTarefas\n\nCrie, vincule e acompanhe tarefas com contexto operacional.\n\nNova tarefa\n2\nTOTAL\n1\nPENDENTES\n1\nEM ANDAMENTO\n0\nCONCLUÍDAS\n1\nVENCIDAS\nStatus:\nTodas\nPendente\nEm andamento\nConcluída\nCancelada\nPrioridade:\nTodas\nUrgente\nAlta\nMédia\nBaixa\n2 tarefas exibidas\nAlta\nPendente\nConfirmar retorno do Thor\n\nValidar evolução e horário com a tutora.\n\n14/09/2026 · 1h restantes\nResponsável atribuído\nStatus\nPendente\nEm andamento\nConcluída\nCancelada\nIniciar\nCancelar\nUrgente · vencida\nEm andamento\nRevisar exames da Luna\n\nHemograma recebido pelo canal digital.\n\n14/09/2026 · Vencida\nEquipe CVG\nStatus\nPendente\nEm andamento\nConcluída\nCancelada\nConcluir\nCancelar"
+  },
+  {
+    "target": "notes",
+    "requests": [
+      "http://127.0.0.1:5199/auth/me",
+      "http://127.0.0.1:5199/notes?mine=true",
+      "http://127.0.0.1:5199/notes?mine=true"
+    ],
+    "body": "MEMÓRIA CLÍNICA\nNotas internas\n\nRegistre observações sobre conversas, tarefas e contatos\n\nNova nota\nTipo:\nTodos\nConversa\nTarefa\nTutor\nPaciente\n0 notas\n\nNenhuma nota registrada\n\nRegistre a primeira observação sobre uma conversa, tarefa ou cadastro.\n\nNova nota"
+  },
+  {
+    "target": "alerts",
+    "requests": [
+      "http://127.0.0.1:5199/auth/me",
+      "http://127.0.0.1:5199/alerts",
+      "http://127.0.0.1:5199/alerts"
+    ],
+    "body": "CENTRAL DE ATENÇÃO\nAlertas\n\nMonitore alertas operacionais do sistema\n\n2\nTOTAL\n1\nATIVOS\n1\nRECONHECIDOS\n0\nRESOLVIDOS\n1\nCRÍTICOS\nStatus:\nTodos\nAtivos\nReconhecidos\nResolvidos\nSeveridade:\nTodas\nCrítico\nErro\nAviso\nInfo\n2 alertas exibidos\nCrítico\nAtivo\nTempo de resposta crítico\n\nConversa clínica aguarda retorno humano.\n\nSLA\n15min atrás\nReconhecer\nResolver\nAviso\nReconhecido\nFila da recepção em atenção\n\nVolume acima da média dos últimos 30 minutos.\n\nQUEUE\n30min atrás\nagora\nResolver"
+  }
+]

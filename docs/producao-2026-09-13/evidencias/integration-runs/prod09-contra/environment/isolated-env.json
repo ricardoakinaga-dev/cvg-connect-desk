@@ -1,0 +1,24 @@
+{
+  "runId": "prod09-contra",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59132/cvg_aaa_prod09_contra_w27",
+  "databaseName": "cvg_aaa_prod09_contra_w27",
+  "databasePort": 59132,
+  "redisUrl": "redis://127.0.0.1:56950",
+  "redisPort": 56950,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2671769,
+    "dataDir": "/tmp/cvg-aaa-runs/prod09-contra/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2671808,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod09-contra",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:27:18.375693-03"
+  }
+}

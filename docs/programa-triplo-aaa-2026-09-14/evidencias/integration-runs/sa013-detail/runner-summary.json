@@ -1,0 +1,54 @@
+{
+  "runId": "sa013-detail",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa013_detail_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:00:58.582Z",
+  "finishedAt": "2026-09-15T04:01:04.754Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-013-authz-matrix.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa013_detail_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa013-detail",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa013-detail",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:00:58.582Z",
+      "finishedAt": "2026-09-15T04:01:00.239Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:01:00.239Z",
+      "finishedAt": "2026-09-15T04:01:00.967Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-013-authz-matrix.integration.test.ts",
+      "startedAt": "2026-09-15T04:01:00.967Z",
+      "finishedAt": "2026-09-15T04:01:04.754Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "tname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1a\",\"req\":{\"method\":\"GET\",\"url\":\"/alerts/5239560e-c509-44d8-b484-eaf34d52a5dc\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444864565,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1a\",\"res\":{\"statusCode\":404},\"responseTime\":4.731366999999864,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444864565,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1b\",\"req\":{\"method\":\"GET\",\"url\":\"/alerts/8c746ca8-df23-4ac9-9388-6f42e45f4450\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444864568,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1b\",\"res\":{\"statusCode\":404},\"responseTime\":2.6096819999997933,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444864568,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1c\",\"req\":{\"method\":\"GET\",\"url\":\"/contacts/6b36ad39-d55c-4f52-8733-baa929f0eea2\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444864571,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1c\",\"res\":{\"statusCode\":404},\"responseTime\":2.8881289999999353,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444864571,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1d\",\"req\":{\"method\":\"GET\",\"url\":\"/contacts/e49f75aa-b727-461a-a30e-b8e7fcc10839\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444864574,\"pid\":1929700,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-1d\",\"res\":{\"statusCode\":404},\"responseTime\":3.117927000000236,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-013-authz-matrix.integration.test.ts (7 tests) 1080ms\n\n Test Files  1 passed (1)\n      Tests  7 passed (7)\n   Start at  01:01:01\n   Duration  3.11s (transform 894ms, setup 0ms, collect 1.84s, tests 1.08s, environment 0ms, prepare 58ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

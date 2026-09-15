@@ -1,0 +1,1 @@
+[{"id":"image","scope":"image test","command":"echo ok","required":true,"image":true}]

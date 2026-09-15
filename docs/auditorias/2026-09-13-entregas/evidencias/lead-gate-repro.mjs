@@ -1,0 +1,18 @@
+import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {validateArtifactPayload,evaluateCheck,sha256Hex} from '/home/ricardo/cvg-connect-desk/scripts/production/evidence-gate.mjs';
+const base='/tmp/cvg-audit-deliveries-ufq9_ejh/lead-gate-repro';
+const root=base+'/fixture';mkdirSync(root,{recursive:true});writeFileSync(root+'/pnpm-lock.yaml','lock');
+const candidate={commit:'a'.repeat(40),sourceSha256:'b'.repeat(64),lockfileSha256:'c'.repeat(64),sealedAt:'2026-09-13T00:00:00Z'};
+writeFileSync(root+'/queries.json',JSON.stringify({...candidate,result:'PASS',generatedAt:new Date().toISOString(),queries:[{}]}));
+const result={emptyQuery:validateArtifactPayload({id:'query',evidence:{kind:'queries',file:'queries.json',minEntries:1}},{evidenceDir:root,candidate})};
+writeFileSync(root+'/empty.log','');
+writeFileSync(root+'/compile.json',JSON.stringify({schemaVersion:1,check:'compile',scope:'anything',command:'true',status:'PASS',exitCode:99,startedAt:'2099-01-01T00:00:00Z',finishedAt:'2099-01-01T00:00:00Z',durationMs:0,environment:{fake:true},candidate,hashes:{log:sha256Hex('')},artifacts:[{kind:'log',path:'empty.log'}]}));
+result.fakeCommand=evaluateCheck({id:'compile',required:true,command:'pnpm typecheck'},{evidenceDir:root,candidate});
+const checks=base+'/checks.json';writeFileSync(checks,JSON.stringify([{id:'image',scope:'image test',command:'echo ok',required:true,image:true}]));
+const cli='/home/ricardo/cvg-connect-desk/scripts/triple-aaa-verify.mjs';
+const args=['--root',root,'--checks-file',checks,'--evidence-dir',base+'/digest-evidence','--artifacts-dir',base+'/digest-report','--candidate',candidate.commit];
+const run=spawnSync('node',[cli,...args,'--run','--image-digest','sha256:'+'1'.repeat(64)],{encoding:'utf8'});
+const evalRun=spawnSync('node',[cli,...args,'--evaluate','--image-digest','sha256:'+'2'.repeat(64)],{encoding:'utf8'});
+result.changedExpectedImage={runExit:run.status,evaluateExit:evalRun.status,stdout:evalRun.stdout,stderr:evalRun.stderr};
+writeFileSync(base+'/adversarial-results.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));

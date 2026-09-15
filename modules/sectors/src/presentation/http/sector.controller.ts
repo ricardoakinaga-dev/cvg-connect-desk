@@ -6,7 +6,7 @@ import * as useCases from '../../application/use-cases';
 export async function registerSectorRoutes(app: FastifyInstance) {
   // Listar setores
   app.get('/sectors', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('chat:read')],
     schema: {
       description: 'Listar setores',
       tags: ['Sectors'],
@@ -133,7 +133,7 @@ export async function registerSectorRoutes(app: FastifyInstance) {
 
   // Estatísticas de todos os setores
   app.get('/sectors/stats/overview', {
-    preHandler: [authenticate],
+    preHandler: [authenticate, requirePermission('dashboard:read')],
     schema: {
       description: 'Visão geral de estatísticas de todos os setores',
       tags: ['Sectors'],

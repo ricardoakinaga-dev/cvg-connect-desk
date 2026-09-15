@@ -1,0 +1,368 @@
+{
+  "config": {
+    "configFile": "/home/ricardo/cvg-connect-desk/playwright.production.config.ts",
+    "rootDir": "/home/ricardo/cvg-connect-desk/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a4/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "aaa",
+        "name": "aaa",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [
+          "**/*.canary.spec.ts"
+        ],
+        "testMatch": [
+          "aaa/**/*.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a4/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production",
+        "name": "production",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [
+          "**/*.canary.spec.ts"
+        ],
+        "testMatch": [
+          "production/**/*.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a4/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "canary",
+        "name": "canary",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.canary.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a4/harness/production-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec tsx e2e/support/aaa/start-aaa-stack.ts",
+      "url": "http://127.0.0.1:4443/login",
+      "reuseExistingServer": true,
+      "timeout": 240000,
+      "gracefulShutdown": {
+        "signal": "SIGTERM",
+        "timeout": 10000
+      },
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "AAA_RUN_ID": "r3-prod00-20260914-a4",
+        "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/r3-prod00-20260914-a4",
+        "CVG_PROGRAM_DIR": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3",
+        "CVG_RUNTIME_DIR": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a4/runtime",
+        "AAA_PG_PORT": "57132",
+        "AAA_REDIS_PORT": "56750",
+        "AAA_API_PORT": "4700",
+        "AAA_REALTIME_PORT": "5001",
+        "AAA_WEB_PORT": "4443",
+        "AAA_EVOLUTION_MOCK_PORT": "8090"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "aaa/00-harness-sanity.spec.ts",
+      "file": "aaa/00-harness-sanity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "AAA-00 harness — sanidade da stack isolada",
+          "file": "aaa/00-harness-sanity.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "API responde health na porta exclusiva do run",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 36,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:27.011Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "04bb93a618f6170ea342-ae7e3afbbdd86ff07f4c",
+              "file": "aaa/00-harness-sanity.spec.ts",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "banco em uso carrega marcador de teste do run",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 18,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:27.068Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "04bb93a618f6170ea342-6f8b4ab1338cb75abe07",
+              "file": "aaa/00-harness-sanity.spec.ts",
+              "line": 14,
+              "column": 3
+            },
+            {
+              "title": "web /login renderiza formulario",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "aaa",
+                  "projectName": "aaa",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 916,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:27.101Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "04bb93a618f6170ea342-c309c28ce0913694ad16",
+              "file": "aaa/00-harness-sanity.spec.ts",
+              "line": 20,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "production/01-harness-identity.spec.ts",
+      "file": "production/01-harness-identity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "PROD produção — identidade do run isolado",
+          "file": "production/01-harness-identity.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "marcador de banco pertence ao run e ao HEAD atual",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production",
+                  "projectName": "production",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 45,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:28.943Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d817588ecb86edec6c42-c324c72a9095f3b00d5b",
+              "file": "production/01-harness-identity.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "web /login renderiza no host/porta do run",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production",
+                  "projectName": "production",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 951,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:29.016Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d817588ecb86edec6c42-598a500d3bed78abf3c5",
+              "file": "production/01-harness-identity.spec.ts",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "API /health do run responde",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "production",
+                  "projectName": "production",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 47,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-14T00:25:30.073Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d817588ecb86edec6c42-beb45127df1aaac01dcc",
+              "file": "production/01-harness-identity.spec.ts",
+              "line": 22,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-14T00:25:13.788Z",
+    "duration": 17438.028000000002,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

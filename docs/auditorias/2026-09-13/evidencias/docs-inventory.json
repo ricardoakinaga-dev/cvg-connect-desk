@@ -1,0 +1,3560 @@
+[
+  {
+    "path": "docs/70-plano-execucao-claude-code-reconciliacao-final-fase2.md",
+    "bytes": 4334,
+    "sha256": "49c8b319e25636f26673c33b9ff76327c322a5de6710cc05d60c08213506f8bf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-006-dr-verification.md",
+    "bytes": 748,
+    "sha256": "b24bdfbb7d2be31bc648f936606a83ac8b71515c3f79a1b5b0e872bfa6a8ed51",
+    "snapshot": false
+  },
+  {
+    "path": "docs/19-test-strategy.md",
+    "bytes": 3424,
+    "sha256": "4467df2afe02cad99c910ad39d9f9a79887d2ec8f905626f07c2a4940fed48ce",
+    "snapshot": false
+  },
+  {
+    "path": "docs/29-auditoria-paralela-seguranca-aderencia.md",
+    "bytes": 11180,
+    "sha256": "71caa5413d9b7fa27d0ce5c29c11c8255e6ec26bd9726cd17c7a0ea169879520",
+    "snapshot": false
+  },
+  {
+    "path": "docs/73-prompt-certificacao-final-triple-aaa.md",
+    "bytes": 23089,
+    "sha256": "027b8e360f16edbc84a168b4dc3555e2d29fc2cfb79e0579d87da174a76e8d5e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/59-plano-execucao-claude-code-webhook-prod-hardening.md",
+    "bytes": 4125,
+    "sha256": "01a06fbb5d5f33ddbd479f54a4e3008ee23b7319356ff2a1d0d48656cacc37fc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/32-plano-execucao-claude-code-fanout-fechamento-final.md",
+    "bytes": 7178,
+    "sha256": "01d2486a9fa5a59e066367fdbd41fe0525d6379b378b5bb126803655b9e3027d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/10-realtime-and-events.md",
+    "bytes": 12337,
+    "sha256": "7a53d9f9d13eb17590ab65e92417095e1b061e325082b946efdb24359fc68d05",
+    "snapshot": false
+  },
+  {
+    "path": "docs/74-prompt-release-certification-closure.md",
+    "bytes": 18977,
+    "sha256": "9df1643bc3103871addb2a008b28d98f6833544e2c2fe72edf521dabb2b4d2b8",
+    "snapshot": false
+  },
+  {
+    "path": "docs/13-dashboard-and-kpis.md",
+    "bytes": 10994,
+    "sha256": "4ed3af2d69a21b857745e99bc8554d04dfd2f9321c6fe5d64d89d133bae1b561",
+    "snapshot": false
+  },
+  {
+    "path": "docs/34-plano-execucao-claude-code-fanout-hardening-e-ci.md",
+    "bytes": 6485,
+    "sha256": "ddac7990b32fb4dce665a98e998d47349323a80a5937c18afa5c38d2616acae7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/64-plano-execucao-claude-code-transfers-contacts-http-real.md",
+    "bytes": 4543,
+    "sha256": "ffc03ec5dd4f12b1613ce8761367b3b85a74faab6e1ba0c4df774793896c504a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/26-relatorio-analise-documentacao-vs-implementacao.md",
+    "bytes": 15286,
+    "sha256": "c097fe79e3c03517b6a1d33a409c04b288835cecebd8f5882ae8dd440ee2c927",
+    "snapshot": false
+  },
+  {
+    "path": "docs/40-plano-execucao-claude-code-api-integration-criticos.md",
+    "bytes": 7844,
+    "sha256": "2b82fca70638e73aa7634212e98146c7f96db980a21538f8c49dbfe6a77cfe48",
+    "snapshot": false
+  },
+  {
+    "path": "docs/47-plano-execucao-claude-code-smoke-stack-dedicada-execucao-real.md",
+    "bytes": 5159,
+    "sha256": "68150dcdafa99bae16c38a8b7af5b8884a356eba4d2fe76577e552544340b876",
+    "snapshot": false
+  },
+  {
+    "path": "docs/51-plano-execucao-claude-code-dead-letter-ui-operacional.md",
+    "bytes": 4977,
+    "sha256": "5e04b0fac3b743138e07dc968e354f94064147d1156813873a23d86509d2d6ef",
+    "snapshot": false
+  },
+  {
+    "path": "docs/MESSAGING_CONTRACTS.md",
+    "bytes": 1282,
+    "sha256": "e18cb95e9cf92970aada56887f635ccdd6e6b3d0fc5595bf0a91ae98729f754e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/08-frontend-architecture.md",
+    "bytes": 13024,
+    "sha256": "7bd27e0861b895f7d6507a2b20a092c5d71822523118acab4785935795e6feb6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/31-relatorio-final-fanout-validacao.md",
+    "bytes": 9389,
+    "sha256": "c74f6b005ca2563d2348cb19ea90ae1107ae1f559db331fb76256fa7355b9650",
+    "snapshot": false
+  },
+  {
+    "path": "docs/SECURITY.md",
+    "bytes": 1400,
+    "sha256": "25c1d4fb84e27dc55498b7e1b0cd9621f339de378cebfacd8b4747ed25976d81",
+    "snapshot": false
+  },
+  {
+    "path": "docs/52-plano-execucao-claude-code-dead-letter-source-event-runtime.md",
+    "bytes": 4937,
+    "sha256": "ac8285da255478a4b6c07743bf61b0c68e285d95247258812060ab022177c4ec",
+    "snapshot": false
+  },
+  {
+    "path": "docs/DISASTER_RECOVERY.md",
+    "bytes": 1852,
+    "sha256": "7234b1ebf037fc149dc459bf374cba16c0c55fd44e3796a84f58e25564ca40a2",
+    "snapshot": false
+  },
+  {
+    "path": "docs/SECURITY_VULNERABILITY_TRIAGE.md",
+    "bytes": 2647,
+    "sha256": "84d5a238629fd2427d7abfa701d7e5d902f54a361df3a350380297189b66ad0b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/39-plano-execucao-claude-code-playwright-smoke.md",
+    "bytes": 5689,
+    "sha256": "76f7291297885b97b7f34c3b32bfc47f2c9a60d653df28aabfb7679f45bc188e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/60-relatorio-consolidado-estado-construcao-cvg-connect-desk.md",
+    "bytes": 17613,
+    "sha256": "c599ab668e4ccb7db59b0a7bc24dc73d5771d918ea223c9c7cb66e3a6b65b9c3",
+    "snapshot": false
+  },
+  {
+    "path": "docs/50-plano-execucao-claude-code-dead-letter-ui-retry.md",
+    "bytes": 4372,
+    "sha256": "e3af667c69330f128f75e024d4f8f5cde17c95141069a33a7c455c1218e7a296",
+    "snapshot": false
+  },
+  {
+    "path": "docs/GAPS-TECNICOS.md",
+    "bytes": 21050,
+    "sha256": "11582d6420261240a6b6b5acdce5f1af556d0423877a117b0ce3ab2609e554bf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/SLO.md",
+    "bytes": 1700,
+    "sha256": "333b9f1d69d1ca2ebc607f15b41f330034f3c545d1966da522e1039774a8e9c1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/66-plano-execucao-claude-code-observabilidade-governanca.md",
+    "bytes": 5244,
+    "sha256": "7b4ddfe01f63f89bbf70846c64f63b1e245cbe2ff3443dfd769e002ca4efd712",
+    "snapshot": false
+  },
+  {
+    "path": "docs/06-integration-contracts.md",
+    "bytes": 9439,
+    "sha256": "cc0a266039617416b52336eaaa96ef1cbe359f19b81985b99420f4564911cb96",
+    "snapshot": false
+  },
+  {
+    "path": "docs/44-plano-execucao-claude-code-fechamento-reconciliacao-tests-e2e-events.md",
+    "bytes": 7149,
+    "sha256": "c6784d3eb4e76fd9ffad123a40852063444854f114c9761e42a3760f393e7905",
+    "snapshot": false
+  },
+  {
+    "path": "docs/75-execplan-redesign-premium.md",
+    "bytes": 3830,
+    "sha256": "fdff4f8b8be7e1e55f27f09941a26f9e2dc0f1887784047a97f78743b6f85051",
+    "snapshot": false
+  },
+  {
+    "path": "docs/16-validation-checklist.md",
+    "bytes": 2338,
+    "sha256": "b6999a7053aaa8f34079a6583f658816d0940b76c860ca03376e2d36eaee64c3",
+    "snapshot": false
+  },
+  {
+    "path": "docs/THREAT_MODEL.md",
+    "bytes": 2907,
+    "sha256": "074d9fe084c3ae0ca7857ccb9453da3c4fbe4bc41e0fd02fb43985becdf4cd23",
+    "snapshot": false
+  },
+  {
+    "path": "docs/04-target-architecture.md",
+    "bytes": 10052,
+    "sha256": "92ba147c68304d018b269d6fddd4f8cd76094623900f8334de240079db8300ed",
+    "snapshot": false
+  },
+  {
+    "path": "docs/AUTHORIZATION.md",
+    "bytes": 1468,
+    "sha256": "486ddf583ac715f8e9272c86e5f00aa0090547e78b8ba6b4027fb1fc1cd0eea1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/14-roadmap.md",
+    "bytes": 11522,
+    "sha256": "3865d7e6c4fc7a6c09952cf9ae45e5b18d6a99da36e046496b41c3103140fcb2",
+    "snapshot": false
+  },
+  {
+    "path": "docs/24-plano-implementacao-enterprise.md",
+    "bytes": 33270,
+    "sha256": "d73018b8e1f026bf99d0ddc95b64f0e122bfecbc22cb80e5400330789b1600bf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/03-scope-and-non-scope.md",
+    "bytes": 6420,
+    "sha256": "f271fa4f8c55723bf862ccee6b4873336182ecc5954c4b5a6295ee0c0b9a6019",
+    "snapshot": false
+  },
+  {
+    "path": "docs/33-relatorio-final-fanout-classe-real.md",
+    "bytes": 9894,
+    "sha256": "5e13722b4a551fa04b9de91fbca9ee8e2e11e1c21f490b1b85ef6626b9706b5a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/46-plano-execucao-claude-code-smoke-stack-ci-local.md",
+    "bytes": 4844,
+    "sha256": "b1c884c1e11d53b87f8c3de1f6d93cb774a15b4e610191de18548e73d6dded6e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/63-plano-execucao-claude-code-transfers-contacts-integration.md",
+    "bytes": 4572,
+    "sha256": "3127ed70c355ed489e26c58667ce8b6ad09b2ecf32751dbf54f56da7fe9cccdc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/prompt_master.md",
+    "bytes": 23588,
+    "sha256": "4d415dd27cd122438989cf0417ee4945c658200481a32225581f1f1ccff4b851",
+    "snapshot": false
+  },
+  {
+    "path": "docs/28-relatorio-executivo-testes-infraestrutura.md",
+    "bytes": 15219,
+    "sha256": "cb7cf20a5db816aaa992e1e1a37941b29c51abd592c968abde7bd0e5800ac878",
+    "snapshot": false
+  },
+  {
+    "path": "docs/05-domain-model.md",
+    "bytes": 10179,
+    "sha256": "1915da133395f5ab3ba6e519945ee1c9e2f72e4bb720724db3c2e9751acb6b7d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/23-auditoria-executiva.md",
+    "bytes": 9587,
+    "sha256": "10f682a08ae63f04cc911ff1cc7ed2af69495dc219327efc8a5cb896c938f08d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/65-plano-execucao-claude-code-contacts-get-by-id-fix.md",
+    "bytes": 3599,
+    "sha256": "42d9bcc4b95089cc7b85e729a0bf21140d597fe5ba8946c62d1e483fbd733d4b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/55-plano-execucao-claude-code-event-version-envelope.md",
+    "bytes": 4697,
+    "sha256": "1968e9fcf1d2cdc0174d36aba96c962dbdf2eec3ad31707fb9aa9842a2128bd5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/20-master-execution-log.md",
+    "bytes": 116316,
+    "sha256": "5cb8e2c207973c10e920fce07e2e1e8cc5b4f0fd320ce39d6270e4d44609d320",
+    "snapshot": false
+  },
+  {
+    "path": "docs/AI_SAFETY.md",
+    "bytes": 1956,
+    "sha256": "cd7d79fe801f0a4f7685a2378943818c38e3b04e6f56536e0e0e01430d2b83e5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/37-plano-execucao-claude-code-realtime-message-auth-final.md",
+    "bytes": 6755,
+    "sha256": "70c91f3643aa8984c55ec654791945c03073a223f38dae592adf2575ac2b1655",
+    "snapshot": false
+  },
+  {
+    "path": "docs/62-plano-execucao-claude-code-modulos-premium-testes.md",
+    "bytes": 5088,
+    "sha256": "9458f35195e069463189d3bbd677ad5ef6405f495b24bdd60dac17c285780674",
+    "snapshot": false
+  },
+  {
+    "path": "docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 7106,
+    "sha256": "777483cd0295404e1e881f9b719f9b3ccf8452cc5db2147567cb73409c09aaa6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-001-persistent-dlq.md",
+    "bytes": 829,
+    "sha256": "67d4ff54b94fb55612cc6393f0d7350a7f5b18a09ef9992789612abcc7080257",
+    "snapshot": false
+  },
+  {
+    "path": "docs/22-enterprise-premium-plan.md",
+    "bytes": 27520,
+    "sha256": "ddf6675398411a748ce3baa52d8b8a7908a67cafdd4cd8fbadc28f16dbd57975",
+    "snapshot": false
+  },
+  {
+    "path": "docs/18-deployment-and-runtime.md",
+    "bytes": 7757,
+    "sha256": "285f480ab3fee31a721d3d5aaae8e48bc7977e71d6b4030ee200394910a655f6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/17-open-decisions.md",
+    "bytes": 844,
+    "sha256": "d3753f47a8e551ca05055b554d99a30bf75175c7bf88b58dc0451a5c41beb316",
+    "snapshot": false
+  },
+  {
+    "path": "docs/67-plano-execucao-claude-code-worker-dead-letter-observability.md",
+    "bytes": 4398,
+    "sha256": "4a25f1608bb5253865005c664fac690ec1dd45406fec238a2777e2f61e0b3d58",
+    "snapshot": false
+  },
+  {
+    "path": "docs/57-plano-execucao-claude-code-ci-db-critical-suites.md",
+    "bytes": 4475,
+    "sha256": "c4b5db00335400d2cb14d195ef62f46714fc332fc118ad590ec93750fe991b30",
+    "snapshot": false
+  },
+  {
+    "path": "docs/09-data-model.md",
+    "bytes": 19235,
+    "sha256": "8a6cf88f420d307081e177ca4544c715491dda5ddf4da85880f90376782dacb6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/68-plano-execucao-claude-code-fase2-observabilidade-fechamento.md",
+    "bytes": 6005,
+    "sha256": "d69f3a08bf118584dd0c05d51d72b421a24f513a9a14a5734def3cb17bd68b88",
+    "snapshot": false
+  },
+  {
+    "path": "docs/71-relatorio-auditoria-completa-notas-0-100.md",
+    "bytes": 17775,
+    "sha256": "cdbad3c933ea8a8090b21c99713abd3c3a800e6f8d6ad2bc1c42e92a2f1b6a30",
+    "snapshot": false
+  },
+  {
+    "path": "docs/30-plano-execucao-claude-code-fanout-validacao-final.md",
+    "bytes": 10950,
+    "sha256": "c3eb508b1917ef5ec1f59685a6a3019a93285abd9fb58e44f564a71223263c19",
+    "snapshot": false
+  },
+  {
+    "path": "docs/42-plano-execucao-claude-code-playwright-smoke-finalizacao-g06.md",
+    "bytes": 7048,
+    "sha256": "69852e8e20878834fc0d0bd2c520a5bddeb9b673e035822556b70a016bf9f0aa",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-002-opentelemetry.md",
+    "bytes": 842,
+    "sha256": "9d2d01b180ea36745e513cbef8631b935bd966ad2b26c4b6cdb228e4d3a03e04",
+    "snapshot": false
+  },
+  {
+    "path": "docs/29-relatorio-final-autenticacao-realtime.md",
+    "bytes": 9764,
+    "sha256": "df5955c851eb55b1a52e1f627d37b3815eb30c31c4caa57ed9433e586dde6d35",
+    "snapshot": false
+  },
+  {
+    "path": "docs/35-plano-execucao-claude-code-realtime-hardening.md",
+    "bytes": 7038,
+    "sha256": "02991754136b60163318f87ae243332d77acd2d0d3982ac0cf0336effe52bb04",
+    "snapshot": false
+  },
+  {
+    "path": "docs/69-plano-execucao-claude-code-observabilidade-riscos-residuais.md",
+    "bytes": 4969,
+    "sha256": "ee6bd0c659438aa0df928d421bcf4fd8f567eb8a786ba346a2080d1cda8934bd",
+    "snapshot": false
+  },
+  {
+    "path": "docs/38-plano-execucao-claude-code-g06-testes-prioritarios.md",
+    "bytes": 7335,
+    "sha256": "5c9f1758726f53ba320914ca1a51b31b462e42af12f5f7ce22a290ef6e025236",
+    "snapshot": false
+  },
+  {
+    "path": "docs/07-backend-architecture.md",
+    "bytes": 14097,
+    "sha256": "86de06b0055da4cf8acd2fc417ede2181858fccc14be13326e3b3934e5cb097f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/PRODUCTION_DEPLOYMENT.md",
+    "bytes": 1488,
+    "sha256": "770d2467d1094d0190999ee0f1946151a5c4f7e9261cfae9a40e11327fe570e4",
+    "snapshot": false
+  },
+  {
+    "path": "docs/27-relatorio-executivo-rastreabilidade-documentacao-vs-codigo.md",
+    "bytes": 19294,
+    "sha256": "64871e28653601929c2edf75c5f83259d8392bd1be500f2b0486cd2bcfaeb3df",
+    "snapshot": false
+  },
+  {
+    "path": "docs/41-plano-execucao-claude-code-secretary-integracao-handoff.md",
+    "bytes": 9031,
+    "sha256": "702667fb05065897f960e3ae4a5b8fc5433d01cb2f6e283e022d89ff4a9971df",
+    "snapshot": false
+  },
+  {
+    "path": "docs/49-plano-execucao-claude-code-ci-github-smoke-e2e.md",
+    "bytes": 5004,
+    "sha256": "923f93e830a0bcf35b53f25e832fe58aca65eb9c019de4fe8c1ccc6f1cfdc092",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-005-realtime-fanout.md",
+    "bytes": 819,
+    "sha256": "a906481e8b811e0ed7e98ddc71394f56f31352202ce31fff2318a1c6eff6a8f7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/56-plano-execucao-claude-code-ci-integration-postgres-real.md",
+    "bytes": 4744,
+    "sha256": "aa6a423a38c29edc6be5da01aaac2dbc5cb20d9d5afd7d9d7aa4629a68816c34",
+    "snapshot": false
+  },
+  {
+    "path": "docs/53-plano-execucao-claude-code-dead-letter-outros-runtimes.md",
+    "bytes": 4389,
+    "sha256": "6f41b9a05f9b9d91d06331893e4d73a7a6296075321be86131798e17f4d57a8d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/15-implementation-phases.md",
+    "bytes": 24619,
+    "sha256": "075c8e1d2d4d2c9b2af688a4addd51e43d4f0e7822841c2311bab751e44e2642",
+    "snapshot": false
+  },
+  {
+    "path": "docs/72-prompt-modernizacao-triplo-aaa.md",
+    "bytes": 30655,
+    "sha256": "4eaf355e0fd8b7aeec475cee6159f63295a3ec4344e82897d5aa22b2df1e64a5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/25-plano-testes-completo.md",
+    "bytes": 16251,
+    "sha256": "b3e2d1946d2d636a60f52b258e8c704a03c822a56b9386d080000648cfdb95c9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/02-business-context.md",
+    "bytes": 7431,
+    "sha256": "0b33ff9c19222e6bbe3bd56f7867cfff8edf44e039b9963755c39dfe7e141968",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-004-malware-quarantine.md",
+    "bytes": 832,
+    "sha256": "cdfaace54b6bca2887e4711e3d6b5e2bb61c9846653f38a550e747d68327a9f0",
+    "snapshot": false
+  },
+  {
+    "path": "docs/58-plano-execucao-claude-code-frontend-page-tests.md",
+    "bytes": 4411,
+    "sha256": "9f35397ec395e1e88e2688edcd2cb4fab528f55a811b43f4ed0cf409223de62b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ARCHITECTURE.md",
+    "bytes": 2068,
+    "sha256": "fe3664f1603d00b94e2acf6ec666c398c4f2cb98b3f54221654cc3df1f80a697",
+    "snapshot": false
+  },
+  {
+    "path": "docs/48-plano-execucao-claude-code-ci-smoke-playwright.md",
+    "bytes": 5093,
+    "sha256": "3edeed33ececd1317c6945fce15220fc154ca4a50a4e11594af7fe9683d1d60b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/43-plano-execucao-claude-code-reconciliacao-e2e-events-polling.md",
+    "bytes": 7113,
+    "sha256": "6db4ec662b222d0924400687fb564376b34bcce703194a4f74dce0419117d045",
+    "snapshot": false
+  },
+  {
+    "path": "docs/12-audit-and-observability.md",
+    "bytes": 16756,
+    "sha256": "dd17fae1f9b5ff873b7c4e12d43fc2fc82229f76b6bffaed951811db26ee90e1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/RUNBOOK.md",
+    "bytes": 1566,
+    "sha256": "10c713759d4cbd5a8a3b6ea3777620e4088fb7fe619ababf0bc433efebc54f88",
+    "snapshot": false
+  },
+  {
+    "path": "docs/ADR-003-media-object-storage.md",
+    "bytes": 841,
+    "sha256": "f384ac50d35759585eebf55d212c10ba4eb43b29a3154eaf35a7581e45e19cde",
+    "snapshot": false
+  },
+  {
+    "path": "docs/TEST_MATRIX.md",
+    "bytes": 3942,
+    "sha256": "d2ef21ffef715f046d6bcbddec182d667b9a96cbe4684c4435cbb75ce19d9a05",
+    "snapshot": false
+  },
+  {
+    "path": "docs/21-instalacao-local.md",
+    "bytes": 7594,
+    "sha256": "b02eb945faca939fe4f61f11695a7b99f1d9466da35499ab78cddc3022500c82",
+    "snapshot": false
+  },
+  {
+    "path": "docs/35-relatorio-final-fanout-hardening-e-ci.md",
+    "bytes": 5112,
+    "sha256": "913097b05790dd5e94733d51484502d7dafd7d7a8bc9b23a513f70ffeef9e668",
+    "snapshot": false
+  },
+  {
+    "path": "docs/54-plano-execucao-claude-code-realtime-dead-letter-semantica.md",
+    "bytes": 4641,
+    "sha256": "05e5369a411e5566af2cbc2d18d7559cf04eddc580b2046c8357a36df367e56a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/OBSERVABILITY.md",
+    "bytes": 2963,
+    "sha256": "145495c6a7596306dbc0530e13a6348f0e7417115965f011865b1016694aac02",
+    "snapshot": false
+  },
+  {
+    "path": "docs/61-plano-executivo-restante-enterprise-premium.md",
+    "bytes": 9020,
+    "sha256": "f82590de027e786afb81e0415498203e38247de5b816271fc8bd552a2f259de7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/TRIPLE_AAA_CERTIFICATION.md",
+    "bytes": 4567,
+    "sha256": "e6461384584af2d8539acb0aaf0c12017b12e6694cd0badc92fb5e6c05270316",
+    "snapshot": false
+  },
+  {
+    "path": "docs/documentacao.md",
+    "bytes": 5970,
+    "sha256": "22c48768d6ebc39e75b80f21f6b781f31c9cec579ae4e5c281dd23fac8165a00",
+    "snapshot": false
+  },
+  {
+    "path": "docs/11-security-and-access-control.md",
+    "bytes": 13078,
+    "sha256": "144fd2c30133f3b8a2ca70e776559cb9c15f6e67d8483ee261967234e0c68337",
+    "snapshot": false
+  },
+  {
+    "path": "docs/36-relatorio-final-realtime-hardening.md",
+    "bytes": 6073,
+    "sha256": "5893b937c1cd08e947ad49cc0de0a9f8d76a84739cb5acb32899cbfca643e52c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/45-plano-execucao-claude-code-smoke-send-message-fixture-estavel.md",
+    "bytes": 6051,
+    "sha256": "07563fdd1411c69f9f0b53b0e3c6f9e8afd8f9b253b9b1987623ade207748d12",
+    "snapshot": false
+  },
+  {
+    "path": "docs/01-product-vision.md",
+    "bytes": 9093,
+    "sha256": "eda6006b6d4d9c8d8c8637a41d5b8a87b0b4f1d0d24450270d739a2fbc9ea31e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/AUDITORIA_IMPLEMENTACAO.md",
+    "bytes": 20047,
+    "sha256": "238b63e0f6b27ef9ac7c2f1b0dd8b206d3f5b3f5d43db08cd70fdf286c0a8971",
+    "snapshot": false
+  },
+  {
+    "path": "docs/auditorias/2026-09-12/RELATORIO.md",
+    "bytes": 25821,
+    "sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/ROADMAP.md",
+    "bytes": 5765,
+    "sha256": "63d4033f8966a65527f64fbb1329a8086a2ce6fb5c5bec99fd5237356e8c3c97",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/BACKLOG.md",
+    "bytes": 6378,
+    "sha256": "129ec32fc04444f95ff707ee5bae570c20597e21d5a3e26e72de594a1cbc64d6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+    "bytes": 8533,
+    "sha256": "a1d09d5c03b2133ddad50fc77a3ff4756dcbcf519c9d80979d765646a11ddb23",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/PLANO_EXECUTIVO.md",
+    "bytes": 6435,
+    "sha256": "c8a7a192515b19bd5e7345b983c706bbe3ce7200bff63cf6f598b28fc32651b9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/VERIFICACAO.md",
+    "bytes": 3904,
+    "sha256": "ee9aa6d04ce74c414c3cfbd4f53f75c194143bc30a5ef1ecd3741078ab4dc92e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/DECISOES.md",
+    "bytes": 4012,
+    "sha256": "355301d143d44f41a70950b207979463d8bc52cd4b1dc0b906ba82c25933b943",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/README.md",
+    "bytes": 2513,
+    "sha256": "03f4b22c110f8760c5ee6cb5e7dd8244cf1db19b9f1c5d3cc871ef4fbacb7285",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/DESIGN_QA.md",
+    "bytes": 5926,
+    "sha256": "8009b415cc766a8c389cdf985f71ad1b56769bb37b0f883dfb1213d07ac2dc85",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+    "bytes": 9101,
+    "sha256": "709d2368adfdb3e070bf48511e805c45684a637d191cb38e0e6f06e2677178c1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-02-aceito.md",
+    "bytes": 2685,
+    "sha256": "e7ceec8b8ef5946fd6ef39c21e1a177302e0415653589b0795fca90070be8721",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-00-worker-recebido.md",
+    "bytes": 2022,
+    "sha256": "2cfb558035e8e205e5446d3bad02031de584f962df01b74fe18df1559d987b07",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-liberacao-agentes-2-3.md",
+    "bytes": 3198,
+    "sha256": "64c6ec72306584368107cccb27b4d5cd393c53194c9e6cd7b16c8f07c8291337",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-builders-liberados.md",
+    "bytes": 2144,
+    "sha256": "f7ccce9ff380d94388191b0e65be28fcb9a1cd2fb07cb7b45ffbd0ad6af39909",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-03.md",
+    "bytes": 3298,
+    "sha256": "0aef6b94b7afad1c537e149025dff7826045a917226f3c9ec0a171d3c79453ee",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/prompt-apoio-AAA-00-inventario.md",
+    "bytes": 3474,
+    "sha256": "4b20006d3da0bb6fa3de42190f4b4f913db8e2888762a49d6d334a17ec727bde",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-implemented.md",
+    "bytes": 4006,
+    "sha256": "f44a5f24546e338cd20f9278f905b2cc8070f30655565f37ae205a4f25a20668",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-integrado.md",
+    "bytes": 2673,
+    "sha256": "e81b07c06fe836d6c46a206438ad11a0532b443f3d969bcfaecd6b2bc2eb3b1b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-snapshot-recebido.md",
+    "bytes": 2596,
+    "sha256": "35bb30edac9758151d8c5e7dc4f20cc8d86da812efd49ba0e9a807323d210b5c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-rejeicoes-consolidadas.md",
+    "bytes": 4229,
+    "sha256": "2225732533ecc8b8ba1e5340a3bb7215bf2b93c0cc55806046fc980b8d35e5de",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-erratas-inventario-reconciliadas.md",
+    "bytes": 1786,
+    "sha256": "e6b1152c019dec0e09cbd522dd9ce8ee77ee4c99b54c2f47af2e009d6573e60d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-02.md",
+    "bytes": 2676,
+    "sha256": "f86d24b95cd1ef9ecbc2d61632ebae5906d0220d00c84ec537700c2532429490",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-v3-conferido.md",
+    "bytes": 2298,
+    "sha256": "c46682537955c1c66b775bbaa91ab13fd24ec55136b8100a4af50005a708bc98",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-despacho-AAA-04-conferido.md",
+    "bytes": 2593,
+    "sha256": "e1f33821c713ca2b1e621f64005b36769cc226480f108c78a9523eaf8806a94a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-06-liberacao-conferida.md",
+    "bytes": 1671,
+    "sha256": "ad4659f80bfa202ecb97ffb10b7e92b8d4c3177c4098e37df1e6cea4cbcd71df",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-implemented.md",
+    "bytes": 3687,
+    "sha256": "40b971bbb1f61c8bca0185461d36cb165c0fc9e6678d91576fc283f923a7dbd5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-recebimento-inventario.md",
+    "bytes": 2812,
+    "sha256": "5173ecb14e104cf26a21551806a963954606a5da57a9285179b60d4dc1f23572",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/RETORNO.md",
+    "bytes": 9134,
+    "sha256": "ba06ad3d12965d20740b780d50122f6823805d6708fa1756693f868fd0d456e4",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/INVENTARIO_CHECKS.md",
+    "bytes": 15613,
+    "sha256": "d72a90d79c7909db891e28855758335a955b6d3d7fd3d4baa1a7b509a18e4c14",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/MATRIZ_SERVICOS.md",
+    "bytes": 14513,
+    "sha256": "ff97ea76924f9040920d27b2ffe88c4dc75b9f2f67c794d1bff742d62bce178e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/01-DIAGNOSTICO.md",
+    "bytes": 3973,
+    "sha256": "d52c281c2e5d1d8da2503a2ae8cefab0b5b8d3c3e6ed98b0d03583b33651e5ff",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/06-PENDENCIAS.md",
+    "bytes": 1998,
+    "sha256": "2c4c148587c8eafd2188030ef50c362a6871c2f7e4cf7cdb9b00ae2eebcd9bd8",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/05-DESPACHO-RASCUNHO.md",
+    "bytes": 3366,
+    "sha256": "4ef62c5be48abd37c65194392bd1faf71074960779c7a28cbeb021555277507d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/04-CONTRATO-C08-RECORTE.md",
+    "bytes": 3840,
+    "sha256": "471aa7968186a8fc4e3585c8bfa9a2befa74f73842b522d8c11fce581ec6ebec",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/README.md",
+    "bytes": 2324,
+    "sha256": "2ec91d4d38840f5396dc98b311c32606b40c5cf57679315e3c5d55fc949e90f1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/03-TESTES.md",
+    "bytes": 4216,
+    "sha256": "0ab80cde4a5383b2b6431392139802676ff62aae428e88da611ddb930ab5af36",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/02-PROPOSTA-SOLUCAO.md",
+    "bytes": 5162,
+    "sha256": "8d41a73b4b0cc152e9a145ce91a98261a2870a96955e9cfe37fadfc33f80cf89",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/README.md",
+    "bytes": 8539,
+    "sha256": "add9733e7f7ba2a2de233c43f9c4e54b081c5c5665795fbfd05d3a9f22d664ad",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/COORDINATION.md",
+    "bytes": 2826,
+    "sha256": "dfdc76148cd5b4bd46a25da65c94b07075468727149d090a6ca2f30b8621a215",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/contracts/C08-AAA06.md",
+    "bytes": 4750,
+    "sha256": "8ec1ad6b9dbfe7bae8c1315cee26fd9d8dd617920ff236144ee344479d228b39",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/contracts/C03.md",
+    "bytes": 9628,
+    "sha256": "26daf0cc1fee1ef34be0067e41b5af230d946e63529dbd6eb8415fddc9c5502a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/contracts/C01.md",
+    "bytes": 13078,
+    "sha256": "abd51f3226fdd7a6a6009f805a188f5c3ed54c893b10ee1f42d1021b18d30668",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/contracts/C02.md",
+    "bytes": 14573,
+    "sha256": "b96ebc6026feffb3db44abbab415eaf806804743c7f7f36a69f1f1f1b0eca46c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-03/classification-preexisting.md",
+    "bytes": 1905,
+    "sha256": "025e891a344ac32e1c1f013c98800c0d23bf5856caa4fc6cefa1c01abc0fd23e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-00/worker-isolation/README.md",
+    "bytes": 4491,
+    "sha256": "116917e8826c7908837fcbe067a57a899473985b858369e26953c4bf99661f9b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v3.md",
+    "bytes": 6662,
+    "sha256": "01a48f75975e36f0107fac03f2ff223d2b4e11198a0b339e3e8ad2b1ce3cad67",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3-correcoes.md",
+    "bytes": 2570,
+    "sha256": "4c4ff557ab7b78014ceb81c6cb4180c5afb035c619ec326ba27fbfccee27c781",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2-aaa06.md",
+    "bytes": 2160,
+    "sha256": "6cb6dc105c22959152a6b9c4c385a03682133a7be65989df87d3c99fe809708f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3.md",
+    "bytes": 2070,
+    "sha256": "5afb4999d6d2c3a2a13d44de3f6ff1231ba3728fbadfa9fb375620681b40a632",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v2.md",
+    "bytes": 3906,
+    "sha256": "00879e90b3642fc1348664f94356dabca41f4cd38b5cf104b68aca24a66e3a53",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03-correcoes.md",
+    "bytes": 3900,
+    "sha256": "6e6baea040f8d4db2a2538b0d03a961352e76c3d2512bd4536cde95c764bd6c3",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06-v2.md",
+    "bytes": 3558,
+    "sha256": "b7b0041aaced2685a1f58cd24824aef7fab3f5c36ce739ae5103b903f8f2933c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v4.md",
+    "bytes": 5232,
+    "sha256": "13e569b3afec11eac4b4165748ba6ebaef98786f2c01819697b39b63c5ff6925",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-02.md",
+    "bytes": 10644,
+    "sha256": "5b58c9bc13beced19a7c3242c67ba497aff7174449ae8bdc2da8c539a36b1c45",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-05.md",
+    "bytes": 3210,
+    "sha256": "d32883a079022588f266dd82d452fc777eba7d24a9c7f3ee9b98c3e715290808",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04.md",
+    "bytes": 9791,
+    "sha256": "98bb36210d7cb85dddd1bb7aeb34ecf95e853acd76ba4c11efa1bf6a677f9b97",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4-correcoes.md",
+    "bytes": 2650,
+    "sha256": "735f53e8e581082f838121bb3166d96aa67eb7ca2c2f6fc06913afab4c745bef",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v5.md",
+    "bytes": 3313,
+    "sha256": "ec658636fde8083d8a1edbf61aca543715a0ee2eb21b47aa633f4cb59f740ce7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2.md",
+    "bytes": 2148,
+    "sha256": "cdddf071cf4c77bab29ae5688b9a3ec38c84510a6b589f1b6249f682f5f3893b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03.md",
+    "bytes": 7519,
+    "sha256": "62e4e9ed1a18f9073a8f1e8b65a2bd3f3c49c2950bc5338ce83e4a9d457ca831",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4.md",
+    "bytes": 2958,
+    "sha256": "d4cd2e6bd85a171820abd69795b0e741dcf59fd0cf936b9d6c9d141783e4ce5a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06.md",
+    "bytes": 4664,
+    "sha256": "ab3bf622639bdf372d54070532ce3da2d64b19dc3240bd87a1f6b39cc7799833",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/LEAD-NOTE.md",
+    "bytes": 2336,
+    "sha256": "9681dca6d62772e29ca91f9f23f3d3cb5d2dba51badc97a6462d745c1529a6e8",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/RETORNO.md",
+    "bytes": 16995,
+    "sha256": "e136c2fab53b9e7acb72b171ed0a916fa9908ff5f4de3ef719ff1b34818ecc15",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/README.md",
+    "bytes": 7004,
+    "sha256": "b5fd35d3d7daec5c129529f92a6ed226c10b229a7c096bd624392ca798a53450",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/CHANGELOG.md",
+    "bytes": 1834,
+    "sha256": "d14c0324813662f571d87153eb8040489069a4c5da81341233bd8ec03d184f8d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/DOCKER_SETUP.md",
+    "bytes": 6744,
+    "sha256": "59f7fa1061870b36b23987ae499cc2510ca5d6490c2a82fe80080af30a432922",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/70-plano-execucao-claude-code-reconciliacao-final-fase2.md",
+    "bytes": 4334,
+    "sha256": "49c8b319e25636f26673c33b9ff76327c322a5de6710cc05d60c08213506f8bf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-006-dr-verification.md",
+    "bytes": 748,
+    "sha256": "b24bdfbb7d2be31bc648f936606a83ac8b71515c3f79a1b5b0e872bfa6a8ed51",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/19-test-strategy.md",
+    "bytes": 3424,
+    "sha256": "4467df2afe02cad99c910ad39d9f9a79887d2ec8f905626f07c2a4940fed48ce",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/29-auditoria-paralela-seguranca-aderencia.md",
+    "bytes": 11180,
+    "sha256": "71caa5413d9b7fa27d0ce5c29c11c8255e6ec26bd9726cd17c7a0ea169879520",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/73-prompt-certificacao-final-triple-aaa.md",
+    "bytes": 23089,
+    "sha256": "027b8e360f16edbc84a168b4dc3555e2d29fc2cfb79e0579d87da174a76e8d5e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/59-plano-execucao-claude-code-webhook-prod-hardening.md",
+    "bytes": 4125,
+    "sha256": "01a06fbb5d5f33ddbd479f54a4e3008ee23b7319356ff2a1d0d48656cacc37fc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/32-plano-execucao-claude-code-fanout-fechamento-final.md",
+    "bytes": 7178,
+    "sha256": "01d2486a9fa5a59e066367fdbd41fe0525d6379b378b5bb126803655b9e3027d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/10-realtime-and-events.md",
+    "bytes": 12337,
+    "sha256": "7a53d9f9d13eb17590ab65e92417095e1b061e325082b946efdb24359fc68d05",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/74-prompt-release-certification-closure.md",
+    "bytes": 18977,
+    "sha256": "9df1643bc3103871addb2a008b28d98f6833544e2c2fe72edf521dabb2b4d2b8",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/13-dashboard-and-kpis.md",
+    "bytes": 10994,
+    "sha256": "4ed3af2d69a21b857745e99bc8554d04dfd2f9321c6fe5d64d89d133bae1b561",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/34-plano-execucao-claude-code-fanout-hardening-e-ci.md",
+    "bytes": 6485,
+    "sha256": "ddac7990b32fb4dce665a98e998d47349323a80a5937c18afa5c38d2616acae7",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/64-plano-execucao-claude-code-transfers-contacts-http-real.md",
+    "bytes": 4543,
+    "sha256": "ffc03ec5dd4f12b1613ce8761367b3b85a74faab6e1ba0c4df774793896c504a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/26-relatorio-analise-documentacao-vs-implementacao.md",
+    "bytes": 15286,
+    "sha256": "c097fe79e3c03517b6a1d33a409c04b288835cecebd8f5882ae8dd440ee2c927",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/40-plano-execucao-claude-code-api-integration-criticos.md",
+    "bytes": 7844,
+    "sha256": "2b82fca70638e73aa7634212e98146c7f96db980a21538f8c49dbfe6a77cfe48",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/47-plano-execucao-claude-code-smoke-stack-dedicada-execucao-real.md",
+    "bytes": 5159,
+    "sha256": "68150dcdafa99bae16c38a8b7af5b8884a356eba4d2fe76577e552544340b876",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/51-plano-execucao-claude-code-dead-letter-ui-operacional.md",
+    "bytes": 4977,
+    "sha256": "5e04b0fac3b743138e07dc968e354f94064147d1156813873a23d86509d2d6ef",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/MESSAGING_CONTRACTS.md",
+    "bytes": 1282,
+    "sha256": "e18cb95e9cf92970aada56887f635ccdd6e6b3d0fc5595bf0a91ae98729f754e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/08-frontend-architecture.md",
+    "bytes": 13024,
+    "sha256": "7bd27e0861b895f7d6507a2b20a092c5d71822523118acab4785935795e6feb6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/31-relatorio-final-fanout-validacao.md",
+    "bytes": 9389,
+    "sha256": "c74f6b005ca2563d2348cb19ea90ae1107ae1f559db331fb76256fa7355b9650",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/SECURITY.md",
+    "bytes": 1400,
+    "sha256": "25c1d4fb84e27dc55498b7e1b0cd9621f339de378cebfacd8b4747ed25976d81",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/52-plano-execucao-claude-code-dead-letter-source-event-runtime.md",
+    "bytes": 4937,
+    "sha256": "ac8285da255478a4b6c07743bf61b0c68e285d95247258812060ab022177c4ec",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/DISASTER_RECOVERY.md",
+    "bytes": 1852,
+    "sha256": "7234b1ebf037fc149dc459bf374cba16c0c55fd44e3796a84f58e25564ca40a2",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/SECURITY_VULNERABILITY_TRIAGE.md",
+    "bytes": 2647,
+    "sha256": "84d5a238629fd2427d7abfa701d7e5d902f54a361df3a350380297189b66ad0b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/39-plano-execucao-claude-code-playwright-smoke.md",
+    "bytes": 5689,
+    "sha256": "76f7291297885b97b7f34c3b32bfc47f2c9a60d653df28aabfb7679f45bc188e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/60-relatorio-consolidado-estado-construcao-cvg-connect-desk.md",
+    "bytes": 17613,
+    "sha256": "c599ab668e4ccb7db59b0a7bc24dc73d5771d918ea223c9c7cb66e3a6b65b9c3",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/50-plano-execucao-claude-code-dead-letter-ui-retry.md",
+    "bytes": 4372,
+    "sha256": "e3af667c69330f128f75e024d4f8f5cde17c95141069a33a7c455c1218e7a296",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/GAPS-TECNICOS.md",
+    "bytes": 21050,
+    "sha256": "11582d6420261240a6b6b5acdce5f1af556d0423877a117b0ce3ab2609e554bf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/SLO.md",
+    "bytes": 1700,
+    "sha256": "333b9f1d69d1ca2ebc607f15b41f330034f3c545d1966da522e1039774a8e9c1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/66-plano-execucao-claude-code-observabilidade-governanca.md",
+    "bytes": 5244,
+    "sha256": "7b4ddfe01f63f89bbf70846c64f63b1e245cbe2ff3443dfd769e002ca4efd712",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/06-integration-contracts.md",
+    "bytes": 9439,
+    "sha256": "cc0a266039617416b52336eaaa96ef1cbe359f19b81985b99420f4564911cb96",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/44-plano-execucao-claude-code-fechamento-reconciliacao-tests-e2e-events.md",
+    "bytes": 7149,
+    "sha256": "c6784d3eb4e76fd9ffad123a40852063444854f114c9761e42a3760f393e7905",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/75-execplan-redesign-premium.md",
+    "bytes": 3830,
+    "sha256": "fdff4f8b8be7e1e55f27f09941a26f9e2dc0f1887784047a97f78743b6f85051",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/16-validation-checklist.md",
+    "bytes": 2338,
+    "sha256": "b6999a7053aaa8f34079a6583f658816d0940b76c860ca03376e2d36eaee64c3",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/THREAT_MODEL.md",
+    "bytes": 2907,
+    "sha256": "074d9fe084c3ae0ca7857ccb9453da3c4fbe4bc41e0fd02fb43985becdf4cd23",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/04-target-architecture.md",
+    "bytes": 10052,
+    "sha256": "92ba147c68304d018b269d6fddd4f8cd76094623900f8334de240079db8300ed",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/AUTHORIZATION.md",
+    "bytes": 1468,
+    "sha256": "486ddf583ac715f8e9272c86e5f00aa0090547e78b8ba6b4027fb1fc1cd0eea1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/14-roadmap.md",
+    "bytes": 11522,
+    "sha256": "3865d7e6c4fc7a6c09952cf9ae45e5b18d6a99da36e046496b41c3103140fcb2",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/24-plano-implementacao-enterprise.md",
+    "bytes": 33270,
+    "sha256": "d73018b8e1f026bf99d0ddc95b64f0e122bfecbc22cb80e5400330789b1600bf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/03-scope-and-non-scope.md",
+    "bytes": 6420,
+    "sha256": "f271fa4f8c55723bf862ccee6b4873336182ecc5954c4b5a6295ee0c0b9a6019",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/33-relatorio-final-fanout-classe-real.md",
+    "bytes": 9894,
+    "sha256": "5e13722b4a551fa04b9de91fbca9ee8e2e11e1c21f490b1b85ef6626b9706b5a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/46-plano-execucao-claude-code-smoke-stack-ci-local.md",
+    "bytes": 4844,
+    "sha256": "b1c884c1e11d53b87f8c3de1f6d93cb774a15b4e610191de18548e73d6dded6e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/63-plano-execucao-claude-code-transfers-contacts-integration.md",
+    "bytes": 4572,
+    "sha256": "3127ed70c355ed489e26c58667ce8b6ad09b2ecf32751dbf54f56da7fe9cccdc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/prompt_master.md",
+    "bytes": 23588,
+    "sha256": "4d415dd27cd122438989cf0417ee4945c658200481a32225581f1f1ccff4b851",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/28-relatorio-executivo-testes-infraestrutura.md",
+    "bytes": 15219,
+    "sha256": "cb7cf20a5db816aaa992e1e1a37941b29c51abd592c968abde7bd0e5800ac878",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/05-domain-model.md",
+    "bytes": 10179,
+    "sha256": "1915da133395f5ab3ba6e519945ee1c9e2f72e4bb720724db3c2e9751acb6b7d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/23-auditoria-executiva.md",
+    "bytes": 9587,
+    "sha256": "10f682a08ae63f04cc911ff1cc7ed2af69495dc219327efc8a5cb896c938f08d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/65-plano-execucao-claude-code-contacts-get-by-id-fix.md",
+    "bytes": 3599,
+    "sha256": "42d9bcc4b95089cc7b85e729a0bf21140d597fe5ba8946c62d1e483fbd733d4b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/55-plano-execucao-claude-code-event-version-envelope.md",
+    "bytes": 4697,
+    "sha256": "1968e9fcf1d2cdc0174d36aba96c962dbdf2eec3ad31707fb9aa9842a2128bd5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/20-master-execution-log.md",
+    "bytes": 116316,
+    "sha256": "5cb8e2c207973c10e920fce07e2e1e8cc5b4f0fd320ce39d6270e4d44609d320",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/AI_SAFETY.md",
+    "bytes": 1956,
+    "sha256": "cd7d79fe801f0a4f7685a2378943818c38e3b04e6f56536e0e0e01430d2b83e5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/37-plano-execucao-claude-code-realtime-message-auth-final.md",
+    "bytes": 6755,
+    "sha256": "70c91f3643aa8984c55ec654791945c03073a223f38dae592adf2575ac2b1655",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/62-plano-execucao-claude-code-modulos-premium-testes.md",
+    "bytes": 5088,
+    "sha256": "9458f35195e069463189d3bbd677ad5ef6405f495b24bdd60dac17c285780674",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 7106,
+    "sha256": "777483cd0295404e1e881f9b719f9b3ccf8452cc5db2147567cb73409c09aaa6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-001-persistent-dlq.md",
+    "bytes": 829,
+    "sha256": "67d4ff54b94fb55612cc6393f0d7350a7f5b18a09ef9992789612abcc7080257",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/22-enterprise-premium-plan.md",
+    "bytes": 27520,
+    "sha256": "ddf6675398411a748ce3baa52d8b8a7908a67cafdd4cd8fbadc28f16dbd57975",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/18-deployment-and-runtime.md",
+    "bytes": 7757,
+    "sha256": "285f480ab3fee31a721d3d5aaae8e48bc7977e71d6b4030ee200394910a655f6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/17-open-decisions.md",
+    "bytes": 844,
+    "sha256": "d3753f47a8e551ca05055b554d99a30bf75175c7bf88b58dc0451a5c41beb316",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/67-plano-execucao-claude-code-worker-dead-letter-observability.md",
+    "bytes": 4398,
+    "sha256": "4a25f1608bb5253865005c664fac690ec1dd45406fec238a2777e2f61e0b3d58",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/57-plano-execucao-claude-code-ci-db-critical-suites.md",
+    "bytes": 4475,
+    "sha256": "c4b5db00335400d2cb14d195ef62f46714fc332fc118ad590ec93750fe991b30",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/09-data-model.md",
+    "bytes": 19235,
+    "sha256": "8a6cf88f420d307081e177ca4544c715491dda5ddf4da85880f90376782dacb6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/68-plano-execucao-claude-code-fase2-observabilidade-fechamento.md",
+    "bytes": 6005,
+    "sha256": "d69f3a08bf118584dd0c05d51d72b421a24f513a9a14a5734def3cb17bd68b88",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/71-relatorio-auditoria-completa-notas-0-100.md",
+    "bytes": 17775,
+    "sha256": "cdbad3c933ea8a8090b21c99713abd3c3a800e6f8d6ad2bc1c42e92a2f1b6a30",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/30-plano-execucao-claude-code-fanout-validacao-final.md",
+    "bytes": 10950,
+    "sha256": "c3eb508b1917ef5ec1f59685a6a3019a93285abd9fb58e44f564a71223263c19",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/42-plano-execucao-claude-code-playwright-smoke-finalizacao-g06.md",
+    "bytes": 7048,
+    "sha256": "69852e8e20878834fc0d0bd2c520a5bddeb9b673e035822556b70a016bf9f0aa",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-002-opentelemetry.md",
+    "bytes": 842,
+    "sha256": "9d2d01b180ea36745e513cbef8631b935bd966ad2b26c4b6cdb228e4d3a03e04",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/29-relatorio-final-autenticacao-realtime.md",
+    "bytes": 9764,
+    "sha256": "df5955c851eb55b1a52e1f627d37b3815eb30c31c4caa57ed9433e586dde6d35",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/35-plano-execucao-claude-code-realtime-hardening.md",
+    "bytes": 7038,
+    "sha256": "02991754136b60163318f87ae243332d77acd2d0d3982ac0cf0336effe52bb04",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/69-plano-execucao-claude-code-observabilidade-riscos-residuais.md",
+    "bytes": 4969,
+    "sha256": "ee6bd0c659438aa0df928d421bcf4fd8f567eb8a786ba346a2080d1cda8934bd",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/38-plano-execucao-claude-code-g06-testes-prioritarios.md",
+    "bytes": 7335,
+    "sha256": "5c9f1758726f53ba320914ca1a51b31b462e42af12f5f7ce22a290ef6e025236",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/07-backend-architecture.md",
+    "bytes": 14097,
+    "sha256": "86de06b0055da4cf8acd2fc417ede2181858fccc14be13326e3b3934e5cb097f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/PRODUCTION_DEPLOYMENT.md",
+    "bytes": 1488,
+    "sha256": "770d2467d1094d0190999ee0f1946151a5c4f7e9261cfae9a40e11327fe570e4",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/27-relatorio-executivo-rastreabilidade-documentacao-vs-codigo.md",
+    "bytes": 19294,
+    "sha256": "64871e28653601929c2edf75c5f83259d8392bd1be500f2b0486cd2bcfaeb3df",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/41-plano-execucao-claude-code-secretary-integracao-handoff.md",
+    "bytes": 9031,
+    "sha256": "702667fb05065897f960e3ae4a5b8fc5433d01cb2f6e283e022d89ff4a9971df",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/49-plano-execucao-claude-code-ci-github-smoke-e2e.md",
+    "bytes": 5004,
+    "sha256": "923f93e830a0bcf35b53f25e832fe58aca65eb9c019de4fe8c1ccc6f1cfdc092",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-005-realtime-fanout.md",
+    "bytes": 819,
+    "sha256": "a906481e8b811e0ed7e98ddc71394f56f31352202ce31fff2318a1c6eff6a8f7",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/56-plano-execucao-claude-code-ci-integration-postgres-real.md",
+    "bytes": 4744,
+    "sha256": "aa6a423a38c29edc6be5da01aaac2dbc5cb20d9d5afd7d9d7aa4629a68816c34",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/53-plano-execucao-claude-code-dead-letter-outros-runtimes.md",
+    "bytes": 4389,
+    "sha256": "6f41b9a05f9b9d91d06331893e4d73a7a6296075321be86131798e17f4d57a8d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/15-implementation-phases.md",
+    "bytes": 24619,
+    "sha256": "075c8e1d2d4d2c9b2af688a4addd51e43d4f0e7822841c2311bab751e44e2642",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/72-prompt-modernizacao-triplo-aaa.md",
+    "bytes": 30655,
+    "sha256": "4eaf355e0fd8b7aeec475cee6159f63295a3ec4344e82897d5aa22b2df1e64a5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/25-plano-testes-completo.md",
+    "bytes": 16251,
+    "sha256": "b3e2d1946d2d636a60f52b258e8c704a03c822a56b9386d080000648cfdb95c9",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/02-business-context.md",
+    "bytes": 7431,
+    "sha256": "0b33ff9c19222e6bbe3bd56f7867cfff8edf44e039b9963755c39dfe7e141968",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-004-malware-quarantine.md",
+    "bytes": 832,
+    "sha256": "cdfaace54b6bca2887e4711e3d6b5e2bb61c9846653f38a550e747d68327a9f0",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/58-plano-execucao-claude-code-frontend-page-tests.md",
+    "bytes": 4411,
+    "sha256": "9f35397ec395e1e88e2688edcd2cb4fab528f55a811b43f4ed0cf409223de62b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ARCHITECTURE.md",
+    "bytes": 2068,
+    "sha256": "fe3664f1603d00b94e2acf6ec666c398c4f2cb98b3f54221654cc3df1f80a697",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/48-plano-execucao-claude-code-ci-smoke-playwright.md",
+    "bytes": 5093,
+    "sha256": "3edeed33ececd1317c6945fce15220fc154ca4a50a4e11594af7fe9683d1d60b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/43-plano-execucao-claude-code-reconciliacao-e2e-events-polling.md",
+    "bytes": 7113,
+    "sha256": "6db4ec662b222d0924400687fb564376b34bcce703194a4f74dce0419117d045",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/12-audit-and-observability.md",
+    "bytes": 16756,
+    "sha256": "dd17fae1f9b5ff873b7c4e12d43fc2fc82229f76b6bffaed951811db26ee90e1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/RUNBOOK.md",
+    "bytes": 1566,
+    "sha256": "10c713759d4cbd5a8a3b6ea3777620e4088fb7fe619ababf0bc433efebc54f88",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/ADR-003-media-object-storage.md",
+    "bytes": 841,
+    "sha256": "f384ac50d35759585eebf55d212c10ba4eb43b29a3154eaf35a7581e45e19cde",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/TEST_MATRIX.md",
+    "bytes": 3942,
+    "sha256": "d2ef21ffef715f046d6bcbddec182d667b9a96cbe4684c4435cbb75ce19d9a05",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/21-instalacao-local.md",
+    "bytes": 7594,
+    "sha256": "b02eb945faca939fe4f61f11695a7b99f1d9466da35499ab78cddc3022500c82",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/35-relatorio-final-fanout-hardening-e-ci.md",
+    "bytes": 5112,
+    "sha256": "913097b05790dd5e94733d51484502d7dafd7d7a8bc9b23a513f70ffeef9e668",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/54-plano-execucao-claude-code-realtime-dead-letter-semantica.md",
+    "bytes": 4641,
+    "sha256": "05e5369a411e5566af2cbc2d18d7559cf04eddc580b2046c8357a36df367e56a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/OBSERVABILITY.md",
+    "bytes": 1812,
+    "sha256": "b4d6949a9fc450e94f9c7aedb2070e2fbb2567b8aab68f1f01664ab600fe4a0f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/61-plano-executivo-restante-enterprise-premium.md",
+    "bytes": 9020,
+    "sha256": "f82590de027e786afb81e0415498203e38247de5b816271fc8bd552a2f259de7",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/TRIPLE_AAA_CERTIFICATION.md",
+    "bytes": 4567,
+    "sha256": "e6461384584af2d8539acb0aaf0c12017b12e6694cd0badc92fb5e6c05270316",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/documentacao.md",
+    "bytes": 5970,
+    "sha256": "22c48768d6ebc39e75b80f21f6b781f31c9cec579ae4e5c281dd23fac8165a00",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/11-security-and-access-control.md",
+    "bytes": 13078,
+    "sha256": "144fd2c30133f3b8a2ca70e776559cb9c15f6e67d8483ee261967234e0c68337",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/36-relatorio-final-realtime-hardening.md",
+    "bytes": 6073,
+    "sha256": "5893b937c1cd08e947ad49cc0de0a9f8d76a84739cb5acb32899cbfca643e52c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/45-plano-execucao-claude-code-smoke-send-message-fixture-estavel.md",
+    "bytes": 6051,
+    "sha256": "07563fdd1411c69f9f0b53b0e3c6f9e8afd8f9b253b9b1987623ade207748d12",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/01-product-vision.md",
+    "bytes": 9093,
+    "sha256": "eda6006b6d4d9c8d8c8637a41d5b8a87b0b4f1d0d24450270d739a2fbc9ea31e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/AUDITORIA_IMPLEMENTACAO.md",
+    "bytes": 20047,
+    "sha256": "238b63e0f6b27ef9ac7c2f1b0dd8b206d3f5b3f5d43db08cd70fdf286c0a8971",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/auditorias/2026-09-12/RELATORIO.md",
+    "bytes": 25821,
+    "sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/ROADMAP.md",
+    "bytes": 5765,
+    "sha256": "63d4033f8966a65527f64fbb1329a8086a2ce6fb5c5bec99fd5237356e8c3c97",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/BACKLOG.md",
+    "bytes": 6378,
+    "sha256": "129ec32fc04444f95ff707ee5bae570c20597e21d5a3e26e72de594a1cbc64d6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+    "bytes": 8533,
+    "sha256": "a1d09d5c03b2133ddad50fc77a3ff4756dcbcf519c9d80979d765646a11ddb23",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/PLANO_EXECUTIVO.md",
+    "bytes": 6435,
+    "sha256": "c8a7a192515b19bd5e7345b983c706bbe3ce7200bff63cf6f598b28fc32651b9",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/VERIFICACAO.md",
+    "bytes": 3904,
+    "sha256": "ee9aa6d04ce74c414c3cfbd4f53f75c194143bc30a5ef1ecd3741078ab4dc92e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/DECISOES.md",
+    "bytes": 4012,
+    "sha256": "355301d143d44f41a70950b207979463d8bc52cd4b1dc0b906ba82c25933b943",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/README.md",
+    "bytes": 2513,
+    "sha256": "03f4b22c110f8760c5ee6cb5e7dd8244cf1db19b9f1c5d3cc871ef4fbacb7285",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/DESIGN_QA.md",
+    "bytes": 5926,
+    "sha256": "8009b415cc766a8c389cdf985f71ad1b56769bb37b0f883dfb1213d07ac2dc85",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+    "bytes": 9101,
+    "sha256": "709d2368adfdb3e070bf48511e805c45684a637d191cb38e0e6f06e2677178c1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-02-aceito.md",
+    "bytes": 2685,
+    "sha256": "e7ceec8b8ef5946fd6ef39c21e1a177302e0415653589b0795fca90070be8721",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-00-worker-recebido.md",
+    "bytes": 2022,
+    "sha256": "2cfb558035e8e205e5446d3bad02031de584f962df01b74fe18df1559d987b07",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-liberacao-agentes-2-3.md",
+    "bytes": 3198,
+    "sha256": "64c6ec72306584368107cccb27b4d5cd393c53194c9e6cd7b16c8f07c8291337",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-builders-liberados.md",
+    "bytes": 2144,
+    "sha256": "f7ccce9ff380d94388191b0e65be28fcb9a1cd2fb07cb7b45ffbd0ad6af39909",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-03.md",
+    "bytes": 3298,
+    "sha256": "0aef6b94b7afad1c537e149025dff7826045a917226f3c9ec0a171d3c79453ee",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/prompt-apoio-AAA-00-inventario.md",
+    "bytes": 3474,
+    "sha256": "4b20006d3da0bb6fa3de42190f4b4f913db8e2888762a49d6d334a17ec727bde",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-implemented.md",
+    "bytes": 4006,
+    "sha256": "f44a5f24546e338cd20f9278f905b2cc8070f30655565f37ae205a4f25a20668",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-03-integrado.md",
+    "bytes": 2673,
+    "sha256": "e81b07c06fe836d6c46a206438ad11a0532b443f3d969bcfaecd6b2bc2eb3b1b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-snapshot-recebido.md",
+    "bytes": 2596,
+    "sha256": "35bb30edac9758151d8c5e7dc4f20cc8d86da812efd49ba0e9a807323d210b5c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-rejeicoes-consolidadas.md",
+    "bytes": 4229,
+    "sha256": "2225732533ecc8b8ba1e5340a3bb7215bf2b93c0cc55806046fc980b8d35e5de",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-erratas-inventario-reconciliadas.md",
+    "bytes": 1786,
+    "sha256": "e6b1152c019dec0e09cbd522dd9ce8ee77ee4c99b54c2f47af2e009d6573e60d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-retomada-AAA-02.md",
+    "bytes": 2676,
+    "sha256": "f86d24b95cd1ef9ecbc2d61632ebae5906d0220d00c84ec537700c2532429490",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-v3-conferido.md",
+    "bytes": 2298,
+    "sha256": "c46682537955c1c66b775bbaa91ab13fd24ec55136b8100a4af50005a708bc98",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-despacho-AAA-04-conferido.md",
+    "bytes": 2593,
+    "sha256": "e1f33821c713ca2b1e621f64005b36769cc226480f108c78a9523eaf8806a94a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-06-liberacao-conferida.md",
+    "bytes": 1671,
+    "sha256": "ad4659f80bfa202ecb97ffb10b7e92b8d4c3177c4098e37df1e6cea4cbcd71df",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-AAA-04-implemented.md",
+    "bytes": 3687,
+    "sha256": "40b971bbb1f61c8bca0185461d36cb165c0fc9e6678d91576fc283f923a7dbd5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/2026-09-12-recebimento-inventario.md",
+    "bytes": 2812,
+    "sha256": "5173ecb14e104cf26a21551806a963954606a5da57a9285179b60d4dc1f23572",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/RETORNO.md",
+    "bytes": 9134,
+    "sha256": "ba06ad3d12965d20740b780d50122f6823805d6708fa1756693f868fd0d456e4",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/INVENTARIO_CHECKS.md",
+    "bytes": 15613,
+    "sha256": "d72a90d79c7909db891e28855758335a955b6d3d7fd3d4baa1a7b509a18e4c14",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-00-inventario/MATRIZ_SERVICOS.md",
+    "bytes": 14513,
+    "sha256": "ff97ea76924f9040920d27b2ffe88c4dc75b9f2f67c794d1bff742d62bce178e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/01-DIAGNOSTICO.md",
+    "bytes": 3973,
+    "sha256": "d52c281c2e5d1d8da2503a2ae8cefab0b5b8d3c3e6ed98b0d03583b33651e5ff",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/06-PENDENCIAS.md",
+    "bytes": 1998,
+    "sha256": "2c4c148587c8eafd2188030ef50c362a6871c2f7e4cf7cdb9b00ae2eebcd9bd8",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/05-DESPACHO-RASCUNHO.md",
+    "bytes": 3366,
+    "sha256": "4ef62c5be48abd37c65194392bd1faf71074960779c7a28cbeb021555277507d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/04-CONTRATO-C08-RECORTE.md",
+    "bytes": 3840,
+    "sha256": "471aa7968186a8fc4e3585c8bfa9a2befa74f73842b522d8c11fce581ec6ebec",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/README.md",
+    "bytes": 2324,
+    "sha256": "2ec91d4d38840f5396dc98b311c32606b40c5cf57679315e3c5d55fc949e90f1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/03-TESTES.md",
+    "bytes": 4216,
+    "sha256": "0ab80cde4a5383b2b6431392139802676ff62aae428e88da611ddb930ab5af36",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/acompanhamento/apoio-AAA-06/02-PROPOSTA-SOLUCAO.md",
+    "bytes": 5162,
+    "sha256": "8d41a73b4b0cc152e9a145ce91a98261a2870a96955e9cfe37fadfc33f80cf89",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/README.md",
+    "bytes": 8539,
+    "sha256": "add9733e7f7ba2a2de233c43f9c4e54b081c5c5665795fbfd05d3a9f22d664ad",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/COORDINATION.md",
+    "bytes": 2826,
+    "sha256": "dfdc76148cd5b4bd46a25da65c94b07075468727149d090a6ca2f30b8621a215",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/contracts/C08-AAA06.md",
+    "bytes": 4750,
+    "sha256": "8ec1ad6b9dbfe7bae8c1315cee26fd9d8dd617920ff236144ee344479d228b39",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/contracts/C03.md",
+    "bytes": 9628,
+    "sha256": "26daf0cc1fee1ef34be0067e41b5af230d946e63529dbd6eb8415fddc9c5502a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/contracts/C01.md",
+    "bytes": 13078,
+    "sha256": "abd51f3226fdd7a6a6009f805a188f5c3ed54c893b10ee1f42d1021b18d30668",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/contracts/C02.md",
+    "bytes": 14573,
+    "sha256": "b96ebc6026feffb3db44abbab415eaf806804743c7f7f36a69f1f1f1b0eca46c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-03/classification-preexisting.md",
+    "bytes": 1905,
+    "sha256": "025e891a344ac32e1c1f013c98800c0d23bf5856caa4fc6cefa1c01abc0fd23e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/evidence/AAA-00/worker-isolation/README.md",
+    "bytes": 4491,
+    "sha256": "116917e8826c7908837fcbe067a57a899473985b858369e26953c4bf99661f9b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v3.md",
+    "bytes": 6662,
+    "sha256": "01a48f75975e36f0107fac03f2ff223d2b4e11198a0b339e3e8ad2b1ce3cad67",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3-correcoes.md",
+    "bytes": 2570,
+    "sha256": "4c4ff557ab7b78014ceb81c6cb4180c5afb035c619ec326ba27fbfccee27c781",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2-aaa06.md",
+    "bytes": 2160,
+    "sha256": "6cb6dc105c22959152a6b9c4c385a03682133a7be65989df87d3c99fe809708f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-3.md",
+    "bytes": 2070,
+    "sha256": "5afb4999d6d2c3a2a13d44de3f6ff1231ba3728fbadfa9fb375620681b40a632",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v2.md",
+    "bytes": 3906,
+    "sha256": "00879e90b3642fc1348664f94356dabca41f4cd38b5cf104b68aca24a66e3a53",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03-correcoes.md",
+    "bytes": 3900,
+    "sha256": "6e6baea040f8d4db2a2538b0d03a961352e76c3d2512bd4536cde95c764bd6c3",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06-v2.md",
+    "bytes": 3558,
+    "sha256": "b7b0041aaced2685a1f58cd24824aef7fab3f5c36ce739ae5103b903f8f2933c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v4.md",
+    "bytes": 5232,
+    "sha256": "13e569b3afec11eac4b4165748ba6ebaef98786f2c01819697b39b63c5ff6925",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-02.md",
+    "bytes": 10644,
+    "sha256": "5b58c9bc13beced19a7c3242c67ba497aff7174449ae8bdc2da8c539a36b1c45",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-05.md",
+    "bytes": 3210,
+    "sha256": "d32883a079022588f266dd82d452fc777eba7d24a9c7f3ee9b98c3e715290808",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04.md",
+    "bytes": 9791,
+    "sha256": "98bb36210d7cb85dddd1bb7aeb34ecf95e853acd76ba4c11efa1bf6a677f9b97",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4-correcoes.md",
+    "bytes": 2650,
+    "sha256": "735f53e8e581082f838121bb3166d96aa67eb7ca2c2f6fc06913afab4c745bef",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-04-correcoes-v5.md",
+    "bytes": 3313,
+    "sha256": "ec658636fde8083d8a1edbf61aca543715a0ee2eb21b47aa633f4cb59f740ce7",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-2.md",
+    "bytes": 2148,
+    "sha256": "cdddf071cf4c77bab29ae5688b9a3ec38c84510a6b589f1b6249f682f5f3893b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-03.md",
+    "bytes": 7519,
+    "sha256": "62e4e9ed1a18f9073a8f1e8b65a2bd3f3c49c2950bc5338ce83e4a9d457ca831",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/prompt-agente-4.md",
+    "bytes": 2958,
+    "sha256": "d4cd2e6bd85a171820abd69795b0e741dcf59fd0cf936b9d6c9d141783e4ce5a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/dispatch/AAA-06.md",
+    "bytes": 4664,
+    "sha256": "ab3bf622639bdf372d54070532ce3da2d64b19dc3240bd87a1f6b39cc7799833",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/README.md",
+    "bytes": 2602,
+    "sha256": "600d24988198bdd64619f7b0957c4d8d357b68974b16b259d270ebe93ed68949",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/DELTA-v2.md",
+    "bytes": 1411,
+    "sha256": "b5899a59858d047e2b9b0baaa0b6d48bdb5ea17346da3071b837b9f20faf964f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-02/README.md",
+    "bytes": 2997,
+    "sha256": "2daf0b97a42c32d3e2a12eae6e1e2aa6aad6f55d63c32e76c5df1dc964fb3217",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/RETORNO.md",
+    "bytes": 11688,
+    "sha256": "7536b97fe7d96bda9b3475b8e6582c3c0059ec7f3b115c810307ae098014f212",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/evidence/exits.md",
+    "bytes": 3057,
+    "sha256": "e69580cb744831e25f2c00824d708852d30d48c56a7fec59f487f701d6db454d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/migration-notes.md",
+    "bytes": 7308,
+    "sha256": "d7890fb5aedd7658eeb0f83a986fac8050a9ebd856b340025dfa6ee39d91dee1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/RETORNO.md",
+    "bytes": 21220,
+    "sha256": "bbd26a84f9d81613ba0639e131f37ac17611b2309d72add3fbaced1286d3c8b6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/evidence/previous-rounds/README.md",
+    "bytes": 1770,
+    "sha256": "d0f2a0c66958958a4a4e10991487e2ab8f791b0383b0aa5444d1530967932102",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/RETORNO.md",
+    "bytes": 15557,
+    "sha256": "bcfadba698002cf03d2c3ca78fdbfc221758b94680f21a929abee2bd4e4dce07",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/before2-README.md",
+    "bytes": 1703,
+    "sha256": "12af697bf1815bf65db2c96460520407a7d684ca33fd639af3556392c8d2b7ed",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/superseded/README.md",
+    "bytes": 964,
+    "sha256": "2b3e2fd2391b9428b8de3423c1ea65c89b49860b3b9811f34da98e06d0cc423a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/migration-notes.md",
+    "bytes": 2118,
+    "sha256": "65a541407dddfee6ee2b79880f4d29b4d39d088a65d506af2a038f8334e91813",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/RETORNO.md",
+    "bytes": 13633,
+    "sha256": "045c3abd5090d5ae719a8a8ab0982e2cf6d980f215716b169280ae35fdb14bcf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-15/RETORNO.md",
+    "bytes": 11297,
+    "sha256": "2152f230f924e8fe4d7c24771f7629e5eac465c29d391e707315c2a7e21e563f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-19/RETORNO.md",
+    "bytes": 11168,
+    "sha256": "9d8c7cf265b6f7af1f9c27a3c73970742a4d6075d6735b67cf92bd6feb08c5d8",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/RETORNO.md",
+    "bytes": 7389,
+    "sha256": "270f056c64de6dca9bdbf524031e97e28d7f1edf06e149f14da7d669d99a45f6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/docs/cvg-design-system.md",
+    "bytes": 10268,
+    "sha256": "5a2887b60279945ad61ede950bee39c4c1c0a56b5a5a25fed75dc131daf99ea1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/before/inventory.md",
+    "bytes": 6000,
+    "sha256": "8414e82a59bb87fbe4d3c772066dfb82e10f10a497def75ba7bcfdbd1a92ac18",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/round1-logs/inventory/inventory.md",
+    "bytes": 5693,
+    "sha256": "3cc0a04216b76f0a938072b8bb3eec1629dd0359d9cae2f16d93d4739495a3d4",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-09/RETORNO.md",
+    "bytes": 13726,
+    "sha256": "554a7cca53f47fa48e6696df77f5512cc3ec2e1cafe1a79551b2158498fa415e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/RETORNO.md",
+    "bytes": 12474,
+    "sha256": "ca980ebee2e23f3171a0f72b1de0c5c96ab6584276a74aa221720a6945477f9d",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/D02-proposta.md",
+    "bytes": 5962,
+    "sha256": "a7dc2dd999f4739088dc3d1c8585c0a53970d49c6ebfc64e1f88bdb60406bcfe",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/before-aaa17/docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 1737,
+    "sha256": "4bc70e78b91c2cffd6be86a0d254e1a0d9955af8f72c29ca2e04588c9b9bb87f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/frozen/docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 7106,
+    "sha256": "777483cd0295404e1e881f9b719f9b3ccf8452cc5db2147567cb73409c09aaa6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v1/RETORNO.md",
+    "bytes": 2756,
+    "sha256": "114bcea7a5064429d1bbf6c6d6e613be79c77c47889dc862a52e7f4eaa94010c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v2/RETORNO.md",
+    "bytes": 10293,
+    "sha256": "b2d251949ba091009a9954bad38ada7227c89de0727a9870614c5f3ec206b7d4",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/RECONCILIACAO.md",
+    "bytes": 5048,
+    "sha256": "fd2f90ff55ffd8b05a31f193de2318a9c6d65af4b7a3565a88cb8b3c32656689",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/README.md",
+    "bytes": 3481,
+    "sha256": "a3f8f7ca0efd0e627c6b3617286aa5c01987eeba630ab8a70e8b705ab33275dd",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/suplementar/RETORNO-AAA-04.md",
+    "bytes": 5125,
+    "sha256": "ef33ca464e131c45ecca4c29db272e40052f83a648fa94e9b54d183a82d7ead5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/versions/v2-README.md",
+    "bytes": 3481,
+    "sha256": "a3f8f7ca0efd0e627c6b3617286aa5c01987eeba630ab8a70e8b705ab33275dd",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/RETORNO.md",
+    "bytes": 10012,
+    "sha256": "d0a6b3cce559281497c36d6ef0f1d6203506d219df7ab2c64da5da2f38a97f4a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/route-authorization-inventory.md",
+    "bytes": 13497,
+    "sha256": "df608be69ee28a2cd98fe79782acb41c997aacbe50a5246198c8ecfc3c74b410",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/RETORNO-AAA-04-v5.md",
+    "bytes": 4377,
+    "sha256": "83a2fc1f0c7af6fd939f880b0a6cd2fe50e3e02bf78976241698cf37d7507eab",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/route-authorization-inventory.md",
+    "bytes": 4525,
+    "sha256": "50129977ed83235ed3fe4513ccbddce82b75d04e803de541b4731d4733d9cc44",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v4/INVENTARIO-ROTAS-AUTORIZACAO.md",
+    "bytes": 3052,
+    "sha256": "851f98e7c298e469dfd80ef5656568fa9dfa4c85fa53bd55966e9ea561294ed3",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/RETORNO.md",
+    "bytes": 11465,
+    "sha256": "d6d04c0bd51c5ec2dc00fa27fd67aa861d1a55cbb55470d0051291824f27e419",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/route-authorization-inventory.md",
+    "bytes": 16976,
+    "sha256": "6550a5ea8b489125fbb7b5e6fb073a3b64bc670b2537624e5f433ab308143460",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/RETORNO.md",
+    "bytes": 20748,
+    "sha256": "8ed23c48b74927d9c94502fc1e6eca8f99eb1b7651c5f4c1d5f8d4b236a90949",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/MIGRATION_0019.md",
+    "bytes": 2650,
+    "sha256": "f3b9a5ae6fb11530d27633371e85b04b64204c7e89f24c7410e593e49fb3e028",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-18/RETORNO.md",
+    "bytes": 10948,
+    "sha256": "505f6f1cd26ae6d53e5093751b00794ed8622d3beed25b636ff2b89971ffd9f0",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/RETORNO.md",
+    "bytes": 13741,
+    "sha256": "e5b5a4a3702104b335e5d27d2e1814b15492ebe5b47b95a7c6374ffd0436b002",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/MIGRATION.md",
+    "bytes": 1483,
+    "sha256": "39fa0809aaa238a70e2bc2e86e789fccda928e655942845f9a4bf75a517bab52",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-05/RETORNO.md",
+    "bytes": 14148,
+    "sha256": "856c938ee878f1eed497c976d10d67f676d219829105d68848d68c439f05d8dc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-entrega-coordenacao.md",
+    "bytes": 2695,
+    "sha256": "040dc768bc69c8c3be57e9f79b6393b4eb59a8aecd2303e59915c2a3faff9451",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-marco-AAA-02-AAA-03.md",
+    "bytes": 3342,
+    "sha256": "c43c0b29b08069a014bab8ad54d89103894bff9aaca8cea9e33c28a04d0ad5cf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-02.md",
+    "bytes": 4715,
+    "sha256": "91af68f373bf67510b571c7a4b20cecc184d5b8dd44c52d7b7a32e185a1f2a72",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-mudanca-catalogo-G-C02-1.md",
+    "bytes": 2617,
+    "sha256": "d404da44b0d7c4172291223f4382dea55eb5d7e9cef63a78294062a58608bb11",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-proximo-prompt-agente-1.md",
+    "bytes": 4575,
+    "sha256": "ed37dea368772a38084fb4010514b78c49a312f952f4b5457113a4c34b9536c9",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-redistribuicao-AAA-04-fixtures.md",
+    "bytes": 1704,
+    "sha256": "a4babdf3fd7e1d96776e87a24f90f42cfba5ee11c7f0a42258d417e20a90f95b",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-parecer-I1.md",
+    "bytes": 4338,
+    "sha256": "82bed1f4fb3f19366f6327b768eb087e81f9d36651eb71bcd13ce19c371f2acc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-03.md",
+    "bytes": 2696,
+    "sha256": "2b3394173d04cf5ed711a206f0f42f0488fc5d3577c2326951970b377ea6c131",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/findings/FIND-DB-001-timestamps.md",
+    "bytes": 2407,
+    "sha256": "703ca486840c5475d73dd8ff2e469c55a17f559f5a4d2e62ba61c7b4b044977f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/findings/FIND-AAA04-002-rotas-id-fora-do-escopo.md",
+    "bytes": 1323,
+    "sha256": "cb17b3303030c2e23cc7635502ba9bf66b8728010cc5a2e1bc9e727a20be270a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-FIND-INV-009-010.md",
+    "bytes": 2431,
+    "sha256": "1a8ae98ff32b6964d53fa1412d5834b9d9530b005c0de332260a8ab1118e1031",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-achados-inventario-AAA-00.md",
+    "bytes": 7864,
+    "sha256": "2f012b43552b5bfad4fe9433b8da10ef23cabeb8c557b99ccacce12730eb2b2f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v2-2026-09-12.md",
+    "bytes": 2018,
+    "sha256": "c933a01a3668f0085d90a94b1329020d795c3883251063234657f4aaae04c22e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v7-2026-09-12.md",
+    "bytes": 1599,
+    "sha256": "9d58096e325567248568f63fde83db513b711f5f4e4f4820ffdb4b7312a4848a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1520,
+    "sha256": "976e227811636a4c6db6a3a3e3718814a7350e5e7f778b0526e27621289350f9",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v6-2026-09-12.md",
+    "bytes": 2069,
+    "sha256": "60549135fdff62a0f78df13604872c202bbb4abc9dfaf6ba34c571fffd28f30c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-2026-09-12.md",
+    "bytes": 1954,
+    "sha256": "32a8b3a4d5757a36ad611bb19a35938767c56f169f66a5379434201a550c72a9",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-condicoes-2026-09-12.md",
+    "bytes": 4573,
+    "sha256": "37a1803ae5c53715694b7486e378d750addf4d09508ffb10c7b347586f89a114",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-00-inventario-aceite-2026-09-12.md",
+    "bytes": 5365,
+    "sha256": "399962d5dc927fa9bf5c927af0e8a444d075133f217ee2b81bb429048c2a7d35",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v3-2026-09-12.md",
+    "bytes": 1048,
+    "sha256": "b6789792320f04020cfefca32a04be7efa143bb634835df9ee43a5251ad1da79",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-2026-09-12.md",
+    "bytes": 4105,
+    "sha256": "7b880d4a6364c48b88146e54b71406eb7cdede8802fc43be8295e20b87303e5c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-review-v3-2026-09-12.md",
+    "bytes": 4399,
+    "sha256": "773c328e9bd6a6282fa5b7db24944109b150e33cb2ca8f8e19d441c3262e7f4c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-07-critica-fresca-2026-09-12.md",
+    "bytes": 2114,
+    "sha256": "79bc1f65faef996f9c4974d4f4ea9224bc90d401e396cd89f7b276c744f11543",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1721,
+    "sha256": "cabfecc49331c6bb1a5bcdafafc7f4932e1bd946aef6ba72692e425849662150",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-v4-fresh-2026-09-12.md",
+    "bytes": 3128,
+    "sha256": "4fe6f02356356beac98109d8cbf2eb2a2e9574c62f0507a97523203bd6d14a17",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-precondicoes-2026-09-12.md",
+    "bytes": 5193,
+    "sha256": "f239e9a5e7fead3a9098adfe334f06fe66626654dce428e6100cc1b8a8e08954",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-2026-09-12.md",
+    "bytes": 1394,
+    "sha256": "6104b7680d37f1f0f9764a1e48d4d0e7b8368e9af31a1d83229dd59976e17370",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1362,
+    "sha256": "d238975c83342148af3b2b890d9f701b9412cefd2127c1c8004a38034c24be90",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-2026-09-12.md",
+    "bytes": 2342,
+    "sha256": "1130f00ddf491ac4d262076c45c93acf5bd48d62649d9aa6910aa38eea91d319",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-11-critica-fresca-2026-09-12.md",
+    "bytes": 2155,
+    "sha256": "ee7c634154d9bc2efa469a50419ec972c901bc4ba762193ee39e096186d6d46f",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-2026-09-12.md",
+    "bytes": 5131,
+    "sha256": "e805486b0719a462bee046d0f29c92095f9787f9a28f00a026baca739be39a45",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-review-2026-09-12.md",
+    "bytes": 3868,
+    "sha256": "8c1e29a59dd65eea5c2ff0914014f44ad4dcbf88bde8cfb529193bc27394a7cc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-08-critica-fresca-2026-09-12.md",
+    "bytes": 1841,
+    "sha256": "bf7e1a8bb72b7fcf12e36bbc429c34a5072593f7565065d5b607dbd55003c133",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-candidato-2026-09-12.md",
+    "bytes": 1536,
+    "sha256": "97142f0ccbd19b15e2535033983d7f7db756244f03d2f50fb154f8b8b3c8b5cf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-candidato-2026-09-12.md",
+    "bytes": 2587,
+    "sha256": "d154859e8f260855fc89731f0f1b39db061b6b0526cd1c7d0bc6a05dc8a365de",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-01-contatos.md",
+    "bytes": 5665,
+    "sha256": "37c57b8ea1ca737d156d03d10591bf72310f3973174dafaf7732097537067398",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/decisions/D01-session-policy.md",
+    "bytes": 3569,
+    "sha256": "36d9763dc5afb94a37c8df78f6ffd295b1d37d94597ce2e56e5d45654e57dd79",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-02-kanban-sem-setor.md",
+    "bytes": 1264,
+    "sha256": "a470a4e2272c8efa962213a2310a136f3f85d7f86a4817ca61dcd686182ef2b6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-00.md",
+    "bytes": 4305,
+    "sha256": "5b12eeee43b96b59cae4e865053cbc19b3d57df3c4bf4c6e518756d233d84652",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-25.md",
+    "bytes": 4354,
+    "sha256": "b6dcf68a86050808d90710939f227d2fed0e095777b4e4353b80ec7a19fc8953",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-23.md",
+    "bytes": 4207,
+    "sha256": "2f618261e3a5a3316fb327ef659968dbffe77cb72776ace4c7cd099fcbc6ba29",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-31.md",
+    "bytes": 4273,
+    "sha256": "dc9dfde5e9781bf2887df01880af513b8ba3ea67a733c856ef99a0ca75710806",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-15.md",
+    "bytes": 3795,
+    "sha256": "bddf963b4331f055c86f90e5bb7c0be80d74540fbad514eca0507615f430bb27",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-24.md",
+    "bytes": 3751,
+    "sha256": "8fab34ee25f89fc3aa698e36d9220f51b0fd838117466503080ed138da9f9be5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-01.md",
+    "bytes": 3993,
+    "sha256": "9430be89599cddadf76bc5a7378f42a1d9e200ff0d316420800fe904d1ce7226",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-10.md",
+    "bytes": 3962,
+    "sha256": "4e97cf2855fc6e8cf3dc3e95645f625a406cd3cdc8f96b8006eb0a99b6620b95",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-02.md",
+    "bytes": 3627,
+    "sha256": "0581bb9e535928b7d762cedefa79117f7e0682b26a95d5dca53f93f9ede22f36",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-22.md",
+    "bytes": 3911,
+    "sha256": "c133fdeb93f2c2a1b9b60af5dc4e05956417f30b002f58db4d6fd11388b65ae6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-05.md",
+    "bytes": 4032,
+    "sha256": "8ea0002c8445796baad17fa12d9a009f998de74d732dbc0c45ab36c17792eed5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-09.md",
+    "bytes": 3648,
+    "sha256": "3335341edbee44305cb3234155855ad5cc776115e33de3282c42efafcbfca1db",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-16.md",
+    "bytes": 3614,
+    "sha256": "e73fe68947ebc9473f355c04e08ae6ce031f936d7c2aa93b68c5afae352a69cc",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-04.md",
+    "bytes": 4073,
+    "sha256": "7091b794fbfa2884feb5b6edba5bbd78887f53834beb217e226511c6bfbddad2",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-07.md",
+    "bytes": 3863,
+    "sha256": "e3bd64d233f2d1c69af7baf3aaafd88e893859f4f8fbd627aeeca44c02706373",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-20.md",
+    "bytes": 3936,
+    "sha256": "7199733432731a3201b3928e2a21052604a3a45eadb32298074a5e9873fc6097",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-19.md",
+    "bytes": 3610,
+    "sha256": "9106e907f07b547c62408e4cc6caca0aa32f8a05a1858645b9cb9616d66c371e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-21.md",
+    "bytes": 4192,
+    "sha256": "8ec5b0f0394d93152b05eefe6bd98a438dbd7cf37d4ec881b2fbbb7f4033f805",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-28.md",
+    "bytes": 4473,
+    "sha256": "b455ed7ef713a08dfb3504b4fbabb691d4100a2d4e05733e8a67e71ed67e6d2e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-27.md",
+    "bytes": 3764,
+    "sha256": "464e16d814435a3dd858ba758d7318657f5dc7ae57597c61d59d2aaa30811d8e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-08.md",
+    "bytes": 3843,
+    "sha256": "077749075bda75d800e2040917b207290f3799a77e6e61aa6794f00b89c22e34",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-11.md",
+    "bytes": 3829,
+    "sha256": "992f94541b590d41d7a31d917e1ae951b960e751f793e5bc8133bf0c702f1fd2",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-14.md",
+    "bytes": 3856,
+    "sha256": "82b6a975e5b62bd93ff0b5320931d05336cbb1014390c799134a47c1e11af7ea",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-03.md",
+    "bytes": 3602,
+    "sha256": "f92f28af1c18de55e00477d223f985d50081a2228af63917f9511c38f4b09259",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-17.md",
+    "bytes": 4054,
+    "sha256": "1d81d58614e590c0ec3cdbfa7ba84f67a69e088d77e880e3ab9f2bb93ef543c4",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-12.md",
+    "bytes": 3825,
+    "sha256": "97f9110e58dc1ddcfaa909bec82ed76c86b1d34a35af3ff8cb7c78b0c6c067d6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-13.md",
+    "bytes": 3817,
+    "sha256": "bf60efeaf73dd87903a02671afedf3c45ef747c6339265dfdbd2a0b84209f913",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-29.md",
+    "bytes": 4348,
+    "sha256": "e508202a40d83345aab2ae0dbeef61bcbf0ecb07e5f922653e5e97db04bd655e",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-06.md",
+    "bytes": 3705,
+    "sha256": "bbaf36ed9759f9d8a689df89c4c025ba59d0fc2ae3290e21cbe44d59b3933317",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-18.md",
+    "bytes": 3666,
+    "sha256": "3498ceabfc7f697d8759a943610a65fbf909d3d0f4567feff42451dbe63325ec",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-26.md",
+    "bytes": 3803,
+    "sha256": "26ec6750a65b69ae7547390fc2dfa419b0496729244296c74340e7ee95a41f3c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/tasks/AAA-30.md",
+    "bytes": 4547,
+    "sha256": "03aa1db8007d3c79667ebee14ef0231290c90b481020ff0eb42274ac7efc47e5",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/execucao-aaa-2026-09-12/revisao-independente/AAA-00-01-critica-I1-2026-09-12.md",
+    "bytes": 8214,
+    "sha256": "19c2a3b4399fca260a04583aa958f4cc89ea018b68f831df3e100255b2823d15",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/design/cvg-tool-provenance.md",
+    "bytes": 2391,
+    "sha256": "98fcf99354e28a367e4e6d81069df4225538b24b91ccf9128d5fa5bc166fd514",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/design/cvg-visual-brief.md",
+    "bytes": 4503,
+    "sha256": "c427d95ed749bbcba633f4932bb5e4e319031fcec4ba95360bc50d15f0a87cbf",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/design/cvg-design-system.md",
+    "bytes": 10268,
+    "sha256": "5a2887b60279945ad61ede950bee39c4c1c0a56b5a5a25fed75dc131daf99ea1",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/00-meta/README.md",
+    "bytes": 7574,
+    "sha256": "3706648697ef91c6392c0e37c380b6f123c7c6c7b1fab6393215dd526732340c",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/docs/security/AAA-15-triagem-dependencias-2026-09-13.md",
+    "bytes": 14190,
+    "sha256": "b8c2f2a3b9071d78feba010d026d052fb97e8caa8d9852bf2b7dcc3965232c85",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/e2e/README.md",
+    "bytes": 3603,
+    "sha256": "c71c081800ab53420d9f06d8ebd26fdfd0ad2643d33c342a99a538050c673a74",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.gauntlet/progress.md",
+    "bytes": 726,
+    "sha256": "ea87b4ac2246ebe89f97983ab735a593d35bf30a19bb01e1595aca1fd901a159",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.gauntlet-v2-archive-20260912/progress.md",
+    "bytes": 519,
+    "sha256": "05036b3f87b5d5fe7fba9b78ceb99cbadd1a80cd7738682ed7b390d6ade9d97a",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/.agent/plans/2026-09-12-best-of-branches.md",
+    "bytes": 22922,
+    "sha256": "8adfa6abba601394287e276407a8940006cce9a37c33fb878ae44a65b94c25e6",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-16/before-snapshot/infra/grafana/dashboards/README.md",
+    "bytes": 166,
+    "sha256": "71d3d9fff8b4efb2c842db1a2a2225d77f8d53fd6e42989f98a87e24ca6b7759",
+    "snapshot": true
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/README.md",
+    "bytes": 2602,
+    "sha256": "600d24988198bdd64619f7b0957c4d8d357b68974b16b259d270ebe93ed68949",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-03/DELTA-v2.md",
+    "bytes": 1411,
+    "sha256": "b5899a59858d047e2b9b0baaa0b6d48bdb5ea17346da3071b837b9f20faf964f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-02/README.md",
+    "bytes": 2997,
+    "sha256": "2daf0b97a42c32d3e2a12eae6e1e2aa6aad6f55d63c32e76c5df1dc964fb3217",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/RETORNO.md",
+    "bytes": 11688,
+    "sha256": "7536b97fe7d96bda9b3475b8e6582c3c0059ec7f3b115c810307ae098014f212",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-10/evidence/exits.md",
+    "bytes": 3057,
+    "sha256": "e69580cb744831e25f2c00824d708852d30d48c56a7fec59f487f701d6db454d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/migration-notes.md",
+    "bytes": 7308,
+    "sha256": "d7890fb5aedd7658eeb0f83a986fac8050a9ebd856b340025dfa6ee39d91dee1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/RETORNO.md",
+    "bytes": 21220,
+    "sha256": "bbd26a84f9d81613ba0639e131f37ac17611b2309d72add3fbaced1286d3c8b6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-12/evidence/previous-rounds/README.md",
+    "bytes": 1770,
+    "sha256": "d0f2a0c66958958a4a4e10991487e2ab8f791b0383b0aa5444d1530967932102",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-31/RETORNO.md",
+    "bytes": 12570,
+    "sha256": "2e5d3ceb3a52ed8a72b2b4fb0c3c1ccaafc897c3cb46397cfb5706ad4f2b15e6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/RETORNO.md",
+    "bytes": 15557,
+    "sha256": "bcfadba698002cf03d2c3ca78fdbfc221758b94680f21a929abee2bd4e4dce07",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/before2-README.md",
+    "bytes": 1703,
+    "sha256": "12af697bf1815bf65db2c96460520407a7d684ca33fd639af3556392c8d2b7ed",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-13/evidence/superseded/README.md",
+    "bytes": 964,
+    "sha256": "2b3e2fd2391b9428b8de3423c1ea65c89b49860b3b9811f34da98e06d0cc423a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/migration-notes.md",
+    "bytes": 2118,
+    "sha256": "65a541407dddfee6ee2b79880f4d29b4d39d088a65d506af2a038f8334e91813",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-11/RETORNO.md",
+    "bytes": 13633,
+    "sha256": "045c3abd5090d5ae719a8a8ab0982e2cf6d980f215716b169280ae35fdb14bcf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-15/RETORNO.md",
+    "bytes": 11297,
+    "sha256": "2152f230f924e8fe4d7c24771f7629e5eac465c29d391e707315c2a7e21e563f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/RETORNO.md",
+    "bytes": 10963,
+    "sha256": "d224e1e7bee71700e994ab3d649c5836a8a772835dd97bf1cbc9849e0ec2a9bc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/raw/final/triple-aaa-report-round3.md",
+    "bytes": 644,
+    "sha256": "fdad92d99146d0543ef5d8d3e91134e21dec08ec4a8c4b40fa14ece956557e07",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-14/raw/final/triple-aaa-report-round2.md",
+    "bytes": 644,
+    "sha256": "b22fb13e1d227c20b4ac6819200ed5a98c174ee156bb8eebaf68d60c4017abb7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-19/RETORNO.md",
+    "bytes": 11168,
+    "sha256": "9d8c7cf265b6f7af1f9c27a3c73970742a4d6075d6735b67cf92bd6feb08c5d8",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-30/RETORNO.md",
+    "bytes": 13738,
+    "sha256": "dc75fce63ac5d6e305badef37a98d417f933e2db088d9c8e722c46c97e121d18",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/RETORNO.md",
+    "bytes": 7389,
+    "sha256": "270f056c64de6dca9bdbf524031e97e28d7f1edf06e149f14da7d669d99a45f6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/docs/cvg-design-system.md",
+    "bytes": 10268,
+    "sha256": "5a2887b60279945ad61ede950bee39c4c1c0a56b5a5a25fed75dc131daf99ea1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/before/inventory.md",
+    "bytes": 6000,
+    "sha256": "8414e82a59bb87fbe4d3c772066dfb82e10f10a497def75ba7bcfdbd1a92ac18",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-20/round1-logs/inventory/inventory.md",
+    "bytes": 5693,
+    "sha256": "3cc0a04216b76f0a938072b8bb3eec1629dd0359d9cae2f16d93d4739495a3d4",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-09/RETORNO.md",
+    "bytes": 13726,
+    "sha256": "554a7cca53f47fa48e6696df77f5512cc3ec2e1cafe1a79551b2158498fa415e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/RETORNO.md",
+    "bytes": 12474,
+    "sha256": "ca980ebee2e23f3171a0f72b1de0c5c96ab6584276a74aa221720a6945477f9d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/D02-proposta.md",
+    "bytes": 5962,
+    "sha256": "a7dc2dd999f4739088dc3d1c8585c0a53970d49c6ebfc64e1f88bdb60406bcfe",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/before-aaa17/docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 1737,
+    "sha256": "4bc70e78b91c2cffd6be86a0d254e1a0d9955af8f72c29ca2e04588c9b9bb87f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-17/frozen/docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+    "bytes": 7106,
+    "sha256": "777483cd0295404e1e881f9b719f9b3ccf8452cc5db2147567cb73409c09aaa6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v1/RETORNO.md",
+    "bytes": 2756,
+    "sha256": "114bcea7a5064429d1bbf6c6d6e613be79c77c47889dc862a52e7f4eaa94010c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-06/v2/RETORNO.md",
+    "bytes": 10293,
+    "sha256": "b2d251949ba091009a9954bad38ada7227c89de0727a9870614c5f3ec206b7d4",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/RECONCILIACAO.md",
+    "bytes": 5048,
+    "sha256": "fd2f90ff55ffd8b05a31f193de2318a9c6d65af4b7a3565a88cb8b3c32656689",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/README.md",
+    "bytes": 3481,
+    "sha256": "a3f8f7ca0efd0e627c6b3617286aa5c01987eeba630ab8a70e8b705ab33275dd",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/suplementar/RETORNO-AAA-04.md",
+    "bytes": 5125,
+    "sha256": "ef33ca464e131c45ecca4c29db272e40052f83a648fa94e9b54d183a82d7ead5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/versions/v2-README.md",
+    "bytes": 3481,
+    "sha256": "a3f8f7ca0efd0e627c6b3617286aa5c01987eeba630ab8a70e8b705ab33275dd",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/RETORNO.md",
+    "bytes": 10012,
+    "sha256": "d0a6b3cce559281497c36d6ef0f1d6203506d219df7ab2c64da5da2f38a97f4a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v6/route-authorization-inventory.md",
+    "bytes": 13497,
+    "sha256": "df608be69ee28a2cd98fe79782acb41c997aacbe50a5246198c8ecfc3c74b410",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/RETORNO-AAA-04-v5.md",
+    "bytes": 4377,
+    "sha256": "83a2fc1f0c7af6fd939f880b0a6cd2fe50e3e02bf78976241698cf37d7507eab",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v5/route-authorization-inventory.md",
+    "bytes": 4525,
+    "sha256": "50129977ed83235ed3fe4513ccbddce82b75d04e803de541b4731d4733d9cc44",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v4/INVENTARIO-ROTAS-AUTORIZACAO.md",
+    "bytes": 3052,
+    "sha256": "851f98e7c298e469dfd80ef5656568fa9dfa4c85fa53bd55966e9ea561294ed3",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/RETORNO.md",
+    "bytes": 11465,
+    "sha256": "d6d04c0bd51c5ec2dc00fa27fd67aa861d1a55cbb55470d0051291824f27e419",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-04/v7/route-authorization-inventory.md",
+    "bytes": 16976,
+    "sha256": "6550a5ea8b489125fbb7b5e6fb073a3b64bc670b2537624e5f433ab308143460",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/RETORNO.md",
+    "bytes": 20748,
+    "sha256": "8ed23c48b74927d9c94502fc1e6eca8f99eb1b7651c5f4c1d5f8d4b236a90949",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-07/MIGRATION_0019.md",
+    "bytes": 2650,
+    "sha256": "f3b9a5ae6fb11530d27633371e85b04b64204c7e89f24c7410e593e49fb3e028",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-18/RETORNO.md",
+    "bytes": 10884,
+    "sha256": "8cf94d1a8e2eb24fda779603f138a9a1a6e48c2f1d62de1e85b85a34dc4d672b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-18/frozen/docs/OBSERVABILITY.md",
+    "bytes": 2963,
+    "sha256": "145495c6a7596306dbc0530e13a6348f0e7417115965f011865b1016694aac02",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/RETORNO.md",
+    "bytes": 13741,
+    "sha256": "e5b5a4a3702104b335e5d27d2e1814b15492ebe5b47b95a7c6374ffd0436b002",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-08/MIGRATION.md",
+    "bytes": 1483,
+    "sha256": "39fa0809aaa238a70e2bc2e86e789fccda928e655942845f9a4bf75a517bab52",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-21/RETORNO.md",
+    "bytes": 11937,
+    "sha256": "e045e43f6d61996f7c688037b4bcbd4a791c99cbe5093b01fdea71ac3aeadcfc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-05/RETORNO.md",
+    "bytes": 14148,
+    "sha256": "856c938ee878f1eed497c976d10d67f676d219829105d68848d68c439f05d8dc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/candidates/AAA-29/RETORNO.md",
+    "bytes": 12385,
+    "sha256": "7d759d1217d9fb02a90aa74d6b82f6888f2163b7b1c142f6f7ae4c46be692a90",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-7981f-s-\u00d7-5-viewports-axe-375x812-aaa/error-context.md",
+    "bytes": 9897,
+    "sha256": "a6a693978f09a2e5b7cd264b3797dba71fd5b0d94ba1a59dc408f3d08ca7568f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-prefers-redu-45993-eradas-e-rolagem-sem-smooth-aaa/error-context.md",
+    "bytes": 10050,
+    "sha256": "401deed36ed16c0d52cfb71f520c4612255a26f3b44e2f4c4eff157c7afce49f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-f7d8e-s-\u00d7-5-viewports-axe-390x844-aaa/error-context.md",
+    "bytes": 9897,
+    "sha256": "576513c11cf8bdae7f20674e41472dd29d35e358e49f27e39f57eb72332ffdf9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-contraste-re-b332c--fundo-em-16-rotas-1440x900-aaa/error-context.md",
+    "bytes": 23033,
+    "sha256": "e33957aaa32b9de6894c31d5a66a8620b6ecb34a1b32fb5ba885a704838a331c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-teclado-\u2014-pa-c692d-Inbox-Escape-devolve-o-foco-aaa/error-context.md",
+    "bytes": 19353,
+    "sha256": "482de00e2e8213b9803cbec5d3b56c2c9868a27f4d7fe8aa8a833a4b0ae5f261",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-5b4cc--\u00d7-5-viewports-axe-768x1024-aaa/error-context.md",
+    "bytes": 9898,
+    "sha256": "9bba28d036a7c5afa56e28a3a72d8b30ba4f66367720731cc47197fd8628a26d",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-1862d--\u00d7-5-viewports-axe-1440x900-aaa/error-context.md",
+    "bytes": 9898,
+    "sha256": "e7a38a9755092b8268d89ef9192d7892c1101f1018ee0a1a2013a90c90efc0d7",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-AAA-22-axe-c-3b5df--\u00d7-5-viewports-axe-1024x768-aaa/error-context.md",
+    "bytes": 9894,
+    "sha256": "207d46d82b17f2d201fcb53bb4a104f3da8f7edc92a47e3b39c6628f7cb8ca38",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/visual/playwright-output/accessibility-teclado-\u2014-tr-0af1c-or-Tab-em-16-rotas-1440x900-aaa/error-context.md",
+    "bytes": 11987,
+    "sha256": "1841722369e32cdf06e051453d3a6a6f44fd85f9a0f6372efbb811239cc96f08",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-entrega-coordenacao.md",
+    "bytes": 2695,
+    "sha256": "040dc768bc69c8c3be57e9f79b6393b4eb59a8aecd2303e59915c2a3faff9451",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-marco-AAA-02-AAA-03.md",
+    "bytes": 3342,
+    "sha256": "c43c0b29b08069a014bab8ad54d89103894bff9aaca8cea9e33c28a04d0ad5cf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-02.md",
+    "bytes": 4715,
+    "sha256": "91af68f373bf67510b571c7a4b20cecc184d5b8dd44c52d7b7a32e185a1f2a72",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-mudanca-catalogo-G-C02-1.md",
+    "bytes": 2617,
+    "sha256": "d404da44b0d7c4172291223f4382dea55eb5d7e9cef63a78294062a58608bb11",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-proximo-prompt-agente-1.md",
+    "bytes": 4575,
+    "sha256": "ed37dea368772a38084fb4010514b78c49a312f952f4b5457113a4c34b9536c9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-redistribuicao-AAA-04-fixtures.md",
+    "bytes": 1704,
+    "sha256": "a4babdf3fd7e1d96776e87a24f90f42cfba5ee11c7f0a42258d417e20a90f95b",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-parecer-I1.md",
+    "bytes": 4338,
+    "sha256": "82bed1f4fb3f19366f6327b768eb087e81f9d36651eb71bcd13ce19c371f2acc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/retornos/2026-09-12-AAA-03.md",
+    "bytes": 2696,
+    "sha256": "2b3394173d04cf5ed711a206f0f42f0488fc5d3577c2326951970b377ea6c131",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/findings/FIND-DB-001-timestamps.md",
+    "bytes": 2407,
+    "sha256": "703ca486840c5475d73dd8ff2e469c55a17f559f5a4d2e62ba61c7b4b044977f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/findings/FIND-AAA04-002-rotas-id-fora-do-escopo.md",
+    "bytes": 1323,
+    "sha256": "cb17b3303030c2e23cc7635502ba9bf66b8728010cc5a2e1bc9e727a20be270a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-FIND-INV-009-010.md",
+    "bytes": 2431,
+    "sha256": "1a8ae98ff32b6964d53fa1412d5834b9d9530b005c0de332260a8ab1118e1031",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/findings/2026-09-12-achados-inventario-AAA-00.md",
+    "bytes": 7864,
+    "sha256": "2f012b43552b5bfad4fe9433b8da10ef23cabeb8c557b99ccacce12730eb2b2f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v2-2026-09-12.md",
+    "bytes": 2018,
+    "sha256": "c933a01a3668f0085d90a94b1329020d795c3883251063234657f4aaae04c22e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v7-2026-09-12.md",
+    "bytes": 1599,
+    "sha256": "9d58096e325567248568f63fde83db513b711f5f4e4f4820ffdb4b7312a4848a",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1520,
+    "sha256": "976e227811636a4c6db6a3a3e3718814a7350e5e7f778b0526e27621289350f9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-v6-2026-09-12.md",
+    "bytes": 2069,
+    "sha256": "60549135fdff62a0f78df13604872c202bbb4abc9dfaf6ba34c571fffd28f30c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-2026-09-12.md",
+    "bytes": 1954,
+    "sha256": "32a8b3a4d5757a36ad611bb19a35938767c56f169f66a5379434201a550c72a9",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-condicoes-2026-09-12.md",
+    "bytes": 4573,
+    "sha256": "37a1803ae5c53715694b7486e378d750addf4d09508ffb10c7b347586f89a114",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-00-inventario-aceite-2026-09-12.md",
+    "bytes": 5365,
+    "sha256": "399962d5dc927fa9bf5c927af0e8a444d075133f217ee2b81bb429048c2a7d35",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-v3-2026-09-12.md",
+    "bytes": 1048,
+    "sha256": "b6789792320f04020cfefca32a04be7efa143bb634835df9ee43a5251ad1da79",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-06-critica-fresca-2026-09-12.md",
+    "bytes": 4105,
+    "sha256": "7b880d4a6364c48b88146e54b71406eb7cdede8802fc43be8295e20b87303e5c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-review-v3-2026-09-12.md",
+    "bytes": 4399,
+    "sha256": "773c328e9bd6a6282fa5b7db24944109b150e33cb2ca8f8e19d441c3262e7f4c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-07-critica-fresca-2026-09-12.md",
+    "bytes": 2114,
+    "sha256": "79bc1f65faef996f9c4974d4f4ea9224bc90d401e396cd89f7b276c744f11543",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-20-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1721,
+    "sha256": "cabfecc49331c6bb1a5bcdafafc7f4932e1bd946aef6ba72692e425849662150",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-v4-fresh-2026-09-12.md",
+    "bytes": 3128,
+    "sha256": "4fe6f02356356beac98109d8cbf2eb2a2e9574c62f0507a97523203bd6d14a17",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-precondicoes-2026-09-12.md",
+    "bytes": 5193,
+    "sha256": "f239e9a5e7fead3a9098adfe334f06fe66626654dce428e6100cc1b8a8e08954",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-2026-09-12.md",
+    "bytes": 1394,
+    "sha256": "6104b7680d37f1f0f9764a1e48d4d0e7b8368e9af31a1d83229dd59976e17370",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-19-critica-fresca-v2-2026-09-12.md",
+    "bytes": 1362,
+    "sha256": "d238975c83342148af3b2b890d9f701b9412cefd2127c1c8004a38034c24be90",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-05-critica-fresca-2026-09-12.md",
+    "bytes": 2342,
+    "sha256": "1130f00ddf491ac4d262076c45c93acf5bd48d62649d9aa6910aa38eea91d319",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-11-critica-fresca-2026-09-12.md",
+    "bytes": 2155,
+    "sha256": "ee7c634154d9bc2efa469a50419ec972c901bc4ba762193ee39e096186d6d46f",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-04-critica-fresca-2026-09-12.md",
+    "bytes": 5131,
+    "sha256": "e805486b0719a462bee046d0f29c92095f9787f9a28f00a026baca739be39a45",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-review-2026-09-12.md",
+    "bytes": 3868,
+    "sha256": "8c1e29a59dd65eea5c2ff0914014f44ad4dcbf88bde8cfb529193bc27394a7cc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-08-critica-fresca-2026-09-12.md",
+    "bytes": 1841,
+    "sha256": "bf7e1a8bb72b7fcf12e36bbc429c34a5072593f7565065d5b607dbd55003c133",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-03-candidato-2026-09-12.md",
+    "bytes": 1536,
+    "sha256": "97142f0ccbd19b15e2535033983d7f7db756244f03d2f50fb154f8b8b3c8b5cf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/reviews/AAA-02-candidato-2026-09-12.md",
+    "bytes": 2587,
+    "sha256": "d154859e8f260855fc89731f0f1b39db061b6b0526cd1c7d0bc6a05dc8a365de",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-01-contatos.md",
+    "bytes": 5665,
+    "sha256": "37c57b8ea1ca737d156d03d10591bf72310f3973174dafaf7732097537067398",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/decisions/D01-session-policy.md",
+    "bytes": 3569,
+    "sha256": "36d9763dc5afb94a37c8df78f6ffd295b1d37d94597ce2e56e5d45654e57dd79",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/runtime/decisions/D-AUTHZ-02-kanban-sem-setor.md",
+    "bytes": 1264,
+    "sha256": "a470a4e2272c8efa962213a2310a136f3f85d7f86a4817ca61dcd686182ef2b6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-00.md",
+    "bytes": 4305,
+    "sha256": "5b12eeee43b96b59cae4e865053cbc19b3d57df3c4bf4c6e518756d233d84652",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-25.md",
+    "bytes": 4354,
+    "sha256": "b6dcf68a86050808d90710939f227d2fed0e095777b4e4353b80ec7a19fc8953",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-23.md",
+    "bytes": 4207,
+    "sha256": "2f618261e3a5a3316fb327ef659968dbffe77cb72776ace4c7cd099fcbc6ba29",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-31.md",
+    "bytes": 4273,
+    "sha256": "dc9dfde5e9781bf2887df01880af513b8ba3ea67a733c856ef99a0ca75710806",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-15.md",
+    "bytes": 3795,
+    "sha256": "bddf963b4331f055c86f90e5bb7c0be80d74540fbad514eca0507615f430bb27",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-24.md",
+    "bytes": 3751,
+    "sha256": "8fab34ee25f89fc3aa698e36d9220f51b0fd838117466503080ed138da9f9be5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-01.md",
+    "bytes": 3993,
+    "sha256": "9430be89599cddadf76bc5a7378f42a1d9e200ff0d316420800fe904d1ce7226",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-10.md",
+    "bytes": 3962,
+    "sha256": "4e97cf2855fc6e8cf3dc3e95645f625a406cd3cdc8f96b8006eb0a99b6620b95",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-02.md",
+    "bytes": 3627,
+    "sha256": "0581bb9e535928b7d762cedefa79117f7e0682b26a95d5dca53f93f9ede22f36",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-22.md",
+    "bytes": 3911,
+    "sha256": "c133fdeb93f2c2a1b9b60af5dc4e05956417f30b002f58db4d6fd11388b65ae6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-05.md",
+    "bytes": 4032,
+    "sha256": "8ea0002c8445796baad17fa12d9a009f998de74d732dbc0c45ab36c17792eed5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-09.md",
+    "bytes": 3648,
+    "sha256": "3335341edbee44305cb3234155855ad5cc776115e33de3282c42efafcbfca1db",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-16.md",
+    "bytes": 3614,
+    "sha256": "e73fe68947ebc9473f355c04e08ae6ce031f936d7c2aa93b68c5afae352a69cc",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-04.md",
+    "bytes": 4073,
+    "sha256": "7091b794fbfa2884feb5b6edba5bbd78887f53834beb217e226511c6bfbddad2",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-07.md",
+    "bytes": 3863,
+    "sha256": "e3bd64d233f2d1c69af7baf3aaafd88e893859f4f8fbd627aeeca44c02706373",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-20.md",
+    "bytes": 3936,
+    "sha256": "7199733432731a3201b3928e2a21052604a3a45eadb32298074a5e9873fc6097",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-19.md",
+    "bytes": 3610,
+    "sha256": "9106e907f07b547c62408e4cc6caca0aa32f8a05a1858645b9cb9616d66c371e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-21.md",
+    "bytes": 4192,
+    "sha256": "8ec5b0f0394d93152b05eefe6bd98a438dbd7cf37d4ec881b2fbbb7f4033f805",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-28.md",
+    "bytes": 4473,
+    "sha256": "b455ed7ef713a08dfb3504b4fbabb691d4100a2d4e05733e8a67e71ed67e6d2e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-27.md",
+    "bytes": 3764,
+    "sha256": "464e16d814435a3dd858ba758d7318657f5dc7ae57597c61d59d2aaa30811d8e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-08.md",
+    "bytes": 3843,
+    "sha256": "077749075bda75d800e2040917b207290f3799a77e6e61aa6794f00b89c22e34",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-11.md",
+    "bytes": 3829,
+    "sha256": "992f94541b590d41d7a31d917e1ae951b960e751f793e5bc8133bf0c702f1fd2",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-14.md",
+    "bytes": 3856,
+    "sha256": "82b6a975e5b62bd93ff0b5320931d05336cbb1014390c799134a47c1e11af7ea",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-03.md",
+    "bytes": 3602,
+    "sha256": "f92f28af1c18de55e00477d223f985d50081a2228af63917f9511c38f4b09259",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-17.md",
+    "bytes": 4054,
+    "sha256": "1d81d58614e590c0ec3cdbfa7ba84f67a69e088d77e880e3ab9f2bb93ef543c4",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-12.md",
+    "bytes": 3825,
+    "sha256": "97f9110e58dc1ddcfaa909bec82ed76c86b1d34a35af3ff8cb7c78b0c6c067d6",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-13.md",
+    "bytes": 3817,
+    "sha256": "bf60efeaf73dd87903a02671afedf3c45ef747c6339265dfdbd2a0b84209f913",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-29.md",
+    "bytes": 4348,
+    "sha256": "e508202a40d83345aab2ae0dbeef61bcbf0ecb07e5f922653e5e97db04bd655e",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-06.md",
+    "bytes": 3705,
+    "sha256": "bbaf36ed9759f9d8a689df89c4c025ba59d0fc2ae3290e21cbe44d59b3933317",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-18.md",
+    "bytes": 3666,
+    "sha256": "3498ceabfc7f697d8759a943610a65fbf909d3d0f4567feff42451dbe63325ec",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-26.md",
+    "bytes": 3803,
+    "sha256": "26ec6750a65b69ae7547390fc2dfa419b0496729244296c74340e7ee95a41f3c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/tasks/AAA-30.md",
+    "bytes": 4547,
+    "sha256": "03aa1db8007d3c79667ebee14ef0231290c90b481020ff0eb42274ac7efc47e5",
+    "snapshot": false
+  },
+  {
+    "path": "docs/execucao-aaa-2026-09-12/revisao-independente/AAA-00-01-critica-I1-2026-09-12.md",
+    "bytes": 8214,
+    "sha256": "19c2a3b4399fca260a04583aa958f4cc89ea018b68f831df3e100255b2823d15",
+    "snapshot": false
+  },
+  {
+    "path": "docs/design/cvg-tool-provenance.md",
+    "bytes": 2391,
+    "sha256": "98fcf99354e28a367e4e6d81069df4225538b24b91ccf9128d5fa5bc166fd514",
+    "snapshot": false
+  },
+  {
+    "path": "docs/design/cvg-visual-brief.md",
+    "bytes": 4503,
+    "sha256": "c427d95ed749bbcba633f4932bb5e4e319031fcec4ba95360bc50d15f0a87cbf",
+    "snapshot": false
+  },
+  {
+    "path": "docs/design/cvg-design-system.md",
+    "bytes": 10268,
+    "sha256": "5a2887b60279945ad61ede950bee39c4c1c0a56b5a5a25fed75dc131daf99ea1",
+    "snapshot": false
+  },
+  {
+    "path": "docs/00-meta/README.md",
+    "bytes": 7574,
+    "sha256": "3706648697ef91c6392c0e37c380b6f123c7c6c7b1fab6393215dd526732340c",
+    "snapshot": false
+  },
+  {
+    "path": "docs/security/AAA-15-triagem-dependencias-2026-09-13.md",
+    "bytes": 14190,
+    "sha256": "b8c2f2a3b9071d78feba010d026d052fb97e8caa8d9852bf2b7dcc3965232c85",
+    "snapshot": false
+  }
+]

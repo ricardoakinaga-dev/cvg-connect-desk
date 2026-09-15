@@ -1,7 +1,7 @@
-import { db } from '@cvg/database';
+import { db, type DatabaseExecutor } from '@cvg/database';
 import { contacts, conversations, internalNotes, tasks, contactLabels, labels, contactGroupMembers, contactGroups } from '@cvg/database';
 import { eq, desc, ilike, or, count, and, sql } from 'drizzle-orm';
-import type { CreateContactInput, UpdateContactInput } from '../types';
+import type { CreateContactInput, UpdateContactInput } from '../../types';
 
 export class ContactRepository {
   async findAll(search?: string) {
@@ -26,6 +26,19 @@ export class ContactRepository {
   async findByPhone(phone: string) {
     const cleanPhone = phone.replace(/\D/g, '');
     const [contact] = await db.select().from(contacts).where(eq(contacts.phone, cleanPhone));
+    return contact || null;
+  }
+
+  /**
+   * SA-007: trava a linha do contato para serializar inícios concorrentes no
+   * mesmo executor da transação (o segundo espera e enxerga a conversa criada).
+   */
+  async lockById(id: string, executor: DatabaseExecutor = db) {
+    const [contact] = await executor
+      .select()
+      .from(contacts)
+      .where(eq(contacts.id, id))
+      .for('update');
     return contact || null;
   }
 
@@ -80,14 +93,15 @@ export class ContactRepository {
 
     // Buscar última mensagem de cada conversa
     const convosWithLastMsg = await Promise.all(convos.map(async (c) => {
-      const [lastMsg] = await db.execute(sql`
+      const result = await db.execute(sql`
         SELECT content FROM messages 
         WHERE conversation_id = ${c.id} 
         ORDER BY created_at DESC LIMIT 1
       `);
+      const rows = (result as unknown as { rows?: Array<{ content: string | null }> }).rows ?? [];
       return {
         ...c,
-        lastMessage: (lastMsg as any)?.rows?.[0]?.content || null,
+        lastMessage: rows[0]?.content ?? null,
       };
     }));
 

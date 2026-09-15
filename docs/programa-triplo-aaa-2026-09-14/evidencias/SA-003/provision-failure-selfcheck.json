@@ -1,0 +1,25 @@
+{
+  "runId": "sa003-provfail",
+  "checkedAt": "2026-09-15T01:39:02.921Z",
+  "result": "PASS",
+  "checks": [
+    {
+      "name": "porta_bloqueada_por_terceiro",
+      "ok": true,
+      "port": 59832
+    },
+    {
+      "name": "provisionamento_aborta_sem_tocar_alvo",
+      "ok": true,
+      "message": "IsolationError: Porta 59832 ocupada por processo que nao pertence ao run sa003-provfail. Escolha outra AAA_PG_PORT."
+    },
+    {
+      "name": "processo_alheio_intacto",
+      "ok": true
+    },
+    {
+      "name": "sem_diretorio_gerenciado_proprio",
+      "ok": true
+    }
+  ]
+}

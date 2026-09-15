@@ -1,0 +1,30 @@
+{
+  "runId": "prod05-r2",
+  "workerIndex": 15,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57932/cvg_aaa_prod05_r2_w15",
+  "redisUrl": "redis://127.0.0.1:56830",
+  "startedAt": "2026-09-13T21:51:49.674Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-05.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 1,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ❯ src/__tests__/production/prod-05.test.ts (17 tests | 1 failed) 7415ms\n   ✓ PROD-05 AC1 — token opaco, defaults e limites exatos (HTTP+PG real) > login devolve token opaco e o banco persiste somente o hash SHA-256 89ms\n   ✓ PROD-05 AC1 — token opaco, defaults e limites exatos (HTTP+PG real) > defaults reais: normal 7d, absoluto 30d e idle 24h ancorados no created_at 68ms\n   ✓ PROD-05 AC1 — token opaco, defaults e limites exatos (HTTP+PG real) > limite exato nega em /auth/me e /auth/rotate (normal, absoluto e idle) 30ms\n   ✓ PROD-05 AC1 — token opaco, defaults e limites exatos (HTTP+PG real) > sessão legada mantém o absoluto original ancorado no created_at; absoluto derivado vencido nega 21ms\n   ✓ PROD-05 AC1 — token opaco, defaults e limites exatos (HTTP+PG real) > rotação não estende o deadline absoluto, mesmo perto do vencimento 7ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > logout, logout-all e rotação completam o ciclo com o banco real 165ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > logout-all com token expirado nega (401) sem derrubar sessões ativas 72ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > usuário desativado nega em me/rotate sem apagar a sessão e volta ao normal ao reativar 76ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > duas rotações concorrentes do mesmo token produzem uma única vencedora 88ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > TZ America/Sao_Paulo: deadlines são instantes absolutos e a rotação preserva o absoluto 81ms\n   ✓ PROD-05 AC2 — fluxo HTTP completo, usuário desativado, concorrência e fuso > revogação não vaza para outra sessão do mesmo usuário 74ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > sucessor de rotação autentica no socket e o token antigo é recusado (4003) 202ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > sessão que fica idle além de 24h é cortada no socket em <=5s (mesma mensagem do HTTP)  427ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > usuário desativado durante a conexão derruba o socket em <=5s  419ms\n   ✓ PROD-05 AC3 — revalidação WS usa a mesma política; sucessor de sessão > revogação de sessão derruba o socket em <=5s e não vaza para outra sessão  495ms\n   ✓ PROD-05 AC3 — tokens fora de URL/log e AC4 — boot sem JWT > tráfego efetivo vai em Authorization sem aparecer no log; querystring não autentica 80ms\n   × PROD-05 AC3 — tokens fora de URL/log e AC4 — boot sem JWT > boot opera sem JWT_SECRET e o segredo interno efetivo é INTERNAL_EVENTS_SECRET 11ms\n     → expected [ Array(1) ] to deeply equal []\n\n Test Files  1 failed (1)\n      Tests  1 failed | 16 passed (17)\n   Start at  18:51:41\n   Duration  8.26s (transform 1.08s, setup 0ms, collect 440ms, tests 7.42s, environment 0ms, prepare 133ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/production/prod-05.test.ts\n\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/production/prod-05.test.ts > PROD-05 AC3 — tokens fora de URL/log e AC4 — boot sem JWT > boot opera sem JWT_SECRET e o segredo interno efetivo é INTERNAL_EVENTS_SECRET\nAssertionError: expected [ Array(1) ] to deeply equal []\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- []\u001b[39m\n\u001b[31m+ [\u001b[39m\n\u001b[31m+   \"/home/ricardo/cvg-connect-desk/apps/desk-api/src/runtime-config.ts\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n ❯ src/__tests__/production/prod-05.test.ts:930:21\n    928|       }\n    929|     }\n    930|     expect(jwtHits).toEqual([]);\n       |                     ^\n    931| \n    932|     // O login segue opaco (não JWT) mesmo sem JWT_SECRET configurado.\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "exitCode": 1
+}

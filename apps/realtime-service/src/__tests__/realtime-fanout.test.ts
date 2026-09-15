@@ -1,17 +1,30 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'http';
 import { AddressInfo } from 'net';
+import { randomUUID } from 'node:crypto';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { WebSocket } from 'ws';
 import { RealtimeServer } from '../index.ts';
 import { RedisRealtimeBus } from '@cvg/events';
 import type { EventEnvelope } from '@cvg/events';
+import { createAllowAllAuthorizationPort } from '@cvg/realtime';
 
 /**
  * Final-8: fan-out multi-réplica via Redis.
  * Cliente no nó A recebe evento publicado pelo nó B (e inverso).
  * Requer Redis real (REDIS_URL ou 127.0.0.1:6379).
+ *
+ * Hermeticidade sob execução paralela: o canal Redis é compartilhado entre
+ * arquivos; eventos deste run carregam marcador no `correlation_id` e as
+ * asserções filtram somente eventos do próprio run. Sockets/buses fecham em
+ * finally/afterEach.
  */
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+const RUN_MARKER = `fan-${randomUUID().slice(0, 8)}`;
+
+interface TestClient {
+  ws: WebSocket;
+  messages: any[];
+}
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -51,8 +64,8 @@ async function startAuthServer() {
   return { baseUrl: `http://127.0.0.1:${port}`, server };
 }
 
-async function connectClient(url: string) {
-  return await new Promise<{ ws: WebSocket; messages: any[] }>((resolve, reject) => {
+async function connectClient(url: string): Promise<TestClient> {
+  return await new Promise<TestClient>((resolve, reject) => {
     const messages: any[] = [];
     const ws = new WebSocket(url);
     ws.on('message', (data: Buffer) => {
@@ -67,6 +80,21 @@ async function connectClient(url: string) {
   });
 }
 
+async function closeClient(client: TestClient | undefined): Promise<void> {
+  if (!client || client.ws.readyState === WebSocket.CLOSED) return;
+  await new Promise<void>((resolve) => {
+    const timer = setTimeout(() => {
+      client.ws.terminate();
+      resolve();
+    }, 1000);
+    client.ws.once('close', () => {
+      clearTimeout(timer);
+      resolve();
+    });
+    client.ws.close();
+  });
+}
+
 async function waitForMessage(client: { messages: any[] }, predicate: (message: any) => boolean, timeoutMs = 15000) {
   const startedAt = Date.now();
   while (!client.messages.some(predicate)) {
@@ -77,6 +105,11 @@ async function waitForMessage(client: { messages: any[] }, predicate: (message: 
   }
 }
 
+/** Somente eventos publicados por este arquivo (marcador no correlation_id). */
+function owned(message: { data?: { correlationId?: unknown } }): boolean {
+  return typeof message?.data?.correlationId === 'string' && message.data.correlationId.startsWith(RUN_MARKER);
+}
+
 function fanoutEnvelope(id: string): EventEnvelope {
   return {
     event_id: id,
@@ -85,6 +118,7 @@ function fanoutEnvelope(id: string): EventEnvelope {
     aggregate_id: 'fanout-conv-1',
     occurred_at: new Date().toISOString(),
     payload: { messageId: 'm-fanout', conversationId: 'fanout-conv-1', content: 'fanout!' },
+    correlation_id: `${RUN_MARKER}-${id}`,
     version: 1,
   };
 }
@@ -93,6 +127,12 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
   let authServer: Awaited<ReturnType<typeof startAuthServer>>;
   let serverA: RealtimeServer | undefined;
   let serverB: RealtimeServer | undefined;
+  const openClients: TestClient[] = [];
+
+  function track(client: TestClient): TestClient {
+    openClients.push(client);
+    return client;
+  }
 
   beforeEach(async () => {
     process.env.DESK_API_URL = '';
@@ -105,14 +145,17 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
     authServer = await startAuthServer();
     process.env.DESK_API_URL = authServer.baseUrl;
 
-    serverA = new RealtimeServer(await getFreePort());
-    serverB = new RealtimeServer(await getFreePort());
+    serverA = new RealtimeServer(await getFreePort(), { authorizationPort: createAllowAllAuthorizationPort() });
+    serverB = new RealtimeServer(await getFreePort(), { authorizationPort: createAllowAllAuthorizationPort() });
     serverA.start();
     serverB.start();
     await wait(300);
   });
 
   afterEach(async () => {
+    for (const client of openClients.splice(0)) {
+      await closeClient(client);
+    }
     serverA?.stop();
     serverB?.stop();
     await new Promise<void>((resolve) => authServer.server.close(() => resolve()));
@@ -123,8 +166,8 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
     delete process.env.REDIS_URL;
   });
 
-  async function authedSubscribedClient(port: number, channel: string) {
-    const client = await connectClient(`ws://127.0.0.1:${port}`);
+  async function authedSubscribedClient(port: number, channel: string): Promise<TestClient> {
+    const client = track(await connectClient(`ws://127.0.0.1:${port}`));
     await waitForMessage(client, (m) => m.event === 'auth.required');
     client.ws.send(JSON.stringify({ type: 'auth', token: 'fanout-token' }));
     await waitForMessage(client, (m) => m.event === 'auth.success');
@@ -137,8 +180,8 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
     const portA = (serverA as unknown as { port: number }).port;
     const portB = (serverB as unknown as { port: number }).port;
 
-    const clientA = await authedSubscribedClient(portA, 'global');
-    const clientB = await authedSubscribedClient(portB, 'global');
+    const clientA = await authedSubscribedClient(portA, 'conversation:fanout-conv-1');
+    const clientB = await authedSubscribedClient(portB, 'conversation:fanout-conv-1');
 
     // Publica DIRETAMENTE no bus (equivale ao hint que B emitiria via outbox).
     const busB = new RedisRealtimeBus({ url: REDIS_URL });
@@ -147,25 +190,24 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
       await busB.publish(fanoutEnvelope(`fanout-a-${Date.now()}`));
       await waitForMessage(
         clientA,
-        (m) => m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
+        (m) => owned(m) && m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
       );
 
       await busB.publish(fanoutEnvelope(`fanout-b-${Date.now()}`));
       await waitForMessage(
         clientB,
-        (m) => m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
+        (m) => owned(m) && m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
       );
     } finally {
       await busB.stop();
+      await closeClient(clientA);
+      await closeClient(clientB);
     }
-
-    clientA.ws.close();
-    clientB.ws.close();
   });
 
   it('no duplicate broadcast when poll and bus deliver the same event', async () => {
     const portA = (serverA as unknown as { port: number }).port;
-    const clientA = await authedSubscribedClient(portA, 'global');
+    const clientA = await authedSubscribedClient(portA, 'conversation:fanout-conv-1');
 
     const bus = new RedisRealtimeBus({ url: REDIS_URL });
     await bus.start();
@@ -176,16 +218,16 @@ describe('Realtime multi-replica fanout (real Redis + WS)', () => {
       await bus.publish(fanoutEnvelope(id));
       await waitForMessage(
         clientA,
-        (m) => m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
+        (m) => owned(m) && m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
       );
       await wait(500);
       const deliveries = clientA.messages.filter(
-        (m) => m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
+        (m) => owned(m) && m.event === 'message.persisted' && m.data?.payload?.content === 'fanout!',
       );
       expect(deliveries).toHaveLength(1);
     } finally {
       await bus.stop();
+      await closeClient(clientA);
     }
-    clientA.ws.close();
   });
 });

@@ -17,7 +17,7 @@ A IA nunca tem autoridade irrestrita. Toda invocação passa pelo gate
 
 `SECRETARY_MAX_CONTENT_CHARS` (4000), `SECRETARY_MAX_HISTORY_ITEMS` (10),
 `SECRETARY_MAX_INVOCATIONS_PER_CONVERSATION` (20), `SECRETARY_TIMEOUT_MS` (30000),
-`SECRETARY_MAX_RETRIES` (2, só pré-resposta).
+`SECRETARY_MAX_RETRIES` (2, somente com `invocationId`/`Idempotency-Key`).
 
 ## Registro
 
@@ -40,4 +40,6 @@ compatíveis (handoff→humano é direção fail-safe). Testes: `ai-tools.test.t
 ## Degradação
 
 Secretary fora/lento → atendimento humano continua (`readiness.degraded`, testes
-`resilience.*`). IA nunca é dependência crítica.
+`resilience.*`). A invocação durável envia `invocationId` como `Idempotency-Key` e
+`invocation_id`; falha ambígua vira `unknown` e exige reconciliação explícita. IA
+nunca é dependência crítica.

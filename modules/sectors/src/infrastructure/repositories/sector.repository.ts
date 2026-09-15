@@ -1,7 +1,7 @@
 import { db } from '@cvg/database';
-import { sectors, conversations, contactSectors } from '@cvg/database';
-import { eq, and, count, sql } from 'drizzle-orm';
-import type { CreateSectorInput, UpdateSectorInput } from '../types';
+import { sectors, conversations } from '@cvg/database';
+import { eq, and, count } from 'drizzle-orm';
+import type { CreateSectorInput, UpdateSectorInput } from '../../types';
 
 export class SectorRepository {
   async findAll(activeOnly = true) {

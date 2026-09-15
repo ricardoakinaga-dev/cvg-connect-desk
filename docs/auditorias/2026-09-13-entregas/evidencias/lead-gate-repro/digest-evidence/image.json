@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "check": "image",
+  "scope": "image test",
+  "command": "echo ok",
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T19:36:00.574Z",
+  "finishedAt": "2026-09-13T19:36:00.576Z",
+  "durationMs": 2,
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64",
+    "cwd": "/tmp/cvg-audit-deliveries-ufq9_ejh/lead-gate-repro/fixture",
+    "ci": false,
+    "runId": null,
+    "attempt": null
+  },
+  "candidate": {
+    "repository": null,
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+    "sourceSha256": "8d7ca1322eb08a83bddde16114936c98a8b3324e48544f4f5e0b7fac32e9731e",
+    "sourceFileCount": 4,
+    "imageDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "sealedAt": "2026-09-13T19:36:00.572Z"
+  },
+  "hashes": {
+    "log": "1491e7b943667cf83b8d8845e7c3ce6cb03c64c053d40ac3b7dbe15715deb566",
+    "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+    "sourceSha256": "8d7ca1322eb08a83bddde16114936c98a8b3324e48544f4f5e0b7fac32e9731e"
+  },
+  "artifacts": [
+    {
+      "path": "logs/image.log",
+      "sha256": "1491e7b943667cf83b8d8845e7c3ce6cb03c64c053d40ac3b7dbe15715deb566",
+      "kind": "log"
+    }
+  ],
+  "metrics": null,
+  "error": null
+}

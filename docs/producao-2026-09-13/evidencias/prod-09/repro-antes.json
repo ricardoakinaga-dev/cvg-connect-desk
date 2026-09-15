@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-09-13T16:08:03.097Z",
+  "runId": "prod09-repro2",
+  "workerIndex": "23",
+  "database": "postgresql://***@127.0.0.1:58732/cvg_aaa_prod09_repro2_w23",
+  "scenarios": {
+    "A_replay_sem_dedup": {
+      "description": "mesmo eventId aplicado 2x (replay)",
+      "eventId": "prod09-repro-5a28a2f8-5d78-4e6e-b421-8fdefa20b1de-replay",
+      "firstIsOk": true,
+      "secondIsOk": true,
+      "alertsCreated": 2,
+      "expectedWithDedup": 1,
+      "defect": true
+    },
+    "B_err_engolido_ack_sem_efeito": {
+      "description": "falha injetada no INSERT do alerta; worker processa o evento",
+      "eventId": "prod09-repro-5a28a2f8-5d78-4e6e-b421-8fdefa20b1de-lost",
+      "processedAtSet": true,
+      "consumerRetryCount": 0,
+      "alertsCreated": 0,
+      "deadLetterRows": 0,
+      "defect": true
+    },
+    "C_handoff_enum_invalido": {
+      "description": "mesmo input do worker (type 'handoff')",
+      "isErr": true,
+      "error": "Failed query: insert into \"alerts\" (\"id\", \"conversation_id\", \"task_id\", \"type\", \"title\", \"message\", \"severity\", \"status\", \"triggered_by\", \"acknowledged_by\", \"acknowledged_at\", \"resolved_by\", \"resolved",
+      "alertsCreated": 0,
+      "defect": true
+    }
+  },
+  "verdict": "DEFECT_REPRODUCED"
+}

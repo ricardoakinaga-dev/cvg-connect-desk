@@ -6,6 +6,17 @@ on:
       - main
   pull_request:
 
+# Second CI path, aligned with `ci.yml`: Node 24.20.0 pin, single lint/warnings
+# policy (package `lint` scripts with `--max-warnings` baselines), audit at
+# `high`, SHA-pinned checkout and revision recording in every job.
+# PROD-03: migration-upgrade (previous -> current) e image-identity (digests)
+# são jobs distintos e requeridos; o agregador não aceita fresh e upgrade como
+# o mesmo job nem imagem sem evidência de digest.
+
+env:
+  NODE_VERSION: "24.20.0"
+  PNPM_VERSION: "10.33.0"
+
 # Estados formais de promoção (§23):
 # FAILED — qualquer gate crítico vermelho
 # CONDITIONAL — gates críticos verdes, evidência externa pendente
@@ -14,12 +25,12 @@ on:
 
 jobs:
   critical-gates:
-    name: Critical gates (unit, integration, migrations, build)
+    name: Critical gates (lint, typecheck, integration, migrations, build)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: connect_desk
           POSTGRES_PASSWORD: root
@@ -45,63 +56,251 @@ jobs:
       REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - run: pnpm install --frozen-lockfile
-      - name: Lint (0 errors)
-        run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
-      - name: Typecheck
-        run: pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json
-      - name: Apply database migrations
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - name: "Lint (single policy: zero errors, warnings baselined)"
+        run: pnpm lint
+      - name: Typecheck (real per package)
+        run: pnpm typecheck
+      - name: Migrate isolated database
         run: pnpm --filter @cvg/database db:migrate
-      - name: Unit + integration (turbo)
-        run: pnpm exec turbo run test --force
+      # `pnpm test:ci` runs the macro suite while excluding only integration
+      # files that require a dedicated real-infrastructure/origin runner,
+      # including the production-origin suite; those are covered by dedicated
+      # jobs. Any other failure keeps this step red.
+      - name: Integration suites (guard-aware)
+        run: pnpm test:ci
       - name: Postgres real chain
         run: pnpm test:postgres-real
       - name: Migration fresh-DB check
         run: pnpm --filter @cvg/database db:check
       - name: Build
-        run: pnpm --filter @cvg/desk-web build
+        run: pnpm build
+
+  migration-upgrade:
+    name: Migration upgrade (previous -> current)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL_ADMIN: postgresql://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      # Upgrade real: aplica o journal N-1, depois aplica N em cima (in place) e
+      # confirma ledger e idempotência. Não é o mesmo caminho do fresh-DB check.
+      - name: Apply previous journal then upgrade in place
+        run: |
+          cat > packages/database/.prod03-migration-upgrade.check.ts <<'TS'
+          import pg from 'pg';
+          import { drizzle } from 'drizzle-orm/node-postgres';
+          import { migrate } from 'drizzle-orm/node-postgres/migrator';
+          import { cpSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+          import { dirname, join } from 'node:path';
+          import { fileURLToPath } from 'node:url';
+
+          async function main(): Promise<void> {
+            const packageDir = dirname(fileURLToPath(import.meta.url));
+            const source = join(packageDir, 'supabase', 'migrations');
+            const previous = '/tmp/migrations-previous';
+            rmSync(previous, { recursive: true, force: true });
+            cpSync(source, previous, { recursive: true });
+            const journalPath = join(previous, 'meta', '_journal.json');
+            const journal = JSON.parse(readFileSync(journalPath, 'utf8'));
+            if (!Array.isArray(journal.entries) || journal.entries.length < 2) {
+              throw new Error('menos de 2 migrations: upgrade indisponível');
+            }
+            const removed = journal.entries.pop();
+            rmSync(join(previous, `${removed.tag}.sql`), { force: true });
+            writeFileSync(journalPath, `${JSON.stringify(journal, null, 2)}\n`);
+
+            const dbName = 'connect_desk_upgrade_check';
+            const adminUrl = process.env.DATABASE_URL_ADMIN;
+            if (!adminUrl) throw new Error('DATABASE_URL_ADMIN ausente');
+            const admin = new pg.Client({ connectionString: adminUrl });
+            await admin.connect();
+            await admin.query(`DROP DATABASE IF EXISTS "${dbName}"`);
+            await admin.query(`CREATE DATABASE "${dbName}"`);
+            await admin.end();
+            const url = adminUrl.replace(/\/[^/?]+(\?|$)/, `/${dbName}$1`);
+            const pool = new pg.Pool({ connectionString: url });
+            try {
+              const db = drizzle(pool);
+              await migrate(db, { migrationsFolder: previous });
+              const before = await pool.query('SELECT count(*)::int AS n FROM drizzle.__drizzle_migrations');
+              if (before.rows[0].n !== journal.entries.length) {
+                throw new Error(`journal anterior aplicou ${before.rows[0].n} != ${journal.entries.length}`);
+              }
+              await migrate(db, { migrationsFolder: source });
+              const all = JSON.parse(readFileSync(join(source, 'meta', '_journal.json'), 'utf8'));
+              const after = await pool.query('SELECT count(*)::int AS n FROM drizzle.__drizzle_migrations');
+              if (after.rows[0].n !== all.entries.length) {
+                throw new Error(`upgrade aplicou ${after.rows[0].n} != ${all.entries.length}`);
+              }
+              await migrate(db, { migrationsFolder: source });
+              const again = await pool.query('SELECT count(*)::int AS n FROM drizzle.__drizzle_migrations');
+              if (again.rows[0].n !== all.entries.length) {
+                throw new Error('reaplicação alterou o ledger (não idempotente)');
+              }
+              console.log(`upgrade ok: ${journal.entries.length} -> ${all.entries.length}`);
+            } finally {
+              await pool.end();
+              const cleanup = new pg.Client({ connectionString: adminUrl });
+              await cleanup.connect();
+              await cleanup.query(`DROP DATABASE IF EXISTS "${dbName}"`);
+              await cleanup.end();
+            }
+          }
+
+          void main().then(
+            () => process.exit(0),
+            (error) => {
+              console.error('[migration-upgrade] FAILED:', error instanceof Error ? error.message : error);
+              process.exit(1);
+            },
+          );
+          TS
+          pnpm --filter @cvg/database exec tsx .prod03-migration-upgrade.check.ts
+          rm -f packages/database/.prod03-migration-upgrade.check.ts
+
+  image-identity:
+    name: Image identity (build + digest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - name: Build delivered images
+        run: |
+          docker build -f apps/desk-api/Dockerfile -t cvg-desk-api:ci .
+          docker build -f apps/desk-web/Dockerfile -t cvg-desk-web:ci .
+          docker build -f apps/message-worker/Dockerfile -t cvg-message-worker:ci .
+          docker build -f apps/realtime-service/Dockerfile -t cvg-realtime-service:ci .
+      - name: Write image digest evidence
+        env:
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          mkdir -p artifacts
+          node --input-type=module - <<'NODE'
+          import { execSync } from 'node:child_process';
+          import { writeFileSync } from 'node:fs';
+          import { resolveCandidate } from './scripts/production/evidence-gate.mjs';
+          const images = ['cvg-desk-api', 'cvg-desk-web', 'cvg-message-worker', 'cvg-realtime-service'];
+          const entries = images.map((name) => ({
+            name,
+            digest: execSync(`docker inspect --format '{{.Id}}' ${name}:ci`).toString().trim(),
+          }));
+          const candidate = resolveCandidate({
+            root: process.cwd(),
+            excludes: ['artifacts'],
+            runId: process.env.GITHUB_RUN_ID,
+            attempt: process.env.GITHUB_RUN_ATTEMPT,
+          });
+          writeFileSync(
+            'artifacts/image-digests.json',
+            `${JSON.stringify({
+              schemaVersion: 1,
+              candidate: { ...candidate },
+              commit: candidate.commit,
+              lockfileSha256: candidate.lockfileSha256,
+              sourceSha256: candidate.sourceSha256,
+              runId: process.env.GITHUB_RUN_ID,
+              attempt: process.env.GITHUB_RUN_ATTEMPT,
+              generatedAt: new Date().toISOString(),
+              images: entries,
+            }, null, 2)}\n`,
+          );
+          NODE
+      - name: Upload image identity for the aggregator
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: image-digests-${{ github.sha }}
+          path: artifacts/image-digests.json
+          if-no-files-found: error
 
   security-gate:
-    name: Security gate (audit critical + secret scan)
+    name: Security gate (audit high + secret scan)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: critical-gates
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
           version: 10.33.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - run: pnpm install --frozen-lockfile
-      - name: pnpm audit (critical blocks merge)
-        run: pnpm audit --audit-level=critical
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - name: Dependency audit (high blocks merge)
+        run: pnpm security:audit
+      - name: Dependency audit, production scope (high blocks merge)
+        run: pnpm security:audit:prod
       - name: Gitleaks (secret leak blocks merge)
         uses: gitleaks/gitleaks-action@83373cf2f8c4db6e24b41c1a9b086bb9619e9cd3
 
   promotion-state:
     name: Promotion state
     runs-on: ubuntu-latest
-    needs: [critical-gates, security-gate]
+    timeout-minutes: 10
+    needs: [critical-gates, migration-upgrade, image-identity, security-gate]
     if: always()
     steps:
+      - name: Record gate revision
+        run: echo "gate-sha=${{ github.sha }}"
       - name: Compute state
+        env:
+          CRITICAL: ${{ needs.critical-gates.result }}
+          UPGRADE: ${{ needs.migration-upgrade.result }}
+          IMAGE: ${{ needs.image-identity.result }}
+          SECURITY: ${{ needs.security-gate.result }}
         run: |
-          if [ "${{ needs.critical-gates.result }}" != "success" ] || [ "${{ needs.security-gate.result }}" != "success" ]; then
-            echo "STATE=FAILED" >> "$GITHUB_ENV"
-            echo "Promotion state: FAILED"
+          if [ "$CRITICAL" != "success" ] || [ "$UPGRADE" != "success" ] || [ "$IMAGE" != "success" ] || [ "$SECURITY" != "success" ]; then
+            echo "Promotion state: FAILED (critical=$CRITICAL upgrade=$UPGRADE image=$IMAGE security=$SECURITY)"
             exit 1
           fi
-          echo "STATE=CONDITIONAL" >> "$GITHUB_ENV"
           echo "Promotion state: CONDITIONAL (critical gates green; external evidence: CodeQL/Trivy/SBOM/E2E/DR per workflows)"

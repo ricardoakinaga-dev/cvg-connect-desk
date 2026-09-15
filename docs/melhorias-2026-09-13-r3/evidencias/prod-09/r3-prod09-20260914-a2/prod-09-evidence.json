@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-09-14T00:34:02.658Z",
+  "runId": "r3-prod09-20260914-a2",
+  "workerIndex": 22,
+  "database": "cvg_aaa_r3_prod09_20260914_a2_w22",
+  "postgresPort": 58632,
+  "redisPort": 56900,
+  "cases": [
+    {
+      "case": "AC1a-replay-sequencial",
+      "eventId": "prod09-ac1a-c1a87858-fc51-4912-89c9-b3eeb2f47adf-evt",
+      "alertId": "e29499c8-c40a-46ff-b417-6bd74eccab0d",
+      "deduplicatedFlags": [
+        false,
+        true
+      ],
+      "receipts": 1,
+      "alerts": 1,
+      "alertEvents": 1
+    },
+    {
+      "case": "AC1b-concorrencia",
+      "eventId": "prod09-ac1b-bb87a3f9-5650-44c1-810f-1ae272ebb7b7-evt",
+      "callers": 5,
+      "distinctAlertIds": 1,
+      "appliedOnce": 1,
+      "deduplicated": 4
+    },
+    {
+      "case": "AC1c-granularidade",
+      "eventId": "prod09-ac1c-b82f77c1-f81f-4a17-a589-7096adc82c10-evt",
+      "receipts": 3,
+      "alerts": 3,
+      "note": "mesmo evento com 2 efeitos + mesmo efeito em outro consumidor"
+    },
+    {
+      "case": "AC1d-crash-simulado-replay",
+      "eventId": "prod09-ac1d-2f98cdc8-ad3f-41d7-86ef-e0d7d6c5f3a2-evt",
+      "generations": [
+        1,
+        2
+      ],
+      "deduplicatedOnReplay": true,
+      "receipts": 1,
+      "alerts": 1
+    },
+    {
+      "case": "AC2a-transitoria-retry",
+      "eventId": "prod09-ac2a-a0c9b43e-466e-4bbf-b271-1b18d34cc408-evt",
+      "firstOutcome": "retry",
+      "retryCountAfterFirst": 1,
+      "secondOutcome": "acked",
+      "alertApplied": true
+    },
+    {
+      "case": "AC2b-orcamento-DLQ",
+      "eventId": "prod09-ac2b-cfc0a5ad-b4d7-43ff-a70f-ea8c24afd6ab-evt",
+      "outcomes": [
+        "retry",
+        "dead-letter"
+      ],
+      "retryCount": 2,
+      "dlqErrorCode": "RETRY_BUDGET_EXHAUSTED",
+      "envelopeIntact": true,
+      "claimableAfterDeadLetter": false,
+      "alerts": 0
+    },
+    {
+      "case": "AC2c-malformed-DLQ-imediata",
+      "eventId": "prod09-ac2c-769907c2-4aa0-46eb-b680-8da6483fc49a-evt",
+      "errorCode": "MALFORMED_PAYLOAD",
+      "retryCountAtDlq": 3,
+      "claimableAfterDeadLetter": false
+    },
+    {
+      "case": "AC2d-versao-nao-suportada",
+      "eventId": "prod09-ac2d-dd7eaa1e-213c-41ce-abb5-8a120fe1ff52-evt",
+      "errorCode": "UNSUPPORTED_EVENT_VERSION",
+      "envelopeVersion": 2
+    },
+    {
+      "case": "AC2e-contrato-de-tipos",
+      "eventId": "prod09-ac2e-12261c7e-e1f4-4a76-b4b4-29cb0ed4177a-evt",
+      "claimed": false,
+      "workerAck": false,
+      "eventStillPending": true
+    },
+    {
+      "case": "AC3a-stale-ack-fence",
+      "eventId": "prod09-ac3a-818a79db-640f-44ee-a9a2-6a25522ea049-evt",
+      "oldOutcome": "stale",
+      "newOutcome": "acked",
+      "generations": [
+        1,
+        2
+      ],
+      "alerts": 1
+    },
+    {
+      "case": "AC3b-crash-real-processo",
+      "eventId": "prod09-ac3b-4b5cb6d2-bb9f-468d-a774-b335dbc2ab9d-evt",
+      "crashedExitCode": 86,
+      "resumedExitCode": 0,
+      "generations": [
+        1,
+        2
+      ],
+      "receipts": 1,
+      "alerts": 1,
+      "alertEvents": 1,
+      "piiInLogs": false
+    },
+    {
+      "case": "AC4a-logs-sem-pii",
+      "eventId": "prod09-ac4a-d86dd079-8348-4e18-a9d0-f1fad52cda3a-evt",
+      "logFields": {
+        "event_id": true,
+        "correlation_id": true,
+        "effect_type": true,
+        "ack_result": true
+      },
+      "piiInLogs": false,
+      "piiInEffect": true
+    },
+    {
+      "case": "AC4b-estados",
+      "retryEventId": "prod09-ac4b-d5dbbe7d-e0a6-4472-84f5-b42bda2ee090-retry",
+      "retryRecord": {
+        "processedAtNull": true,
+        "retryCount": 1,
+        "lastError": true
+      },
+      "dlqEventId": "prod09-ac4b-d5dbbe7d-e0a6-4472-84f5-b42bda2ee090-dlq",
+      "dlqStatus": "PENDING",
+      "replayClaim": "REPLAYING",
+      "replayFinal": "RESOLVED (replayCount=1)",
+      "sourceEventImmutable": true
+    }
+  ]
+}

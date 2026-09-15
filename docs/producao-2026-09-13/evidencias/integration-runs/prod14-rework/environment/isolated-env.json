@@ -1,0 +1,24 @@
+{
+  "runId": "prod14-rework",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60132/cvg_aaa_prod14_rework_w37",
+  "databaseName": "cvg_aaa_prod14_rework_w37",
+  "databasePort": 60132,
+  "redisUrl": "redis://127.0.0.1:57050",
+  "redisPort": 57050,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "already-ours",
+    "pid": 3144114,
+    "dataDir": "/tmp/cvg-aaa-runs/prod14-rework/pg/data"
+  },
+  "redis": {
+    "status": "already-ours",
+    "pid": 3144166,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod14-rework",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:24:08.581155-03"
+  }
+}

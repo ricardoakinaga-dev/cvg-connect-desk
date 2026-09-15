@@ -1,0 +1,30 @@
+{
+  "runId": "prod12",
+  "workerIndex": 40,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60432/cvg_aaa_prod12_w40",
+  "redisUrl": "redis://127.0.0.1:57080",
+  "startedAt": "2026-09-13T18:19:18.057Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-12.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nPermission already exists: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nAdmin user already exists: admin@cvg.com\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-api\n\n ✓ src/__tests__/production/prod-12.test.ts (13 tests) 49828ms\n   ✓ PROD-12 AC1 — lease/owner/generation entre processos > AC1a — dois workers reais disputam o outbox: cada evento processado por exatamente um processo  1315ms\n   ✓ PROD-12 AC1 — lease/owner/generation entre processos > AC1b — claim concorrente de 4 processos: partição exclusiva e generation 1  12228ms\n   ✓ PROD-12 AC1 — lease/owner/generation entre processos > AC1c — renew mantém o lease entre processos e takeover pós-expiração; ACK antigo é stale  2616ms\n   ✓ PROD-12 AC1 — lease/owner/generation entre processos > AC1d — crash real do worker após o efeito: outro processo retoma com geração+1 sem duplicar  2338ms\n   ✓ PROD-12 AC2 — DLQ durável e replay/claim administrativo via HTTP > AC2a — DLQ sobrevive ao restart: evento não ACKado, envelope íntegro e replay HTTP executa uma vez  3198ms\n   ✓ PROD-12 AC2 — DLQ durável e replay/claim administrativo via HTTP > AC2b — replay concorrente: claim único (1×200 + 1×409), um único evento reenfileirado  2372ms\n   ✓ PROD-12 AC2 — DLQ durável e replay/claim administrativo via HTTP > AC2c — resolve/discard HTTP com auditoria e autorização (401 sem token, 403 sem admin:write)  1983ms\n   ✓ PROD-12 AC2 — DLQ durável e replay/claim administrativo via HTTP > AC2d — ACK do worker não esconde o evento do http-poll; ACK stale do http-poll é 409  1157ms\n   ✓ PROD-12 AC3 — fanout realtime entre 2 processos > AC3a — evento publicado no outbox é entregue 1× a cada assinante autorizado nas 2 réplicas  1559ms\n   ✓ PROD-12 AC3 — fanout realtime entre 2 processos > AC3b — destinatário sem membership não assina nem recebe (entrega autorizada)  853ms\n   ✓ PROD-12 AC3 — fanout realtime entre 2 processos > AC3c — revogação de membership corta o canal e nenhuma entrega nova chega  1456ms\n   ✓ PROD-12 AC4 — kill no meio do processamento e DLQ entre processos > AC4a — SIGKILL durante o handler: lease expira, outro processo recupera e o efeito aplica 1×  5154ms\n   ✓ PROD-12 AC4 — kill no meio do processamento e DLQ entre processos > AC4b — DLQ após esgotar tentativas atravessando restart do processo worker  2979ms\n\n Test Files  1 passed (1)\n      Tests  13 passed (13)\n   Start at  15:18:27\n   Duration  50.37s (transform 437ms, setup 0ms, collect 121ms, tests 49.83s, environment 0ms, prepare 166ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

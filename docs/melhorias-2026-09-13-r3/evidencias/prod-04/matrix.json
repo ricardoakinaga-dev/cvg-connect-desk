@@ -1,0 +1,1756 @@
+{
+  "runId": "r3-prod04-20260914-a1",
+  "database": "cvg_aaa_r3_prod04_20260914_a1_w4",
+  "probes": [
+    {
+      "id": "AC1.1",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "no-role",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC1.1",
+      "method": "GET",
+      "url": "/conversations?sectorId=A",
+      "actor": "no-role",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC1.1",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "viewer",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC1.2",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "reader-a",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.2",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "outsider",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "admin",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/conversations?sectorId=A",
+      "actor": "reader-a",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.3",
+      "method": "GET",
+      "url": "/conversations?sectorId=B",
+      "actor": "reader-a",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC1.4",
+      "method": "GET",
+      "url": "/conversations?limit=1",
+      "actor": "writer-ab",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.4",
+      "method": "GET",
+      "url": "/conversations?cursor=...",
+      "actor": "writer-ab",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.4",
+      "method": "GET",
+      "url": "/conversations?cursor=(adulterado)",
+      "actor": "writer-ab",
+      "status": 400,
+      "expected": [
+        400
+      ]
+    },
+    {
+      "id": "AC1.5",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "toctou (revogado)",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC1.7",
+      "method": "GET",
+      "url": "/conversations?sectorId=A (membership revogada)",
+      "actor": "r3-prod04-20260914-a1.747360.toctou-sector@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/conversations",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/board",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/board",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/board",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/filters",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/filters",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/kanban/filters",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/5c7ea742-d41f-4f25-b726-95826462c9f3",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/5c7ea742-d41f-4f25-b726-95826462c9f3",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tutors/5c7ea742-d41f-4f25-b726-95826462c9f3",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/bfc38886-7c13-45bb-ad0c-ee4ccf9aa282",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/bfc38886-7c13-45bb-ad0c-ee4ccf9aa282",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/patients/bfc38886-7c13-45bb-ad0c-ee4ccf9aa282",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/7c9ed85e-4251-4f0b-a52b-d44a3bfb31ff",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/7c9ed85e-4251-4f0b-a52b-d44a3bfb31ff",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/contacts/7c9ed85e-4251-4f0b-a52b-d44a3bfb31ff",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks/6cc3c41e-b834-4518-90d6-414fd0c1d0b5",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks/6cc3c41e-b834-4518-90d6-414fd0c1d0b5",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/tasks/6cc3c41e-b834-4518-90d6-414fd0c1d0b5",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts/6b6bc54b-5d9b-488a-bdc3-95b89ac7aed6",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts/6b6bc54b-5d9b-488a-bdc3-95b89ac7aed6",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/alerts/6b6bc54b-5d9b-488a-bdc3-95b89ac7aed6",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes?conversationId=86c71c7a-5e4e-460f-8a96-d5c39152d146",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes?conversationId=86c71c7a-5e4e-460f-8a96-d5c39152d146",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes?conversationId=86c71c7a-5e4e-460f-8a96-d5c39152d146",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes/21ca0afd-db4f-41a4-a919-bbc811bed936",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes/21ca0afd-db4f-41a4-a919-bbc811bed936",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.1",
+      "method": "GET",
+      "url": "/notes/21ca0afd-db4f-41a4-a919-bbc811bed936",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/tutors",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/tutors",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/patients",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/patients",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/contacts",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/contacts",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "PUT",
+      "url": "/contacts/7c9ed85e-4251-4f0b-a52b-d44a3bfb31ff",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "PUT",
+      "url": "/contacts/7c9ed85e-4251-4f0b-a52b-d44a3bfb31ff",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/tasks",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/tasks",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/alerts",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/alerts",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/notes",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "POST",
+      "url": "/notes",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "PATCH",
+      "url": "/kanban/card/4772ed23-a474-4119-bca3-568d67815489/move",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.2",
+      "method": "PATCH",
+      "url": "/kanban/card/4772ed23-a474-4119-bca3-568d67815489/move",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.3",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (leitura)",
+      "actor": "reader-a",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.3",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (cross)",
+      "actor": "writer-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.3",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (próprio)",
+      "actor": "writer-a",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.3",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (destino alheio)",
+      "actor": "writer-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.3",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (destino autorizado)",
+      "actor": "writer-ab",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "GET",
+      "url": "/contacts/:id (alheio)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "PUT",
+      "url": "/contacts/:id (write)",
+      "actor": "writer-a",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "PUT",
+      "url": "/contacts/:id (sem nível)",
+      "actor": "reader-a",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "PUT",
+      "url": "/contacts/:id (cross)",
+      "actor": "writer-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "PUT",
+      "url": "/contacts/:id (sem vínculo D-AUTHZ-01)",
+      "actor": "writer-a",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "POST",
+      "url": "/contacts/:id/start-conversation (sem nível)",
+      "actor": "reader-a",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "POST",
+      "url": "/contacts/:id/start-conversation (sem membership)",
+      "actor": "outsider",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.4",
+      "method": "POST",
+      "url": "/contacts/:id/start-conversation (write)",
+      "actor": "writer-a",
+      "status": 201,
+      "expected": [
+        201
+      ]
+    },
+    {
+      "id": "AC2.5",
+      "method": "GET",
+      "url": "/tasks/:id (cross)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.5",
+      "method": "GET",
+      "url": "/alerts/:id (cross)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.5",
+      "method": "GET",
+      "url": "/notes?conversationId (cross)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/users",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/users",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/users",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/users",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/users",
+      "actor": "r3-prod04-20260914-a1.747360.admin@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/roles",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/roles",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/roles",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/roles",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/roles",
+      "actor": "r3-prod04-20260914-a1.747360.admin@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/permissions",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/permissions",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/permissions",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/permissions",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/permissions",
+      "actor": "r3-prod04-20260914-a1.747360.admin@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/dead-letters",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/dead-letters",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/dead-letters",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/dead-letters",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "GET",
+      "url": "/admin/dead-letters",
+      "actor": "r3-prod04-20260914-a1.747360.admin@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.6",
+      "method": "POST",
+      "url": "/admin/users (Manager)",
+      "actor": "manager",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.7",
+      "method": "GET",
+      "url": "/conversations/:id/messages (inexistente)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.7",
+      "method": "GET",
+      "url": "/conversations/:id/messages (cross)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/labels",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/labels",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/labels",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/transfers",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/transfers",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/transfers",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/contact-groups",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/contact-groups",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/contact-groups",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.no-role@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.viewer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.8",
+      "method": "GET",
+      "url": "/sectors/stats/overview",
+      "actor": "r3-prod04-20260914-a1.747360.reader-a@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.9",
+      "method": "POST",
+      "url": "/contact-groups/:id/members (sem chat:write)",
+      "actor": "r3-prod04-20260914-a1.747360.group-writer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC2.9",
+      "method": "POST",
+      "url": "/contact-groups/:id/members (com chat:write)",
+      "actor": "r3-prod04-20260914-a1.747360.group-writer@example.com",
+      "status": 201,
+      "expected": [
+        201
+      ]
+    },
+    {
+      "id": "AC2.9",
+      "method": "DELETE",
+      "url": "/contact-groups/:id/members/:contactId (com chat:write)",
+      "actor": "r3-prod04-20260914-a1.747360.group-writer@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC2.9",
+      "method": "POST",
+      "url": "/contact-groups/:id/members (sem membership)",
+      "actor": "r3-prod04-20260914-a1.747360.group-outsider@example.com",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC2.9",
+      "method": "POST",
+      "url": "/contact-groups/:id/members (revogado)",
+      "actor": "r3-prod04-20260914-a1.747360.group-writer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.1",
+      "method": "GET",
+      "url": "/conversations (sem papel)",
+      "actor": "dyn",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.1",
+      "method": "GET",
+      "url": "/conversations (papel concedido)",
+      "actor": "dyn",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.1",
+      "method": "GET",
+      "url": "/conversations (papel removido)",
+      "actor": "dyn",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.2",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (B write)",
+      "actor": "dual-ab",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.2",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (A read)",
+      "actor": "dual-ab",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.2",
+      "method": "GET",
+      "url": "/conversations/:id/messages (sem setor, dono)",
+      "actor": "owner",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.2",
+      "method": "GET",
+      "url": "/conversations/:id/messages (sem setor, terceiro)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC3.2",
+      "method": "GET",
+      "url": "/conversations/:id/messages (dono sem permissão)",
+      "actor": "viewer",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.3",
+      "method": "GET",
+      "url": "/notes?conversationId (Manager read)",
+      "actor": "manager",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.3",
+      "method": "POST",
+      "url": "/notes (Manager sem notes:write)",
+      "actor": "manager",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.3",
+      "method": "GET",
+      "url": "/conversations/:id/messages (sem role)",
+      "actor": "no-role",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.3",
+      "method": "GET",
+      "url": "/conversations/:id/messages (sem membership)",
+      "actor": "outsider",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC3.3",
+      "method": "POST",
+      "url": "/messages (read-only nível)",
+      "actor": "reader-a",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.4",
+      "method": "GET",
+      "url": "/conversations/:id/messages (admin)",
+      "actor": "admin",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.4",
+      "method": "GET",
+      "url": "/conversations/:id/messages (membership revogada)",
+      "actor": "reader-a",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC3.5",
+      "method": "GET",
+      "url": "/conversations (custom sem permissão)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-perm@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.5",
+      "method": "GET",
+      "url": "/conversations (custom com chat:read)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-perm@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.5",
+      "method": "GET",
+      "url": "/conversations (custom revogado)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-perm@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.6",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (custom sem chat:write)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-writer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.6",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (custom com chat:write)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-writer@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.6",
+      "method": "PATCH",
+      "url": "/kanban/card/:id/move (custom revogado)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-writer@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.7",
+      "method": "GET",
+      "url": "/conversations (Manager antes)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.7",
+      "method": "GET",
+      "url": "/conversations (Manager sem chat:read)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.7",
+      "method": "GET",
+      "url": "/conversations (Manager restaurado)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.9",
+      "method": "GET",
+      "url": "/conversations?sectorId=A (custom chat:read)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-sector@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.9",
+      "method": "GET",
+      "url": "/conversations (custom chat:read)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-sector@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC3.9",
+      "method": "GET",
+      "url": "/conversations?sectorId=A (custom revogado)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-sector@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.9",
+      "method": "GET",
+      "url": "/conversations (custom revogado)",
+      "actor": "r3-prod04-20260914-a1.747360.custom-sector@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.10",
+      "method": "GET",
+      "url": "/conversations (Manager sem nenhuma permissão)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.10",
+      "method": "GET",
+      "url": "/conversations?sectorId=A (Manager sem nenhuma permissão)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 403,
+      "expected": [
+        403
+      ]
+    },
+    {
+      "id": "AC3.10",
+      "method": "GET",
+      "url": "/conversations (Manager restaurado)",
+      "actor": "r3-prod04-20260914-a1.747360.manager@example.com",
+      "status": 200,
+      "expected": [
+        200
+      ]
+    },
+    {
+      "id": "AC4.1",
+      "method": "GET",
+      "url": "/conversations/:id/messages (pós-revogação WS)",
+      "actor": "ws-member",
+      "status": 404,
+      "expected": [
+        404
+      ]
+    },
+    {
+      "id": "AC4.1",
+      "method": "GET",
+      "url": "/auth/me (sessão revogada)",
+      "actor": "ws-session",
+      "status": 401,
+      "expected": [
+        401
+      ]
+    }
+  ]
+}

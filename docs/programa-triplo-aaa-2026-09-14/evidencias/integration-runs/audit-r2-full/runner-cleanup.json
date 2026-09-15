@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "audit-r2-full",
+    "redis": {
+      "stopped": true,
+      "pid": 1347213
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1347172
+    }
+  }
+}

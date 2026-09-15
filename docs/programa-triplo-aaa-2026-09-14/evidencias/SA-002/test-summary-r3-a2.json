@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-002",
+  "run_id": "sa002-r3-a2-20260915",
+  "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "command": "python3 -B -m unittest -q scripts/programa-triplo-aaa/test_candidate_manifest.py docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/test_validate_sa002_docs.py",
+  "exit_status": 0,
+  "result": "PASS",
+  "tests_run": 10,
+  "tests_failed": 0,
+  "tests": [
+    "8 candidate-manifest controls: env same-size, ledger separation, mode/symlink, staged/unstaged/add/remove, fail-closed",
+    "test_current_contract_decision_and_denominator_docs_are_complete",
+    "test_missing_contract_example_is_rejected"
+  ],
+  "source_hashes": {
+    "candidate_manifest.py": "1b27c102da808956cb1153be75f91acdd2cdd411c161db5aa693d5a921c0c688",
+    "validate_sa002_docs.py": "56cbe89a5b3158ab1b195abdf43ee712c0b9e2cb1510f516ad4a670449225f4e",
+    "test_validate_sa002_docs.py": "40181c202ad0f9b8ca1e1f3edc9dc02fefc777f17a5783c385ef3455f19d5bf7"
+  },
+  "candidate_artifact": "evidencias/SA-002/candidate-manifest-r3.json",
+  "program_validation": "63 tasks / 59 requirements / 2 DONE / 17 REWORK / 44 PLANNED; eligible SA-003/SA-020",
+  "limitations": [
+    "Os testes validam identidade do candidato e completude documental; não certificam G01/G05/G12 nem o produto.",
+    "Provas executáveis de cada contrato/gate continuam nas tarefas produtoras correspondentes."
+  ]
+}

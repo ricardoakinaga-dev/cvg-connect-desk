@@ -1,0 +1,66 @@
+[
+  {
+    "task": "PROD-10",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-10.test.ts"
+    ],
+    "start": "2026-09-13T19:34:26.187870+00:00",
+    "end": "2026-09-13T19:34:50.500931+00:00",
+    "exit": 0,
+    "log": "/tmp/cvg-audit-deliveries-ufq9_ejh/integration-10/output.log"
+  },
+  {
+    "task": "PROD-13",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-13.test.ts"
+    ],
+    "start": "2026-09-13T19:34:50.501499+00:00",
+    "end": "2026-09-13T19:34:55.710244+00:00",
+    "exit": 0,
+    "log": "/tmp/cvg-audit-deliveries-ufq9_ejh/integration-13/output.log"
+  },
+  {
+    "task": "PROD-16",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-16.test.ts"
+    ],
+    "start": "2026-09-13T19:34:55.710881+00:00",
+    "end": "2026-09-13T19:35:01.400630+00:00",
+    "exit": 0,
+    "log": "/tmp/cvg-audit-deliveries-ufq9_ejh/integration-16/output.log"
+  },
+  {
+    "task": "PROD-18",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@cvg/desk-api",
+      "exec",
+      "vitest",
+      "run",
+      "src/__tests__/production/prod-18.test.ts"
+    ],
+    "start": "2026-09-13T19:35:01.401138+00:00",
+    "end": "2026-09-13T19:35:07.306980+00:00",
+    "exit": 1,
+    "log": "/tmp/cvg-audit-deliveries-ufq9_ejh/integration-18/output.log"
+  }
+]

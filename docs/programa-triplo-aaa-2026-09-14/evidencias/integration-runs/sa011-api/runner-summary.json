@@ -1,0 +1,54 @@
+{
+  "runId": "sa011-api",
+  "workerIndex": 48,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_api_w48",
+  "redisUrl": "redis://127.0.0.1:57160",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:39:37.953Z",
+  "finishedAt": "2026-09-15T03:39:43.380Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61232/cvg_aaa_sa011_api_w48",
+    "REDIS_URL": "redis://127.0.0.1:57160",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa011-api",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa011-api",
+    "AAA_WORKER_INDEX": "48"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:39:37.953Z",
+      "finishedAt": "2026-09-15T03:39:39.665Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:39:39.665Z",
+      "finishedAt": "2026-09-15T03:39:40.365Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-011-api-contract.integration.test.ts",
+      "startedAt": "2026-09-15T03:39:40.365Z",
+      "finishedAt": "2026-09-15T03:39:43.380Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789443583155,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":401},\"responseTime\":0.23244199999999182,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789443583155,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"req\":{\"method\":\"GET\",\"url\":\"/admin/users\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789443583160,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"res\":{\"statusCode\":200},\"responseTime\":4.3305820000000494,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789443583160,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"req\":{\"method\":\"GET\",\"url\":\"/rota-inexistente\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789443583161,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"msg\":\"Route GET:/rota-inexistente not found\"}\n{\"level\":30,\"time\":1789443583161,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"res\":{\"statusCode\":404},\"responseTime\":0.3636660000001939,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789443583163,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-g\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/ee4c83be-914b-40a0-9c7c-3a91a89a59d1\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789443583169,\"pid\":1786410,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-g\",\"res\":{\"statusCode\":200},\"responseTime\":6.698534999999993,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-011-api-contract.integration.test.ts (6 tests) 498ms\n\n Test Files  1 passed (1)\n      Tests  6 passed (6)\n   Start at  00:39:40\n   Duration  2.37s (transform 813ms, setup 0ms, collect 1.68s, tests 498ms, environment 0ms, prepare 54ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

@@ -1,0 +1,30 @@
+{
+  "runId": "prod18-repro",
+  "workerIndex": 42,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60632/cvg_aaa_prod18_repro_w42",
+  "redisUrl": "redis://127.0.0.1:57100",
+  "startedAt": "2026-09-13T18:02:51.325Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-18/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\n  \"generatedAt\": \"2026-09-13T18:02:51.156Z\",\n  \"runId\": \"prod18-repro\",\n  \"workerIndex\": \"42\",\n  \"database\": \"postgresql://***@127.0.0.1:60632/cvg_aaa_prod18_repro_w42\",\n  \"scenarios\": {\n    \"A_note\": {\n      \"isErr\": true,\n      \"errorMessage\": \"Failed query: insert into \\\"audit_logs\\\" (\\\"id\\\", \\\"user_id\\\", \\\"action\\\", \\\"entity_type\\\", \\\"entity_id\\\", \\\"old_value\\\", \\\"new_value\\\", \\\"ip_address\\\", \\\"user_agent\\\", \\\"correlation_id\\\", \\\"metadata\\\", \\\"created_at\\\") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, default) returning \\\"id\\\", \\\"user_id\\\", \\\"action\\\", \\\"entity_type\\\", \\\"entity_id\\\", \\\"old_value\\\", \\\"new_value\\\", \\\"ip_address\\\", \\\"user_agent\\\", \\\"correlation_id\\\", \\\"metadata\\\", \\\"created_at\\\"\\nparams: e7c78721-c26e-441b-a742-fa923d706d44,note.created,note,a0937537-3908-4545-9d28-92f229bd6cfe,,{\\\"referenceType\\\":\\\"conversation\\\",\\\"referenceId\\\":\\\"2d7a5982-08e5-4b47-9e2e-4af86fda6644\\\",\\\"contentLength\\\":18},,,,{\\\"authorId\\\":\\\"e7c78721-c26e-441b-a742-fa923d706d44\\\"}\",\n      \"notesPersisted\": 1,\n      \"auditRows\": 0,\n      \"outboxRows\": 0,\n      \"defect\": true,\n      \"expectedAfterFix\": \"falha na auditoria => rollback total (0 notas, 0 auditoria, 0 outbox)\"\n    },\n    \"B_task\": {\n      \"isErr\": true,\n      \"statusAfterFailure\": \"completed\",\n      \"historyRows\": 1,\n      \"auditRows\": 0,\n      \"outboxRows\": 0,\n      \"defect\": true,\n      \"expectedAfterFix\": \"falha na auditoria => rollback total (status pendente, 0 histórico, 0 auditoria, 0 outbox)\"\n    },\n    \"C_alert\": {\n      \"isErr\": true,\n      \"statusAfterFailure\": \"acknowledged\",\n      \"alertEvents\": 1,\n      \"auditRows\": 0,\n      \"outboxRows\": 0,\n      \"defect\": true,\n      \"expectedAfterFix\": \"falha na auditoria => rollback total (status ativo, 0 evento, 0 auditoria, 0 outbox)\"\n    },\n    \"D_transfer\": {\n      \"isErr\": true,\n      \"thrownMessage\": \"Failed query: insert into \\\"contact_sectors\\\" (\\\"id\\\", \\\"contact_id\\\", \\\"sector_id\\\", \\\"source_id\\\", \\\"status\\\", \\\"assigned_user_id\\\", \\\"created_at\\\", \\\"updated_at\\\") values (default, $1, $2, default, $3, default, default, default)\\nparams: 64c052cd-27f2-4687-aae8-3d48c8c529b8,53215ff6-dd85-4bbe-93cf-62fdf254aee9,active\",\n      \"transferStatusAfterFailure\": \"accepted\",\n      \"conversationSectorAfterFailure\": \"moved_to_B\",\n      \"contactLinkRows\": 1,\n      \"auditRows\": 0,\n      \"outboxRows\": 0,\n      \"defect\": true,\n      \"expectedAfterFix\": \"falha no vínculo => rollback total (0 transferência, conversa no setor A, vínculo original)\"\n    },\n    \"E_chat_operations\": {\n      \"publicRoutesBefore\": [\n        \"GET /conversations\",\n        \"GET /conversations/:id/messages\",\n        \"POST /conversations/:id/read\",\n        \"POST /messages\",\n        \"PATCH /kanban/card/:id/move (status/assign fora do módulo chat)\"\n      ],\n      \"missingPublicOperations\": [\n        \"PATCH /conversations/:id/state\",\n        \"POST /conversations/:id/assign\",\n        \"POST /conversations/:id/handoff\"\n      ],\n      \"defect\": true,\n      \"evidence\": \"modules/chat/src/presentation/http/outbound.controller.ts registra apenas as rotas acima; não há controller de estado/atribuição/handoff (UI05).\",\n      \"expectedAfterFix\": \"operações públicas de estado/atribuição/handoff transacionais com CAS, auditoria e outbox.\"\n    }\n  },\n  \"verdict\": \"DEFECT_REPRODUCED\"\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

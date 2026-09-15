@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "bar_version": "SA-002-R3-v1",
+  "task": "SA-002",
+  "frozen_at": "2026-09-15T10:56:01-03:00",
+  "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "product_sha256": "4ee19f2ec5ca8bffd550d2befc006a695bec89b5b3eeb8460e05146d61c8a52f",
+  "ledger_sha256": "55cff7349c4dbd2d19176495055a5201aab23dd03c10c28cecfefa79493d270a",
+  "criteria": [
+    {
+      "id": "SA-002-AC1",
+      "source": "CONTRATOS.md; CRITERIOS.md; RASTREABILIDADE.md",
+      "target": "C01–C10 e G01–G12 têm versão, proprietário/dono, entradas, saídas, consumidores e exemplos explícitos de sucesso/erro.",
+      "evidence_method": "validate_sa002_docs.py verifica IDs, células obrigatórias e as matrizes de contrato/gate; revisão independente inspeciona o conteúdo.",
+      "required": true,
+      "status": "FROZEN"
+    },
+    {
+      "id": "SA-002-AC2",
+      "source": "DECISOES.md; AUTORIZACAO-MATRIZ.md",
+      "target": "D01–D06 têm proposta, alternativa/consequência, impacto, subações, preparo permitido, autoridade e limite; todas continuam OPEN.",
+      "evidence_method": "validate_sa002_docs.py verifica seis linhas completas e o marcador OPEN; a evidência não presume aprovação.",
+      "required": true,
+      "status": "FROZEN"
+    },
+    {
+      "id": "SA-002-AC3",
+      "source": "CRITERIOS.md; evidencias/SA-002/frozen-denominators.json; packages/shared/vitest.config.ts",
+      "target": "Coverage, workload, matriz visual e método de nota permanecem congelados, sem redução após falha.",
+      "evidence_method": "Validação estrutural confere thresholds, ordem provider v8, dataset/rodadas, 16×5, pesos 40/25/25/10, regra ≥95 e candidate_id atual.",
+      "required": true,
+      "status": "FROZEN"
+    }
+  ],
+  "non_goals": [
+    "Não aprovar D01–D06 por texto; todas permanecem OPEN.",
+    "Não declarar G01/G05/G12 ou o produto inteiro PASS por documentação.",
+    "Não alterar metas, denominadores ou a identidade visual do produto."
+  ]
+}

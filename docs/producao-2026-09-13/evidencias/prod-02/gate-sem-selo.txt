@@ -1,0 +1,7 @@
+[gate] candidate.json ausente (candidato não selado)
+
+FINAL: FAILED
+Checks: {"pass":0,"fail":0,"blocked":0,"notRun":0,"skipped":0,"invalid":0,"missing":14,"notEvaluated":5}
+Reprovados: runtime=MISSING (manifesto ausente (runtime.json)) | install=MISSING (manifesto ausente (install.json)) | lint=MISSING (manifesto ausente (lint.json)) | typecheck=MISSING (manifesto ausente (typecheck.json)) | unit=MISSING (manifesto ausente (unit.json)) | postgres-real=MISSING (manifesto ausente (postgres-real.json)) | migration-check=MISSING (manifesto ausente (migration-check.json)) | build=MISSING (manifesto ausente (build.json)) | security-audit=MISSING (manifesto ausente (security-audit.json)) | security-audit-prod=MISSING (manifesto ausente (security-audit-prod.json)) | coverage=MISSING (manifesto ausente (coverage.json)) | dr-e2e=MISSING (payload ausente (artifacts/dr-e2e-report.json)) | staging-otel=MISSING (payload ausente (artifacts/staging-otel.json)) | query-performance=MISSING (payload ausente (artifacts/query-performance.json))
+Certificação: NOT_ELIGIBLE_LOCAL (TRIPLE_AAA_CERTIFIED não pode ser emitido pelo gate local: exige política de release ratificada e verificação de tag/assinatura em fluxo dedicado.)
+Reports: /tmp/prod02-smoke3/triple-aaa-report.json + /tmp/prod02-smoke3/triple-aaa-report.md

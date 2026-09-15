@@ -1,0 +1,34 @@
+{
+  "mode": "CURRENT source transpiled, mocked datastore; no DB/network",
+  "hashes": {
+    "packages/shared/src/webhook-anti-replay.ts": "ba31733fbb15c3ca41a35641a8d46fdf4c5a452f53af483909ca1f2daf3710a9",
+    "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts": "203940326fee1622e04471443e6a4d3ca45c256d684e0483c09e08b6d0884fad"
+  },
+  "webhook": {
+    "first": {
+      "action": "claimed_new"
+    },
+    "retryNewTimestamp": {
+      "action": "mismatch"
+    },
+    "retrySameTimestamp": {
+      "action": "claimed_retry"
+    }
+  },
+  "secretary": {
+    "originalStatus": "unknown",
+    "resultStatus": "processing",
+    "alreadyCompleted": false,
+    "writes": [
+      {
+        "status": "processing",
+        "attemptCount": 2,
+        "eventId": "synthetic-event",
+        "consumerId": "worker",
+        "lastError": null,
+        "errorCode": null,
+        "updatedAt": "2026-09-13T19:33:37.310Z"
+      }
+    ]
+  }
+}

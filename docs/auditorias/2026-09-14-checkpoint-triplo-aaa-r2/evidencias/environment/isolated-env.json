@@ -1,0 +1,24 @@
+{
+  "runId": "audit-r2-sa009",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_audit_r2_sa009_w47",
+  "databaseName": "cvg_aaa_audit_r2_sa009_w47",
+  "databasePort": 61132,
+  "redisUrl": "redis://127.0.0.1:57150",
+  "redisPort": 57150,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1361239,
+    "dataDir": "/tmp/cvg-aaa-runs/audit-r2-sa009-w47/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1361258,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "audit-r2-sa009",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 23:19:32.534155-03"
+  }
+}

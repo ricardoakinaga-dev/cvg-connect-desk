@@ -1,14 +1,14 @@
 import type { WAInboundEvent, WAReceiptEvent, InstanceStatusEvent } from '../../types/gateway-contracts';
 import { normalizeGatewayInbound } from '../../infrastructure/gateway-normalizer';
 import { gatewayService } from '../../infrastructure/gateway-service';
-import { parseInboundMessageV1 } from '@cvg/messaging-contracts';
+import { parseInboundMessageV1, mapProviderReceiptStatus, type GatewayHandlerPorts } from '@cvg/messaging-contracts';
 import { ok, err } from '@cvg/shared';
 
 /**
  * Processa evento WA_INBOUND do gateway.
  * Converte para formato interno e chama o use case de receiveInboundMessage.
  */
-export async function handleGatewayInbound(event: WAInboundEvent) {
+export async function handleGatewayInbound(event: WAInboundEvent, ports: GatewayHandlerPorts) {
   try {
     // Validar contrato básico
     if (event.event_type !== 'WA_INBOUND') {
@@ -46,9 +46,8 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
       return ok({ skipped: true, reason: 'fromMe' });
     }
 
-    // Chamar o use case de inbound do módulo chat
-    const { receiveInboundMessage } = await import('@cvg/chat');
-    const result = await receiveInboundMessage({
+    // Submete pela porta injetada (C02 §5): sem import direto do módulo chat.
+    const result = await ports.inbound.submit({
       externalMessageId: normalized.externalMessageId,
       externalConversationId: normalized.externalConversationId,
       content: normalized.content,
@@ -72,8 +71,8 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
       },
     });
 
-    if (result.isErr()) {
-      return err(result.error);
+    if (!result.ok) {
+      return err(new Error(result.error.message));
     }
 
     return ok({
@@ -92,37 +91,25 @@ export async function handleGatewayInbound(event: WAInboundEvent) {
  * Processa evento WA_RECEIPT do gateway.
  * Atualiza status de entrega da mensagem.
  */
-export async function handleGatewayReceipt(event: WAReceiptEvent) {
+export async function handleGatewayReceipt(event: WAReceiptEvent, ports: GatewayHandlerPorts) {
   try {
     if (event.event_type !== 'WA_RECEIPT') {
       return err(new Error(`Invalid event_type: ${event.event_type}`));
     }
 
-    const { messageRepository } = await import('@cvg/chat');
-    const message = await messageRepository.findByExternalId(event.payload.messageId);
+    const internalStatus = mapProviderReceiptStatus(event.payload.status);
 
-    if (!message) {
+    const result = await ports.messageStatus.applyReceipt({
+      externalMessageId: event.payload.messageId,
+      status: event.payload.status,
+      statusAt: new Date(event.payload.status_at),
+    });
+
+    if (!result.updated) {
       return ok({ skipped: true, reason: 'message_not_found' });
     }
 
-    // Mapear status do gateway para status interno
-    const statusMap: Record<string, string> = {
-      sent: 'sent',
-      delivered: 'delivered',
-      read: 'delivered',
-      failed: 'failed',
-      played: 'delivered',
-    };
-
-    const internalStatus = statusMap[event.payload.status] || 'sent';
-
-    // Atualizar status da mensagem
-    await messageRepository.update(message.id, {
-      status: internalStatus as any,
-      deliveredAt: event.payload.status === 'delivered' ? new Date(event.payload.status_at) : undefined,
-    });
-
-    return ok({ updated: true, messageId: message.id, status: internalStatus });
+    return ok({ updated: true, messageId: result.messageId, status: internalStatus });
   } catch (error) {
     console.error('[handleGatewayReceipt] Erro:', error);
     return err(error as Error);

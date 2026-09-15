@@ -12,11 +12,13 @@ export function buildSecretaryRequest(
     tutorId?: string;
     patientId?: string;
   },
-  messageId?: string
+  messageId?: string,
+  invocationId?: string,
 ): SecretaryInvocationRequest {
   return {
     conversationId,
     messageId,
+    invocationId,
     action,
     context: {
       content: context.content,

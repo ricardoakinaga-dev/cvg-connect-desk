@@ -1,0 +1,2 @@
+import {createServer} from '/home/ricardo/cvg-connect-desk/apps/desk-web/node_modules/vite/dist/node/index.js';
+const server=await createServer({configFile:false,define:{'import.meta.env.VITE_API_URL':JSON.stringify('/api')},root:'/home/ricardo/cvg-connect-desk/apps/desk-web',cacheDir:'/tmp/cvg-audit-20260913/vite-cache',server:{host:'127.0.0.1',port:14573,strictPort:true},esbuild:{jsx:'automatic'}});await server.listen();console.log('audit web 14573');

@@ -1,0 +1,581 @@
+{
+  "role": "read-only frontend scout R3, not final independent critic",
+  "timestamp": "2026-09-13T22:17:02.786313+00:00",
+  "run_id": "cvg-audit-r3-dvlqz0my",
+  "status_counts": {
+    "RESOLVED": 0,
+    "PARTIAL": 0,
+    "OPEN": 17,
+    "NOT_REVALIDATED": 0
+  },
+  "findings": [
+    {
+      "id": "FE01",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-29"
+      ],
+      "title": "Drawer fechado amplia Inbox 1024 para 1318 pixels e continua no DOM acessível",
+      "assessment_r3": "Fechado a 1024: scrollWidth=1318, rect x1038/right1318, inert=false e aria-hidden ausente; Tab chega ao botão Abrir cadastro do contato. Aberto estabiliza em1024 e Escape restaura foco, mas não corrige estado fechado.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1024-selected.png",
+        "focused-observations.json:closed-drawer-dom/closed-drawer-tab/context-escape-stable"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.css:17",
+        "apps/desk-web/src/pages/Inbox.tsx:1240"
+      ],
+      "remaining": "Fechar drawer com geometria contida e inert/aria-hidden conforme estado; medir scrollWidth e navegação por Tab nos breakpoints.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE02",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Operação no contexto incompleta: transferência desabilitada; cadastro abre lista genérica",
+      "assessment_r3": "Transferência permanece disabled; contexto mostra status/setor/início/canal e leva a /contacts genérico, sem atribuição/tags/handoff/tarefa/nota contextuais. Não basta backend operacional existir.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1440-selected.png",
+        "inbox-1024-context-stable.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1127",
+        "apps/desk-web/src/pages/Inbox.tsx:1249"
+      ],
+      "remaining": "Implementar atribuição/status/handoff/transferência/tags e links exatos; contexto de tarefa/nota/tutor/paciente via recursos autorizados.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE03",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Busca e contagens consideram apenas conversas carregadas; parâmetros de consulta não incluem busca/status/responsável/labels",
+      "assessment_r3": "Busca sintética fora da primeira página gera zero request e mostra Nenhuma conversa; total2 continua derivado do lote. fetchConversations passa setor/limit/cursor; wrapper possui status mas tela não o envia.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "focused-observations.json:server-search",
+        "browser-observations.json:requests"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:335",
+        "apps/desk-web/src/pages/Inbox.tsx:880",
+        "apps/desk-web/src/pages/Inbox.tsx:894",
+        "apps/desk-web/src/lib/api.ts:524"
+      ],
+      "remaining": "Levar busca/filtros ao servidor autorizado e distinguir totais globais dos itens carregados.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE04",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Timeline rotula qualquer histórico como Hoje",
+      "assessment_r3": "Histórico sintético de10/11 setembro continua sob separador literal Hoje em13 setembro. Não foi auditada ordem da timeline a partir desta fixture.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-375-selected.png",
+        "inbox-1440-selected.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1161"
+      ],
+      "remaining": "Agrupar por data local real e tratar timezone, mudança de dia e empates.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE05",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "asset:// é chip sem ação; documento/vídeo não têm componente de leitura completo",
+      "assessment_r3": "asset://fixture-doc renderiza exame-luna-fixture.pdf como chip sem link/botão de leitura/download. Componentes/estados de mídia completa e autorização real não demonstrados.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "inbox-1440-selected.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1163",
+        "apps/desk-web/src/pages/Inbox.tsx:1164"
+      ],
+      "remaining": "Resolver leitura/download autorizado e estados pending/infected/revogado/expirado; não reconduzir mídia para URL arbitrária.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE06",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Rascunhos e intenções existem só em memória do Inbox; sair/remontar perde estado",
+      "assessment_r3": "RASCUNHO SINTETICO R3 desaparece após navegação SPA por links Inbox→Tarefas→Inbox (input vazio). useState/ref local continuam sendo donos de drafts e intenções. Não foi testado401/relogin integrado.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "focused-observations.json:draft-after-navigation",
+        "render-focused.cjs"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:246",
+        "apps/desk-web/src/pages/Inbox.tsx:274"
+      ],
+      "remaining": "Definir recuperação segura por identidade/conversa durante 401/relogin/navegação; preservar intenção idempotente sem compartilhar dados entre usuários.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE07",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-21"
+      ],
+      "title": "Tarefa não permite atribuição/vínculos no formulário nem abrir conversa do card",
+      "assessment_r3": "Formulário só oferece título, descrição, prioridade e prazo; payload omite assignee/vínculos. Card mostra10000000 e não abre conversa vinculada.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "tasks-create-1440.png",
+        "tasks-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Tasks.tsx:129",
+        "apps/desk-web/src/pages/Tasks.tsx:357"
+      ],
+      "remaining": "Seletores humanos autorizados e edição/links de conversa/tutor/paciente/assignee; provar persistência e atualização.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE08",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-22"
+      ],
+      "title": "Nota exige ID técnico e apresenta referência truncada sem navegação",
+      "assessment_r3": "Formulário exige ID da referência; card mostra #20000000 sem navegação. Seletores humanos/contextuais não implementados.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "notes-create-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Notes.tsx:95",
+        "apps/desk-web/src/pages/Notes.tsx:169",
+        "apps/desk-web/src/pages/Notes.tsx:243"
+      ],
+      "remaining": "Pesquisa/seletor por nomes, preseleção contextual e links exatos.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE09",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-22",
+        "PROD-25"
+      ],
+      "title": "Ficha de contato carrega/cria notas apenas na primeira conversa",
+      "assessment_r3": "fetchContactDetail carrega notas apenas para data.conversations[0]?.id; criação também escolhe primeira conversa. Agregação/paginação de todas as conversas não existe nesse caminho.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Contacts.tsx:188",
+        "apps/desk-web/src/pages/Contacts.tsx:305",
+        "apps/desk-web/src/pages/Contacts.tsx:340"
+      ],
+      "remaining": "Agregar notas de todas conversas autorizadas com procedência e paginação; evitar escolha implícita da primeira conversa.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    {
+      "id": "FE10",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-23"
+      ],
+      "title": "Alertas têm ack/resolve mas não navegam ao recurso relacionado",
+      "assessment_r3": "Alerta sintético tem conversationId/taskId, mas só expõe Reconhecer/Resolver. Não há navegação ao recurso exato.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "alerts-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Alerts.tsx:245",
+        "apps/desk-web/src/pages/Alerts.tsx:260"
+      ],
+      "remaining": "Adicionar links autorizados para tarefa/conversa e reconciliar status entre operadores.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE11",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-24"
+      ],
+      "title": "Grupos só exibem membros; instrução para adicionar pela ficha não corresponde a controle ali",
+      "assessment_r3": "ContactGroups lista membros sem mutação e orienta adicionar pela ficha; Contacts mostra badges sem controle correspondente de membership. Não há novo caminho frontend.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/ContactGroups.tsx:354",
+        "apps/desk-web/src/pages/ContactGroups.tsx:363",
+        "apps/desk-web/src/pages/Contacts.tsx:452"
+      ],
+      "remaining": "Conectar ações adicionar/remover membros e labels; editar grupo/setor conforme permissões e invalidar consultas.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    {
+      "id": "FE12",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-25"
+      ],
+      "title": "Paciente ainda usa tutorId singular; N:N não representado pela UI",
+      "assessment_r3": "Estado/formulário/payload de Patients mantêm tutorId singular. N:N e ratificação D03 não podem ser considerados entregues pela UI.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Patients.tsx:68",
+        "apps/desk-web/src/pages/Patients.tsx:144",
+        "apps/desk-web/src/pages/Patients.tsx:322"
+      ],
+      "remaining": "Resolver D03 e adaptar API/UI/migração compatível a múltiplos tutores; não declarar N:N entregue.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    {
+      "id": "FE13",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-26"
+      ],
+      "title": "Admin não possui editor de permissões por papel/vínculo usuário-papel nem gestão completa de membros de times/filas",
+      "assessment_r3": "Usuários mantêm editor Setores e delete; papéis exibem nome/descrição/delete, sem editor de capacidades ou vínculo usuário↔papel. Filas/times continuam tabelas simples sem gestão completa de membros.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "admin-correct-fixture-1440.png",
+        "admin-roles-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Admin.tsx:739",
+        "apps/desk-web/src/pages/Admin.tsx:745",
+        "apps/desk-web/src/pages/Admin.tsx:756"
+      ],
+      "remaining": "Manter editor de setores existente, adicionar editor por capacidade efetiva, associação papel e membros com audit/revogação.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE14",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-27"
+      ],
+      "title": "Kanban move por select/drag, mas card não abre conversa e só há filtro de setor",
+      "assessment_r3": "Kanban possui drag/select de mudança de status e filtro setor; card não abre conversa e faltam filtros agente/label/prioridade/período/grupo.",
+      "evidence_kind": "BROWSER+STATIC",
+      "evidence": [
+        "kanban-1440.png"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Kanban.tsx:92",
+        "apps/desk-web/src/pages/Kanban.tsx:265"
+      ],
+      "remaining": "Conectar deep-link de conversa e filtros agente/label/prioridade/período/grupo; manter alternativa teclado e feedback de falha.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE15",
+      "status": "OPEN",
+      "severity": "High",
+      "cards": [
+        "PROD-30"
+      ],
+      "title": "Tasks/Alerts/Contacts/Kanban/Dashboard não assinam realtime nem executam polling bounded",
+      "assessment_r3": "Tasks/Alerts/Contacts/Kanban/Dashboard continuam fetch inicial, mutação ou refresh manual. Não há assinatura realtime/polling bounded nessas páginas; timers de feedback/debounce não atualizam dados de outro operador.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Tasks.tsx:84",
+        "apps/desk-web/src/pages/Alerts.tsx:76",
+        "apps/desk-web/src/pages/Contacts.tsx:198",
+        "apps/desk-web/src/pages/Kanban.tsx:108",
+        "apps/desk-web/src/pages/Dashboard.tsx:37"
+      ],
+      "remaining": "Invalidação ou polling limitado e estado stale/offline; preservar formulário sujo e reconciliar reconexão.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    {
+      "id": "FE16",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-28"
+      ],
+      "title": "Monólitos de página e duplicação de estados continuam; features/inbox ausente",
+      "assessment_r3": "Inbox1254 linhas/Admin1342/Contacts682; apps/desk-web/src/features não existe e loadFailureFrom continua repetido. Primitivos/tokens existentes não fecham extração por ownership.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "source-hashes-before.json",
+        "static-evidence.txt"
+      ],
+      "source": [
+        "apps/desk-web/src/pages/Inbox.tsx:1",
+        "apps/desk-web/src/pages/Admin.tsx:1",
+        "apps/desk-web/src/pages/Contacts.tsx:1"
+      ],
+      "remaining": "Extrações por ownership real de consultas/mutações e adoção de primitivos; preservar comportamento em capturas equivalentes.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    },
+    {
+      "id": "FE17",
+      "status": "OPEN",
+      "severity": "Medium",
+      "cards": [
+        "PROD-38"
+      ],
+      "title": "Percurso E2E produção completo não está implementado na pasta de suites",
+      "assessment_r3": "e2e/production contém apenas01-harness-identity.spec.ts; config production inclui suites AAA existentes, mas não os novos percursos completos. reuseExistingServer:!CI permanece. Stack real não executado por esta lane.",
+      "evidence_kind": "STATIC",
+      "evidence": [
+        "static-evidence.txt"
+      ],
+      "source": [
+        "playwright.production.config.ts:41",
+        "e2e/production/01-harness-identity.spec.ts:1"
+      ],
+      "remaining": "Criar cenário de atendimento com serviços isolados identificados e impedir reutilização sem prova de identidade; esta auditoria não executou o stack.",
+      "new_progress": "Nenhum delta identificado nas fontes frontend comparáveis à R2.",
+      "confidence": "HIGH_STATIC_ONLY"
+    }
+  ],
+  "new_progress": [],
+  "preserved_progress": [
+    "Boot espera /auth/me antes da consulta operacional na fixture; deep-link admin sem capacidade exibe Acesso negado; erro de rede oferece retry.",
+    "Shell mobile: Escape restaura foco Abrir navegação e sidebar fechada inert.",
+    "Contexto aberto: Escape restaura foco Abrir informações da conversa; esta melhoria já existente não resolve FE01 fechado.",
+    "Primitivos/tokens, estados de erro/retry, select acessível Kanban e editor de setores Admin existentes foram preservados."
+  ],
+  "source_comparison": {
+    "compared_to": "/tmp/cvg-audit-deliveries-ufq9_ejh/sources-before.json",
+    "total_current_source_files": 83,
+    "comparable": 82,
+    "identical": 82,
+    "changed": 0,
+    "unmatched": [
+      "e2e/production/01-harness-identity.spec.ts"
+    ],
+    "changed_during_r3": []
+  },
+  "renders": [
+    {
+      "file": "admin-1440.png",
+      "sha256": "82753d2027240e618120b967d4c008431936f92030561b157f45d97e7641f30b",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "admin-correct-fixture-1440.png",
+      "sha256": "e8986f1f43ac7aa024335596a78646435991dcd11c30517f1a5da37adee72617",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "admin-roles-1440.png",
+      "sha256": "e0303f11c8ebbfc6365323cb183d06f6353973d7676493b25c4c4498c13eaf1a",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "alerts-1440.png",
+      "sha256": "f8f6e1ae8f2ce916a066555d82e5fd6ec9233cd32a5b93292f6f0a3359014d03",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "auth-boot-confirmed-1440.png",
+      "sha256": "7043380f546b8d981189b9527dbc5f9bd0b87e267f5f30a2698e02011dd54cc4",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "auth-boot-pending-1440.png",
+      "sha256": "41a57d341b63533fecb6b95da5dcfe10278c38e6ccbdc62abea1764e1eece46c",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "auth-deeplink-denied-1440.png",
+      "sha256": "14aee48553c9e9d4e4136a828b4cdb7f246df22e567810720a70fbd15e3c36fd",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "auth-offline-retry-1440.png",
+      "sha256": "7c4414f7d839eb2081a86696b29527a5bfe2ab0bee1a84360cc52cafdcb96ce4",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "contacts-1440.png",
+      "sha256": "6b013f574a96ec143b1d29c822caccf64991d870312554ab5a4f39c186e6855f",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "inbox-1024-context-stable.png",
+      "sha256": "ddd77c04cec2013b5f01e253c87c2ca675ad189479419d7b683f5d509cae426c",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "inbox-1024-context.png",
+      "sha256": "3f0d246f01f7cf83c25350ea9c1661543fae5d920834fe9e4e42603e93db7e7d",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "inbox-1024-list.png",
+      "sha256": "5733f7317454cd99251287fe474c77e0302d7d1ff5b3259c10cdd2b1143a32e7",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "inbox-1024-selected.png",
+      "sha256": "d082a5b66e1beedc423bebe22d2228c28295c05a45e10b29d79ea9c4a0aa2d92",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "inbox-1440-list.png",
+      "sha256": "c4437f23817de42e8dcbb0aae39b9c687a46c60b229d507ac6b0432daeae4461",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "inbox-1440-selected.png",
+      "sha256": "534f5cd3a2f16cfa409fc340675ec0ac1538268eaac70f3fda31f12d3e3045e9",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "inbox-375-list.png",
+      "sha256": "b760e811f61c366b554711c0de8737b259b316e752d5a825c130a6b695d3712d",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "inbox-375-selected.png",
+      "sha256": "5a07a85ff7faa80618eb76068577b715efb12614f0c30efe8130ae4f81faa87b",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "kanban-1440.png",
+      "sha256": "5d369fa039bc4a91d25d0cb08fd7bf96fb477ce533f13d37f1d0172a07164c7c",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "notes-1440.png",
+      "sha256": "c5823e41aed58a8614763c7dd5005b7fc13747d4fdb83e2065d0d0934a9e8883",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "notes-create-1440.png",
+      "sha256": "35aa4799732513a2653311a44985e11c606227cb349a7210fb424c66c9d706f4",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "shell-mobile-nav-open.png",
+      "sha256": "42ec58b2a3fdb47dca23191f03f9fa692321ba53a579308941f751fcc038f2d7",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    },
+    {
+      "file": "tasks-1440.png",
+      "sha256": "c09087dca2614b98c7a4b8a3708f2208a05cb30a10368dd29b9b26a4c8ce3117",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": false
+    },
+    {
+      "file": "tasks-create-1440.png",
+      "sha256": "106fff5f23f13c91c400540341bc3b4d556553aeb58b2f7c85880b589437269e",
+      "fixture": "SYNTHETIC API MOCKS",
+      "inspected": true
+    }
+  ],
+  "inspected_renders": [
+    "inbox-375-selected.png",
+    "inbox-1024-selected.png",
+    "inbox-1440-selected.png",
+    "inbox-1024-context.png",
+    "inbox-1024-context-stable.png",
+    "tasks-create-1440.png",
+    "notes-create-1440.png",
+    "admin-correct-fixture-1440.png",
+    "admin-roles-1440.png",
+    "alerts-1440.png",
+    "kanban-1440.png",
+    "auth-boot-pending-1440.png",
+    "auth-deeplink-denied-1440.png",
+    "auth-offline-retry-1440.png",
+    "shell-mobile-nav-open.png"
+  ],
+  "limitations": [
+    "API inteiramente sintética via route; screenshots provam somente UI atual. Nenhum E2E/backend/DB/autorização real/provider/scanner/persistência/realtime remoto validado.",
+    "WebSockets fechados propositalmente para não acessar servidor externo/preexistente. Mensagens de erro HMR Vite e banner de reconexão são efeitos do harness, não defeitos novos de produto.",
+    "Nenhum pageerror observado; auth offline gera ERR_FAILED intencional.",
+    "Captura inbox-1024-context.png foi colhida durante transição e não é usada para geometria aberta final: substituída por inbox-1024-context-stable.png com450ms de estabilização.",
+    "Matriz parcial: Inbox375/1024/1440 e páginas adjacentes desktop; não16 rotas×5 viewports, fronteiras, zoom/reflow, contraste ou leitor de tela real. Não concede G07/G12/AAA.",
+    "Fixture histórica de mensagens não constitui prova de ordenação/empates/timezone completo. FE04 limita-se a Hoje literal sobre dias anteriores.",
+    "Baseline R2 é sources-before.json arquivado em /tmp/cvg-audit-deliveries-ufq9_ejh, não apenas gitHEAD; árvore preexistente contém modificações.77 arquivos src e5 configurações/lock comparáveis idênticos; suite identity tem hash atual, sem baseline naquele mapa.",
+    "Tentativas de startup iniciais falharam por path vite raiz e bundling CJS; comando bem-sucedido usa apps/desk-web/node_modules/vite/bin/vite.js e --configLoader native. Sem mudança produtiva."
+  ],
+  "visual_verdict": "FAIL for scoped acceptance; no overall design score/AAA assigned from partial matrix",
+  "commands": [
+    "node apps/desk-web/node_modules/vite/bin/vite.js --config /tmp/cvg-audit-r3-dvlqz0my/frontend/vite.config.mjs --configLoader native",
+    "node /tmp/cvg-audit-r3-dvlqz0my/frontend/render.cjs",
+    "node /tmp/cvg-audit-r3-dvlqz0my/frontend/render-auth.cjs",
+    "node /tmp/cvg-audit-r3-dvlqz0my/frontend/render-focused.cjs"
+  ]
+}

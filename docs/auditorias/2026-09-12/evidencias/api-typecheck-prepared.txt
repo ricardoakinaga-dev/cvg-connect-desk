@@ -1,0 +1,336 @@
+src/__tests__/api-structure.test.ts(6,41): error TS1470: The 'import.meta' meta-property is not allowed in files which will build into CommonJS output.
+src/__tests__/auth-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/chat-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/contact-groups-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/contact-groups-routes.integration.test.ts(30,7): error TS2322: Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/__tests__/contact-groups-routes.integration.test.ts(70,38): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'type' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }'.
+  Overload 2 of 2, '(values: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]'.
+src/__tests__/contacts-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/contacts-routes.integration.test.ts(31,7): error TS2322: Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/__tests__/contacts-routes.integration.test.ts(80,38): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'type' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }'.
+  Overload 2 of 2, '(values: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]'.
+src/__tests__/contacts-routes.integration.test.ts(233,38): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'type' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }'.
+  Overload 2 of 2, '(values: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]'.
+src/__tests__/dead-letter-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/dynamic-permissions.integration.test.ts(19,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/events-polling.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/kanban-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/labels-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/labels-routes.integration.test.ts(30,7): error TS2322: Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/__tests__/labels-routes.integration.test.ts(257,48): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: { conversationId: string | SQL<unknown> | Placeholder<string, any>; labelId: string | SQL<unknown> | Placeholder<string, any>; id?: string | SQL<unknown> | Placeholder<...> | undefined; createdAt?: SQL<...> | ... 2 more ... | undefined; createdBy?: string | ... 3 more ... | undefined; }): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'addedBy' does not exist in type '{ conversationId: string | SQL<unknown> | Placeholder<string, any>; labelId: string | SQL<unknown> | Placeholder<string, any>; id?: string | SQL<unknown> | Placeholder<...> | undefined; createdAt?: SQL<...> | ... 2 more ... | undefined; createdBy?: string | ... 3 more ... | undefined; }'.
+  Overload 2 of 2, '(values: { conversationId: string | SQL<unknown> | Placeholder<string, any>; labelId: string | SQL<unknown> | Placeholder<string, any>; id?: string | SQL<unknown> | Placeholder<...> | undefined; createdAt?: SQL<...> | ... 2 more ... | undefined; createdBy?: string | ... 3 more ... | undefined; }[]): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'conversationId' does not exist in type '{ conversationId: string | SQL<unknown> | Placeholder<string, any>; labelId: string | SQL<unknown> | Placeholder<string, any>; id?: string | SQL<unknown> | Placeholder<...> | undefined; createdAt?: SQL<...> | ... 2 more ... | undefined; createdBy?: string | ... 3 more ... | undefined; }[]'.
+src/__tests__/metrics.integration.test.ts(3,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/outbound-idempotency.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/outbound-idempotency.integration.test.ts(79,9): error TS2345: Argument of type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>' is not assignable to parameter of type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>'.
+  Types have separate declarations of a private property 'shouldInlineParams'.
+src/__tests__/outbound-idempotency.integration.test.ts(79,17): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(column: Aliased<string>, values: SQLWrapper | (string | Placeholder<string, any>)[]): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "internal_message_id"; tableName: "outbound_deliveries"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "internal_message_id"; tableName: "outbound_deliveries"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 2 of 3, '(column: Column<ColumnBaseConfig<ColumnDataType, string>, object, object>, values: readonly unknown[] | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "internal_message_id"; tableName: "outbound_deliveries"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Column<ColumnBaseConfig<ColumnDataType, string>, object, object>'.
+      The types of 'table._.config.columns' are incompatible between these types.
+        Type 'Record<string, PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>>' is not assignable to type 'Record<string, Column<any, object, object>>'.
+          'string' index signatures are incompatible.
+            Type 'PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>' is not assignable to type 'Column<any, object, object>'.
+              Property 'config' is protected but type 'Column<T, TRuntimeConfig, TTypeConfig>' is not a class derived from 'Column<T, TRuntimeConfig, TTypeConfig>'.
+  Overload 3 of 3, '(column: SQLWrapper, values: readonly unknown[] | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "internal_message_id"; tableName: "outbound_deliveries"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'SQLWrapper'.
+      The types returned by 'getSQL()' are incompatible between these types.
+        Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>'.
+          Types have separate declarations of a private property 'shouldInlineParams'.
+src/__tests__/persistent-dead-letter.integration.test.ts(33,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/privacy-dsar.integration.test.ts(32,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/resilience.integration.test.ts(7,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/sector-authz.integration.test.ts(32,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/sectors-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/sectors-routes.integration.test.ts(30,7): error TS2322: Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/__tests__/transfers-routes.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/transfers-routes.integration.test.ts(32,7): error TS2322: Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/__tests__/transfers-routes.integration.test.ts(90,38): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(value: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'type' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }'.
+  Overload 2 of 2, '(values: { id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]): PgInsertBase<...>', gave the following error.
+    Object literal may only specify known properties, and 'id' does not exist in type '{ id?: string | SQL<unknown> | Placeholder<string, any> | undefined; name?: string | SQL<unknown> | Placeholder<string, any> | null | undefined; externalId?: string | ... 3 more ... | undefined; ... 6 more ...; metadata?: string | ... 3 more ... | undefined; }[]'.
+src/__tests__/webhook-inbound.integration.test.ts(6,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/__tests__/webhook-security-stats.integration.test.ts(8,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/app.ts(123,24): error TS18046: 'error' is of type 'unknown'.
+src/app.ts(132,14): error TS18046: 'error' is of type 'unknown'.
+src/app.ts(133,62): error TS18046: 'error' is of type 'unknown'.
+src/app.ts(136,62): error TS18046: 'error' is of type 'unknown'.
+src/index.ts(3,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+../../modules/admin/src/application/use-cases/index.ts(4,25): error TS7016: Could not find a declaration file for module 'bcryptjs'. '/home/ricardo/cvg-connect-desk/node_modules/.pnpm/bcryptjs@2.4.3/node_modules/bcryptjs/index.js' implicitly has an 'any' type.
+  If the 'bcryptjs' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/bcryptjs'
+../../modules/admin/src/application/use-cases/index.ts(7,41): error TS2304: Cannot find name 'CreateUserInput'.
+../../modules/admin/src/application/use-cases/index.ts(7,74): error TS2304: Cannot find name 'User'.
+../../modules/admin/src/application/use-cases/index.ts(15,46): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+../../modules/admin/src/application/use-cases/index.ts(35,61): error TS2304: Cannot find name 'UpdateUserInput'.
+../../modules/admin/src/application/use-cases/index.ts(35,95): error TS2304: Cannot find name 'User'.
+../../modules/admin/src/application/use-cases/index.ts(86,41): error TS2304: Cannot find name 'CreateRoleInput'.
+../../modules/admin/src/application/use-cases/index.ts(86,74): error TS2304: Cannot find name 'Role'.
+../../modules/admin/src/application/use-cases/index.ts(94,46): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+../../modules/admin/src/application/use-cases/index.ts(104,61): error TS2304: Cannot find name 'UpdateRoleInput'.
+../../modules/admin/src/application/use-cases/index.ts(104,95): error TS2304: Cannot find name 'Role'.
+../../modules/admin/src/application/use-cases/index.ts(133,47): error TS2304: Cannot find name 'CreatePermissionInput'.
+../../modules/admin/src/application/use-cases/index.ts(133,86): error TS2304: Cannot find name 'Permission'.
+../../modules/admin/src/application/use-cases/index.ts(137,52): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+../../modules/admin/src/application/use-cases/index.ts(157,42): error TS2304: Cannot find name 'CreateQueueInput'.
+../../modules/admin/src/application/use-cases/index.ts(157,76): error TS2304: Cannot find name 'Queue'.
+../../modules/admin/src/application/use-cases/index.ts(166,54): error TS2304: Cannot find name 'UpdateQueueInput'.
+../../modules/admin/src/application/use-cases/index.ts(166,88): error TS2304: Cannot find name 'Queue'.
+../../modules/admin/src/application/use-cases/index.ts(190,41): error TS2304: Cannot find name 'CreateTeamInput'.
+../../modules/admin/src/application/use-cases/index.ts(190,74): error TS2304: Cannot find name 'Team'.
+../../modules/admin/src/application/use-cases/index.ts(199,53): error TS2304: Cannot find name 'UpdateTeamInput'.
+../../modules/admin/src/application/use-cases/index.ts(199,86): error TS2304: Cannot find name 'Team'.
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(3,15): error TS2724: '"@cvg/database"' has no exported member named 'User'. Did you mean 'users'?
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(3,21): error TS2724: '"@cvg/database"' has no exported member named 'Role'. Did you mean 'roles'?
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(3,27): error TS2724: '"@cvg/database"' has no exported member named 'Permission'. Did you mean 'permissions'?
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(3,39): error TS2724: '"@cvg/database"' has no exported member named 'Queue'. Did you mean 'queues'?
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(3,46): error TS2724: '"@cvg/database"' has no exported member named 'Team'. Did you mean 'teams'?
+../../modules/admin/src/infrastructure/repositories/admin.repository.ts(11,8): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/admin/src/infrastructure/repositories/index.ts(1,15): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+../../modules/admin/src/presentation/http/admin.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/admin/src/presentation/http/admin.controller.ts(9,33): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+../../modules/admin/src/presentation/http/admin.controller.ts(21,8): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/admin/src/presentation/http/admin.controller.ts(325,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(325,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(339,13): error TS7006: Parameter '_request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(339,23): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(350,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(350,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(399,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(399,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(428,13): error TS7006: Parameter '_request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(428,23): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(444,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(444,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(481,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(481,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(518,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(518,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(547,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/admin.controller.ts(547,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/dead-letter-persistent.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/admin/src/presentation/http/dead-letter-persistent.controller.ts(53,12): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/admin/src/presentation/http/index.ts(1,15): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+../../modules/admin/src/types/index.ts(1,15): error TS2724: '"@cvg/database"' has no exported member named 'User'. Did you mean 'users'?
+../../modules/admin/src/types/index.ts(1,21): error TS2724: '"@cvg/database"' has no exported member named 'Role'. Did you mean 'roles'?
+../../modules/admin/src/types/index.ts(1,27): error TS2724: '"@cvg/database"' has no exported member named 'Permission'. Did you mean 'permissions'?
+../../modules/admin/src/types/index.ts(1,39): error TS2724: '"@cvg/database"' has no exported member named 'Queue'. Did you mean 'queues'?
+../../modules/admin/src/types/index.ts(1,46): error TS2724: '"@cvg/database"' has no exported member named 'Team'. Did you mean 'teams'?
+../../modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts(161,35): error TS2345: Argument of type '{ id: string; createdAt: Date; metadata: string | null; status: "pending" | "sent" | "delivered" | "failed"; conversationId: string; direction: "inbound" | "outbound"; content: string; ... 9 more ...; deliveredAt: Date | null; }' is not assignable to parameter of type '{ id: string; conversationId: string; direction: "inbound" | "outbound"; content: string; sender?: string | undefined; recipient?: string | undefined; status: string; createdAt: Date; }'.
+  Types of property 'sender' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+../../modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts(207,59): error TS2339: Property 'handoffReason' does not exist on type '{ category: "clinical" | "commercial" | "urgent" | "general"; priority: "urgent" | "low" | "medium" | "high"; confidence: number; }'.
+../../modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts(214,58): error TS2307: Cannot find module './send-outbound-message.use-case' or its corresponding type declarations.
+../../modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts(244,5): error TS2322: Type 'Err<ReceiveInboundMessageOutput, Error>' is not assignable to type 'Result<ReceiveInboundMessageOutput, BadRequestError>'.
+  Type 'Err<ReceiveInboundMessageOutput, Error>' is not assignable to type 'Err<ReceiveInboundMessageOutput, BadRequestError>'.
+    Type 'Error' is missing the following properties from type 'BadRequestError': statusCode, code, isOperational
+../../modules/chat/src/application/use-cases/send-outbound-message.use-case.ts(153,35): error TS2345: Argument of type '{ id: string; createdAt: Date; metadata: string | null; status: "pending" | "sent" | "delivered" | "failed"; conversationId: string; direction: "inbound" | "outbound"; content: string; ... 9 more ...; deliveredAt: Date | null; }' is not assignable to parameter of type '{ id: string; conversationId: string; direction: "inbound" | "outbound"; content: string; sender?: string | undefined; recipient?: string | undefined; status: string; createdAt: Date; }'.
+  Types of property 'sender' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+../../modules/chat/src/application/use-cases/send-outbound-message.use-case.ts(174,5): error TS2322: Type 'Err<SendOutboundMessageOutput, Error>' is not assignable to type 'Result<SendOutboundMessageOutput, NotFoundError | BadRequestError>'.
+  Type 'Err<SendOutboundMessageOutput, Error>' is not assignable to type 'Err<SendOutboundMessageOutput, NotFoundError | BadRequestError>'.
+    Type 'Error' is not assignable to type 'NotFoundError | BadRequestError'.
+      Type 'Error' is missing the following properties from type 'BadRequestError': statusCode, code, isOperational
+../../modules/chat/src/presentation/http/outbound.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/chat/src/presentation/http/outbound.controller.ts(6,85): error TS2307: Cannot find module '@cvg/auth' or its corresponding type declarations.
+../../modules/chat/src/presentation/http/outbound.controller.ts(123,52): error TS2307: Cannot find module '../../infrastructure/repositories/message.repository' or its corresponding type declarations.
+../../modules/chat/src/presentation/http/webhook-inbound.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/contact-groups/src/infrastructure/repositories/contact-group.repository.ts(4,39): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(11,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(11,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(31,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(31,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(35,24): error TS2339: Property 'error' does not exist on type 'never'.
+  The intersection 'Ok<{ id: string; name: string; createdAt: Date; updatedAt: Date; description: string | null; color: string | null; icon: string | null; sectorId: string | null; createdBy: string | null; isSystem: boolean; groupType: "internal" | ... 3 more ... | "custom"; }, Error> & Err<...>' was reduced to 'never' because property 'ok' has conflicting types in some constituents.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(46,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(46,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(61,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(61,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(76,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(76,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(94,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(94,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(111,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(111,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(122,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contact-groups/src/presentation/http/contact-group.controller.ts(122,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/infrastructure/repositories/contact.repository.ts(4,61): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/contacts/src/infrastructure/repositories/contact.repository.ts(83,13): error TS2488: Type 'QueryResult<Record<string, unknown>>' must have a '[Symbol.iterator]()' method that returns an iterator.
+../../modules/contacts/src/presentation/http/contact.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/contacts/src/presentation/http/contact.controller.ts(19,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(19,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(34,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(34,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(63,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(63,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(81,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(81,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(100,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(100,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(125,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/contacts/src/presentation/http/contact.controller.ts(125,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(97,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(97,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(120,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(120,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(141,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(141,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(161,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(161,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(204,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/gateway-adapter/src/presentation/http/gateway.controller.ts(204,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(34,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(34,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(44,11): error TS2322: Type '{ status: string; label: string; icon: string; color: string; count: number; cards: { id: string; contactName: string | null; contactPhone: string | null; patientName: null; lastMessage: string | null; ... 7 more ...; createdAt: Date; }[]; }[]' is not assignable to type 'KanbanColumn[]'.
+  Type '{ status: string; label: string; icon: string; color: string; count: number; cards: { id: string; contactName: string | null; contactPhone: string | null; patientName: null; lastMessage: string | null; ... 7 more ...; createdAt: Date; }[]; }' is not assignable to type 'KanbanColumn'.
+    Types of property 'cards' are incompatible.
+      Type '{ id: string; contactName: string | null; contactPhone: string | null; patientName: null; lastMessage: string | null; assignedUserName: string | null; sectorName: string | null; sectorColor: string | null; ... 4 more ...; createdAt: Date; }[]' is not assignable to type 'KanbanCard[]'.
+        Type '{ id: string; contactName: string | null; contactPhone: string | null; patientName: null; lastMessage: string | null; assignedUserName: string | null; sectorName: string | null; sectorColor: string | null; ... 4 more ...; createdAt: Date; }' is not assignable to type 'KanbanCard'.
+          Types of property 'createdAt' are incompatible.
+            Type 'Date' is not assignable to type 'string'.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(105,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/kanban/src/presentation/http/kanban.controller.ts(105,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/infrastructure/repositories/label.repository.ts(4,74): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/labels/src/presentation/http/label.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/labels/src/presentation/http/label.controller.ts(15,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(15,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(39,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(39,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(57,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(57,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(76,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(76,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(95,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(95,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(117,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(117,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(138,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(138,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(153,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(153,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(175,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/labels/src/presentation/http/label.controller.ts(175,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/notes/src/application/use-cases/create-note.use-case.ts(4,32): error TS2307: Cannot find module '@cvg/audit' or its corresponding type declarations.
+../../modules/notes/src/application/use-cases/create-note.use-case.ts(76,5): error TS2322: Type 'Ok<{ id: string; conversationId: string | undefined; createdAt: Date; }, Error>' is not assignable to type 'Result<CreateNoteOutput>'.
+  Type 'Ok<{ id: string; conversationId: string | undefined; createdAt: Date; }, Error>' is not assignable to type 'Ok<CreateNoteOutput, Error>'.
+    Type '{ id: string; conversationId: string | undefined; createdAt: Date; }' is not assignable to type 'CreateNoteOutput'.
+      Types of property 'conversationId' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+../../modules/notes/src/presentation/http/note.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/notes/src/presentation/http/note.controller.ts(5,49): error TS2307: Cannot find module '@cvg/auth' or its corresponding type declarations.
+../../modules/privacy/src/presentation/http/privacy.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/sectors/src/infrastructure/repositories/sector.repository.ts(4,59): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+../../modules/sectors/src/presentation/http/sector.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/sectors/src/presentation/http/sector.controller.ts(19,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(19,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(47,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(47,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(65,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(65,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(84,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(84,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(103,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(103,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(123,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(123,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(142,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/sectors/src/presentation/http/sector.controller.ts(142,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/tasks/src/application/use-cases/create-task.use-case.ts(4,32): error TS2307: Cannot find module '@cvg/audit' or its corresponding type declarations.
+../../modules/tasks/src/application/use-cases/update-task-status.use-case.ts(4,32): error TS2307: Cannot find module '@cvg/audit' or its corresponding type declarations.
+../../modules/tasks/src/presentation/http/task.controller.ts(1,63): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/tasks/src/presentation/http/task.controller.ts(6,49): error TS2307: Cannot find module '@cvg/auth' or its corresponding type declarations.
+../../modules/transfers/src/application/use-cases/index.ts(18,52): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type '{ contactId: string; conversationId?: string | undefined; fromSectorId?: string | undefined; toSectorId: string; fromUserId?: string | undefined; toUserId?: string | undefined; reason?: string | undefined; }'.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(1,33): error TS2307: Cannot find module 'fastify' or its corresponding type declarations.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(28,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(28,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(35,24): error TS2339: Property 'error' does not exist on type 'never'.
+  The intersection 'Ok<{ id: string; createdAt: Date; contactId: string; status: "pending" | "accepted" | "rejected"; conversationId: string | null; reason: string | null; resolvedAt: Date | null; fromSectorId: string | null; toSectorId: string; fromUserId: string | null; toUserId: string | null; }, Error> & Err<...>' was reduced to 'never' because property 'ok' has conflicting types in some constituents.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(50,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(50,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(64,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(64,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(79,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(79,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(99,13): error TS7006: Parameter 'request' implicitly has an 'any' type.
+../../modules/transfers/src/presentation/http/transfer.controller.ts(99,22): error TS7006: Parameter 'reply' implicitly has an 'any' type.
+../../packages/auth/src/sector-permissions.ts(61,25): error TS2345: Argument of type 'SQL<unknown>' is not assignable to parameter of type 'SQL<unknown> | ((aliases: { roleName: PgColumn<{ name: "name"; tableName: "roles"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>; }) => SQL<...> | undefined) | undefined'.
+  Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>'.
+    Types have separate declarations of a private property 'shouldInlineParams'.
+../../packages/auth/src/sector-permissions.ts(61,30): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: Column<ColumnBaseConfig<ColumnDataType, string>, object, object>, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "role_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Column<ColumnBaseConfig<ColumnDataType, string>, object, object>'.
+      The types of 'table._.config.columns' are incompatible between these types.
+        Type 'Record<string, PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>>' is not assignable to type 'Record<string, Column<any, object, object>>'.
+          'string' index signatures are incompatible.
+            Type 'PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>' is not assignable to type 'Column<any, object, object>'.
+              Property 'config' is protected but type 'Column<T, TRuntimeConfig, TTypeConfig>' is not a class derived from 'Column<T, TRuntimeConfig, TTypeConfig>'.
+  Overload 2 of 3, '(left: Aliased<PgColumn<{ name: "id"; tableName: "roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: true; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>>, right: PgColumn<...> | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'PgColumn<{ name: "role_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<PgColumn<{ name: "id"; tableName: "roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: true; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }...'.
+      Type 'PgColumn<{ name: "role_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<PgColumn<{ name: "id"; tableName: "roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: true; isAutoincrement: false; hasRuntimeDefault: false; enumValues: undefined; baseColumn: never; identity: undefined; generated: undefined; }...': sql, fieldAlias
+  Overload 3 of 3, '(left: SQLWrapper, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "role_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'SQLWrapper'.
+      The types returned by 'getSQL()' are incompatible between these types.
+        Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>'.
+          Types have separate declarations of a private property 'shouldInlineParams'.
+../../packages/auth/src/sector-permissions.ts(62,14): error TS2345: Argument of type 'SQL<unknown>' is not assignable to parameter of type 'SQL<unknown> | ((aliases: { roleName: PgColumn<{ name: "name"; tableName: "roles"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>; }) => SQL<...> | undefined) | undefined'.
+  Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>'.
+    Types have separate declarations of a private property 'shouldInlineParams'.
+../../packages/auth/src/sector-permissions.ts(62,19): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: Column<ColumnBaseConfig<ColumnDataType, string>, object, object>, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "user_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Column<ColumnBaseConfig<ColumnDataType, string>, object, object>'.
+      The types of 'table._.config.columns' are incompatible between these types.
+        Type 'Record<string, PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>>' is not assignable to type 'Record<string, Column<any, object, object>>'.
+          'string' index signatures are incompatible.
+            Type 'PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>' is not assignable to type 'Column<any, object, object>'.
+              Property 'config' is protected but type 'Column<T, TRuntimeConfig, TTypeConfig>' is not a class derived from 'Column<T, TRuntimeConfig, TTypeConfig>'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "user_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "user_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: SQLWrapper, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "user_id"; tableName: "user_roles"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'SQLWrapper'.
+      The types returned by 'getSQL()' are incompatible between these types.
+        Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>'.
+          Types have separate declarations of a private property 'shouldInlineParams'.
+../../packages/events/src/outbox-reader.ts(240,11): error TS2345: Argument of type 'SQL<unknown>' is not assignable to parameter of type 'SQLWrapper'.
+  The types returned by 'getSQL()' are incompatible between these types.
+    Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>'.
+      Types have separate declarations of a private property 'shouldInlineParams'.
+../../packages/events/src/outbox-reader.ts(240,19): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(column: Aliased<string>, values: SQLWrapper | (string | Placeholder<string, any>)[]): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "event_id"; tableName: "outbox_consumer_acks"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "event_id"; tableName: "outbox_consumer_acks"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 2 of 3, '(column: Column<ColumnBaseConfig<ColumnDataType, string>, object, object>, values: readonly unknown[] | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "event_id"; tableName: "outbox_consumer_acks"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Column<ColumnBaseConfig<ColumnDataType, string>, object, object>'.
+      The types of 'table._.config.columns' are incompatible between these types.
+        Type 'Record<string, PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>>' is not assignable to type 'Record<string, Column<any, object, object>>'.
+          'string' index signatures are incompatible.
+            Type 'PgColumn<ColumnBaseConfig<ColumnDataType, string>, {}, {}>' is not assignable to type 'Column<any, object, object>'.
+              Property 'config' is protected but type 'Column<T, TRuntimeConfig, TTypeConfig>' is not a class derived from 'Column<T, TRuntimeConfig, TTypeConfig>'.
+  Overload 3 of 3, '(column: SQLWrapper, values: readonly unknown[] | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "event_id"; tableName: "outbox_consumer_acks"; dataType: "string"; columnType: "PgText"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; isAutoincrement: false; ... 4 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'SQLWrapper'.
+      The types returned by 'getSQL()' are incompatible between these types.
+        Type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql").SQL<unknown>' is not assignable to type 'import("/home/ricardo/cvg-connect-desk/node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/sql/sql", { with: { "resolution-mode": "import" } }).SQL<unknown>'.
+          Types have separate declarations of a private property 'shouldInlineParams'.
+undefined
+/home/ricardo/cvg-connect-desk/apps/desk-api:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 2: tsc --noEmit

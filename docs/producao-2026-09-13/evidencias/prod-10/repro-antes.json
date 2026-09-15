@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-09-13T16:49:01.347Z",
+  "runId": "prod10-repro",
+  "workerIndex": "24",
+  "database": "postgresql://***@127.0.0.1:58832/cvg_aaa_prod10_repro_w24",
+  "scenarios": {
+    "A_webhook_sincrono": {
+      "description": "Secretary lenta (3000ms) no caminho do webhook",
+      "isOk": true,
+      "elapsedMs": 3364,
+      "secretaryDelayMs": 3000,
+      "gatewaySends": 1,
+      "outboundReplies": 1,
+      "defect": true
+    },
+    "B_duplicata_nao_recupera_invocacao": {
+      "description": "1ª chamada falha na IA; reenvio do mesmo messageId com IA disponível",
+      "firstIsOk": true,
+      "firstSecretaryCalls": 1,
+      "duplicateIsOk": true,
+      "duplicateSecretaryCalls": 0,
+      "persistedMessages": 1,
+      "outboundRepliesForB": 0,
+      "defect": true
+    },
+    "C_worker_apenas_loga": {
+      "description": "handler real do worker para o evento durável do inbound",
+      "handlerReturn": null,
+      "invocationStateRows": 0,
+      "defect": true
+    }
+  },
+  "verdict": "DEFECT_REPRODUCED"
+}

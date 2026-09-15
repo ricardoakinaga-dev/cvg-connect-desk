@@ -3,11 +3,11 @@
  * Query performance evidence (§21): EXPLAIN (FORMAT JSON) nos hot paths.
  * Sem binds: usa literais dummy válidos por query. Gera artifacts/query-performance.json.
  */
-import { execSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
+import { resolveCandidate } from '../../scripts/production/evidence-gate.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const artifactsDir = join(root, 'artifacts');
@@ -49,7 +49,35 @@ const TABLE_INDEXES = {
   messages: ['idx_messages_external', 'idx_messages_conversation'],
 };
 
-const report = { commit: execSync('git rev-parse HEAD').toString().trim(), timestamp: new Date().toISOString(), queries: {} };
+const startedAt = new Date().toISOString();
+const candidate = resolveCandidate({ root, excludes: [artifactsDir] });
+const maxTotalCost = Number(process.env.QUERY_MAX_TOTAL_COST ?? 1000);
+const maxPlanRows = Number(process.env.QUERY_MAX_PLAN_ROWS ?? 100000);
+if (!Number.isFinite(maxTotalCost) || maxTotalCost <= 0 || !Number.isInteger(maxPlanRows) || maxPlanRows <= 0) {
+  throw new Error('QUERY_MAX_TOTAL_COST/QUERY_MAX_PLAN_ROWS inválidos');
+}
+const report = {
+  schemaVersion: 1,
+  candidate: {
+    commit: candidate.commit,
+    lockfileSha256: candidate.lockfileSha256,
+    sourceSha256: candidate.sourceSha256,
+  },
+  commit: candidate.commit,
+  lockfileSha256: candidate.lockfileSha256,
+  sourceSha256: candidate.sourceSha256,
+  runId: process.env.GITHUB_RUN_ID ?? null,
+  attempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
+  result: 'PASS',
+  startedAt,
+  generatedAt: startedAt,
+  profile: {
+    name: process.env.QUERY_PROFILE || 'hot-paths',
+    dataset: process.env.QUERY_DATASET || 'database-under-test',
+  },
+  budget: { maxTotalCost, maxPlanRows },
+  queries: {},
+};
 
 async function listIndexes() {
   const { rows } = await pool.query(
@@ -83,15 +111,41 @@ for (const [name, sql] of HOT_PATHS) {
     const seqScan = JSON.stringify(plan.rows[0]).includes('Seq Scan');
     const indexed = (idx.length > 0);
     // Seq scan barato em tabela pequena é decisão ótima do planner, não déficit.
-    const acceptable = !seqScan || cost < 50 || !indexed;
-    report.queries[name] = { totalCost: cost, planRows: rows, seqScan, indexCount: idx.length, indexNames: idx, acceptable };
+    const withinBudget = cost <= maxTotalCost && rows <= maxPlanRows;
+    const acceptable = withinBudget && (!seqScan || cost <= 50);
+    report.queries[name] = {
+      name,
+      sql,
+      plan: { nodeType: rootNode['Node Type'] ?? null, seqScan },
+      totalCost: cost,
+      planRows: rows,
+      seqScan,
+      indexCount: idx.length,
+      indexNames: idx,
+      acceptable,
+      withinBudget,
+      budget: { maxTotalCost, maxPlanRows },
+      measuredAt: new Date().toISOString(),
+    };
+    if (!acceptable) report.result = 'FAIL';
     console.log(`${acceptable ? 'OK ' : '⚠️  '} ${name}: cost=${cost.toFixed(1)} rows=${rows} seqScan=${seqScan} idx=${idx.length}`);
   } catch (error) {
-    report.queries[name] = { error: String(error.message) };
+    report.result = 'FAIL';
+    report.queries[name] = {
+      name,
+      sql,
+      error: String(error.message),
+      acceptable: false,
+      withinBudget: false,
+      budget: { maxTotalCost, maxPlanRows },
+      measuredAt: new Date().toISOString(),
+    };
     console.log(`ERR ${name}: ${error.message}`);
   }
 }
 
+report.finishedAt = new Date().toISOString();
 writeFileSync(join(artifactsDir, 'query-performance.json'), `${JSON.stringify(report, null, 2)}\n`);
 console.log(`Report: artifacts/query-performance.json`);
 await pool.end();
+process.exitCode = report.result === 'PASS' ? 0 : 1;

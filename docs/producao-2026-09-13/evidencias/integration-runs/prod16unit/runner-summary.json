@@ -1,0 +1,30 @@
+{
+  "runId": "prod16unit",
+  "workerIndex": 25,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58932/cvg_aaa_prod16unit_w25",
+  "redisUrl": "redis://127.0.0.1:56930",
+  "startedAt": "2026-09-13T16:55:45.632Z",
+  "command": "pnpm --filter @cvg/privacy exec vitest run src/__tests__/data-subject-service.test.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/privacy\n\n ✓ src/__tests__/data-subject-service.test.ts (4 tests) 45ms\n\n Test Files  1 passed (1)\n      Tests  4 passed (4)\n   Start at  13:55:44\n   Duration  962ms (transform 198ms, setup 0ms, collect 633ms, tests 45ms, environment 0ms, prepare 88ms)\n\n\n"
+    }
+  ],
+  "exitCode": 0
+}

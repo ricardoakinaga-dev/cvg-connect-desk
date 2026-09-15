@@ -1,0 +1,88 @@
+{
+  "recorded_at": "2026-09-13T19:51:00.998586+00:00",
+  "candidate_head": "754f9badac46278e77d21de91c58eedb15e80581",
+  "candidate_manifest": "evidencias/sources-before.json",
+  "candidate_manifest_sha256": "a2e615924f322602b0f45a05d77dc71a846f8b587e429b02c8a17d187f027f74",
+  "scope": "audited source subset plus current raw checks; not a release seal",
+  "checks": [
+    {
+      "id": "typecheck",
+      "command": "pnpm exec turbo run typecheck --continue --force",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "33/33 packages",
+      "artifact": "evidencias/typecheck.log",
+      "artifact_sha256": "2fd32f96dc28204517a157d0c14805f7383b811002776065f72dda7dfd068574"
+    },
+    {
+      "id": "lint",
+      "command": "pnpm exec turbo run lint --continue --force",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "33/33 packages; existing warning allowances",
+      "artifact": "evidencias/lint.log",
+      "artifact_sha256": "8e085965f2fbb14dcd53cba89eb6ba7ccfbd12cc0973fa3fdbbfcffa1f25ce29"
+    },
+    {
+      "id": "web-unit",
+      "command": "pnpm --filter @cvg/desk-web exec vitest run",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "268/268 tests; 22 files; jsdom",
+      "artifact": "evidencias/web-unit.log",
+      "artifact_sha256": "4ff47ca8bd81399f858d7584c5ed08dbe329523f6044088dd582ac503cc31e57"
+    },
+    {
+      "id": "PROD-10",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-10.test.ts",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "7/7; isolated PostgreSQL; local fixtures; provider mocks where used",
+      "artifact": "evidencias/integration-10/output.log",
+      "artifact_sha256": "3c7e2ef7bfa82fbc633c59b3307aeedff810e34cd417bfbd05ae6b4c8f8dc790"
+    },
+    {
+      "id": "PROD-13",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-13.test.ts",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "11/11; isolated PostgreSQL; local fixtures; provider mocks where used",
+      "artifact": "evidencias/integration-13/output.log",
+      "artifact_sha256": "2f7b5d738de7d7f284c8d09d3df7978ebb617b5f6ce9358cdbb18f919712c4dd"
+    },
+    {
+      "id": "PROD-16",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-16.test.ts",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "9/9; isolated PostgreSQL; local fixtures; provider mocks where used",
+      "artifact": "evidencias/integration-16/output.log",
+      "artifact_sha256": "e362af6182ce17b2fbc0e92dcea52276e5acd8ffd6fd932f6345c833f1a1035b"
+    },
+    {
+      "id": "PROD-18",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-18.test.ts",
+      "exit": 0,
+      "result": "PASS",
+      "observed": "18/18; isolated PostgreSQL; local fixtures; provider mocks where used",
+      "artifact": "evidencias/prod18-corrected.log",
+      "artifact_sha256": "5c175ccd5e61290e90ee74df72b196ab4929bd422a701ce6a6e96eec2a5ac418"
+    },
+    {
+      "id": "PROD-18-initial",
+      "exit": 1,
+      "result": "INVALID",
+      "observed": "setup imported database before isolated env; authentication rejected; 18 tests not executed",
+      "artifact": "evidencias/integration-18/output.log",
+      "artifact_sha256": "be72bcc20213dc2fc804742d7a82c8e8774c93473b3ecae51df65f03ba03a663"
+    },
+    {
+      "id": "gate-adversarials",
+      "exit": 0,
+      "result": "FAIL_REQUIREMENT",
+      "observed": "three invalid fixtures accepted; probe exit0 reports reproduction, not gate quality PASS",
+      "artifact": "evidencias/lead-gate-repro.log",
+      "artifact_sha256": "1a54ac8aedd827b60022a35e0e7e3aa22b9da81614c8859c0e07f61de10b424a"
+    }
+  ]
+}

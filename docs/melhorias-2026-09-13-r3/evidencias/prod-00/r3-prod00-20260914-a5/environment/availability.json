@@ -1,0 +1,78 @@
+{
+  "generatedAt": "2026-09-14T00:27:12.067Z",
+  "programDir": "/home/ricardo/cvg-connect-desk",
+  "docker": "BLOCKED (permission denied while trying to connect to the docker API at unix:///var/run/docker.sock)",
+  "dockerStderr": "permission denied while trying to connect to the docker API at unix:///var/run/docker.sock",
+  "services": {
+    "postgresql": {
+      "status": "AVAILABLE",
+      "mode": "binario local (initdb/postgres por run, banco marcado cvg_aaa_*)",
+      "detail": "/home/ricardo/.local/share/cvg-his-v4-runtime/root/usr/lib/postgresql/16/bin",
+      "hostListeners": {
+        "127.0.0.1:5432": true,
+        "127.0.0.1:5543": true
+      },
+      "owner": "plataforma"
+    },
+    "redis": {
+      "status": "AVAILABLE",
+      "mode": "binario local (instancia por run, porta dedicada)",
+      "detail": "Redis server v=7.0.15 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=e53ff17674aa6190",
+      "hostListener6379": true,
+      "owner": "plataforma"
+    },
+    "minio": {
+      "status": "BLOCKED",
+      "mode": "binario estatico local + bucket por run",
+      "detail": "binario minio ausente; Docker sem permissao no socket",
+      "blocker": "sem binario local; Docker bloqueado (permission denied no socket)",
+      "unblocks": [
+        "PROD-14",
+        "PROD-15",
+        "PROD-32",
+        "PROD-38"
+      ],
+      "owner": "plataforma"
+    },
+    "clamav": {
+      "status": "BLOCKED",
+      "mode": "clamd/clamscan local com assinatura sintetica (EICAR)",
+      "detail": "clamscan ausente",
+      "blocker": "sem clamscan/clamd local; Docker bloqueado",
+      "unblocks": [
+        "PROD-14",
+        "PROD-32",
+        "PROD-38"
+      ],
+      "owner": "plataforma"
+    },
+    "otelCollector": {
+      "status": "AVAILABLE",
+      "mode": "otelcol-contrib local com receptor OTLP por run",
+      "detail": "/tmp/opencode/otelcol/otelcol-contrib",
+      "unblocks": [
+        "PROD-32"
+      ],
+      "owner": "plataforma"
+    },
+    "browserChromium": {
+      "status": "AVAILABLE",
+      "mode": "Playwright chromium headless",
+      "detail": "chromium-1243",
+      "owner": "produto"
+    },
+    "loadGenerator": {
+      "status": "AVAILABLE",
+      "mode": "k6 local",
+      "detail": "k6 v0.55.0 (commit/90bb9415d0, go1.23.3, linux/amd64)",
+      "owner": "sre"
+    },
+    "osvScanner": {
+      "status": "AVAILABLE",
+      "mode": "osv-scanner local",
+      "detail": "/tmp/opencode/osv-scanner",
+      "owner": "seguranca"
+    }
+  },
+  "policy": "Servico ausente bloqueia apenas a prova dependente (NOT_RUN/BLOCKED com dono). Inventario e harness concluem sem todos os servicos."
+}

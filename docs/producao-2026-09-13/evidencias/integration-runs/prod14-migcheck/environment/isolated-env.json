@@ -1,0 +1,24 @@
+{
+  "runId": "prod14-migcheck",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_prod14_migcheck_w45",
+  "databaseName": "cvg_aaa_prod14_migcheck_w45",
+  "databasePort": 60932,
+  "redisUrl": "redis://127.0.0.1:57130",
+  "redisPort": 57130,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 934828,
+    "dataDir": "/tmp/cvg-aaa-runs/prod14-migcheck/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 935333,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod14-migcheck",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 18:33:14.310017-03"
+  }
+}

@@ -1,7 +1,7 @@
 import './integration-mocks';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { buildDeskApiApp } from '../app.ts';
 
@@ -211,13 +211,21 @@ describe('Events polling integration', () => {
       expect(ack.statusCode).toBe(200);
     }
 
+    // Escopo nos eventos do teste: o outbox é compartilhado e o GET com lease
+    // pode reivindicar pendentes de outros runs; a asserção verifica o que este
+    // teste promete (os seus três eventos concluídos), sem depender de banco vazio.
     const ackedEvents = await db
       .select({
         eventId: schema.outboxConsumerAcks.eventId,
         processedAt: schema.outboxConsumerAcks.processedAt,
       })
       .from(schema.outboxConsumerAcks)
-      .where(eq(schema.outboxConsumerAcks.consumerId, consumerId));
+      .where(
+        and(
+          eq(schema.outboxConsumerAcks.consumerId, consumerId),
+          inArray(schema.outboxConsumerAcks.eventId, eventIds),
+        ),
+      );
 
     expect(ackedEvents.map((event) => event.eventId)).toEqual(expect.arrayContaining(eventIds));
     expect(ackedEvents.every((event) => event.processedAt instanceof Date)).toBe(true);

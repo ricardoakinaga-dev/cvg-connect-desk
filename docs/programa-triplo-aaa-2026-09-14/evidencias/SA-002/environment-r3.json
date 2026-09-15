@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-002",
+  "run_id": "sa002-r3-a2-20260915",
+  "captured_at": "2026-09-15T11:06:14-03:00",
+  "owner": "lead/Codex",
+  "executor": "Codex em worktree compartilhado",
+  "repository": "/home/ricardo/cvg-connect-desk",
+  "revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "candidate_artifact": "evidencias/SA-002/candidate-manifest-r3.json",
+  "candidate": {
+    "id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+    "product_sha256": "4ee19f2ec5ca8bffd550d2befc006a695bec89b5b3eeb8460e05146d61c8a52f",
+    "ledger_sha256": "55cff7349c4dbd2d19176495055a5201aab23dd03c10c28cecfefa79493d270a"
+  },
+  "tools": {
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "python": "3.12.3",
+    "git": "2.43.0",
+    "os": "Linux 7.0.0-31-generic x86_64 GNU/Linux"
+  },
+  "commands": [
+    "python3 -B -m unittest -q scripts/programa-triplo-aaa/test_candidate_manifest.py docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/test_validate_sa002_docs.py",
+    "python3 -B docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/validate_sa002_docs.py --manifest docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/candidate-manifest-r3.json --candidate-id 754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+    "python3 -B docs/programa-triplo-aaa-2026-09-14/programa.py validate",
+    "python3 scripts/programa-triplo-aaa/candidate_manifest.py --label SA-002-R3-A2 --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/candidate-manifest-r3.json",
+    "python3 scripts/programa-triplo-aaa/compare_source_manifest.py --baseline docs/auditorias/2026-09-14/evidencias/source-manifest.json --current docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/candidate-manifest-r3.json --out docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/source-manifest-comparison-r3.json"
+  ],
+  "scope": {
+    "contracts": "C-1",
+    "gates": "G-1",
+    "decisions": "D-1, all OPEN",
+    "quality_bar": "QB-1",
+    "program_validation": "63 tasks / 59 requirements / 2 DONE / 17 REWORK / 44 PLANNED; eligible SA-003/SA-020"
+  },
+  "limitations": [
+    "Denominadores efetivos de escopos adicionais serão configurados/provados nas tarefas produtoras, sem redução desta barra.",
+    "A validação é estrutural e documental; não certifica o produto, gates ou release.",
+    "Nenhuma decisão OPEN foi tratada como aprovação e nenhum segredo foi copiado."
+  ]
+}

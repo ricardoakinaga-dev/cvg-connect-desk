@@ -1,6 +1,41 @@
 import type { User, Role, Permission, Queue, Team } from '@cvg/database';
 
+export type { User, Role, Permission, Queue, Team };
+
 // User
+//
+// DTO público (SA-004/C02): fronteira de serialização dos endpoints de usuário.
+// Lista explícita de campos permitidos — `passwordHash` e qualquer outro campo
+// privado da row NUNCA podem atravessar esta função.
+export interface PublicUser {
+  id: string;
+  name: string;
+  email: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type UserProjectable = {
+  id: string;
+  name: string;
+  email: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt?: Date;
+};
+
+export function toPublicUser(row: UserProjectable): PublicUser {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    isActive: row.isActive,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt ?? row.createdAt,
+  };
+}
+
 export interface UserListItem {
   id: string;
   name: string;
@@ -29,7 +64,7 @@ export interface UpdateUserInput {
 export interface RoleListItem {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   createdAt: Date;
   _count?: { permissions: number };
 }
@@ -58,8 +93,8 @@ export type PermissionName =
 
 export interface PermissionItem {
   id: string;
-  name: PermissionName;
-  description?: string;
+  name: string;
+  description: string | null;
   createdAt: Date;
 }
 
@@ -72,7 +107,7 @@ export interface CreatePermissionInput {
 export interface QueueItem {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   createdAt: Date;
 }
 

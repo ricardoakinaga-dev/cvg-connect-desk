@@ -1,10 +1,21 @@
 name: CI Quality Gate
 
+# Gate binds to the exact workflow SHA (`ref: ${{ github.sha }}` in every job),
+# records the revision in each job, runs the same real scripts used locally and
+# finishes with an aggregate job that fails on any missing/error/skipped job.
+
 on:
   push:
     branches:
       - main
   pull_request:
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24.20.0"
+  PNPM_VERSION: "10.33.0"
 
 jobs:
   install:
@@ -13,53 +24,125 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: |
+          echo "gate-sha=$(git rev-parse HEAD)"
+          sha256sum pnpm-lock.yaml
 
-  lint-typecheck:
-    name: Lint + Typecheck
+  lint:
+    name: Lint (real, zero errors)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: install
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100
-      - run: pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - run: pnpm lint
+
+  typecheck:
+    name: Typecheck (real per package)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: install
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - run: pnpm typecheck
 
   unit:
     name: Unit tests (no DB)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: install
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
       - run: pnpm --filter @cvg/shared test
       - run: pnpm --filter @cvg/messaging-contracts test
       - run: pnpm --filter @cvg/auth test
       - run: pnpm --filter @cvg/gateway-adapter test
       - run: pnpm --filter @cvg/secretary-adapter exec vitest run src/__tests__/ai-policy.test.ts
+      - run: node .github/scripts/certification-aggregator.test.mjs
+
+  contracts:
+    name: Contract tests (messaging-contracts)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: install
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - run: pnpm --filter @cvg/messaging-contracts test
+
+  coverage:
+    name: Coverage (shared thresholds)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: install
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      # Thresholds 85/80/85/85 live in packages/shared/vitest.config.ts (ratchet).
+      - run: pnpm --filter @cvg/shared exec vitest run --coverage
 
   migration-check:
     name: Migration check (fresh DB)
@@ -68,7 +151,7 @@ jobs:
     needs: install
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -82,39 +165,178 @@ jobs:
           --health-retries 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
       - run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres pnpm --filter @cvg/database db:check
 
-  build:
-    name: Build desk-web
+  integration:
+    name: Integration tests (isolated PG + Redis)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [lint-typecheck, unit]
+    timeout-minutes: 30
+    needs: install
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: connect_desk
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: connect_desk_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U connect_desk -d connect_desk_db"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://connect_desk:root@localhost:5432/connect_desk_db
+      REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
-          version: 10.33.0
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @cvg/desk-web build
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - name: Migrate isolated database
+        run: pnpm --filter @cvg/database db:migrate
+      # `pnpm test:ci` runs the macro suite while excluding only integration
+      # files that require a dedicated real-infrastructure/origin runner,
+      # including the production-origin suite; those are covered by dedicated
+      # jobs. Any other failure keeps this job red.
+      - name: Integration suites (guard-aware)
+        run: pnpm test:ci
 
-  docker:
-    name: Docker build (api + worker)
+  build:
+    name: Build (real, macro)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [migration-check, build]
+    needs: install
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - run: pnpm build
+
+  audit:
+    name: Dependency audit (high blocks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: install
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: corepack enable && corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      # Hardened per AAA-15 triage: zero High/Critical in delivered scope.
+      - run: pnpm security:audit
+      - run: pnpm security:audit:prod
+
+  docker:
+    name: Docker build (frozen lockfile, Node 24)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [build, typecheck]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
       - run: docker build -f apps/desk-api/Dockerfile -t cvg-desk-api:ci .
+      - run: docker build -f apps/desk-web/Dockerfile -t cvg-desk-web:ci .
       - run: docker build -f apps/message-worker/Dockerfile -t cvg-message-worker:ci .
+      - run: docker build -f apps/realtime-service/Dockerfile -t cvg-realtime-service:ci .
+      - run: docker build -f services/db-init/Dockerfile -t cvg-db-init:ci .
+
+  sbom:
+    name: SBOM (CycloneDX workspace)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0
+        with:
+          path: ./
+          format: cyclonedx-json
+          output-file: sbom.cyclonedx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cyclonedx.json
+
+  gate:
+    name: Aggregate gate (per SHA)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [install, lint, typecheck, unit, migration-check, integration, contracts, coverage, build, audit, docker, sbom]
+    if: always()
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - name: Record gate revision
+        run: echo "gate-sha=$(git rev-parse HEAD)"
+      - name: Verify checkout matches gate SHA
+        run: test "$(git rev-parse HEAD)" = "${{ github.sha }}"
+      - name: Fail on missing, skipped or failed required jobs
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          GATE_SHA: ${{ github.sha }}
+        run: |
+          node - <<'NODE'
+          const needs = JSON.parse(process.env.NEEDS_JSON);
+          const failures = Object.entries(needs)
+            .filter(([, state]) => state.result !== 'success')
+            .map(([job, state]) => `${job}=${state.result}`);
+          if (failures.length > 0) {
+            console.error(`GATE FAILED @ ${process.env.GATE_SHA}: ${failures.join(', ')}`);
+            process.exit(1);
+          }
+          console.log(`GATE OK @ ${process.env.GATE_SHA}: ${Object.keys(needs).length} required jobs succeeded`);
+          NODE

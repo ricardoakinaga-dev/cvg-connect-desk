@@ -1,0 +1,89 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - heading "Kanban" [level=1]
+  - combobox "Filtrar Kanban por setor":
+    - option "Todos os Setores" [selected]
+    - option "Recepção"
+    - option "Clínica Médica"
+    - option "Internação"
+    - option "Cirurgia"
+    - option "Comercial"
+    - option "Farmácia"
+    - option "Administrativo"
+    - option "Setor A (fixture)"
+    - option "Setor B (fixture)"
+  - button "Atualizar Kanban"
+  - group "Atendimentos por status": "Novo: 3 Em Atendimento: 0 Pendente: 0 Em Espera: 0 Finalizado: 0 Arquivado: 0"
+  - text: Novo 3 Contato Setor A 3h Prioridade Alta 🅰 Setor A (fixture) [fixture] inbound A1… AAA Mover para
+  - combobox "Mover atendimento de Contato Setor A para outro status":
+    - option "Selecionar status…" [disabled] [selected]
+    - option "Para Em Atendimento"
+    - option "Para Pendente"
+    - option "Para Em Espera"
+    - option "Para Finalizado"
+    - option "Para Arquivado"
+  - text: Contato Setor B 3h Prioridade Alta 🅱 Setor B (fixture) [fixture] inbound B1… AAA Mover para
+  - combobox "Mover atendimento de Contato Setor B para outro status":
+    - option "Selecionar status…" [disabled] [selected]
+    - option "Para Em Atendimento"
+    - option "Para Pendente"
+    - option "Para Em Espera"
+    - option "Para Finalizado"
+    - option "Para Arquivado"
+  - text: Contato Setor A 3h Prioridade Alta Mover para
+  - combobox "Mover atendimento de Contato Setor A para outro status":
+    - option "Selecionar status…" [disabled] [selected]
+    - option "Para Em Atendimento"
+    - option "Para Pendente"
+    - option "Para Em Espera"
+    - option "Para Finalizado"
+    - option "Para Arquivado"
+  - text: Em Atendimento 0 Nenhum atendimento Pendente 0 Nenhum atendimento Em Espera 0 Nenhum atendimento Finalizado 0 Nenhum atendimento Arquivado 0 Nenhum atendimento

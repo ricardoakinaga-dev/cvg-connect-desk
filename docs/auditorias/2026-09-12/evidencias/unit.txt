@@ -1,0 +1,103 @@
+Scope: 6 of 34 workspace projects
+packages/shared test$ vitest run --passWithNoTests
+packages/messaging-contracts test$ vitest run --passWithNoTests
+packages/shared test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/shared
+packages/messaging-contracts test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/messaging-contracts
+packages/shared test:  ✓ src/__tests__/error.test.ts (6 tests) 6ms
+packages/shared test:  ✓ src/__tests__/pagination.test.ts (8 tests) 14ms
+packages/shared test:  ✓ src/__tests__/webhook-security-stats.test.ts (1 test) 11ms
+packages/shared test:  ✓ src/__tests__/observability.test.ts (8 tests) 13ms
+packages/shared test:  ✓ src/__tests__/media-policy.test.ts (6 tests) 100ms
+packages/shared test:  ✓ src/__tests__/result.test.ts (5 tests) 18ms
+packages/messaging-contracts test:  ✓ src/__tests__/contracts.test.ts (7 tests) 16ms
+packages/shared test:  ✓ src/__tests__/media-security-final.test.ts (6 tests) 138ms
+packages/messaging-contracts test:  Test Files  1 passed (1)
+packages/messaging-contracts test:       Tests  7 passed (7)
+packages/messaging-contracts test:    Start at  17:01:30
+packages/messaging-contracts test:    Duration  1.13s (transform 137ms, setup 0ms, collect 181ms, tests 16ms, environment 0ms, prepare 307ms)
+packages/messaging-contracts test: Done
+packages/tracing test$ vitest run --passWithNoTests
+packages/tracing test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/tracing
+packages/shared test:  ✓ src/__tests__/retry-policy.test.ts (13 tests) 1035ms
+packages/shared test:    ✓ withRetry > honors Retry-After header when provided  1002ms
+packages/shared test:  ✓ src/__tests__/app-error.test.ts (9 tests) 8ms
+packages/shared test:  ✓ src/__tests__/webhook-guard.test.ts (12 tests) 85ms
+packages/shared test:  Test Files  10 passed (10)
+packages/shared test:       Tests  74 passed (74)
+packages/shared test:    Start at  17:01:30
+packages/shared test:    Duration  2.22s (transform 1.16s, setup 0ms, collect 3.83s, tests 1.43s, environment 2ms, prepare 2.03s)
+packages/shared test: Done
+packages/realtime test$ vitest run --passWithNoTests
+packages/tracing test:  ✓ src/__tests__/tracing.test.ts (7 tests) 24ms
+packages/tracing test:  Test Files  1 passed (1)
+packages/tracing test:       Tests  7 passed (7)
+packages/tracing test:    Start at  17:01:32
+packages/tracing test:    Duration  810ms (transform 130ms, setup 0ms, collect 230ms, tests 24ms, environment 0ms, prepare 175ms)
+packages/tracing test: Done
+packages/realtime test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/realtime
+packages/realtime test: No test files found, exiting with code 0
+packages/realtime test: include: src/__tests__/**/*.test.ts
+packages/realtime test: exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*
+packages/realtime test: Done
+packages/auth test$ vitest run --passWithNoTests
+packages/auth test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/packages/auth
+packages/auth test:  ✓ src/__tests__/authorize.test.ts (9 tests) 18ms
+packages/auth test:  Test Files  1 passed (1)
+packages/auth test:       Tests  9 passed (9)
+packages/auth test:    Start at  17:01:33
+packages/auth test:    Duration  1.27s (transform 152ms, setup 0ms, collect 772ms, tests 18ms, environment 0ms, prepare 162ms)
+packages/auth test: Done
+modules/privacy test$ vitest run --passWithNoTests
+modules/privacy test:  RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/privacy
+modules/privacy test:  ❯ src/__tests__/data-subject-service.test.ts (4 tests | 4 skipped) 16ms
+modules/privacy test:    ↓ DataSubjectService (real PG) > export includes all subject sections
+modules/privacy test:    ↓ DataSubjectService (real PG) > export of unknown contact returns null
+modules/privacy test:    ↓ DataSubjectService (real PG) > anonymize scrubs direct PII and preserves history
+modules/privacy test:    ↓ DataSubjectService (real PG) > anonymize of unknown contact returns null
+modules/privacy test: ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+modules/privacy test:  FAIL  src/__tests__/data-subject-service.test.ts > DataSubjectService (real PG)
+modules/privacy test: Error: Failed query: insert into "users" ("id", "name", "email", "password_hash", "is_active", "created_at", "updated_at") values ($1, $2, $3, $4, $5, default, default)
+modules/privacy test: params: c7b122a9-787a-4b3c-99db-bf4440391845,DSAR Operator,dsar.op.1789243296719@example.com,x,true
+modules/privacy test:  ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:73:11
+modules/privacy test:  ❯ src/__tests__/data-subject-service.test.ts:18:5
+modules/privacy test:      16| 
+modules/privacy test:      17|   beforeAll(async () => {
+modules/privacy test:      18|     await db.insert(schema.users).values({ id: actorId, name: 'DSAR Op…
+modules/privacy test:        |     ^
+modules/privacy test:      19|     await db.insert(schema.contacts).values({ id: contactId, phone, na…
+modules/privacy test:      20|     const [conv] = await db
+modules/privacy test: Caused by: Error: connect ECONNREFUSED 127.0.0.1:1
+modules/privacy test:  ❯ ../../node_modules/.pnpm/pg-pool@3.13.0_pg@8.20.0/node_modules/pg-pool/index.js:45:11
+modules/privacy test:  ❯ ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/node-postgres/session.ts:149:14
+modules/privacy test:  ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:71:12
+modules/privacy test:  ❯ src/__tests__/data-subject-service.test.ts:18:5
+modules/privacy test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+modules/privacy test: Serialized Error: { errno: -111, code: 'ECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 1 }
+modules/privacy test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+modules/privacy test:  FAIL  src/__tests__/data-subject-service.test.ts > DataSubjectService (real PG)
+modules/privacy test: Error: Failed query: delete from "messages" where "messages"."conversation_id" = $1
+modules/privacy test: params: 
+modules/privacy test:  ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:73:11
+modules/privacy test:  ❯ src/__tests__/data-subject-service.test.ts:42:5
+modules/privacy test:      40| 
+modules/privacy test:      41|   afterAll(async () => {
+modules/privacy test:      42|     await db.delete(schema.messages).where(eq(schema.messages.conversa…
+modules/privacy test:        |     ^
+modules/privacy test:      43|     await db.delete(schema.conversationStatusHistory).where(eq(schema.…
+modules/privacy test:      44|     await db.delete(schema.conversations).where(eq(schema.conversation…
+modules/privacy test: Caused by: Error: connect ECONNREFUSED 127.0.0.1:1
+modules/privacy test:  ❯ ../../node_modules/.pnpm/pg-pool@3.13.0_pg@8.20.0/node_modules/pg-pool/index.js:45:11
+modules/privacy test:  ❯ ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/node-postgres/session.ts:149:14
+modules/privacy test:  ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:71:12
+modules/privacy test:  ❯ src/__tests__/data-subject-service.test.ts:42:5
+modules/privacy test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+modules/privacy test: Serialized Error: { errno: -111, code: 'ECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 1 }
+modules/privacy test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+modules/privacy test:  Test Files  1 failed (1)
+modules/privacy test:       Tests  4 skipped (4)
+modules/privacy test:    Start at  17:01:35
+modules/privacy test:    Duration  1.13s (transform 208ms, setup 0ms, collect 709ms, tests 16ms, environment 0ms, prepare 96ms)
+modules/privacy test: Failed
+/home/ricardo/cvg-connect-desk/modules/privacy:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @cvg/privacy@1.0.0 test: `vitest run --passWithNoTests`
+Exit status 1

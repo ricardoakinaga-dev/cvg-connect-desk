@@ -1,0 +1,69 @@
+{
+  "id": "QB-1",
+  "frozen_at": "2026-09-14",
+  "frozen_by": "SA-002",
+  "candidate": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "product_sha256": "4ee19f2ec5ca8bffd550d2befc006a695bec89b5b3eeb8460e05146d61c8a52f",
+  "ledger_sha256": "55cff7349c4dbd2d19176495055a5201aab23dd03c10c28cecfefa79493d270a",
+  "coverage": {
+    "provider": "v8",
+    "metric_order": ["statements", "branches", "functions", "lines"],
+    "scope_thresholds": {
+      "shared": [85, 80, 85, 85],
+      "core": [90, null, null, 90],
+      "domain": [80, null, null, 80],
+      "api": [70, null, null, 70],
+      "web": [60, null, null, 60],
+      "global": [75, null, null, 75]
+    },
+    "scope_globs": {
+      "shared": ["packages/shared/src/**/*.ts"],
+      "core": ["packages/auth/src/**/*.ts", "packages/database/src/**/*.ts", "packages/events/src/**/*.ts", "packages/realtime/src/**/*.ts", "packages/media/src/**/*.ts", "packages/tracing/src/**/*.ts", "packages/messaging-contracts/src/**/*.ts", "packages/integrations/src/**/*.ts"],
+      "domain": ["modules/*/src/**/*.ts"],
+      "api": ["apps/desk-api/src/**/*.ts", "apps/message-worker/src/**/*.ts", "apps/realtime-service/src/**/*.ts"],
+      "web": ["apps/desk-web/src/**/*.{ts,tsx}"],
+      "global": ["apps/*/src/**/*.{ts,tsx}", "packages/*/src/**/*.ts", "modules/*/src/**/*.ts"]
+    },
+    "permanent_exclusions": [
+      "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts",
+      "**/__tests__/**", "**/src/index.ts",
+      "**/*.d.ts", "**/generated/**"
+    ],
+    "exclusion_rule": "Nenhuma exclusão nova após medição. Exclusão extra exige motivo legítimo registrado antes da medição e aprovada pelo lead.",
+    "notes": "shared é o único pacote com thresholds já configurados (statements/branches/functions/lines = 85/80/85/85); a ordem das métricas é preservada. Demais escopos serão configurados em SA-050 com estes valores, sem reduzir denominador."
+  },
+  "workload": {
+    "dataset": {"conversations": 10000, "messages": 100000, "sessions": 100},
+    "profile": {"warmup_minutes": 10, "measure_minutes": 30, "rounds": 3},
+    "latency_budgets_ms": {"inbound_p95": 250, "realtime_p95": 500, "fallback_convergence": 5000},
+    "error_budget": {"unexpected_errors_pct": 0.1, "duplicate_effects": 0, "lost_effects": 0},
+    "record_required": ["hardware", "dataset", "config", "operation_mix", "concurrency", "start", "end"]
+  },
+  "web_vitals": {
+    "lcp_ms": 2500, "inp_ms": 200, "cls": 0.1,
+    "initial_js_gzip_kib": 120, "css_gzip_kib": 25,
+    "measurement": "build de produção servido de modo representativo; laboratório não representa percentil de campo; distinguir kB decimal de KiB"
+  },
+  "visual_matrix": {
+    "routes": ["Login","Inbox","Dashboard","Tasks","Alerts","Notes","Kanban","Contacts","Tutors","Patients","Sectors","Labels","Contact groups","Admin","Audit","Settings"],
+    "viewports": ["375x812", "390x844", "768x1024", "1024x768", "1440x900"],
+    "states_normal": "todas as 80 combinações com dados e navegação por capacidade",
+    "states_additional": ["loading","empty","recuperável","dados longos","acesso negado"],
+    "additional_viewports": "menor viewport e desktop; tablets quando o comportamento difere",
+    "boundaries_px": [859, 860, 861, 1259, 1260, 1261],
+    "zoom": "200% real; reflow 320 CSS px/400% conforme cenário",
+    "ergonomics": "375x812: primeira tarefa prioritária e primeiro alerta crítico com ação no primeiro viewport, com fixture congelada",
+    "target_size_px": 44,
+    "manual_requirements": ["ao menos 1 dispositivo móvel real com teclado virtual", "leitor de tela real", "axe automático + resolução manual dos inconclusivos"]
+  },
+  "scoring_method": {
+    "general_formula": "média ponderada por bloco: backend/dados/integrações 40%, interface 25%, operação 25%, qualidade/documentação 10%",
+    "individual_rule": "cada um dos 48 itens e cada uma das 11 dimensões UX ≥95; não arredondar 94,5 para 95",
+    "evidence_rule": "nota exige evidência atual por item, confiança ALTA, revisor independente; meta não pode ser copiada como resultado",
+    "blocking_rule": "Critical/High aberto, jornada primária quebrada, falha de autorização/integridade, evidência ausente/antiga ou skip requerido impedem qualificação, independentemente da média"
+  },
+  "dr": {"rpo_hours": 24, "rto_hours": 2},
+  "availability": {"api_monthly_pct": 99.9, "webhook_monthly_pct": 99.95, "field_window": "primeira janela mensal completa após implantação autorizada (SA-062)"},
+  "quality": {"lint_errors": 0, "lint_material_warnings_target": 0, "frozen_scope": "workspaces existentes; proibido remover regra ou excluir arquivo crítico para limpar resultado"}
+}

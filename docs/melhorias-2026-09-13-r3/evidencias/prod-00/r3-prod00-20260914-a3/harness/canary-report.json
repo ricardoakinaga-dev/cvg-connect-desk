@@ -1,0 +1,209 @@
+{
+  "config": {
+    "configFile": "/home/ricardo/cvg-connect-desk/playwright.production.config.ts",
+    "rootDir": "/home/ricardo/cvg-connect-desk/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "aaa",
+        "name": "aaa",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [
+          "**/*.canary.spec.ts"
+        ],
+        "testMatch": [
+          "aaa/**/*.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "production",
+        "name": "production",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [
+          "**/*.canary.spec.ts"
+        ],
+        "testMatch": [
+          "production/**/*.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime/harness/playwright-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "canary",
+        "name": "canary",
+        "testDir": "/home/ricardo/cvg-connect-desk/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.canary.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/harness/canary-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec tsx e2e/support/aaa/start-aaa-stack.ts",
+      "url": "http://127.0.0.1:4443/login",
+      "reuseExistingServer": true,
+      "timeout": 240000,
+      "gracefulShutdown": {
+        "signal": "SIGTERM",
+        "timeout": 10000
+      },
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "env": {
+        "AAA_RUN_ID": "r3-prod00-20260914-a3",
+        "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/r3-prod00-20260914-a3",
+        "CVG_PROGRAM_DIR": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3",
+        "CVG_RUNTIME_DIR": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime",
+        "AAA_PG_PORT": "57132",
+        "AAA_REDIS_PORT": "56750",
+        "AAA_API_PORT": "4700",
+        "AAA_REALTIME_PORT": "5001",
+        "AAA_WEB_PORT": "4443",
+        "AAA_EVOLUTION_MOCK_PORT": "8090"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "aaa/99-negative-control.canary.spec.ts",
+      "file": "aaa/99-negative-control.canary.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "@negative-control rejeita um candidato conhecido ruim",
+          "ok": false,
+          "tags": [
+            "negative-control"
+          ],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "canary",
+              "projectName": "canary",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 11,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mrejec\u001b[27mte\u001b[7md\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mknown-bad-candida\u001b[27mte\"\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mrejec\u001b[27mte\u001b[7md\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mknown-bad-candida\u001b[27mte\"\u001b[39m\n    at /home/ricardo/cvg-connect-desk/e2e/aaa/99-negative-control.canary.spec.ts:12:33",
+                    "location": {
+                      "file": "/home/ricardo/cvg-connect-desk/e2e/aaa/99-negative-control.canary.spec.ts",
+                      "column": 33,
+                      "line": 12
+                    },
+                    "snippet": "  10 | test('@negative-control rejeita um candidato conhecido ruim', async () => {\n  11 |   expect(process.env.AAA_CANARY_MODE, 'AAA_CANARY_MODE deve ser \"fail\" no controle negativo').toBe('fail');\n> 12 |   expect('known-bad-candidate').toBe('rejected');\n     |                                 ^\n  13 | });\n  14 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/ricardo/cvg-connect-desk/e2e/aaa/99-negative-control.canary.spec.ts",
+                        "column": 33,
+                        "line": 12
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"\u001b[7mrejec\u001b[27mte\u001b[7md\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mknown-bad-candida\u001b[27mte\"\u001b[39m\n\n  10 | test('@negative-control rejeita um candidato conhecido ruim', async () => {\n  11 |   expect(process.env.AAA_CANARY_MODE, 'AAA_CANARY_MODE deve ser \"fail\" no controle negativo').toBe('fail');\n> 12 |   expect('known-bad-candidate').toBe('rejected');\n     |                                 ^\n  13 | });\n  14 |\n    at /home/ricardo/cvg-connect-desk/e2e/aaa/99-negative-control.canary.spec.ts:12:33"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-14T00:13:56.100Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime/harness/playwright-artifacts/aaa-99-negative-control.ca-0d2d0-um-candidato-conhecido-ruim-canary/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-00/r3-prod00-20260914-a3/runtime/harness/playwright-artifacts/aaa-99-negative-control.ca-0d2d0-um-candidato-conhecido-ruim-canary/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/ricardo/cvg-connect-desk/e2e/aaa/99-negative-control.canary.spec.ts",
+                    "column": 33,
+                    "line": 12
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ca63b9efc5fd003dba08-a075f75730d14998ce8e",
+          "file": "aaa/99-negative-control.canary.spec.ts",
+          "line": 10,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-14T00:13:40.929Z",
+    "duration": 16330.691,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

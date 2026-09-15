@@ -1,0 +1,32 @@
+[
+  {
+    "route": "inbox",
+    "primaryCount": 17,
+    "below24": [],
+    "below44": 0
+  },
+  {
+    "route": "tasks",
+    "primaryCount": 19,
+    "below24": [],
+    "below44": 1
+  },
+  {
+    "route": "contacts",
+    "primaryCount": 18,
+    "below24": [],
+    "below44": 0
+  },
+  {
+    "route": "dashboard",
+    "primaryCount": 19,
+    "below24": [],
+    "below44": 2
+  },
+  {
+    "route": "settings",
+    "primaryCount": 18,
+    "below24": [],
+    "below44": 1
+  }
+]

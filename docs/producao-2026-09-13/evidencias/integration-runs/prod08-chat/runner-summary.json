@@ -1,0 +1,30 @@
+{
+  "runId": "prod08-chat",
+  "workerIndex": 16,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58032/cvg_aaa_prod08_chat_w16",
+  "redisUrl": "redis://127.0.0.1:56840",
+  "startedAt": "2026-09-13T15:50:54.116Z",
+  "command": "pnpm --filter @cvg/chat exec vitest run",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 1,
+      "output": "\n RUN  v3.2.7 /home/ricardo/cvg-connect-desk/modules/chat\n\n ✓ src/__tests__/conversation-repository.test.ts (15 tests) 7ms\n ✓ src/__tests__/outbound-delivery-surface.test.ts (2 tests) 3ms\n ❯ src/__tests__/aaa-08-atomicity.test.ts (8 tests | 8 skipped) 7ms\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > A07 — falha entre o insert da mensagem e a intenção: rollback total e retry sem mensagem órfã\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > falha na própria intenção do outbox: a escrita do evento participa da transação\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > corrida no mesmo externalMessageId: um vencedor, sem mensagem/evento duplicado\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > falha após a intenção (antes do estado): intenção, conversa nova e contato voltam atrás, sem órfãos\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > hint Redis só após commit: terceiro não enxerga escrita aberta e o hint chega depois\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > Redis indisponível: hint perdido não perde o evento; polling/claim entrega o durável\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > identidade estável: replay do mesmo envelope não multiplica linha/efeito\n   ↓ AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais) > Secretary indisponível: mensagem, evento e recuperação humana preservados\n ✓ src/__tests__/receive-inbound-idempotency.test.ts (6 tests) 299ms\n ✓ src/__tests__/secretary-handoff.integration.test.ts (5 tests) 260ms\nstdout | src/__tests__/chat-ports.integration.test.ts > chat ports (C02) — comportamento em PostgreSQL isolado > sendOutboundMessage usa a GatewayOutboundPort injetada e reconcilia status\n[deliverOutbound] Mensagem aceita pelo gateway: aaa02-ports-1789314653690-provider-1\n\n ✓ src/__tests__/chat-ports.integration.test.ts (6 tests) 214ms\n\n Test Files  1 failed | 5 passed (6)\n      Tests  34 passed | 8 skipped (42)\n   Start at  12:50:52\n   Duration  1.79s (transform 813ms, setup 0ms, collect 5.12s, tests 789ms, environment 1ms, prepare 672ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/modules/chat:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run\n\n\n⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/aaa-08-atomicity.test.ts > AAA-08 — mensagem + estado + outbox atômicos (PostgreSQL/Redis reais)\nError: [AAA-08] DATABASE_URL deve apontar para 127.0.0.1:56432 (recebido 127.0.0.1:58032)\n ❯ src/__tests__/aaa-08-atomicity.test.ts:168:13\n    166|     const parsed = new URL(CONNECTION_STRING);\n    167|     if (parsed.hostname !== EXPECTED.host || Number(parsed.port) !== E…\n    168|       throw new Error(`[AAA-08] DATABASE_URL deve apontar para ${EXPEC…\n       |             ^\n    169|     }\n    170|     const database = decodeURIComponent(parsed.pathname.replace(/^\\//,…\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "exitCode": 1
+}

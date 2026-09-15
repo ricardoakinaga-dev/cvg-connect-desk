@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-09-13T17:14:27.775Z",
+  "runId": "prod10-contra2",
+  "workerIndex": "33",
+  "database": "postgresql://***@127.0.0.1:59732/cvg_aaa_prod10_contra2_w33",
+  "scenarios": {
+    "A_webhook_assincrono": {
+      "isOk": true,
+      "elapsedMs": 50,
+      "secretaryDelayMs": 3000,
+      "asyncReplyArrived": true,
+      "defect": false
+    },
+    "B_duplicata_recupera_via_worker": {
+      "firstIsOk": true,
+      "duplicateIsOk": true,
+      "persistedMessages": 1,
+      "replyArrived": true,
+      "defect": false
+    },
+    "C_estado_duravel_da_invocacao": {
+      "invocationStatus": "completed",
+      "attemptCount": 5,
+      "resultRef": "28e3f687-f9f3-4b98-93fb-630367d1746a",
+      "errorCode": null,
+      "defect": false
+    }
+  },
+  "verdict": "NO_DEFECT_OBSERVED",
+  "secretaryInvocations": 6
+}

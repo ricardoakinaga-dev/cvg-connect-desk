@@ -1,0 +1,25 @@
+✔ AC4 — execução real do gate produz selo bom aceito e reavaliação idempotente (329.454571ms)
+✔ AC3 — manifesto por check contém comando, ambiente, horário, resultado, hashes e escopo (0.600496ms)
+✔ AC3 — métrica de coverage vem da medição (sem percentual fixo no código/relatório) (3.447841ms)
+✔ AC1 — WRONG-SHA (outro candidato) é rejeitado e log da falha é conservado (67.248272ms)
+✔ AC1 — lockfileSha256 divergente é rejeitado (72.150637ms)
+✔ AC1 — sourceSha256 divergente é rejeitado (69.98407ms)
+✔ AC1 — imageDigest divergente é rejeitado (67.944687ms)
+✔ AC1 — evidência anterior ao selo (STALE de outro candidato) é rejeitada (69.51114ms)
+✔ AC1 — JSON vazio é rejeitado (66.634791ms)
+✔ AC1 — JSON truncado é rejeitado (57.28693ms)
+✔ AC1 — query set vazio é rejeitado (60.71792ms)
+✔ AC1 — PASS só narrativo (log ausente) é rejeitado (54.374294ms)
+✔ AC2 — FAIL, BLOCKED, NOT_RUN e SKIPPED impedem VERIFIED_CANDIDATE (255.817861ms)
+✔ AC2 — check requerido ausente (MISSING) reprova com estado inequívoco (56.973116ms)
+✔ AC2 — FAIL externo com --with-external-evidence reprova (exit != 0) (61.758044ms)
+✔ AC2 — payload externo sem vínculo de candidato é rejeitado (66.748994ms)
+✔ AC4 — selo local nunca é TRIPLE_AAA_CERTIFIED e exige política de release (0.638818ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1454.186161

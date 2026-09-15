@@ -1,0 +1,87 @@
+{
+  "generatedAt": "2026-09-14T03:21:24.973Z",
+  "runId": "r3-prod10-20260914-a3",
+  "workerIndex": 30,
+  "database": "cvg_aaa_r3_prod10_20260914_a3_w30",
+  "postgresPort": 59432,
+  "redisPort": 56980,
+  "cases": [
+    {
+      "case": "AC1-webhook-nao-espera-ia",
+      "externalMessageId": "prod10-ac1-msg-7ba7b748-d655-4ca2-84e3-2f8f080a71a2",
+      "webhookElapsedMs": 37,
+      "secretaryDelayMs": 3000,
+      "outboxEventId": "7708ad98-13d3-4b85-b242-9a34141d2b0b",
+      "invocationStatusDuring": "processing",
+      "invocationStatusFinal": "completed",
+      "outboundReplies": 1,
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC2-crash-antes-invocacao",
+      "externalMessageId": "prod10-ac2a-msg-ad76fbcf-a2fc-4cb7-bff8-a4f6206aaac0",
+      "crashedExitCode": 86,
+      "crashInvocationRows": 0,
+      "recoveredAttempts": 1,
+      "outboundReplies": 1,
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC2-replay-pos-efeito",
+      "externalMessageId": "prod10-ac2b-msg-7f3ff918-94de-4bc9-aeb2-0c1442d85806",
+      "firstEffectDeduplicated": false,
+      "replayDeduplicated": true,
+      "invocationAttempts": 1,
+      "outboundReplies": 1,
+      "secretaryCalls": 1
+    },
+    {
+      "case": "AC2-duplicata-inbound",
+      "externalMessageId": "prod10-ac2c-msg-9dbcce07-12e9-4ebe-a734-b280d4699c7d",
+      "duplicateStatus": 200,
+      "messages": 1,
+      "messagePersistedEvents": 1,
+      "invocationStatus": "completed",
+      "outboundReplies": 1
+    },
+    {
+      "case": "AC3-timeout-unknown-no-blind-retry",
+      "externalMessageId": "prod10-ac3a-msg-9e66564c-8c65-440d-bb3d-4979ecbe243c",
+      "outboxEventId": "9acb2cb0-e50e-4ca9-b22d-c7f75d623f0c",
+      "invocationStatus": "unknown",
+      "invocationErrorCode": "SECRETARY_TIMEOUT",
+      "invocationAttempts": 1,
+      "secretaryCalls": 2,
+      "secretaryIdempotencyKeys": [
+        "inbound:7398a6e3-295c-4be9-a8cb-82defed46563",
+        "inbound:7398a6e3-295c-4be9-a8cb-82defed46563"
+      ],
+      "secretaryInvocationIds": [
+        "inbound:7398a6e3-295c-4be9-a8cb-82defed46563",
+        "inbound:7398a6e3-295c-4be9-a8cb-82defed46563"
+      ],
+      "unknownNoBlindRetry": true,
+      "messageContentPreserved": true,
+      "logHasEventIdOnly": true
+    },
+    {
+      "case": "AC3-handoff-cancela-resposta",
+      "firstMessageId": "prod10-ac3b-msg-ee403077-d2a9-4ba7-9c62-c298db6c3d63",
+      "handoffHandler": "human",
+      "secretaryCalls": 1,
+      "secondInvocationDetail": {
+        "skipped": "handler_not_bot"
+      },
+      "outboundReplies": 0
+    },
+    {
+      "case": "AC3-superseded",
+      "firstInvocationDetail": {
+        "skipped": "superseded_by_newer_inbound"
+      },
+      "secondInvocationStatus": "completed",
+      "secretaryCalls": 1,
+      "outboundReplies": 1
+    }
+  ]
+}

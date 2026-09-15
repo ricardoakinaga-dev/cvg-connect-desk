@@ -1,0 +1,24 @@
+{
+  "runId": "sa003-migrate",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_sa003_migrate_w24",
+  "databaseName": "cvg_aaa_sa003_migrate_w24",
+  "databasePort": 58832,
+  "redisUrl": "redis://127.0.0.1:56920",
+  "redisPort": 56920,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 824843,
+    "dataDir": "/tmp/cvg-aaa-runs/sa003-migrate/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 824863,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa003-migrate",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 21:47:32.890567-03"
+  }
+}

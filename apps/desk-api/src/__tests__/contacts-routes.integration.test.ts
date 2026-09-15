@@ -10,12 +10,26 @@ describe('Contacts routes integration', () => {
   const passwordHash = '$2a$10$UX/LcD/6NKhheDIZmbHyN.a6Hc8SW6ytZ/LCCZW3un3h5vJ9n/1h6';
   const email = `contact.integration.${Date.now()}@example.com`;
   const userId = randomUUID();
-  let adminRoleId = randomUUID();
+  let adminRoleId: string = randomUUID();
   const testContactId = randomUUID();
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
   let token = '';
 
-  const makePhone = () => `55199${Date.now().toString().slice(-8)}${Math.floor(Math.random() * 9000 + 1000)}`.slice(0, 15);
+  let phoneSeq = 0;
+  // Fixture sem colisao por construcao: entropia numerica por execucao +
+  // sequencia monotonica dentro do valor e pre-limpeza de qualquer residuo
+  // com o mesmo telefone (FIND-AAA04-008). Somente digitos: a API normaliza
+  // o telefone removendo nao-digitos.
+  const runEntropy = `${Date.now()}${Math.floor(Math.random() * 1_000_000)}`;
+  const makePhoneValue = () => {
+    phoneSeq += 1;
+    return `55${runEntropy}${phoneSeq.toString().padStart(6, '0')}`;
+  };
+  const makePhone = async () => {
+    const phone = makePhoneValue();
+    await db.delete(schema.contacts).where(eq(schema.contacts.phone, phone));
+    return phone;
+  };
 
   beforeAll(async () => {
     app = await buildDeskApiApp();
@@ -68,6 +82,11 @@ describe('Contacts routes integration', () => {
 
     for (const conv of convs) {
       await db.delete(schema.conversationStatusHistory).where(eq(schema.conversationStatusHistory.conversationId, conv.id));
+      await db.delete(schema.conversationAssignments).where(eq(schema.conversationAssignments.conversationId, conv.id));
+      // SA-007: o início de atendimento agora grava auditoria/outbox no mesmo
+      // commit; a limpeza precisa remover os dependentes antes das entidades.
+      await db.delete(schema.auditLogs).where(eq(schema.auditLogs.entityId, conv.id));
+      await db.delete(schema.outboxEvents).where(eq(schema.outboxEvents.aggregateId, conv.id));
     }
 
     await db.delete(schema.contactSectors).where(eq(schema.contactSectors.contactId, testContactId));
@@ -78,8 +97,7 @@ describe('Contacts routes integration', () => {
     await db.insert(schema.contacts).values({
       id: testContactId,
       name: `Test Contact ${Date.now()}`,
-      phone: makePhone(),
-      type: 'patient',
+      phone: await makePhone(),
     });
   });
 
@@ -98,12 +116,21 @@ describe('Contacts routes integration', () => {
     await db.delete(schema.conversations).where(eq(schema.conversations.contactId, testContactId));
     await db.delete(schema.contacts).where(eq(schema.contacts.id, testContactId));
     await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
+    await db.delete(schema.auditLogs).where(eq(schema.auditLogs.userId, userId));
     await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
     await db.delete(schema.users).where(eq(schema.users.id, userId));
     // The shared Admin role may be reused concurrently by another integration
     // suite. The job database is disposable, so removing it here creates an FK
     // race without providing useful isolation.
     await app.close();
+  });
+
+  it('makePhone e unico por construcao (10.000 amostras sem colisao)', () => {
+    const samples = new Set<string>();
+    for (let index = 0; index < 10_000; index += 1) {
+      samples.add(makePhoneValue());
+    }
+    expect(samples.size).toBe(10_000);
   });
 
   // === GET /contacts ===
@@ -155,7 +182,7 @@ describe('Contacts routes integration', () => {
 
   // === POST /contacts ===
   it('criar contato com dados validos retorna 201', async () => {
-    const phone = makePhone();
+    const phone = await makePhone();
     const response = await app.inject({
       method: 'POST',
       url: '/contacts',
@@ -178,10 +205,10 @@ describe('Contacts routes integration', () => {
   });
 
   it('criar contato com telefone duplicado retorna 409', async () => {
-    const phone = `+55199${Date.now()}`.slice(0, 15);
+    const phone = await makePhone();
 
     // First create
-    await app.inject({
+    const first = await app.inject({
       method: 'POST',
       url: '/contacts',
       headers: { authorization: `Bearer ${token}` },
@@ -197,6 +224,10 @@ describe('Contacts routes integration', () => {
     });
 
     expect(response.statusCode).toBe(409);
+
+    // Cleanup: sem residuo que colida com execucoes futuras.
+    await db.delete(schema.contacts).where(eq(schema.contacts.phone, phone));
+    expect(first.statusCode).toBe(201);
   });
 
   // === PUT /contacts/:id ===
@@ -231,8 +262,7 @@ describe('Contacts routes integration', () => {
     await db.insert(schema.contacts).values({
       id: contactToDelete,
       name: `Contato Para Deletar ${Date.now()}`,
-      phone: `+55199${Date.now()}`.slice(0, 15),
-      type: 'patient',
+      phone: await makePhone(),
     });
 
     const response = await app.inject({

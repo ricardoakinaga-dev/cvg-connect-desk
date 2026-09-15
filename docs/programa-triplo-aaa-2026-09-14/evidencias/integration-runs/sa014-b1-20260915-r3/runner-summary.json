@@ -1,0 +1,54 @@
+{
+  "runId": "sa014-b1-20260915-r3",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_r3_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:50:34.177Z",
+  "finishedAt": "2026-09-15T03:50:40.789Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-014-message-contract.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_r3_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa014-b1-20260915-r3",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa014-b1-20260915-r3",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:50:34.177Z",
+      "finishedAt": "2026-09-15T03:50:36.193Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:50:36.193Z",
+      "finishedAt": "2026-09-15T03:50:37.028Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-014-message-contract.integration.test.ts",
+      "startedAt": "2026-09-15T03:50:37.029Z",
+      "finishedAt": "2026-09-15T03:50:40.789Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "240615,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"reason\":\"signature_valid\",\"webhook_mode\":\"hmac\",\"has_secret\":***,\"algorithm\":\"sha256\",\"msg\":\"[WebhookGuard] Assinatura validada com sucesso\"}\n{\"level\":30,\"time\":1789444240621,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-b\",\"res\":{\"statusCode\":200},\"responseTime\":6.365919999999733,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444240621,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"req\":{\"method\":\"POST\",\"url\":\"/webhook/inbound\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444240622,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"reason\":\"signature_valid\",\"webhook_mode\":\"hmac\",\"has_secret\":***,\"algorithm\":\"sha256\",\"msg\":\"[WebhookGuard] Assinatura validada com sucesso\"}\n{\"level\":30,\"time\":1789444240625,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-c\",\"res\":{\"statusCode\":200},\"responseTime\":3.843188000000282,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444240627,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"req\":{\"method\":\"POST\",\"url\":\"/webhook/inbound\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444240628,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"reason\":\"signature_valid\",\"webhook_mode\":\"hmac\",\"has_secret\":***,\"algorithm\":\"sha256\",\"msg\":\"[WebhookGuard] Assinatura validada com sucesso\"}\n{\"level\":30,\"time\":1789444240629,\"pid\":1860777,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":200},\"responseTime\":1.896998000000167,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-014-message-contract.integration.test.ts (8 tests) 597ms\n\n Test Files  1 passed (1)\n      Tests  8 passed (8)\n   Start at  00:50:37\n   Duration  2.80s (transform 907ms, setup 0ms, collect 1.96s, tests 597ms, environment 0ms, prepare 68ms)\n\n",
+      "stderrTail": "stderr | src/__tests__/sa-014-message-contract.integration.test.ts > SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC2/AC3 — intenção outbound antes do efeito e falha em pontos de escrita > aceite desconhecido entra em reconciliação explícita e é listável; nunca reenvia cegamente\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): timeout do provider\n\nstderr | src/__tests__/sa-014-message-contract.integration.test.ts > SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC4 — receipts e mensagens fora de ordem > receipt ANTES da mensagem é no-op seguro e definido: sem linhas, intent listável e convergência na reentrega\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): timeout do provider\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

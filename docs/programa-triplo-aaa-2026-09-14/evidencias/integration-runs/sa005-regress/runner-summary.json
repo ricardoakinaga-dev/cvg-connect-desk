@@ -1,0 +1,54 @@
+{
+  "runId": "sa005-regress",
+  "workerIndex": 27,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59132/cvg_aaa_sa005_regress_w27",
+  "redisUrl": "redis://127.0.0.1:56950",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T00:57:13.170Z",
+  "finishedAt": "2026-09-15T00:57:20.136Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/kanban-routes.integration.test.ts src/__tests__/sa-005-kanban-atomic.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:59132/cvg_aaa_sa005_regress_w27",
+    "REDIS_URL": "redis://127.0.0.1:56950",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa005-regress",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa005-regress",
+    "AAA_WORKER_INDEX": "27"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T00:57:13.170Z",
+      "finishedAt": "2026-09-15T00:57:15.227Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T00:57:15.227Z",
+      "finishedAt": "2026-09-15T00:57:16.089Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/kanban-routes.integration.test.ts src/__tests__/sa-005-kanban-atomic.integration.test.ts",
+      "startedAt": "2026-09-15T00:57:16.089Z",
+      "finishedAt": "2026-09-15T00:57:20.135Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": ",\"reqId\":\"req-7\",\"res\":{\"statusCode\":200},\"responseTime\":6.349706999999853,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789433839915,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-8\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/5f4d8bc1-bbb6-4fb2-85e4-f640efc2819f/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789433839926,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-8\",\"res\":{\"statusCode\":200},\"responseTime\":10.432070999999723,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789433839927,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/5f4d8bc1-bbb6-4fb2-85e4-f640efc2819f/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789433839933,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-9\",\"res\":{\"statusCode\":409},\"responseTime\":5.8104849999999715,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789433839935,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"req\":{\"method\":\"PATCH\",\"url\":\"/kanban/card/5f4d8bc1-bbb6-4fb2-85e4-f640efc2819f/move\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789433839939,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"userId\":\"a31f81a1-92df-4a8f-848a-71d325889697\",\"userRoles\":[],\"userPermissions\":0,\"requiredPermissions\":[\"chat:write\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789433839939,\"pid\":884357,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-a\",\"res\":{\"statusCode\":403},\"responseTime\":4.321378000000095,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-005-kanban-atomic.integration.test.ts (6 tests) 747ms\n\n Test Files  2 passed (2)\n      Tests  9 passed (9)\n   Start at  21:57:16\n   Duration  3.27s (transform 1.07s, setup 0ms, collect 4.31s, tests 1.39s, environment 0ms, prepare 204ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

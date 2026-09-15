@@ -1,0 +1,71 @@
+# PROD-30 — Completar atualização entre páginas e validade dos KPIs
+
+**Observação da auditoria:** FE15 OPEN: páginas adjacentes não atualizam dados de outro operador por realtime/polling limitado. Provar reconexão, stale/offline e preservação de formulário.
+
+**Tratamento:** PRESERVE_COMPLETE_AND_VERIFY · AUDITED_R3_NOT_TASK_CERTIFICATION
+
+**Achados:** FE15
+
+**Origem:** CVG-IMPROVEMENTS-20260913-R2 / PROD-30 / estado recebido PLANNED
+
+**Estado:** PLANNED · **Prioridade:** P1 · **Marco:** M3 · **Estimativa relativa:** 5
+
+**Dono funcional:** Frontend dados + dashboard backend · **Risco:** R2 · **Classe:** PRE_RELEASE_OBRIGATORIO
+
+**Itens auditados:** UI06, UI08, UI09, UI10, UI12, BE17, BE19
+
+**Dependências:** [PROD-21](PROD-21.md), [PROD-22](PROD-22.md), [PROD-23](PROD-23.md), [PROD-24](PROD-24.md), [PROD-25](PROD-25.md), [PROD-26](PROD-26.md), [PROD-27](PROD-27.md)
+
+**Decisões:** Sem decisão externa específica; verificar contratos e ambiente.
+
+## Escopo de escrita
+
+Caminhos relativos à raiz do repositório; confirmar existência e fronteira antes da edição.
+
+- `apps/desk-web/src/lib`
+- `apps/desk-web/src/features`
+- `apps/desk-web/src/pages/Dashboard.tsx`
+- `modules/dashboard/src`
+- `modules/chat/src/infrastructure/repositories`
+- `e2e/production/prod-30.spec.ts`
+
+**Locks:** web-contract-inbox
+
+## Critérios de aceite
+
+- **PROD-30-AC1** — Tasks/Alerts/Kanban/Contacts/Dashboard recebem invalidação real ou polling bounded conforme contrato; stale/offline visível e reconsulta após reconexão sem double fetch storm.
+- **PROD-30-AC2** — KPIs seguem fórmulas doc13 no backend com janela explicitamente atual; null/sem dados não é zero fabricado, horário retornado e falha parcial acessíveis.
+- **PROD-30-AC3** — Testes de cálculo em PG cobrem inbound/outbound humanos/bot/null legado, múltiplas mensagens, handoff, aging vazio e cross-sector conforme permissão de gestor.
+- **PROD-30-AC4** — Filtros/search/paginação e atualizações não vazam dados, repetem efeitos ou sobrescrevem edição suja; padrões de cache e atualização documentados.
+
+## Verificação proposta
+
+Estado: **NOT_RUN**. Ambiente: synthetic-isolated.
+
+Reexecutar/adaptar no candidato novo, cobrindo todos os aceites e negativos. Resultado histórico não fecha tarefa; comando proposto precisa de ambiente e precondições inspecionados.
+
+```bash
+pnpm exec playwright test e2e/production/prod-30.spec.ts --config playwright.production.config.ts
+```
+
+Estado: **TO_CREATE**. Ambiente: Candidato R3 próprio; identidade/portas/recursos declarados antes de imports; terceiros somente sandbox autorizado..
+
+Provar os aceites R3 e preservar regressões resolvidas. Logs de auditoria são baseline; cada aceite real exige ferramenta/ambiente apropriado, revisão e evidência nova.
+
+Criar/adaptar a suíte após descoberta. Incluir execução real, revisão ou observação manual exigida pelos aceites; um runner unitário não substitui PG, browser, provider, scanner ou operador quando requeridos.
+
+## Próxima ação
+
+FE15 OPEN: páginas adjacentes não atualizam dados de outro operador por realtime/polling limitado. Provar reconexão, stale/offline e preservação de formulário. Registrar subtarefas de correção e prova conforme aceites, preservando o comportamento já correto.
+
+**Sinal de conclusão da ação:** Aceites cobertos por evidência atual e revisão; pendências externas registradas sem PASS implícito.
+
+## Recuperação
+
+Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.
+
+## Evidência e fechamento
+
+Evidências: Ainda não produzidas para esta execução.
+
+Aplicar [critérios](../CRITERIOS.md) e [protocolo do agente](../AGENTE.md). Integrador registra cada aceite, identidade do candidato, revisão e resultado antes de DONE.

@@ -1,0 +1,164 @@
+{
+  "task": "PROD-44",
+  "status": "PASS",
+  "error": null,
+  "startedAt": "2026-09-14T03:10:11.790Z",
+  "finishedAt": "2026-09-14T03:10:14.364Z",
+  "execution": {
+    "runId": "local-prod44-20260914",
+    "attempt": 1,
+    "evidenceSegment": "local-prod44-20260914-1"
+  },
+  "candidate": {
+    "head": "754f9badac46278e77d21de91c58eedb15e80581",
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "sourceSha256": {
+      "apps/realtime-service/src/index.ts": "c8d100bd8a83378530e55e18d5daed637d46862fa0ff8d51fd5cd09e689080cc",
+      "apps/realtime-service/src/authorization.ts": "1315f1e296be02f9370925f216326b4b5491bccf0e90f21a50deea1783039cd6",
+      "apps/realtime-service/package.json": "ccb449ea9d4f668f600a63493bc2420122fcc833d2a7de53b71d97afb0b86f65",
+      "apps/realtime-service/Dockerfile": "10ecbe3fef252715620a22f1c69a416ffcb0a01ef5e51baf870b1371c016675c",
+      "packages/shared/src/index.ts": "2dc91aa40074d5db2b30ed8e239e0bf3c2587cbcf1f2294f0a37fe77dd4a3c12",
+      "packages/shared/src/metrics.ts": "f80efc65ede04eb7c01c7b4a48ef879ff98b2e92abb5d56439303aa54eea11be",
+      "packages/shared/package.json": "5db44b84006f638173629addc6bc8f1c3d69ed7e9ee9e12b4c3a2237db3234cf",
+      "pnpm-lock.yaml": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba"
+    }
+  },
+  "command": {
+    "executable": "pnpm",
+    "args": [
+      "--filter",
+      "@cvg/realtime-service",
+      "exec",
+      "tsx",
+      "src/index.ts"
+    ],
+    "cwd": "/home/ricardo/cvg-connect-desk"
+  },
+  "syntheticApi": {
+    "url": "http://127.0.0.1:46401",
+    "host": "127.0.0.1",
+    "purpose": "empty events response only"
+  },
+  "cases": [
+    {
+      "port": 43037,
+      "pid": 127119,
+      "startedAt": "2026-09-14T03:10:11.803Z",
+      "tokenConfigured": false,
+      "health": {
+        "status": 200
+      },
+      "readiness": {
+        "status": 200
+      },
+      "portClosed": true,
+      "metrics": {
+        "unavailable": {
+          "status": 503,
+          "body": {
+            "error": "METRICS_UNAVAILABLE"
+          }
+        }
+      },
+      "exit": {
+        "code": null,
+        "signal": "SIGTERM"
+      },
+      "stdout": "{\"msg\":\"[Realtime] HTTP polling started\",\"api_url\":\"http://127.0.0.1:46401\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Event polling started\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Redis bus subscribed\",\"instance_id\":\"rt-b9051639\",\"channel\":\"cvg:realtime\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] HTTP/WebSocket server listening\",\"port\":43037,\"level\":\"info\"}\n{\"msg\":\"[Realtime] Received SIGTERM, shutting down\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n",
+      "stderr": "",
+      "healthBody": {
+        "status": "ok",
+        "service": "realtime-service",
+        "uptime": 0.051
+      },
+      "readinessBody": {
+        "status": "ok",
+        "ready": true,
+        "service": "realtime-service",
+        "uptime": 0.062,
+        "checks": {
+          "process": {
+            "status": "ok"
+          },
+          "websocket": {
+            "status": "ok"
+          },
+          "poller": {
+            "status": "ok",
+            "mode": "http",
+            "lastStartedAt": "2026-09-14T03:10:12.998Z",
+            "lastSucceededAt": "2026-09-14T03:10:12.998Z",
+            "ageMs": 2,
+            "consecutiveFailures": 0
+          }
+        }
+      }
+    },
+    {
+      "port": 33007,
+      "pid": 127357,
+      "startedAt": "2026-09-14T03:10:13.091Z",
+      "tokenConfigured": true,
+      "health": {
+        "status": 200
+      },
+      "readiness": {
+        "status": 200
+      },
+      "portClosed": true,
+      "metrics": {
+        "anonymous": {
+          "status": 401,
+          "body": {
+            "error": "UNAUTHORIZED"
+          }
+        },
+        "wrong": {
+          "status": 401,
+          "body": {
+            "error": "UNAUTHORIZED"
+          }
+        },
+        "authorized": {
+          "status": 200,
+          "contentType": "text/plain; version=0.0.4",
+          "body": "# HELP http_requests_total Total de requests HTTP por rota e status\n# TYPE http_requests_total counter\n# HELP http_request_duration_seconds Duracao de requests HTTP em segundos\n# TYPE http_request_duration_seconds histogram\n# HELP webhook_requests_total Requests de webhook por decisao\n# TYPE webhook_requests_total counter\n# HELP webhook_replay_rejected_total Webhooks rejeitados por anti-replay\n# TYPE webhook_replay_rejected_total counter\n# HELP messages_inbound_total Mensagens inbound persistidas\n# TYPE messages_inbound_total counter\n# HELP messages_outbound_total Mensagens outbound criadas\n# TYPE messages_outbound_total counter\n# HELP auth_failures_total Falhas de autenticacao por motivo\n# TYPE auth_failures_total counter\n# HELP rate_limit_hits_total Requests bloqueados por rate limit\n# TYPE rate_limit_hits_total counter\n# HELP authz_denials_total Negacoes de autorizacao por motivo\n# TYPE authz_denials_total counter\n# HELP media_recovery_claims_total Itens de media inbound reclamados pelo recovery worker\n# TYPE media_recovery_claims_total counter\n# HELP media_recovery_outcomes_total Desfechos do recovery de media inbound\n# TYPE media_recovery_outcomes_total counter\n# HELP media_recovery_in_flight Tarefas de media inbound em processamento neste processo\n# TYPE media_recovery_in_flight gauge\n"
+        }
+      },
+      "exit": {
+        "code": null,
+        "signal": "SIGTERM"
+      },
+      "stdout": "{\"msg\":\"[Realtime] HTTP polling started\",\"api_url\":\"http://127.0.0.1:46401\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Event polling started\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Redis bus subscribed\",\"instance_id\":\"rt-2952f4e4\",\"channel\":\"cvg:realtime\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] HTTP/WebSocket server listening\",\"port\":33007,\"level\":\"info\"}\n{\"msg\":\"[Realtime] Received SIGTERM, shutting down\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n",
+      "stderr": "",
+      "healthBody": {
+        "status": "ok",
+        "service": "realtime-service",
+        "uptime": 0.053
+      },
+      "readinessBody": {
+        "status": "ok",
+        "ready": true,
+        "service": "realtime-service",
+        "uptime": 0.056,
+        "checks": {
+          "process": {
+            "status": "ok"
+          },
+          "websocket": {
+            "status": "ok"
+          },
+          "poller": {
+            "status": "ok",
+            "mode": "http",
+            "lastStartedAt": "2026-09-14T03:10:14.259Z",
+            "lastSucceededAt": "2026-09-14T03:10:14.275Z",
+            "ageMs": 6,
+            "consecutiveFailures": 0
+          }
+        }
+      }
+    }
+  ]
+}

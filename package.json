@@ -8,8 +8,9 @@
     "build": "turbo run build",
     "prebuild": "pnpm --filter @cvg/database db:types",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
+    "lint": "turbo run lint --continue",
+    "test": "turbo run test --continue",
+    "test:ci": "turbo run test --continue --filter=!@cvg/desk-api --filter=!@cvg/chat --filter=!@cvg/events --filter=!@cvg/realtime-service && pnpm --filter @cvg/desk-api exec vitest run --exclude '**/aaa-04.integration.test.ts' --exclude '**/aaa-05.integration.test.ts' --exclude '**/aaa-09.integration.test.ts' --exclude '**/aaa-10.integration.test.ts' --exclude '**/aaa-11.integration.test.ts' --exclude '**/aaa-12.integration.test.ts' --exclude '**/aaa-17.integration.test.ts' --exclude '**/aaa-19.integration.test.ts' --exclude '**/production/**' && pnpm --filter @cvg/chat exec vitest run --exclude '**/aaa-08-atomicity.test.ts' && pnpm --filter @cvg/events exec vitest run --exclude '**/aaa-07-lease-real.test.ts' && pnpm --filter @cvg/realtime-service exec vitest run --exclude '**/aaa-05-isolation.test.ts'",
     "test:postgres-real": "pnpm --filter @cvg/database db:types && pnpm --filter @cvg/database db:migrate && pnpm --filter @cvg/events test:real-db && pnpm --filter @cvg/chat exec vitest run src/__tests__/receive-inbound-idempotency.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/auth-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/chat-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/webhook-inbound.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/events-polling.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/kanban-routes.integration.test.ts && pnpm --filter @cvg/desk-api exec vitest run src/__tests__/dead-letter-routes.integration.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:smoke": "DATABASE_URL=postgresql://connect_desk:root@localhost:55432/connect_desk_db playwright test",
@@ -18,33 +19,54 @@
     "e2e:stack:down": "fuser -k 4330/tcp 4930/tcp 4173/tcp 8082/tcp 2>/dev/null; docker compose -f docker-compose.smoke.yml down -v",
     "e2e:stack:logs": "docker compose -f docker-compose.smoke.yml logs -f postgres redis",
     "pretypecheck": "pnpm --filter @cvg/database db:types",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck --continue",
     "db:migrate": "pnpm --filter @cvg/database db:migrate",
     "db:seed": "pnpm --filter @cvg/database db:seed",
     "triple-aaa:verify": "node scripts/triple-aaa-verify.mjs",
-    "staging:smoke": "tsx scripts/staging-smoke.mjs",
-    "production-readiness": "node scripts/production-readiness.mjs"
+    "a11y:axe": "node scripts/a11y-axe.mjs",
+    "staging:smoke": "node scripts/staging-smoke.mjs",
+    "production-readiness": "node scripts/production-readiness.mjs",
+    "security:audit": "pnpm audit --audit-level=high",
+    "security:audit:prod": "pnpm audit --prod --audit-level=high"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.1131.0",
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.5.0",
     "bcryptjs": "^2.4.3",
     "eslint": "^9.0.0",
     "globals": "^17.4.0",
-    "tsx": "4.21.0",
-    "turbo": "2.8.21",
+    "tsx": "4.23.13",
+    "turbo": "2.10.12",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.57.2",
     "vitest": "^3.2.7"
   },
   "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=24.0.0 <25.0.0",
+    "pnpm": ">=10.33.0 <11.0.0"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
     "pg": "8.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/core@<8": "7.29.7",
+      "@humanfs/node@<0.16.8": "0.16.8",
+      "@opentelemetry/propagator-jaeger@<2.9.0": "2.11.0",
+      "baseline-browser-mapping@<2.11.0": "2.11.23",
+      "brace-expansion@<2": "1.1.18",
+      "brace-expansion@>=3.0.0": "5.0.9",
+      "browserslist@<4.28.7": "4.28.9",
+      "fast-uri@<3.1.6": "3.1.7",
+      "form-data@<4.0.6": "4.0.6",
+      "js-yaml@<4.3.2": "4.3.2",
+      "nanoid@<3.3.18": "3.3.19",
+      "postcss@<8.5.23": "8.5.28",
+      "ws@<8.21.0": "8.21.3"
+    }
   }
 }

@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "sa003-migrate",
+    "redis": {
+      "stopped": true,
+      "pid": 824863
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 824843
+    }
+  }
+}

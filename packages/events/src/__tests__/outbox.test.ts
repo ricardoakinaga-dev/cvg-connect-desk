@@ -328,7 +328,6 @@ describe('Consumer-Aware Fan-Out Behavioral Tests', () => {
 describe('Consumers use ConsumerAwareOutboxReader', () => {
   const workerPath = resolve(__dirname, '../../../../apps/message-worker/src/index.ts');
   const realtimePath = resolve(__dirname, '../../../../apps/realtime-service/src/index.ts');
-  const apiPath = resolve(__dirname, '../../../../apps/desk-api/src/index.ts');
 
   describe('message-worker', () => {
     try {

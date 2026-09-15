@@ -1,0 +1,3604 @@
+{
+  "schema_version": 1,
+  "id": "CVG-PRODUCTION-20260913",
+  "status": "SUPERSEDED_EXECUTION_PARTIAL",
+  "created_at": "2026-09-13",
+  "goal": "Fechar as lacunas dos 55 itens da auditoria e demonstrar prontidão; implantar quando autorizado e medir operação real.",
+  "audit": "../auditorias/2026-09-13/RELATORIO.md",
+  "audit_sha256": "dd485eec8e0e59b89c4e2e75cec4ca83f134e0032ca49577aaa9f56058ec1b40",
+  "notes_sha256": "e504b7d2d14024f5df4b1ba8d01d16ea61f6905276cb36e00c9754b2aad44cdb",
+  "state_policy": "PLANNED->READY->RUNNING->IMPLEMENTED->REVIEW->VERIFIED->DONE; falha->REWORK/BLOCKED/FAILED. Apenas integrador com evidência atual fecha DONE. Planejamento não muda status do produto.",
+  "tasks": [
+    {
+      "id": "PROD-00",
+      "title": "Congelar candidato e ambiente de teste reproduzível",
+      "status": "VERIFIED",
+      "priority": "P1",
+      "milestone": "M0",
+      "role": "Lead + plataforma",
+      "effort_points": 8,
+      "audit_items": [
+        "OP06",
+        "DT02",
+        "BE01"
+      ],
+      "dependencies": [],
+      "decision_refs": [],
+      "ownership": [
+        "e2e/support/aaa",
+        "e2e/support/production",
+        "playwright.production.config.ts",
+        "scripts/production",
+        "docs/producao-2026-09-13/evidencias",
+        "scripts/production/prod-00.test.mjs"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-00-AC1",
+          "requirement": "Inventariar worktree sujo, HEAD, hashes de fontes/lock e imagens; reconciliar candidatos já presentes sem reset, limpeza ou substituição cega por HEAD."
+        },
+        {
+          "id": "PROD-00-AC2",
+          "requirement": "Reutilizar o harness AAA com runId, banco/Redis/bucket/portas próprios por worker, fixture marcada e teardown idempotente; recusar URL sem marcador e servidor alheio. Remover fuser/nomes fixos do caminho de teste utilizado."
+        },
+        {
+          "id": "PROD-00-AC3",
+          "requirement": "Criar configuração production que inclui novas suítes, valida identidade/isolamento e prova canário positivo/negativo do harness. Registrar disponibilidade de PostgreSQL/Redis/MinIO/ClamAV/OTel; serviço ausente bloqueia somente a prova dependente, nunca vira skip/PASS. Inventário e harness podem concluir sem todos os serviços disponíveis."
+        },
+        {
+          "id": "PROD-00-AC4",
+          "requirement": "Fixar Node/pnpm/lock atuais, seeds, relógio/timezone e concorrência; registrar baseline de checks disponíveis e perfil de carga especificado. Ausências recebem NOT_RUN/BLOCKED e dono na tarefa dependente; PROD-00 encerra inventário, identidade e isolamento sem alegar baseline funcional verde."
+        }
+      ],
+      "checks": [
+        {
+          "status": "PASS",
+          "file": "scripts/production/prod-00.test.mjs",
+          "command": "node --test scripts/production/prod-00.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "AC1-AC4 exercitados com casos positivos/negativos; servicos ausentes registrados como BLOCKED com dono.",
+          "result": "5/5 testes PASS em 2026-09-13; worktree 384 alteracoes; audit sha match=true; canario de isolamento PASS com teardown idempotente."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-00/baseline/candidate-manifest.json",
+        "evidencias/prod-00/baseline/git-status.txt",
+        "evidencias/prod-00/baseline/diff-stat.txt",
+        "evidencias/prod-00/baseline/hash-before.txt",
+        "evidencias/prod-00/environment/availability.json",
+        "evidencias/prod-00/isolation/canary.json",
+        "evidencias/prod-00/checks/prod-00.test.log"
+      ],
+      "next_action": {
+        "id": "PROD-00:DONE",
+        "summary": "Baseline e harness de producao congelados; proxima acao e PROD-01 (contratos/decisoes) e PROD-02 (gate mestre).",
+        "completion_signal": "Evidencia vinculada ao candidato em evidencias/prod-00 e reproducao via node --test scripts/production/prod-00.test.mjs."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "OPS07",
+          "DOC01"
+        ],
+        "successor_task": "PROD-00",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-01",
+      "title": "Fechar contratos e decisões de escopo/produção",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M0",
+      "role": "Lead + donos de produto/dados/operação",
+      "effort_points": 5,
+      "audit_items": [
+        "BE01",
+        "BE02",
+        "BE03",
+        "BE04",
+        "BE20",
+        "DT01",
+        "UI05",
+        "UI10",
+        "UI13",
+        "OP16"
+      ],
+      "dependencies": [
+        "PROD-00"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "docs/producao-2026-09-13/CONTRATOS.md",
+        "docs/producao-2026-09-13/DECISOES.md"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-01-AC1",
+          "requirement": "Publicar contratos C01–C10 definidos em CONTRATOS.md com produtor, consumidor, payload positivo/negativo, erro, versão, compatibilidade e evidência requerida; ratificar os recortes já congelados sem redesenhar sessão ou canal."
+        },
+        {
+          "id": "PROD-01-AC2",
+          "requirement": "Registrar decisões D01–D06 com dono e alcance: permissões efetivas, dados/retencão, tutor-paciente, expansões Kanban, ferramentas IA e condições operacionais. Decisão não tomada bloqueia só ação dependente; não inventar ratificação."
+        },
+        {
+          "id": "PROD-01-AC3",
+          "requirement": "Manter todos os 55 itens cobertos; funcionalidades já completas recebem validação, não reimplementação. Cada possível exclusão precisa origem, motivo, dono e registro explícito; não classificar ausência como concluída."
+        },
+        {
+          "id": "PROD-01-AC4",
+          "requirement": "Distinguir implementação autorizada por futura solicitação, aprovação técnica e implantação externa; plano atual não inicia nenhuma delas."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-01/VALIDACAO.md"
+      ],
+      "next_action": {
+        "id": "PROD-01:REVIEW",
+        "summary": "Contratos e decisoes publicados; aguarda revisao independente do lote M0.",
+        "completion_signal": "Critico fresco aprova CONTRATOS/DECISOES sem achado bloqueante."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "BE-A03",
+          "DOC01"
+        ],
+        "successor_task": "PROD-01",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-02",
+      "title": "Corrigir gate mestre e vínculo de evidência ao candidato",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M0",
+      "role": "Plataforma + crítico de evidências",
+      "effort_points": 5,
+      "audit_items": [
+        "OP01",
+        "OP07",
+        "OP16"
+      ],
+      "dependencies": [
+        "PROD-00"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "scripts/triple-aaa-verify.mjs",
+        "scripts/production/evidence-gate.mjs",
+        "scripts/production/prod-02.test.mjs"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-02-AC1",
+          "requirement": "Rejeitar SHA/lock/source/image digest divergentes, evidência antiga de outro candidato, JSON vazio/truncado, query set vazio e PASS só narrativo; conservar logs da falha."
+        },
+        {
+          "id": "PROD-02-AC2",
+          "requirement": "FAIL, BLOCKED, NOT_RUN, skipped indevido e gate requerido ausente impedem VERIFIED_CANDIDATE; saída não zero para falha e estado inequívoco para evidência ausente."
+        },
+        {
+          "id": "PROD-02-AC3",
+          "requirement": "Exigir manifesto por check com comando, ambiente, horário, resultado, hashes e escopo real; não reutilizar percentuais de coverage fixos no texto."
+        },
+        {
+          "id": "PROD-02-AC4",
+          "requirement": "Caso bom selado aceita; cada caso ruim isoladamente rejeita. Selo AAA não pode ser criado só por status local nem sem política de release definida."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-02.test.mjs",
+          "command": "node --test scripts/production/prod-02.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-02/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-02:REVIEW",
+        "summary": "Gate mestre corrigido e 17 testes verdes localmente; aguarda revisao independente.",
+        "completion_signal": "Critico reproduz adversariais rejeitados no candidato."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "OPS01",
+          "OPS02",
+          "OPS03"
+        ],
+        "successor_task": "PROD-02",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-03",
+      "title": "Corrigir agregador e política required PR/release/scheduled",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M0",
+      "role": "Plataforma/CI",
+      "effort_points": 8,
+      "audit_items": [
+        "OP02",
+        "OP03",
+        "OP05",
+        "OP16"
+      ],
+      "dependencies": [
+        "PROD-01",
+        "PROD-02"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        ".github/scripts/certification-aggregator.mjs",
+        ".github/scripts/certification-aggregator.test.mjs",
+        ".github/workflows/triple-aaa-certification.yml",
+        ".github/workflows/triple-aaa-gate.yml",
+        "scripts/production/prod-03.test.mjs"
+      ],
+      "locks": [
+        "deploy-ci"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-03-AC1",
+          "requirement": "Inventário requerido cobre Docker/boot, staging real, coverage global, migrations fresh e upgrade distintos, E2E, carga/DR e segurança; jobs agregados não escondem falhas dos dependentes."
+        },
+        {
+          "id": "PROD-03-AC2",
+          "requirement": "Diferenciar políticas de PR, push/tag de release e scheduled; dependency-review só aplicável em PR não torna push impossível, mas ausência de prova requerida para release nunca vira dispensada silenciosamente."
+        },
+        {
+          "id": "PROD-03-AC3",
+          "requirement": "Consultar runs/jobs paginados no SHA correto e checar imagem testada; antigo sucesso, cancelamento, job duplicado/renomeado, skip e payload malformado rejeitados conforme política."
+        },
+        {
+          "id": "PROD-03-AC4",
+          "requirement": "Reproduzir os adversariais da auditoria e demonstrar rejeição; testar todos requeridos verdes e vincular a configuração de branch protection/rulesets inspecionada."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-03.test.mjs",
+          "command": "node --test scripts/production/prod-03.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-03/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-03:REVIEW",
+        "summary": "Agregador corrigido e 16 testes verdes; limitacao GitHub real registrada.",
+        "completion_signal": "Critico reproduz politicas por evento e rejeicoes."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "OPS04",
+          "OPS06"
+        ],
+        "successor_task": "PROD-03",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-04",
+      "title": "Uniformizar permissão de ação e escopo em HTTP/WS",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M1",
+      "role": "Backend segurança",
+      "effort_points": 13,
+      "audit_items": [
+        "BE04",
+        "BE06",
+        "BE17",
+        "BE20",
+        "UI02",
+        "UI13"
+      ],
+      "dependencies": [
+        "PROD-01"
+      ],
+      "decision_refs": [
+        "D01"
+      ],
+      "ownership": [
+        "packages/auth/src",
+        "modules/chat/src/presentation/http",
+        "modules/chat/src/infrastructure/repositories/conversation.repository.ts",
+        "modules/kanban/src",
+        "modules/tutors/src",
+        "modules/patients/src",
+        "modules/contacts/src",
+        "modules/notes/src",
+        "modules/tasks/src",
+        "modules/alerts/src",
+        "modules/admin/src",
+        "apps/realtime-service/src/authorization.ts",
+        "apps/desk-api/src/__tests__/production/prod-04.test.ts"
+      ],
+      "locks": [
+        "auth-contract",
+        "realtime-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-04-AC1",
+          "requirement": "Toda variante GET /conversations exige chat:read antes de consultar; sem role ou membership não há conteúdo/últimas mensagens. Query builder nunca interpreta ausência de setores como admin; papel global explícito. Testar revogação entre checagem e query."
+        },
+        {
+          "id": "PROD-04-AC2",
+          "requirement": "Kanban mover/atribuir/transferir exige ação+origem+destino autorizados; matriz de endpoints por ID/lista/estatística cobre tutores/pacientes/contatos/tasks/alerts/notes/admin e consumidores WS, respeitando exceções D-AUTHZ existentes."
+        },
+        {
+          "id": "PROD-04-AC3",
+          "requirement": "Uma fonte efetiva de permissões: papéis/permissions editáveis precisam realmente alterar decisão. Validar admin, usuário sem role, read-only, write, dois setores, recurso sem setor, revogação e IDs adulterados; 403/404 estáveis."
+        },
+        {
+          "id": "PROD-04-AC4",
+          "requirement": "Subscription e entrega WS validam ação/recurso; revogação corta conteúdo em <=5s no perfil congelado. Não enfraquecer gates HTTP para alinhar com WS; negativos reais por rota e socket."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-04.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-04.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-04/RELATORIO.md",
+        "evidencias/prod-04/PERMISSOES.md",
+        "evidencias/prod-04/matrix.json"
+      ],
+      "next_action": {
+        "id": "PROD-04:REVIEW",
+        "summary": "Autorizacao e fonte efetiva de permissoes implementadas; 27/27 HTTP+PG e WS 453ms. Aguarda revisao apos correcoes F1-F6.",
+        "completion_signal": "Critico reproduce revogacao total de permissoes negando no HTTP e no WS."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "BE-A05"
+        ],
+        "successor_task": "PROD-04",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-05",
+      "title": "Provar sessão, rotação e revalidação HTTP/WS",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend autenticação",
+      "effort_points": 5,
+      "audit_items": [
+        "BE03",
+        "UI01",
+        "BE06"
+      ],
+      "dependencies": [
+        "PROD-01",
+        "PROD-06"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/auth/src/session-policy.ts",
+        "packages/auth/src/infrastructure/repositories/auth.repository.ts",
+        "packages/auth/src/middleware.ts",
+        "apps/desk-api/src/__tests__",
+        "apps/desk-api/src/__tests__/production/prod-05.test.ts"
+      ],
+      "locks": [
+        "auth-contract"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-05-AC1",
+          "requirement": "Preservar tokens opacos só hash e C01: 7d normal/30d absoluto/24h idle; no limite exato negar; legado mantém deadline absoluto original."
+        },
+        {
+          "id": "PROD-05-AC2",
+          "requirement": "HTTP+PG reais demonstram login/logout/me/rotate/logout-all, usuário desativado, duas rotações concorrentes com um vencedor, relógio/timezone diferente, sem extensão indevida."
+        },
+        {
+          "id": "PROD-05-AC3",
+          "requirement": "Revalidação WS e sucessor de sessão usam mesma política; 401/403 e falha de rede distintos. Tokens não entram em URL/log nem novas migrations apagam sessão sem estratégia."
+        },
+        {
+          "id": "PROD-05-AC4",
+          "requirement": "Pré-check/boot não exige JWT como arquitetura; identificar e resolver variáveis legadas inconsistentes conforme configuração efetiva."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-05.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-05.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-05/RELATORIO.md",
+        "evidencias/integration-runs/prod05/runner-summary.json",
+        "evidencias/integration-runs/prod05-ws/runner-summary.json"
+      ],
+      "next_action": {
+        "id": "PROD-05:REVIEW",
+        "summary": "Sessao/rotacao/revalidacao provadas HTTP+PG+WS; 17/17 e 14/14. Aguarda revisao independente.",
+        "completion_signal": "Critico reproduz limites exatos, rotacao concorrente e corte WS <=5s."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-05",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-06",
+      "title": "Harmonizar schema e timezone; preparar evolução relacional",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend dados",
+      "effort_points": 5,
+      "audit_items": [
+        "DT01",
+        "BE03",
+        "BE08",
+        "BE10",
+        "BE20"
+      ],
+      "dependencies": [
+        "PROD-01"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/database/src/schema.ts",
+        "packages/database/src/check-migrations.ts",
+        "packages/database/supabase/migrations",
+        "modules/tutors/src",
+        "modules/patients/src",
+        "apps/desk-api/src/__tests__/production/prod-06.test.ts"
+      ],
+      "locks": [
+        "schema-migrations"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-06-AC1",
+          "requirement": "Confrontar schema completo com ledger/DDL e corrigir timestamp vs timestamptz de sessão; testar valores históricos em UTC e America/Sao_Paulo preservando instantes e deadlines."
+        },
+        {
+          "id": "PROD-06-AC2",
+          "requirement": "FKs/índices/uniques e deletes têm invariantes verificáveis; upgrade de cópia populada e migration fresh independentes, drift/checksum divergente bloqueia readiness."
+        },
+        {
+          "id": "PROD-06-AC3",
+          "requirement": "Inventariar tutor_patients N:N documentado versus patient.tutorId e preparar proposta D03 com impacto, migração e compatibilidade. Este aceite termina na proposta; decisão e implementação relacional pertencem a PROD-25 e não bloqueiam as correções independentes de sessão/webhook."
+        },
+        {
+          "id": "PROD-06-AC4",
+          "requirement": "Numerar novas migrations pelo integrador; ensaiar interrupção/restart e roll-forward, sem editar SQL já aplicado nem deletar dados para testes."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-06.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-06.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-06/relatorio.md",
+        "evidencias/prod-06/D03-PROPOSTA.md"
+      ],
+      "next_action": {
+        "id": "PROD-06:REVIEW",
+        "summary": "Timezone/migrations harmonizados com 12 testes verdes; aguarda revisao.",
+        "completion_signal": "Critico valida migration 0023 e readiness com checksum."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-06",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-07",
+      "title": "Tornar recibo de webhook recuperável sem enfraquecer antirreplay",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M1",
+      "role": "Backend ingresso/eventos",
+      "effort_points": 8,
+      "audit_items": [
+        "BE09",
+        "BE08",
+        "BE13"
+      ],
+      "dependencies": [
+        "PROD-01",
+        "PROD-06"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/shared/src/webhook-guard.ts",
+        "packages/shared/src/webhook-anti-replay.ts",
+        "modules/chat/src/presentation/http/webhook-inbound.controller.ts",
+        "modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/production/prod-07.test.ts"
+      ],
+      "locks": [
+        "schema-migrations"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-07-AC1",
+          "requirement": "Falha após HMAC válido e antes de commit permite retry legítimo do mesmo evento até persistir uma mensagem; evento concluído não reexecuta efeito."
+        },
+        {
+          "id": "PROD-07-AC2",
+          "requirement": "Definir lifecycle do recibo/inbox pending/committed/retryable/terminal vinculado a payload hash, origem e retenção; concorrentes reclamam atomicamente. Nunca remover HMAC/timestamp/dedup para corrigir retry."
+        },
+        {
+          "id": "PROD-07-AC3",
+          "requirement": "Testar bytes exatos, assinatura inválida, alteração de payload mesmo ID, skew de relógio, queda DB, crash antes/depois commit e reconexão; nenhum evento aceito some."
+        },
+        {
+          "id": "PROD-07-AC4",
+          "requirement": "Resposta ACK/erro respeita contrato Gateway real/sandbox e política de redelivery; logs e métricas distinguem repetição inofensiva de perda e de ataque."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-07.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-07.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-07/relatorio.md",
+        "evidencias/prod-07/PROCEDIMENTO-RECUPERACAO.md"
+      ],
+      "next_action": {
+        "id": "PROD-07:REVIEW",
+        "summary": "Recibo claim/complete/fail corrigido; 9/9 com exit 0 apos F4. Gateway real segue BLOCKED externo.",
+        "completion_signal": "Critico reproduz falha pos-HMAC + retry com um efeito; contrato Gateway permanece BLOCKED com dono."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "BE-A02",
+          "BE-A03"
+        ],
+        "successor_task": "PROD-07",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-08",
+      "title": "Eliminar conversas órfãs e duplicatas no primeiro inbound",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M1",
+      "role": "Backend persistência",
+      "effort_points": 8,
+      "audit_items": [
+        "BE08",
+        "BE17",
+        "DT01"
+      ],
+      "dependencies": [
+        "PROD-07"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts",
+        "modules/chat/src/infrastructure/repositories/message.repository.ts",
+        "modules/chat/src/infrastructure/repositories/inbound-contact.repository.ts",
+        "modules/chat/src/__tests__",
+        "apps/desk-api/src/__tests__/production/prod-08.test.ts"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-08-AC1",
+          "requirement": "Duas primeiras mensagens duplicadas concorrentes com/sem externalConversationId produzem uma conversa lógica, mensagem e intenções esperadas; transação perdedora não comita conversa/outbox órfãos."
+        },
+        {
+          "id": "PROD-08-AC2",
+          "requirement": "Mensagem+estado+contato/vínculo+histórico+outbox participam do executor correto; falha em cada escrita rollback completo e hints somente pós-commit."
+        },
+        {
+          "id": "PROD-08-AC3",
+          "requirement": "Paginação/keyset preserva ordem total em timestamps empatados e inserts concorrentes; busca/detalhe continuam autorizados."
+        },
+        {
+          "id": "PROD-08-AC4",
+          "requirement": "Identificar órfãos legados por dry-run e oferecer reconciliação idempotente com aprovação para mutação irreversível, sem apagar silenciosamente mensagens."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-08.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-08.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-08/RELATORIO.md",
+        "evidencias/prod-08/PROCEDIMENTO-RECUPERACAO.md"
+      ],
+      "next_action": {
+        "id": "PROD-08:REVIEW",
+        "summary": "Corrida da primeira conversa corrigida com advisory lock e rollback; 19/19. Aguarda revisao.",
+        "completion_signal": "Critico reproduz corrida sem orfaos e reconciliacao dry-run idempotente."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-08",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-09",
+      "title": "Garantir efeitos idempotentes de worker e falhas observáveis",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M1",
+      "role": "Backend worker/eventos",
+      "effort_points": 8,
+      "audit_items": [
+        "BE11",
+        "BE12",
+        "BE07",
+        "UI08"
+      ],
+      "dependencies": [
+        "PROD-08"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/message-worker/src",
+        "modules/alerts/src",
+        "modules/transfers/src",
+        "packages/events/src",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/production/prod-09.test.ts"
+      ],
+      "locks": [
+        "schema-migrations",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-09-AC1",
+          "requirement": "Err de createAlert e outros handlers propaga falha e impede ACK de sucesso; resultados de ACK/NACK stale são observados e não relatados como concluídos."
+        },
+        {
+          "id": "PROD-09-AC2",
+          "requirement": "Efeito+registro de dedup durável por evento/consumidor/ação são transacionais; crash após efeito antes ACK, lease expirado e redelivery não duplicam alerta/handoff."
+        },
+        {
+          "id": "PROD-09-AC3",
+          "requirement": "Falha transitória respeita retry budget/backoff; poison/malformed/unsupported version termina em DLQ com sourceEvent íntegro e motivo; tipo ignorável precisa contrato explícito."
+        },
+        {
+          "id": "PROD-09-AC4",
+          "requirement": "Testes PG e processos reais cobrem parada/restart/retry/DLQ e recuperação de outro consumidor sem perda; auditoria e métricas do efeito e decisão são minimizadas."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-09.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-09.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-09/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-09:REVIEW",
+        "summary": "Efeitos idempotentes, NACK/DLQ e crash/retomada provados; 13/13. Aguarda revisao.",
+        "completion_signal": "Critico reproduz crash pos-efeito com exatamente um alerta."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-09",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-10",
+      "title": "Mover Secretary para execução durável assíncrona",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend integrações",
+      "effort_points": 8,
+      "audit_items": [
+        "BE13",
+        "BE01",
+        "BE09",
+        "BE11"
+      ],
+      "dependencies": [
+        "PROD-09"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts",
+        "modules/secretary-adapter/src",
+        "apps/message-worker/src",
+        "packages/messaging-contracts/src",
+        "apps/desk-api/src/__tests__/production/prod-10.test.ts"
+      ],
+      "locks": [
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-10-AC1",
+          "requirement": "Webhook confirma apenas recibo/persistência; intenção de invocação Secretary comita junto e worker efetivamente processa, removendo espera de IA do caminho síncrono."
+        },
+        {
+          "id": "PROD-10-AC2",
+          "requirement": "Crash após commit antes invocar ou responder recupera job; duplicata inbound não perde invocação; idempotência/reconciliação externa registra unknown quando provider não oferece confirmação."
+        },
+        {
+          "id": "PROD-10-AC3",
+          "requirement": "Timeout/retry limitado e degradação preservam atendimento humano; cancelamento por handoff humano/estado antigo impede resposta tardia indevida."
+        },
+        {
+          "id": "PROD-10-AC4",
+          "requirement": "Contratos Gateway/Secretary e eventos versionados preservados com testes de consumidor real/sandbox; sem reescrever provider ou introduzir transporte paralelo."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-10.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-10.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-10/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-10:REVIEW",
+        "summary": "Secretary assincrona duravel com recibo e DLQ; 7/7 em 3 rodadas. Aguarda revisao independente.",
+        "completion_signal": "Critico reproduz webhook rapido, crash antes da invocacao e uma unica resposta."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "BE-A01"
+        ],
+        "successor_task": "PROD-10",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-11",
+      "title": "Validar reconciliação outbound e retenção da intenção",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend outbound",
+      "effort_points": 8,
+      "audit_items": [
+        "BE10",
+        "BE15",
+        "UI04"
+      ],
+      "dependencies": [
+        "PROD-08",
+        "PROD-10"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "modules/chat/src/application/use-cases/send-outbound-message.use-case.ts",
+        "modules/chat/src/infrastructure/repositories/outbound-atomic.repository.ts",
+        "modules/chat/src/infrastructure/repositories/outbound-delivery.repository.ts",
+        "modules/gateway-adapter/src",
+        "packages/messaging-contracts/src",
+        "apps/desk-api/src/__tests__/production/prod-11.test.ts"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-11-AC1",
+          "requirement": "Mesma intenção ator+conversa+payload retorna mesmo resultado; payload conflitante409; corrida tem um efeito e TTL não permite reenvio silencioso após expiração."
+        },
+        {
+          "id": "PROD-11-AC2",
+          "requirement": "ACK externo perdido,429,reset/timeout/deadline e callback atrasado/outra versão resultam em estado correto pending/sent/failed/unknown_reconciling; nunca reenviar cegamente."
+        },
+        {
+          "id": "PROD-11-AC3",
+          "requirement": "Mapping+message+outbox atômicos e callback autorizado/idempotente; replay após restart com prova durável e janela de rollout writer antigo detectada."
+        },
+        {
+          "id": "PROD-11-AC4",
+          "requirement": "Gateway/Secretary sandbox oficial distinguido de mock; resultados de entrega reais usados pela UI, limites de taxa e retry documentados."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-11.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-11.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-11/RELATORIO.md",
+        "evidencias/prod-11/RETENCAO.md"
+      ],
+      "next_action": {
+        "id": "PROD-11:REVIEW",
+        "summary": "Reconciliacao outbound e retencao implementadas; 12/12 com crash real. Aguarda revisao.",
+        "completion_signal": "Critico reproduz crash entre envio e callback sem reenvio duplicado."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-11",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-12",
+      "title": "Provar leases, DLQ e fanout entre processos",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend distribuído/QA",
+      "effort_points": 8,
+      "audit_items": [
+        "BE06",
+        "BE07",
+        "BE12"
+      ],
+      "dependencies": [
+        "PROD-04",
+        "PROD-09",
+        "PROD-11"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/events/src",
+        "packages/realtime/src",
+        "apps/realtime-service/src",
+        "apps/message-worker/src",
+        "modules/admin/src/presentation/http/dead-letter-persistent.controller.ts",
+        "apps/desk-api/src/__tests__/production/prod-12.test.ts"
+      ],
+      "locks": [
+        "realtime-runtime",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-12-AC1",
+          "requirement": "PG/Redis e três réplicas reais: claim exclusivo, renewal, geração/owner, staleACK/NACK negados, queda de processo e lease expirado recuperáveis."
+        },
+        {
+          "id": "PROD-12-AC2",
+          "requirement": "ACK de worker não esconde evento de realtime/http-poll; reorder/duplicata/reconnect não vaza conteúdo nem duplica efeito lógico; HTTP cursor não avança sobre falha."
+        },
+        {
+          "id": "PROD-12-AC3",
+          "requirement": "DLQ sobrevive restart; retry administrativo tem autorização, claim concorrente único, sourceEvent imutável, audit e resultados de falha explícitos."
+        },
+        {
+          "id": "PROD-12-AC4",
+          "requirement": "Queda Redis/partição nó, backlog e pressão recebem backoff bounded e recuperação; UI recebe estado verdadeiro, não online fixo."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-12.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-12.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-12/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-12:REVIEW",
+        "summary": "Leases, DLQ e fanout multi-processo implementados; 13/13 e regressões verdes; revisão independente pendente.",
+        "completion_signal": "Revisor confirma fence entre processos, replay administrativo autorizado e recuperação após SIGKILL."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "BE-A01"
+        ],
+        "successor_task": "PROD-12",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-13",
+      "title": "Fechar budget durável e workflow seguro de ferramentas IA",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend IA + admin",
+      "effort_points": 8,
+      "audit_items": [
+        "BE14",
+        "BE19",
+        "BE13"
+      ],
+      "dependencies": [
+        "PROD-01",
+        "PROD-10",
+        "PROD-04"
+      ],
+      "decision_refs": [
+        "D05"
+      ],
+      "ownership": [
+        "modules/secretary-adapter/src",
+        "packages/database/src/schema.ts",
+        "packages/database/supabase/migrations",
+        "modules/admin/src",
+        "apps/desk-web/src/pages/Admin.tsx",
+        "apps/desk-api/src/__tests__/production/prod-13.test.ts"
+      ],
+      "locks": [
+        "schema-migrations"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-13-AC1",
+          "requirement": "priorInvocations vem de contador persistente atômico por conversa; chamadas concorrentes e restart não superam orçamento. Conteúdo/histórico/timeout/retry já existentes permanecem."
+        },
+        {
+          "id": "PROD-13-AC2",
+          "requirement": "D05 define ferramentas efetivamente habilitadas. Conectar dispatcher existente ao enforcement se habilitadas, com validação ator/recurso, deny desconhecida e aprovação por revisor autorizado; caso não habilitadas, desabilitar exposição e corrigir claim sem anunciar fluxo ativo."
+        },
+        {
+          "id": "PROD-13-AC3",
+          "requirement": "Aprovação vinculada a payload original canônico/ação/recurso/escopo, nunca hash de versão truncada/sanitizada; CAS para decidir/consumir, expiração/revogação e uso único conforme contrato."
+        },
+        {
+          "id": "PROD-13-AC4",
+          "requirement": "Negativos budget, duplo approve/use, replay, args phone/email/conteúdo diferentes e ação proibida; registros sanitizados recursivamente e respostas tardias não vencem handoff humano."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-13.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-13.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-13/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-13:REVIEW",
+        "summary": "Budget duravel e aprovacao vinculada ao payload original; 11/11; D05 mantido desabilitado. Aguarda revisao.",
+        "completion_signal": "Critico reproduz limite concorrente e negacao por payload divergente."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "BE-A01"
+        ],
+        "successor_task": "PROD-13",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-14",
+      "title": "Conectar mídia inbound à quarentena e acesso privado",
+      "status": "IMPLEMENTED",
+      "priority": "P0",
+      "milestone": "M1",
+      "role": "Backend mídia",
+      "effort_points": 8,
+      "audit_items": [
+        "BE16",
+        "BE15",
+        "UI04"
+      ],
+      "dependencies": [
+        "PROD-07",
+        "PROD-08"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/media/src",
+        "modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts",
+        "modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts",
+        "apps/message-worker/src",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/production/prod-14.test.ts"
+      ],
+      "locks": [
+        "schema-migrations",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-14-AC1",
+          "requirement": "Todo ingresso de mídia referencia asset privado com lifecycle; webhook não bloqueia em scan longo e nenhum consumidor lê URL bruta sem política. Pipeline processInboundMedia possui chamada produtiva real."
+        },
+        {
+          "id": "PROD-14-AC2",
+          "requirement": "Download e redirects revalidam destino/SSRF, MIME/magic e bytes; documentos só acessíveis CLEAN+STORED conforme contrato, infectado/pending/timeout/falha scanner nunca liberados."
+        },
+        {
+          "id": "PROD-14-AC3",
+          "requirement": "Idempotência por evento/asset e crash entre baixar/scan/store/publicar recuperáveis sem duplicação; MinIO/ClamAV reais clean/EICAR/timeout observados através de webhook→leitura."
+        },
+        {
+          "id": "PROD-14-AC4",
+          "requirement": "Dry-run de mídias legadas URLs/assets, migração para storage controlado e quarentena/revalidação conforme origem; impedir acesso inseguro enquanto pendente sem apagar histórico."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-14.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-14.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-14/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-14:REVIEW",
+        "summary": "AC4 de midia legada entregue (dry-run/migracao/revalidacao) e lint zerado; 12/12. MinIO permanece BLOCKED com dono.",
+        "completion_signal": "Critico reproduz dry-run sem mutacao e migracao idempotente com pendente indisponivel."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "BE-A04"
+        ],
+        "successor_task": "PROD-14",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-15",
+      "title": "Validar upload e resolução autorizada de assets",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend mídia + plataforma",
+      "effort_points": 5,
+      "audit_items": [
+        "BE15",
+        "BE10",
+        "UI04"
+      ],
+      "dependencies": [
+        "PROD-11",
+        "PROD-14"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/media/src",
+        "modules/chat/src/presentation/http/media-upload.controller.ts",
+        "modules/chat/src/application/use-cases/send-outbound-message.use-case.ts",
+        "apps/desk-api/src/app.ts",
+        "apps/desk-web/nginx.conf",
+        "apps/desk-api/src/__tests__/production/prod-15.test.ts"
+      ],
+      "locks": [
+        "api-composition"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-15-AC1",
+          "requirement": "Limite 16MiB útil consistente proxy/API/storage incluindo overhead; tamanho exato aceita se válido e excesso413; stream/limites protegem memória e abort/cancel limpa apenas asset do run."
+        },
+        {
+          "id": "PROD-15-AC2",
+          "requirement": "Leitura/download/URL assinada confere ator, conversa, estado CLEAN e prefixo; outro setor/assetId adulterado, expirado/revogado, infected e pending negados."
+        },
+        {
+          "id": "PROD-15-AC3",
+          "requirement": "Transportar documento/vídeo/imagem/áudio por asset, preservando DTO de cliente e não aceitando URL arbitrária no outbound; falha de scanner/storage claramente recuperável."
+        },
+        {
+          "id": "PROD-15-AC4",
+          "requirement": "Executar via HTTP de imagem de produção com MinIO/ClamAV reais, fronteiras de tamanho e assinatura expirando; nenhum mock substitui scanner/storage para esse aceite."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-15.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-15.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-15/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-15:REVIEW",
+        "summary": "Upload/resolução de assets implementados; 12/12 com moto/ClamAV; MinIO e assinatura real permanecem limitados.",
+        "completion_signal": "Revisor confirma limites, autorização cross-conversa e ciclo CLEAN/INFECTED/PENDING sem URL crua."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-15",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-16",
+      "title": "Fechar escopo de privacidade e política por cópia",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M1",
+      "role": "Backend privacidade + responsável dados",
+      "effort_points": 8,
+      "audit_items": [
+        "BE20",
+        "BE05",
+        "BE19",
+        "OP08"
+      ],
+      "dependencies": [
+        "PROD-01",
+        "PROD-04",
+        "PROD-06"
+      ],
+      "decision_refs": [
+        "D02"
+      ],
+      "ownership": [
+        "modules/privacy/src",
+        "modules/notes/src",
+        "modules/alerts/src",
+        "packages/database/supabase/migrations",
+        "docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+        "apps/desk-api/src/__tests__/production/prod-16.test.ts"
+      ],
+      "locks": [
+        "schema-migrations"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-16-AC1",
+          "requirement": "GET/resume/export/erase sempre revalidam principal, permissão e escopo atual; requestId idempotente vinculado ator+contato+payload, reuso incompatível409 sem relatório alheio."
+        },
+        {
+          "id": "PROD-16-AC2",
+          "requirement": "Criação/retomada com checkpoint sob duas identidades, revogação no meio e crash não atravessa setor nem declara conclusão quando parcial; autor vem da sessão, incluindo alertas/notas."
+        },
+        {
+          "id": "PROD-16-AC3",
+          "requirement": "D02 ratifica retenção/finalidade/ação por contato,mensagem,nota,outbox,DLQ,asset,audit,logs,backup e relações tutor-paciente; inventário/dry-run podem avançar, mutação irreversível dependente só após decisão real."
+        },
+        {
+          "id": "PROD-16-AC4",
+          "requirement": "Exportação/residual scan e reaplicação de erasures após restore provam alcance; auditoria registra ator/correlação sem payload sensível integral e guarda recusas."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-16.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-16.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-16/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-16:REVIEW",
+        "summary": "Escopo de privacidade, cópias e dry-run implementados; 9/9; D02 permanece OPEN.",
+        "completion_signal": "Revisor confirma requestId/retomada cross-scope e que nenhum erase irreversível ocorre sem D02/confirmação."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "BE-A05"
+        ],
+        "successor_task": "PROD-16",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-17",
+      "title": "Validar sessão inicial e navegação por capacidade",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend sessão/shell",
+      "effort_points": 5,
+      "audit_items": [
+        "UI01",
+        "UI02",
+        "UI13",
+        "BE03",
+        "BE04"
+      ],
+      "dependencies": [
+        "PROD-04",
+        "PROD-05"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/App.tsx",
+        "apps/desk-web/src/store/auth.ts",
+        "apps/desk-web/src/components/layout",
+        "apps/desk-web/src/pages/Login.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/__tests__/production/prod-17.test.tsx"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-17-AC1",
+          "requirement": "Boot valida sessão persistida antes de liberar dados/rotas; loading, rede indisponível,401 e403 distintos; sem loop de redirects, estado antigo ou perda indevida de rascunho."
+        },
+        {
+          "id": "PROD-17-AC2",
+          "requirement": "Menus/rotas administrativos visíveis conforme capacidades efetivas sem confiar na UI para autorização; tentativa deep-link proibida recebe tratamento acessível e backend nega."
+        },
+        {
+          "id": "PROD-17-AC3",
+          "requirement": "Logout/expiração/rotação desconectam/reautenticam WS e limpam caches sensíveis; principal/setor mudou não herda dados da sessão anterior."
+        },
+        {
+          "id": "PROD-17-AC4",
+          "requirement": "Shell mobile, skip-link, trap/inert/Escape/retorno foco e conectividade real preservados, labels de setor/contadores derivados de API quando exibidos."
+        }
+      ],
+      "checks": [
+        {
+          "status": "PASS",
+          "file": "apps/desk-web/src/__tests__/production/prod-17.test.tsx",
+          "command": "pnpm --filter @cvg/desk-web test",
+          "environment": "synthetic-isolated",
+          "expected": "Boot, capacidades, deep-link, expiração, shell e regressões web sem falhas.",
+          "result": "22 arquivos e 268 testes PASS em 2026-09-13; typecheck, lint direcionado e build de produção PASS."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-17/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-17:REVIEW",
+        "summary": "Boot e navegação por capacidade implementados; aguarda revisão independente e prova browser integrada.",
+        "completion_signal": "Revisor confirma que rota protegida não libera dados antes de /auth/me e deep-link sem capacidade permanece negado."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [],
+        "successor_task": "PROD-17",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-18",
+      "title": "Completar APIs operacionais transacionais e trilha de auditoria",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Backend operação",
+      "effort_points": 8,
+      "audit_items": [
+        "UI05",
+        "UI06",
+        "UI08",
+        "UI10",
+        "BE04",
+        "BE05",
+        "BE11"
+      ],
+      "dependencies": [
+        "PROD-04",
+        "PROD-08",
+        "PROD-09"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "modules/chat/src",
+        "modules/transfers/src",
+        "modules/tasks/src",
+        "modules/notes/src",
+        "modules/alerts/src",
+        "modules/audit/src",
+        "packages/messaging-contracts/src",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/production/prod-18.test.ts"
+      ],
+      "locks": [
+        "schema-migrations"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-18-AC1",
+          "requirement": "Atribuir, mudar estado, handoff, transferir e vincular contexto têm operações públicas existentes reaproveitadas e contratos tipados; origem/destino/assignee/estado validado server-side."
+        },
+        {
+          "id": "PROD-18-AC2",
+          "requirement": "Estado+vínculos necessários+histórico+outbox/audit atômicos ou reconciliação explícita durável; falha entre updates não deixa Kanban/conversa/contato em setores contraditórios."
+        },
+        {
+          "id": "PROD-18-AC3",
+          "requirement": "CAS/versionamento impede operador antigo sobrescrever mudança de outro; status transitável e erros409/403/404 documentados; ações repetidas sem efeitos duplicados."
+        },
+        {
+          "id": "PROD-18-AC4",
+          "requirement": "Matriz de audit cobre mensagens, status/atribuição/handoff/tarefa/nota/admin/ack-resolve de alerta com autor derivado da sessão, resultados e correlação."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-18.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-18.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-18/RELATORIO.md"
+      ],
+      "next_action": {
+        "id": "PROD-18:REVIEW",
+        "summary": "APIs operacionais transacionais e auditoria implementadas; 18/18 e regressões verdes; revisão independente pendente.",
+        "completion_signal": "Revisor confirma rollback total, auditoria do ator efetivo e CAS/idempotência concorrente."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REWORK",
+        "findings": [
+          "BE-A06"
+        ],
+        "successor_task": "PROD-18",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-19",
+      "title": "Entregar Inbox com contexto e operação completos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend atendimento + API consultas",
+      "effort_points": 13,
+      "audit_items": [
+        "UI03",
+        "UI05",
+        "UI12",
+        "BE17"
+      ],
+      "dependencies": [
+        "PROD-17",
+        "PROD-18"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/pages/Inbox.css",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/features/inbox",
+        "modules/chat/src/presentation/http",
+        "modules/chat/src/infrastructure/repositories/conversation.repository.ts",
+        "e2e/production/prod-19.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-19-AC1",
+          "requirement": "Operador atribui, altera estado, faz handoff/transferência e gerencia tags, tutor/paciente/tarefas/notas/alertas no contexto; remover disabled permanente só com API funcional e autorização."
+        },
+        {
+          "id": "PROD-19-AC2",
+          "requirement": "Painel exibe dados humanos e links para recurso exato, não /contacts genérico; criar tarefa/nota preenche conversa/tutor/paciente sem exigir ID técnico."
+        },
+        {
+          "id": "PROD-19-AC3",
+          "requirement": "Busca/filtros por status/label/responsável/setor no conjunto autorizado do servidor e paginados, inclusive fora da primeira página; deep-link carrega recurso autorizado."
+        },
+        {
+          "id": "PROD-19-AC4",
+          "requirement": "Realtime/polling reconciliam detalhe do mesmo ID, status e contadores sem perder rascunho/foco ou saltar histórico; ações concorrentes/negadas têm feedback e recuperação."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-19.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-19.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-19:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "BE-A06",
+          "FE02",
+          "FE03"
+        ],
+        "successor_task": "PROD-19",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-20",
+      "title": "Corrigir timeline, anexos e recuperação de envio",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend conversa/mídia",
+      "effort_points": 8,
+      "audit_items": [
+        "UI03",
+        "UI04",
+        "UI16",
+        "BE10",
+        "BE15"
+      ],
+      "dependencies": [
+        "PROD-19",
+        "PROD-15"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/features/inbox",
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/lib/realtime.ts",
+        "e2e/production/prod-20.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-20-AC1",
+          "requirement": "Agrupar datas pelo timestamp/timezone real (Hoje apenas data atual), empates/ordem/replay deduplicados, histórico incremental sem pular leitura e sem estourar memória."
+        },
+        {
+          "id": "PROD-20-AC2",
+          "requirement": "Imagem/áudio/vídeo/documento asset:// resolvem leitura/download autorizado; pending/infected/expirado/revogado não vira URL insegura nem chip sem ação inexplicável."
+        },
+        {
+          "id": "PROD-20-AC3",
+          "requirement": "Preservar intenção idempotente e rascunho por conversa sob 401/offline/timeout/resposta tardia, cancelar upload e retry; UI distingue recebido pelo provider de entregue."
+        },
+        {
+          "id": "PROD-20-AC4",
+          "requirement": "RNG do teste backoff determinístico, sem diminuir backoff/jitter produtivo; validar reconexão em browser WSS remoto e teclado/toque de composer/anexos."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-20.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-20.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-20:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE04",
+          "FE05",
+          "FE06"
+        ],
+        "successor_task": "PROD-20",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-21",
+      "title": "Completar tarefas vinculadas e atribuição",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend operação + tasks",
+      "effort_points": 5,
+      "audit_items": [
+        "UI06",
+        "BE05"
+      ],
+      "dependencies": [
+        "PROD-18",
+        "PROD-17"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/pages/Tasks.tsx",
+        "apps/desk-web/src/pages/Tasks.css",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/tasks/src",
+        "e2e/production/prod-21.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-21-AC1",
+          "requirement": "Criar/editar atribuição, prazo/prioridade/status e vínculos conversa/tutor/paciente; seletores autorizados mostram nomes e contexto, não ID truncado."
+        },
+        {
+          "id": "PROD-21-AC2",
+          "requirement": "Abrir conversa vinculada preserva contexto e deep-link; filtros server-side ou paginação transparente não escondem tarefas fora do lote."
+        },
+        {
+          "id": "PROD-21-AC3",
+          "requirement": "Atualização realtime ou refresh acordado mostra mudanças de outro operador sem sobrescrever formulário sujo; overdue correto em timezone."
+        },
+        {
+          "id": "PROD-21-AC4",
+          "requirement": "Permissões, transições concorrentes, input inválido e falhas anunciam erro e preservam dados; testes HTTP+browser com vínculo persistido e audit."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-21.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-21.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-21:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE07"
+        ],
+        "successor_task": "PROD-21",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-22",
+      "title": "Tornar notas contextuais e navegáveis",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend contexto + notes",
+      "effort_points": 5,
+      "audit_items": [
+        "UI07",
+        "UI12",
+        "BE05"
+      ],
+      "dependencies": [
+        "PROD-18",
+        "PROD-17"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/pages/Notes.tsx",
+        "apps/desk-web/src/pages/Contacts.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/notes/src",
+        "e2e/production/prod-22.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-22-AC1",
+          "requirement": "Substituir ID digitado por pesquisa/seletor autorizado de conversa/tarefa/tutor/paciente, com referências humanas e links; criação contextual seleciona entidade correta."
+        },
+        {
+          "id": "PROD-22-AC2",
+          "requirement": "Autoria vem do principal; impedir authorId falsificado e referência conflitante, com erro acessível e sem salvar parcialmente."
+        },
+        {
+          "id": "PROD-22-AC3",
+          "requirement": "Detalhe do contato agrega notas de todas conversas autorizadas, não só primeira, com paginação e procedência; sem expor nota de outra entidade/setor."
+        },
+        {
+          "id": "PROD-22-AC4",
+          "requirement": "Editar/recarregar formulário, erro/retry, vazio e conteúdo longo operáveis em mobile/teclado; retorno do navegador preserva contexto."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-22.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-22.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-22:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE08",
+          "FE09"
+        ],
+        "successor_task": "PROD-22",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-23",
+      "title": "Completar alertas acionáveis e geração operacional",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Backend alertas + frontend",
+      "effort_points": 8,
+      "audit_items": [
+        "UI08",
+        "BE11",
+        "BE19"
+      ],
+      "dependencies": [
+        "PROD-09",
+        "PROD-18",
+        "PROD-17"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/pages/Alerts.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/alerts/src",
+        "apps/message-worker/src",
+        "e2e/production/prod-23.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-23-AC1",
+          "requirement": "Ack/resolve e link à conversa/tarefa são autorizados, auditados com ator real e atualizam lista em tempo hábil sem refresh manual obrigatório."
+        },
+        {
+          "id": "PROD-23-AC2",
+          "requirement": "Inventariar regras prometidas (prazo/tarefa vencida, conversa sem resposta/handoff pendente, falha envio/Secretary); completar as regras operacionais adotadas sem inventar diagnóstico clínico automatizado."
+        },
+        {
+          "id": "PROD-23-AC3",
+          "requirement": "Scheduler/evento usa chave dedup por regra+recurso+janela e relógio testável; restart, duas réplicas e mudança de prazo não duplicam nem mantêm alerta inválido."
+        },
+        {
+          "id": "PROD-23-AC4",
+          "requirement": "Regra dispara e recupera via dado real sintético, UI não confunde erro com vazio; controles por severity/status, bulk apenas se contrato existir."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-23.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-23.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-23:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE10"
+        ],
+        "successor_task": "PROD-23",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-24",
+      "title": "Fechar membership de labels, setores e grupos",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend cadastros + backend catálogos",
+      "effort_points": 5,
+      "audit_items": [
+        "UI11",
+        "UI12",
+        "UI02",
+        "BE04"
+      ],
+      "dependencies": [
+        "PROD-04",
+        "PROD-17"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/pages/Labels.tsx",
+        "apps/desk-web/src/pages/Sectors.tsx",
+        "apps/desk-web/src/pages/ContactGroups.tsx",
+        "apps/desk-web/src/pages/Contacts.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/labels/src",
+        "modules/sectors/src",
+        "modules/contact-groups/src",
+        "e2e/production/prod-24.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-24-AC1",
+          "requirement": "Adicionar/remover contato em grupos e labels via UI/API existente; instruções de tela apontam para ações que existem, e persistência aparece após reload."
+        },
+        {
+          "id": "PROD-24-AC2",
+          "requirement": "Editar setor/grupo e ativar/desativar respeita permissões, labels de sistema protegidas e vínculos referenciados; nomes e erros de conflito claros."
+        },
+        {
+          "id": "PROD-24-AC3",
+          "requirement": "Mudança de membership/escopo dispara invalidação de listas e corta acesso anterior; filtros e contadores correspondem a dados reais autorizados."
+        },
+        {
+          "id": "PROD-24-AC4",
+          "requirement": "Negativos outra identidade/setor, duplicidade e referência removida; ações recuperáveis no teclado/mobile com confirmação apropriada."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-24.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-24.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-24:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE11"
+        ],
+        "successor_task": "PROD-24",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-25",
+      "title": "Consolidar contatos, tutores e pacientes",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend hospitalar + dados",
+      "effort_points": 11,
+      "audit_items": [
+        "UI12",
+        "DT01",
+        "UI05"
+      ],
+      "dependencies": [
+        "PROD-06",
+        "PROD-22",
+        "PROD-24"
+      ],
+      "decision_refs": [
+        "D03"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Contacts.tsx",
+        "apps/desk-web/src/pages/Tutors.tsx",
+        "apps/desk-web/src/pages/Patients.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/contacts/src",
+        "modules/tutors/src",
+        "modules/patients/src",
+        "e2e/production/prod-25.spec.ts",
+        "packages/database/src/schema.ts",
+        "packages/database/supabase/migrations"
+      ],
+      "locks": [
+        "schema-migrations",
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-25-AC1",
+          "requirement": "CRUD/detalhe/iniciar conversa funcionam com vínculo tutor-paciente ratificado, names/phone normalizados e busca de recursos autorizados; dedup mantém dado canônico."
+        },
+        {
+          "id": "PROD-25-AC2",
+          "requirement": "Ficha reúne conversas/notas/tarefas/labels/grupos autorizados com paginação e links; contato sem setor segue exceção documentada, não vira acesso global a conversas."
+        },
+        {
+          "id": "PROD-25-AC3",
+          "requirement": "Formulários modal preservam dados e foco após falha; salvar/editar/desvincular atualiza Inbox/contexto e não remove histórico por cascade indevido."
+        },
+        {
+          "id": "PROD-25-AC4",
+          "requirement": "Fixtures de múltiplas conversas/tutores/pacientes e duas identidades comprovam integridade/privacidade e compatibilidade do legado."
+        },
+        {
+          "id": "PROD-25-AC5",
+          "requirement": "Executar D03 ratificada: padrão N:N com expansão, backfill idempotente, constraints/índices, compatibilidade de leitores antigos, API e UI; provar fresh/upgrade com múltiplos tutores. Manter 1:N exige alteração explícita de escopo e documentos, sem afirmar N:N entregue. Nenhuma decisão aberta fecha este aceite."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-25.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-25.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-25:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE09",
+          "FE12"
+        ],
+        "successor_task": "PROD-25",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-26",
+      "title": "Completar administração de permissões e auditoria",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend admin + backend acesso",
+      "effort_points": 8,
+      "audit_items": [
+        "UI13",
+        "BE04",
+        "BE05",
+        "BE12"
+      ],
+      "dependencies": [
+        "PROD-04",
+        "PROD-13",
+        "PROD-16",
+        "PROD-17"
+      ],
+      "decision_refs": [
+        "D01",
+        "D05"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Admin.tsx",
+        "apps/desk-web/src/pages/Audit.tsx",
+        "apps/desk-web/src/pages/Settings.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/admin/src",
+        "modules/audit/src",
+        "packages/auth/src",
+        "e2e/production/prod-26.spec.ts"
+      ],
+      "locks": [
+        "auth-contract",
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-26-AC1",
+          "requirement": "Editor de permissões por papel e vínculo usuário-papel/setor aplica a fonte efetiva D01; remover permissão tem efeito em HTTP/WS/sessão ativa. Prevenir autoelevação e perda do último admin conforme regra congelada."
+        },
+        {
+          "id": "PROD-26-AC2",
+          "requirement": "Usuários/papéis/filas/times com membros, DLQ e perfil/senha têm caminhos completos com validação, confirmação, erro/retry e nomes humanos; sem controles placebo."
+        },
+        {
+          "id": "PROD-26-AC3",
+          "requirement": "Auditoria consulta/filter/pagina ação/recurso/ator/tempo e registra alterações administrativas, sem PII indevida; perfis sem permissão não veem dados nem endpoints."
+        },
+        {
+          "id": "PROD-26-AC4",
+          "requirement": "Quando D05 habilitar ferramentas, revisor autorizado consegue aprovar/rejeitar com payload claro/minimizado; sem D05 não expor aprovação fictícia."
+        },
+        {
+          "id": "PROD-26-AC5",
+          "requirement": "Gestão de vínculo usuário↔papel e memberships/setores tem endpoint efetivo, autorização, auditoria e revogação; descobrir e implementar contrato ausente em coordenação com PROD-04/26."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-26.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-26.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-26:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE13"
+        ],
+        "successor_task": "PROD-26",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-27",
+      "title": "Completar Kanban funcional e sincronizado",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M2",
+      "role": "Frontend board + API",
+      "effort_points": 8,
+      "audit_items": [
+        "UI10",
+        "UI05",
+        "BE04"
+      ],
+      "dependencies": [
+        "PROD-18",
+        "PROD-19",
+        "PROD-24"
+      ],
+      "decision_refs": [
+        "D04"
+      ],
+      "ownership": [
+        "apps/desk-web/src/pages/Kanban.tsx",
+        "apps/desk-web/src/pages/Kanban.css",
+        "apps/desk-web/src/lib/api.ts",
+        "modules/kanban/src",
+        "e2e/production/prod-27.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-27-AC1",
+          "requirement": "Card abre conversa correta e mostra contexto relevante autorizado; drag/drop e alternativa select por teclado/toque usam mutação atômica validada."
+        },
+        {
+          "id": "PROD-27-AC2",
+          "requirement": "Filtros agente/labels/prioridade/período/grupo/setor funcionam sobre conjunto autorizado; ordenação e contagem consistentes e dados ausentes tratados."
+        },
+        {
+          "id": "PROD-27-AC3",
+          "requirement": "Realtime/refresh sincroniza outro operador e recupera erro/conflito sem movimento fantasma; mudança de setor corta acesso anterior."
+        },
+        {
+          "id": "PROD-27-AC4",
+          "requirement": "D04 resolve trilhas custom e expansões doc22: implementar se parte do escopo ratificado; deferimento exige item/dono/data e justificativa explícitos sem marcar recurso entregue. Núcleo/filtros não podem ser excluídos para passar."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-27.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-27.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-27:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "BE-A06",
+          "FE14"
+        ],
+        "successor_task": "PROD-27",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-28",
+      "title": "Modularizar frontend e unificar componentes/estados",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Frontend arquitetura/design",
+      "effort_points": 8,
+      "audit_items": [
+        "UI14",
+        "UI15",
+        "BE01",
+        "DT02"
+      ],
+      "dependencies": [
+        "PROD-20",
+        "PROD-21",
+        "PROD-22",
+        "PROD-23",
+        "PROD-24",
+        "PROD-25",
+        "PROD-26",
+        "PROD-27"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/features",
+        "apps/desk-web/src/components/ui",
+        "apps/desk-web/src/pages",
+        "apps/desk-web/src/lib",
+        "apps/desk-web/src/index.css",
+        "docs/design",
+        "apps/desk-web/src/__tests__/production/prod-28.test.tsx"
+      ],
+      "locks": [
+        "design-system",
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-28-AC1",
+          "requirement": "Extrair Inbox/Admin/Contacts em features/hooks/componentes com ownership de consultas e mutações; preservar contratos e fluxos aprovados, sem segunda API ou store paralela."
+        },
+        {
+          "id": "PROD-28-AC2",
+          "requirement": "Adotar tokens e primitivos nos estados loading/empty/error/forbidden/partial/success e controles; reduzir literais CSS/normalizações duplicadas por substituição semântica, não meta de linhas arbitrária."
+        },
+        {
+          "id": "PROD-28-AC3",
+          "requirement": "Atualizar ledger de adoção por página/estado a partir do código final; propriedades da marca, textos de produto e recursos preservados."
+        },
+        {
+          "id": "PROD-28-AC4",
+          "requirement": "Antes/depois com mesmos testes e capturas, regressão de fluxo completa e DAG/imports sem ciclo; refactor não esconde mudança comportamental."
+        },
+        {
+          "id": "PROD-28-AC5",
+          "requirement": "Extrações mínimas necessárias aos fluxos podem ser subtarefas das tarefas UI predecessoras, sob dono único por arquivo; esta tarefa fecha a composição integrada, sem exigir reescrita geral."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-web/src/__tests__/production/prod-28.test.tsx",
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/production/prod-28.test.tsx",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-28:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE16"
+        ],
+        "successor_task": "PROD-28",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-29",
+      "title": "Fechar responsividade e acessibilidade em toda a aplicação",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Frontend acessibilidade + QA visual",
+      "effort_points": 8,
+      "audit_items": [
+        "UI16",
+        "UI15",
+        "UI02",
+        "UI03"
+      ],
+      "dependencies": [
+        "PROD-28"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src",
+        "e2e/production",
+        "docs/design",
+        "docs/producao-2026-09-13/evidencias",
+        "e2e/production/prod-29.spec.ts"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-29-AC1",
+          "requirement": "Corrigir drawer fechado do Inbox: não amplia scrollWidth nem participa foco/árvore acessível; em 1024 viewport sem largura 1318; abrir/Escape restaura foco."
+        },
+        {
+          "id": "PROD-29-AC2",
+          "requirement": "Matriz todas as 16 rotas + shell/redirecionamento/deep-link em 375x812,390x844,768x1024,1024x768,1440x900 e em torno de 860/1260; normal cinco viewports e estados adicionais desktop+menor aplicável."
+        },
+        {
+          "id": "PROD-29-AC3",
+          "requirement": "WCAG2.2AA aplicável: teclado, leitor de tela real, foco, contraste, status announcements, zoom 200%/reflow, reduced-motion incluindo JS, orientação/teclado virtual/safe areas; zero barreira essencial/Critical/High não tratado."
+        },
+        {
+          "id": "PROD-29-AC4",
+          "requirement": "Capturas nativas e console/rede/hash por fixture/estado; críticos independentes julgam sem justificar score por código. Sem leitor de tela disponível é NOT_RUN, não skip aprovado nem alegação AAA."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-29.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-29.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-29:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE01"
+        ],
+        "successor_task": "PROD-29",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-30",
+      "title": "Completar atualização entre páginas e validade dos KPIs",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Frontend dados + dashboard backend",
+      "effort_points": 5,
+      "audit_items": [
+        "UI06",
+        "UI08",
+        "UI09",
+        "UI10",
+        "UI12",
+        "BE17",
+        "BE19"
+      ],
+      "dependencies": [
+        "PROD-21",
+        "PROD-22",
+        "PROD-23",
+        "PROD-24",
+        "PROD-25",
+        "PROD-26",
+        "PROD-27"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-web/src/lib",
+        "apps/desk-web/src/features",
+        "apps/desk-web/src/pages/Dashboard.tsx",
+        "modules/dashboard/src",
+        "modules/chat/src/infrastructure/repositories",
+        "e2e/production/prod-30.spec.ts"
+      ],
+      "locks": [
+        "web-contract-inbox"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-30-AC1",
+          "requirement": "Tasks/Alerts/Kanban/Contacts/Dashboard recebem invalidação real ou polling bounded conforme contrato; stale/offline visível e reconsulta após reconexão sem double fetch storm."
+        },
+        {
+          "id": "PROD-30-AC2",
+          "requirement": "KPIs seguem fórmulas doc13 no backend com janela explicitamente atual; null/sem dados não é zero fabricado, horário retornado e falha parcial acessíveis."
+        },
+        {
+          "id": "PROD-30-AC3",
+          "requirement": "Testes de cálculo em PG cobrem inbound/outbound humanos/bot/null legado, múltiplas mensagens, handoff, aging vazio e cross-sector conforme permissão de gestor."
+        },
+        {
+          "id": "PROD-30-AC4",
+          "requirement": "Filtros/search/paginação e atualizações não vazam dados, repetem efeitos ou sobrescrevem edição suja; padrões de cache e atualização documentados."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-30.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-30.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-30:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "FE15"
+        ],
+        "successor_task": "PROD-30",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-31",
+      "title": "Endurecer logs, PII e métricas operacionais",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Backend observabilidade",
+      "effort_points": 5,
+      "audit_items": [
+        "BE19",
+        "OP12",
+        "BE14",
+        "BE20",
+        "BE11"
+      ],
+      "dependencies": [
+        "PROD-09",
+        "PROD-13",
+        "PROD-16",
+        "PROD-18"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "apps/desk-api/src/app.ts",
+        "apps/message-worker/src",
+        "apps/realtime-service/src",
+        "packages/shared/src",
+        "modules/secretary-adapter/src",
+        "apps/desk-api/src/__tests__/production/prod-31.test.ts"
+      ],
+      "locks": [
+        "api-composition",
+        "realtime-runtime",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-31-AC1",
+          "requirement": "Redaction recursiva cobre previews, objetos aninhados, erros de provider e console; não vazar token/email/phone/content em logs/traces/labels de métricas."
+        },
+        {
+          "id": "PROD-31-AC2",
+          "requirement": "/metrics protegido e labels por rota normalizada/valores finitos; 404/IDs aleatórios não criam cardinalidade ilimitada; carga confirma orçamento antes/depois."
+        },
+        {
+          "id": "PROD-31-AC3",
+          "requirement": "Métricas detectam backlog/idade/lease/retry/DLQ/processamento worker, atraso realtime e degradação; correlação/causação ligam eventos sem PII."
+        },
+        {
+          "id": "PROD-31-AC4",
+          "requirement": "Falha de exportação/observabilidade não derruba negócio, porém detectável; logs e audit de segurança cobrem sucesso/negação/falha e retenção D02."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "apps/desk-api/src/__tests__/production/prod-31.test.ts",
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-31.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-31:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [],
+        "successor_task": "PROD-31",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-32",
+      "title": "Provar tracing real e corrigir smoke de integrações",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Plataforma tracing + QA integração",
+      "effort_points": 8,
+      "audit_items": [
+        "OP13",
+        "OP14",
+        "BE19",
+        "OP09"
+      ],
+      "dependencies": [
+        "PROD-31",
+        "PROD-36"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "packages/tracing/src",
+        "scripts/otel-e2e-check.mjs",
+        "scripts/staging-smoke.mjs",
+        ".github/workflows/staging-integrations.yml",
+        "docker-compose.yml",
+        "docker-compose.staging.yml",
+        "infra/otel",
+        "scripts/production/prod-32.test.mjs"
+      ],
+      "locks": [
+        "deploy-ci"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-32-AC1",
+          "requirement": "Staging smoke importa DeleteObjectCommand, interpreta HEAD 404 corretamente, remove tautologia || true e rejeita indisponibilidade/credencial/arquivo errado."
+        },
+        {
+          "id": "PROD-32-AC2",
+          "requirement": "Compose fornece OTEL_* realmente aos runtimes; usar Collector/armazenamento reais configurados, sem substituir endpoint por receptor de teste no aceite E2E."
+        },
+        {
+          "id": "PROD-32-AC3",
+          "requirement": "Transação webhook→API→DB→outbox→worker→Gateway/Secretary sandbox→realtime produz spans correlacionados consultáveis no backend de traces, com erro/timeout e campos sem PII."
+        },
+        {
+          "id": "PROD-32-AC4",
+          "requirement": "MinIO put/get/delete/signed expiry e ClamAV CLEAN/EICAR/timeout comprovados com serviços reais; portas abertas ou strings num span sintético não satisfazem gate."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-32.test.mjs",
+          "command": "node --test scripts/production/prod-32.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-32:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS05"
+        ],
+        "successor_task": "PROD-32",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-33",
+      "title": "Implantar SLOs, alertas e validar capacidade",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M4",
+      "role": "SRE desempenho + frontend",
+      "effort_points": 13,
+      "audit_items": [
+        "OP15",
+        "BE17",
+        "OP12",
+        "UI09",
+        "UI16"
+      ],
+      "dependencies": [
+        "PROD-12",
+        "PROD-29",
+        "PROD-30",
+        "PROD-32"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "docs/SLO.md",
+        "infra/prometheus",
+        "infra/grafana",
+        "infra/scripts/query-performance.mjs",
+        "e2e/load",
+        "scripts/production",
+        "scripts/production/prod-33.test.mjs"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-33-AC1",
+          "requirement": "Reescrever SLIs válidos e orçamento com janela explícita: dedup inofensiva não é efeito duplicado; 30 dias: API 99.9%=43min12s e webhook 99.95%=21min36s. Provar queries/rules com falha e recuperação."
+        },
+        {
+          "id": "PROD-33-AC2",
+          "requirement": "Dashboards reais versionados, burn-rate 1h/6h e receptor/simulador de alerta; fila parada, erro webhook, dependência crítica e atraso WS disparam e resolvem com runbook."
+        },
+        {
+          "id": "PROD-33-AC3",
+          "requirement": "Perfil herdado: 10 mil conversas/100 mil mensagens/100 sessões, 10min de aquecimento + 30min de medição x3 em hardware/rede/seed fixos; p95 inbound<250ms/realtime<500ms, inesperados<0.1%, zero perda/duplicação nos cenários determinísticos; EXPLAIN hotpaths e memória/pool/backpressure observados."
+        },
+        {
+          "id": "PROD-33-AC4",
+          "requirement": "Browser LCP<=2.5s/INP<=200ms/CLS<=0.1 no perfil fixo, JS inicial gzip<=120KiB/CSS<=25KiB; reportar três rodadas e pior resultado. Não confundir laboratório com percentil75 de campo ou disponibilidade mensal."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-33.test.mjs",
+          "command": "node --test scripts/production/prod-33.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-33:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS03"
+        ],
+        "successor_task": "PROD-33",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-34",
+      "title": "Integrar regressões e coverage efetiva no CI",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "QA/CI",
+      "effort_points": 8,
+      "audit_items": [
+        "OP03",
+        "OP07",
+        "DT02",
+        "UI17"
+      ],
+      "dependencies": [
+        "PROD-03",
+        "PROD-05",
+        "PROD-08",
+        "PROD-12",
+        "PROD-15",
+        "PROD-16",
+        "PROD-18",
+        "PROD-28"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/postgres-real-tests.yml",
+        ".github/workflows/smoke-e2e.yml",
+        "package.json",
+        "turbo.json",
+        "eslint.config.js",
+        "apps/*/vitest.config.ts",
+        "packages/*/vitest.config.ts",
+        "modules/*/vitest.config.ts",
+        "scripts/production/prod-34.test.mjs"
+      ],
+      "locks": [
+        "deploy-ci",
+        "workspace-manifests"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-34-AC1",
+          "requirement": "Reintroduzir todos arquivos AAA excluídos usando ambiente/guards do candidato, portáveis por run, sem remover testes protetores; incluir novas production suites e job agregado required."
+        },
+        {
+          "id": "PROD-34-AC2",
+          "requirement": "Lint/typecheck/build reais abrangem scripts operacionais (incluindo staging-smoke) e packages, lock imutável; reprovação não mascarada por echo,pipe,|| true ou cache de outro candidato."
+        },
+        {
+          "id": "PROD-34-AC3",
+          "requirement": "Coverage por escopo/branches no código tocado + inventário de fronteiras: manter shared85/80/85/85 e reconciliar doc25 core90/domain80/API70/web60/global75 antes de execução; definir denominadores e eventuais referências divergentes com justificativa, não reduzir por falha."
+        },
+        {
+          "id": "PROD-34-AC4",
+          "requirement": "Casos conhecidos ruins de autorização/ACK/scan/gate são rejeitados (testes de mutação focados); sem .only e skip requerido; artifacts completos mesmo falha, paths de report/trace coerentes."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-34.test.mjs",
+          "command": "node --test scripts/production/prod-34.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-34:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS02"
+        ],
+        "successor_task": "PROD-34",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-35",
+      "title": "Sanear cadeia de fornecimento e provar todas as imagens",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M4",
+      "role": "Segurança supply chain/plataforma",
+      "effort_points": 8,
+      "audit_items": [
+        "OP04",
+        "OP09",
+        "DT02"
+      ],
+      "dependencies": [
+        "PROD-34",
+        "PROD-36"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        ".github/workflows/security.yml",
+        ".github/workflows/ci.yml",
+        "package.json",
+        "pnpm-lock.yaml",
+        "apps/*/Dockerfile",
+        "docs/security",
+        "scripts/production/prod-35.test.mjs"
+      ],
+      "locks": [
+        "deploy-ci",
+        "workspace-manifests"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-35-AC1",
+          "requirement": "Audit prod/dev, SAST,secrets,dependencyreview conforme evento,SBOM e Trivy em API/worker/realtime/web e imagens de serviço entregues; scans no mesmo digest usado por boot/smoke/promoção."
+        },
+        {
+          "id": "PROD-35-AC2",
+          "requirement": "Fixar imagens/actions/runtime conforme política; verificar suporte/compatibilidade com fontes oficiais na execução e testar upgrades, sem trocar versões só por recomendação genérica."
+        },
+        {
+          "id": "PROD-35-AC3",
+          "requirement": "Zero High/Critical explorável ou não triado; target zero nas imagens. Exceção documentada por vulnerabilidade/alcance/mitigação/dono/prazo só autoridade responsável, nunca justifica falha comprovada de acesso/dados."
+        },
+        {
+          "id": "PROD-35-AC4",
+          "requirement": "Remover suppressões globais silenciosas e avaliar ignore-unfixed; gerar proveniência/hash assinável verificável, permissões CI mínimas e sem segredos nos artifacts."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-35.test.mjs",
+          "command": "node --test scripts/production/prod-35.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-35:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS01",
+          "OPS06"
+        ],
+        "successor_task": "PROD-35",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-36",
+      "title": "Fechar boot, health/readiness e implantação remota",
+      "status": "IMPLEMENTED",
+      "priority": "P1",
+      "milestone": "M3",
+      "role": "Plataforma runtime",
+      "effort_points": 8,
+      "audit_items": [
+        "BE18",
+        "OP09",
+        "OP10",
+        "OP11",
+        "BE06"
+      ],
+      "dependencies": [
+        "PROD-00",
+        "PROD-04",
+        "PROD-05",
+        "PROD-12"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "scripts/production-readiness.mjs",
+        "apps/desk-api/src/runtime-config.ts",
+        "apps/desk-api/src/app.ts",
+        "apps/message-worker/src/health.ts",
+        "apps/message-worker/src/healthcheck.ts",
+        "apps/realtime-service/src",
+        "apps/*/Dockerfile",
+        "apps/desk-web/nginx.conf",
+        "docker-compose.yml",
+        "docker-compose.staging.yml",
+        ".env.production.example",
+        "scripts/production/prod-36.test.mjs"
+      ],
+      "locks": [
+        "api-composition",
+        "deploy-ci",
+        "realtime-runtime",
+        "worker-runtime"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-36-AC1",
+          "requirement": "Préflight valida as mesmas dependências/variáveis efetivas do boot: NODE_ENV,origens,credenciais internas,storage/scanner/metrics obrigatórios; ausente não dá READY, sem exigir JWT se removido do desenho."
+        },
+        {
+          "id": "PROD-36-AC2",
+          "requirement": "Liveness separada de readiness: DB/schema/Redis crítico falhos=>503; opcional degradado explícito. Worker probe verifica progresso do loop/idade da fila e health do processo real, não só SELECT 1 em processo novo; WS aberto sozinho insuficiente."
+        },
+        {
+          "id": "PROD-36-AC3",
+          "requirement": "Imagens production sob usuário/rede/filesystem restritos iniciam de checkout limpo; TLS/WSS/origem pública /ws,proxy headers,CORS/rate-limit,graceful drain e reinício observados de outro host."
+        },
+        {
+          "id": "PROD-36-AC4",
+          "requirement": "Volumes/buckets privados e persistentes, scanner fail-closed,limits/timeouts/recursos/secrets fornecidos por mecanismo operacional real; restart não perde mensagens/arquivos e rollback compatível ensaiado."
+        }
+      ],
+      "checks": [
+        {
+          "status": "PASS",
+          "file": "scripts/production/prod-36.test.mjs",
+          "command": "node --test scripts/production/prod-36.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "AC1 e AC2 exercitados por preflight, API readiness, worker health e realtime HTTP/WS; contratos estáticos de AC3/AC4 verificados. AC3/AC4 ainda exigem observação com imagens, proxy TLS/WSS, storage/scanner e rollback reais.",
+          "result": "5/5"
+        },
+        {
+          "status": "PASS",
+          "file": "scripts/production/run-integration-isolated.mjs",
+          "command": "node scripts/production/run-integration-isolated.mjs --run-id prod36-health-final2 --worker 38 -- node --test scripts/production/prod-36.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Preflight executado após db:types, migration e seed isolados; exit 0.",
+          "result": "5/5; exit 0"
+        },
+        {
+          "status": "PASS",
+          "file": "scripts/production/run-integration-isolated.mjs",
+          "command": "node scripts/production/run-integration-isolated.mjs --run-id prod36-realtime-final --worker 36 -- pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/aaa-05-isolation.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Realtime isolado com PostgreSQL, Redis e sockets reais; exit 0.",
+          "result": "AAA-05 14/14; exit 0"
+        },
+        {
+          "status": "PASS",
+          "file": "scripts/production/run-integration-isolated.mjs",
+          "command": "node scripts/production/run-integration-isolated.mjs --run-id prod36-api-resilience --worker 37 -- pnpm --filter @cvg/desk-api exec vitest run src/__tests__/resilience.integration.test.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Resiliencia HTTP/API com PostgreSQL e Redis isolados; exit 0.",
+          "result": "5/5; exit 0"
+        }
+      ],
+      "evidence_refs": [
+        "evidencias/prod-36/RELATORIO.md",
+        "evidencias/prod-36/prod-36-evidence.json",
+        "evidencias/integration-runs/prod36-health-final2/runner-summary.json",
+        "evidencias/integration-runs/prod36-realtime-final/runner-summary.json",
+        "evidencias/integration-runs/prod36-api-resilience/runner-summary.json"
+      ],
+      "next_action": {
+        "id": "PROD-36:REVIEW",
+        "summary": "Boot/readiness, health do worker e realtime e preflight foram implementados e provados em ambiente sintético isolado; revisão do integrador pendente, com AC3/AC4 externos explicitamente parciais.",
+        "completion_signal": "Revisor confirma contratos de processo/readiness e registra observação ou bloqueio de imagens, TLS/WSS, volumes/scanner, restart e rollback reais."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "PARTIAL_REQUIRES_VERIFICATION",
+        "findings": [
+          "OPS07"
+        ],
+        "successor_task": "PROD-36",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-37",
+      "title": "Ensaiar backup/restore durável e privacidade pós-desastre",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M4",
+      "role": "SRE dados + privacidade",
+      "effort_points": 8,
+      "audit_items": [
+        "OP08",
+        "OP06",
+        "BE20",
+        "DT01"
+      ],
+      "dependencies": [
+        "PROD-06",
+        "PROD-16",
+        "PROD-36",
+        "PROD-25"
+      ],
+      "decision_refs": [
+        "D02"
+      ],
+      "ownership": [
+        "infra/scripts/pg-backup.sh",
+        "infra/scripts/pg-restore.sh",
+        "infra/scripts/dr-e2e.sh",
+        "infra/scripts/dr-e2e-node.mjs",
+        ".github/workflows/dr-e2e.yml",
+        "docs/DISASTER_RECOVERY.md",
+        "docs/RUNBOOK.md",
+        "scripts/production/prod-37.test.mjs"
+      ],
+      "locks": [
+        "deploy-ci"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-37-AC1",
+          "requirement": "Backup real durable com checksum exigido/verificado, encryption/access/retention/offsite conforme política, scheduler e observação de idade; falta/checksum inválido/corrupção bloqueiam restore."
+        },
+        {
+          "id": "PROD-37-AC2",
+          "requirement": "Ensaio em namespace com marcador: restaurar backup de banco populado (inclui sessions,acks,outbox,DLQ,assets/links e política); não substituir dump por SELECT→memória→INSERT."
+        },
+        {
+          "id": "PROD-37-AC3",
+          "requirement": "Integridade/contagens/hash e constraints antes/depois, migration/boot/readiness e fluxo browser pós-restore; readiness false ou dados perdidos reprovam; erasures reimplementadas antes de expor backup restaurado."
+        },
+        {
+          "id": "PROD-37-AC4",
+          "requirement": "RPO<=24h/RTO<=2h medidos, procedure por segundo operador, teardown só recursos run. Retention/erro/falta espaço/backup antigo e recuperação parcial exercitados sem tocar produção."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "scripts/production/prod-37.test.mjs",
+          "command": "node --test scripts/production/prod-37.test.mjs",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-37:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS08"
+        ],
+        "successor_task": "PROD-37",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-38",
+      "title": "Validar percurso completo com serviços reais isolados",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M4",
+      "role": "QA integração full stack",
+      "effort_points": 13,
+      "audit_items": [
+        "UI17",
+        "OP05",
+        "BE06",
+        "BE10",
+        "BE15",
+        "BE20"
+      ],
+      "dependencies": [
+        "PROD-19",
+        "PROD-20",
+        "PROD-21",
+        "PROD-22",
+        "PROD-23",
+        "PROD-24",
+        "PROD-25",
+        "PROD-26",
+        "PROD-27",
+        "PROD-29",
+        "PROD-30",
+        "PROD-32",
+        "PROD-34",
+        "PROD-35",
+        "PROD-37"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "e2e/production",
+        "e2e/smoke",
+        "e2e/aaa/system.spec.ts",
+        "playwright.production.config.ts",
+        ".github/workflows/smoke-e2e.yml",
+        "e2e/production/prod-38.spec.ts"
+      ],
+      "locks": [
+        "deploy-ci"
+      ],
+      "acceptance": [
+        {
+          "id": "PROD-38-AC1",
+          "requirement": "Atualizar seletores acessíveis do smoke (emojis/placeholders antigos removidos), fixtures estáveis e outputs coerentes; nenhum servidor preexistente reaproveitado sem identidade."
+        },
+        {
+          "id": "PROD-38-AC2",
+          "requirement": "Login→inbound→atribuição→resposta/anexo→realtime→handoff/transferência→notas/tarefas/alertas→auditoria/privacidade pelo browser, com PG/Redis/MinIO/ClamAV/Collector reais e providers sandbox identificados."
+        },
+        {
+          "id": "PROD-38-AC3",
+          "requirement": "Dois operadores/setores, sessão expirada,401/403,redelivery,rede offline,crash,restart,scanner falho e callback tardio não vazam/perdem/duplicam efeitos; UI/DB/eventos conferidos conjuntamente."
+        },
+        {
+          "id": "PROD-38-AC4",
+          "requirement": "Suites obrigatórias sem skip: ambiente ausente reprova/blocked, não verde; execução por imagem/digest do candidato e evidência source hash/run script/trace/logs/resultados completa."
+        }
+      ],
+      "checks": [
+        {
+          "status": "TO_CREATE",
+          "file": "e2e/production/prod-38.spec.ts",
+          "command": "pnpm exec playwright test e2e/production/prod-38.spec.ts --config playwright.production.config.ts",
+          "environment": "synthetic-isolated",
+          "expected": "Especificação de regressão a criar/adaptar após descoberta. Cobrir os aceites aplicáveis com casos positivos e negativos; exit 0 isolado não comprova o aceite integrado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-38:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS06",
+          "FE17"
+        ],
+        "successor_task": "PROD-38",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-39",
+      "title": "Reconciliar documentação e runbooks com o candidato",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M5",
+      "role": "Documentação técnica + SRE/lead",
+      "effort_points": 5,
+      "audit_items": [
+        "BE02",
+        "OP16",
+        "BE01",
+        "UI15",
+        "DT01"
+      ],
+      "dependencies": [
+        "PROD-33",
+        "PROD-35",
+        "PROD-37",
+        "PROD-38"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "docs/00-meta/README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/THREAT_MODEL.md",
+        "docs/TEST_MATRIX.md",
+        "docs/TRIPLE_AAA_CERTIFICATION.md",
+        "docs/18-deployment-and-runtime.md",
+        "docs/21-instalacao-local.md",
+        "docs/GAPS-TECNICOS.md",
+        "docs/design",
+        "docs/README.md"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-39-AC1",
+          "requirement": "Atualizar fotografia do candidato com hashes/contratos/limitações; rotular auditorias antigas como históricas via índice sem alterar o arquivo preservado13/09."
+        },
+        {
+          "id": "PROD-39-AC2",
+          "requirement": "Remover claims conflitantes in-memory/userId/sem OTel/DB placeholder/nenhum blocker; classificar arquitetura alvo,estado atual,expansão e evidência, sem confundir PLANNED com ausência."
+        },
+        {
+          "id": "PROD-39-AC3",
+          "requirement": "TEST_MATRIX aponta check+run+imagem+resultado atual+escopo e inclui os 55itens; C01–C10 e decisões ratificadas coerentes com APIs/DTOs/UI e logs."
+        },
+        {
+          "id": "PROD-39-AC4",
+          "requirement": "Outro operador segue instalação, recuperação, monitoramento, troca de credencial e rollback com dados sintéticos; instruções executadas, não só revisão textual."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-39:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "DOC01"
+        ],
+        "successor_task": "PROD-39",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-40",
+      "title": "Auditoria independente final do candidato integrado",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M5",
+      "role": "Crítico final fresco + integrador",
+      "effort_points": 8,
+      "audit_items": [
+        "BE01",
+        "BE02",
+        "BE03",
+        "BE04",
+        "BE05",
+        "BE06",
+        "BE07",
+        "BE08",
+        "BE09",
+        "BE10",
+        "BE11",
+        "BE12",
+        "BE13",
+        "BE14",
+        "BE15",
+        "BE16",
+        "BE17",
+        "BE18",
+        "BE19",
+        "BE20",
+        "UI01",
+        "UI02",
+        "UI03",
+        "UI04",
+        "UI05",
+        "UI06",
+        "UI07",
+        "UI08",
+        "UI09",
+        "UI10",
+        "UI11",
+        "UI12",
+        "UI13",
+        "UI14",
+        "UI15",
+        "UI16",
+        "UI17",
+        "OP01",
+        "OP02",
+        "OP03",
+        "OP04",
+        "OP05",
+        "OP06",
+        "OP07",
+        "OP08",
+        "OP09",
+        "OP10",
+        "OP11",
+        "OP12",
+        "OP13",
+        "OP14",
+        "OP15",
+        "OP16",
+        "DT01",
+        "DT02"
+      ],
+      "dependencies": [
+        "PROD-00",
+        "PROD-01",
+        "PROD-02",
+        "PROD-03",
+        "PROD-04",
+        "PROD-05",
+        "PROD-06",
+        "PROD-07",
+        "PROD-08",
+        "PROD-09",
+        "PROD-10",
+        "PROD-11",
+        "PROD-12",
+        "PROD-13",
+        "PROD-14",
+        "PROD-15",
+        "PROD-16",
+        "PROD-17",
+        "PROD-18",
+        "PROD-19",
+        "PROD-20",
+        "PROD-21",
+        "PROD-22",
+        "PROD-23",
+        "PROD-24",
+        "PROD-25",
+        "PROD-26",
+        "PROD-27",
+        "PROD-28",
+        "PROD-29",
+        "PROD-30",
+        "PROD-31",
+        "PROD-32",
+        "PROD-33",
+        "PROD-34",
+        "PROD-35",
+        "PROD-36",
+        "PROD-37",
+        "PROD-38",
+        "PROD-39"
+      ],
+      "decision_refs": [],
+      "ownership": [
+        "docs/producao-2026-09-13/evidencias/final"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-40-AC1",
+          "requirement": "Crítico fresco distinto dos builders/revisores intermediários inspeciona produto e registros selados contra cada requisito, sem usar nota anterior ou relato de builder como prova."
+        },
+        {
+          "id": "PROD-40-AC2",
+          "requirement": "Revalidar todos os gates G01–G12 exigidos antes de release no mesmo candidato/digest; nenhuma falhaCritical/High ou requerida aberta e nenhum resultado STALE/NOT_RUN substituído por média."
+        },
+        {
+          "id": "PROD-40-AC3",
+          "requirement": "Sentinela de fontes antes/depois limpa, evidências rejeitam versões falsas e casos conhecidos ruins; amostras visuais e fluxos completos revisados conforme critério configurado."
+        },
+        {
+          "id": "PROD-40-AC4",
+          "requirement": "Emitir READY_FOR_RELEASE apenas para artefato íntegro aprovado; achado volta dono existente REWORK com regressão+novo crítico, sem criar certificação/implantação automática."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-40:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "PRE_RELEASE_OBRIGATORIO",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [
+          "OPS07"
+        ],
+        "successor_task": "PROD-40",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-41",
+      "title": "Preparar pacote revisável e decisão go/no-go",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M5",
+      "role": "Lead release + operador responsável",
+      "effort_points": 5,
+      "audit_items": [
+        "OP09",
+        "OP16",
+        "BE20",
+        "OP08"
+      ],
+      "dependencies": [
+        "PROD-40"
+      ],
+      "decision_refs": [
+        "D02",
+        "D06"
+      ],
+      "ownership": [
+        "docs/producao-2026-09-13/evidencias/release",
+        "docs/PRODUCTION_DEPLOYMENT.md",
+        "docs/RUNBOOK.md"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-41-AC1",
+          "requirement": "Pacote imutável commit/source/lock/SBOM/image-digests, matriz de evidências, migração expand/rollback/runbook,configuração com segredos ocultados, backup válido e owners de incidente/contatos/plantão identificados."
+        },
+        {
+          "id": "PROD-41-AC2",
+          "requirement": "D06 fixa domínio/TLS,ambiente,capacidade,janela,perfilpiloto,critériosabort/rollback,observação,custo e responsáveis; D02 retenção ratificada; credenciais e sandbox/providerteste realmente disponíveis."
+        },
+        {
+          "id": "PROD-41-AC3",
+          "requirement": "Dry-run de deploy com mesmas imagens em staging privado e permissões mínimas; registrar risco residual concreto e mudança de código após selo invalida o aceite e repete gates afetados."
+        },
+        {
+          "id": "PROD-41-AC4",
+          "requirement": "Solicitar aprovação apenas sobre esse pacote concreto se implantação ainda não tiver autorização explícita. Decisão go/no-go do operador identificada, nunca inferida de timeout/notas."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-41:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "OPERACAO_CONDICIONAL",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [],
+        "successor_task": "PROD-41",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-42",
+      "title": "Executar entrada controlada em produção quando autorizada",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M6",
+      "role": "Operador de produção + lead",
+      "effort_points": 5,
+      "audit_items": [
+        "OP09",
+        "OP11",
+        "OP12",
+        "OP16"
+      ],
+      "dependencies": [
+        "PROD-41"
+      ],
+      "decision_refs": [
+        "D06"
+      ],
+      "ownership": [
+        "docs/producao-2026-09-13/evidencias/release",
+        "infra/scripts",
+        "docs/PRODUCTION_DEPLOYMENT.md"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-42-AC1",
+          "requirement": "Somente após autorização explícita válida vinculada ao pacote: aplicar migrations/deploy da imagem selada com backup/restauração ensaiada e janela/operador disponíveis."
+        },
+        {
+          "id": "PROD-42-AC2",
+          "requirement": "Piloto com escopo/canais/usuários acordados em D06; smoke seguro e autorizado confirma login,serviços,readiness,mensagem teste e WSS sem expor/enviar clientes reais inadvertidamente."
+        },
+        {
+          "id": "PROD-42-AC3",
+          "requirement": "Abortar/reverter ou roll-forward conforme plano se falha de autorização,dados,persistência,readiness ou critérios de SLO do piloto; registrar efeito parcial e reconciliação."
+        },
+        {
+          "id": "PROD-42-AC4",
+          "requirement": "Abrir tráfego progressivamente só com decisão observada e gates verdes; status IN_PRODUCTION significa observação real da implantação, não apenas CI verde."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-42:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R3",
+      "release_class": "OPERACAO_CONDICIONAL",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [],
+        "successor_task": "PROD-42",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    },
+    {
+      "id": "PROD-43",
+      "title": "Concluir estabilização e medir SLO de campo",
+      "status": "PLANNED",
+      "priority": "P1",
+      "milestone": "M7",
+      "role": "SRE/operação + lead",
+      "effort_points": 5,
+      "audit_items": [
+        "OP15",
+        "OP08",
+        "OP12",
+        "OP16",
+        "UI16"
+      ],
+      "dependencies": [
+        "PROD-42"
+      ],
+      "decision_refs": [
+        "D06"
+      ],
+      "ownership": [
+        "docs/producao-2026-09-13/evidencias/operacao",
+        "docs/SLO.md",
+        "docs/RUNBOOK.md",
+        "docs/DISASTER_RECOVERY.md"
+      ],
+      "locks": [],
+      "acceptance": [
+        {
+          "id": "PROD-43-AC1",
+          "requirement": "Cumprir janela de estabilização definida antes do piloto; monitorar perdas/efeitos duplicados/authz/backlog/latência e acionar incidente com dono e mitigação, sem ocultar violações."
+        },
+        {
+          "id": "PROD-43-AC2",
+          "requirement": "Observar janela mensal declarada para 99.9%API/99.95% webhook; ausência de 30 dias não vira SLO comprovado, mas não cria dependência circular que proíbe o primeiro deploy."
+        },
+        {
+          "id": "PROD-43-AC3",
+          "requirement": "Confirmar backups agendados,rotina restauração,expiração exceções supplychain e privacidade/retention; dashboards e alertas com operador respondendo."
+        },
+        {
+          "id": "PROD-43-AC4",
+          "requirement": "Reauditoria de 55itens e relatório de evidência de campo separado de laboratório; melhorias residuais viram backlog com owner/prazo, CLOSED só quando observações requeridas terminarem."
+        }
+      ],
+      "checks": [
+        {
+          "status": "NOT_RUN",
+          "file": null,
+          "command": null,
+          "environment": "revisão documental; operação somente quando autorizada",
+          "expected": "Revisão registrada requisito por requisito, links a artefatos e identidade do candidato. Decisões humanas e observação de campo não são substituídas por teste automatizado."
+        }
+      ],
+      "evidence_refs": [],
+      "next_action": {
+        "id": "PROD-43:REVALIDATE",
+        "summary": "Revalidar os achados e predecessores desta tarefa no candidato atual, antes de editar.",
+        "completion_signal": "Mapa achado→caminho real e reprodução/limite atual registrados no retorno."
+      },
+      "rollback": "Trabalhar em branch/worktree própria, preservar alterações preexistentes. Reverter só o delta da tarefa se compatível; em schema/dados preferir expand/contract e roll-forward ensaiado. Teardown apenas por runId e marcador isolado; nunca apagar banco existente.",
+      "risk": "R2",
+      "release_class": "OPERACAO_CONDICIONAL",
+      "audit_review": {
+        "review": "2026-09-13-R2",
+        "assessment": "REMAINING_SCOPE",
+        "findings": [],
+        "successor_task": "PROD-43",
+        "note": "Estado anterior preservado como declaração de entrega; execução futura no programa sucessor."
+      }
+    }
+  ],
+  "successor": "../melhorias-2026-09-13/BACKLOG.json",
+  "delivery_audit": "../auditorias/2026-09-13-entregas/RELATORIO.md"
+}

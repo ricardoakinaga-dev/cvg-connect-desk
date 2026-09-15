@@ -1,0 +1,40 @@
+{
+  "emptyQuery": {
+    "ok": true,
+    "status": "PASS",
+    "reasons": [],
+    "payload": {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "lockfileSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "sealedAt": "2026-09-13T00:00:00Z",
+      "result": "PASS",
+      "generatedAt": "2026-09-13T19:33:18.466Z",
+      "queries": [
+        {}
+      ]
+    },
+    "payloadSha256": "d49000b47ddb39e8d5808218f3fe6bb89f00d23d3c6dec1d5421c179468aa47e",
+    "identity": {
+      "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "lockfileSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "sourceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "imageDigest": null
+    }
+  },
+  "fakeCommand": {
+    "id": "compile",
+    "required": true,
+    "status": "PASS",
+    "reasons": [],
+    "manifestPath": "/tmp/cvg-audit-deliveries-ufq9_ejh/ops/fixture/compile.json",
+    "metrics": null,
+    "derivedManifest": null
+  },
+  "changedExpectedImage": {
+    "runExit": 1,
+    "evaluateExit": 1,
+    "stdout": "\nFINAL: FAILED\nChecks: {\"pass\":0,\"fail\":0,\"blocked\":0,\"notRun\":0,\"skipped\":0,\"invalid\":1,\"missing\":0,\"notEvaluated\":0}\nReprovados: image=INVALID (escopo ausente)\nCertificação: NOT_ELIGIBLE_LOCAL (TRIPLE_AAA_CERTIFIED não pode ser emitido pelo gate local: exige política de release ratificada e verificação de tag/assinatura em fluxo dedicado.)\nReports: /tmp/cvg-audit-deliveries-ufq9_ejh/ops/digest-report/triple-aaa-report.json + /tmp/cvg-audit-deliveries-ufq9_ejh/ops/digest-report/triple-aaa-report.md\n",
+    "stderr": ""
+  }
+}

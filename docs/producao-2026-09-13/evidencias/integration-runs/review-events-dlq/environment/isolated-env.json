@@ -1,0 +1,24 @@
+{
+  "runId": "review-events-dlq",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59832/cvg_aaa_review_events_dlq_w34",
+  "databaseName": "cvg_aaa_review_events_dlq_w34",
+  "databasePort": 59832,
+  "redisUrl": "redis://127.0.0.1:57020",
+  "redisPort": 57020,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2863946,
+    "dataDir": "/tmp/cvg-aaa-runs/review-events-dlq/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2864001,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-events-dlq",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:49:35.86063-03"
+  }
+}

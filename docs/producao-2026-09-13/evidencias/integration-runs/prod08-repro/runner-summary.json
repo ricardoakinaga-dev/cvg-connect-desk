@@ -1,0 +1,30 @@
+{
+  "runId": "prod08-repro",
+  "workerIndex": 17,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58132/cvg_aaa_prod08_repro_w17",
+  "redisUrl": "redis://127.0.0.1:56850",
+  "startedAt": "2026-09-13T15:41:41.026Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-08/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\"generatedAt\":\"2026-09-13T15:41:40.583Z\",\"runId\":\"prod08-repro\",\"database\":\"postgresql://***@127.0.0.1:58132/cvg_aaa_prod08_repro_w17\",\"scenarioA\":{\"winnerConversationId\":\"5ff5d513-0af7-41f3-8cbf-e697668efa99\",\"loserConversationId\":\"a7522e37-cbcd-4660-a0f9-aa09051ffd1d\",\"messages\":1,\"orphanConversations\":1,\"orphanConversationCreatedEvents\":1,\"orphanStatusHistory\":1,\"winnerUnread\":1},\"scenarioB\":{\"iterations\":8,\"loserErrors\":8,\"bothOk\":0,\"maxConversations\":1,\"maxMessages\":1,\"sampleError\":\"Failed query: insert into \\\"conversations\\\" (\\\"id\\\", \\\"contact_id\\\", \\\"status\\\", \\\"status_v2\\\", \\\"current_handler\\\", \\\"interaction_type\\\", \\\"queue_id\\\", \\\"team_id\\\", \\\"sector_id\\\", \\\"assigned_user_id\\\", \\\"is_active\\\", \\\"external_channel_id\\\", \\\"external_conversation_id\\\", \\\"metadata\\\", \\\"unread_count\\\", \\\"created_at\\\", \\\"updated_at\\\", \\\"closed_at\\\") values (default, default, $1, default, default, default, default, default, default, default, $2, $3, $4, default, default, default, default, default) returning \\\"id\\\", \\\"contact_id\\\", \\\"status\\\", \\\"status_v2\\\", \\\"current_handler\\\", \\\"interaction_type\\\", \\\"queue_id\\\", \\\"team_id\\\", \\\"sector_id\\\", \\\"assigned_user_id\\\", \\\"is_active\\\", \\\"external_channel_id\\\", \\\"external_conversation_id\\\", \\\"metadata\\\", \\\"unread_count\\\", \\\"created_at\\\", \\\"updated_at\\\", \\\"closed_at\\\"\\nparams: open,true,whatsapp,prod08-repro-b-1789314100870-0-kyfweo-conv\"},\"defects\":{\"orphanConversationsCommitted\":true,\"orphanOutboxEventsCommitted\":true,\"duplicateLogicalConversations\":true,\"loserNotIdempotent\":true},\"verdict\":\"DEFECT_REPRODUCED\"}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

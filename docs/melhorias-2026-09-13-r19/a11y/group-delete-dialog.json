@@ -1,0 +1,12 @@
+{
+  "groupName": "AAA-22 modal 1789374059410",
+  "dialogState": {
+    "ariaModal": "true",
+    "focusInside": true,
+    "labelled": "group-delete-title"
+  },
+  "afterEscape": {
+    "dialogPresent": false,
+    "focusDescriptor": "Excluir grupo AAA-22 modal 1789374059410"
+  }
+}

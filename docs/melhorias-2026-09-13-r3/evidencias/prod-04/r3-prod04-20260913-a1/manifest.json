@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-04",
+  "runId": "r3-prod04-20260913-a1",
+  "attempt": 1,
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-04.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T23:40:05.184Z",
+  "finishedAt": "2026-09-13T23:40:18.933Z",
+  "durationMs": 13749,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "1bf7b0478dce47d09fee2c229b2ac647b6f79de0a49a9ddac1176e667f8b8684",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod04-20260913-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-13T23:40:05.184Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-04.test.log",
+      "sha256": "5e9353f9fe7b0f5771069dd7ae81173eb20276e1fe333da0eda85aa91119e0db"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis e serviços HTTP/WS locais isolados; não substitui provas Docker/staging remotas nem revisão independente."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "runId": "prod11-repro",
+  "workerIndex": 38,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60232/cvg_aaa_prod11_repro_w38",
+  "redisUrl": "redis://127.0.0.1:57060",
+  "startedAt": "2026-09-13T17:45:04.264Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-11/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nPermission already exists: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nAdmin user already exists: admin@cvg.com\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "[outbound-reconciliation] receipt resolved delivery=8c08a1a2-b5bb-49ad-bb44-0fa1b372c334 ref=9b4aa3eff7f5ef9a status=sent\n{\n  \"runId\": \"prod11-repro\",\n  \"prefix\": \"prod11-repro-prod11-repro-792baaa7\",\n  \"conversationId\": \"bbdcb1cc-f7b1-409e-95e4-a5f1a09f44d6\",\n  \"A_intencao_ambigua_callback\": {\n    \"sendOutcome\": \"unknown_reconciling\",\n    \"deliveryStatusBeforeReceipt\": \"unknown_reconciling\",\n    \"deliveryStatusAfterReceipt\": \"sent\",\n    \"messageStatusAfterReceipt\": \"delivered\",\n    \"receiptUpdated\": true,\n    \"gatewaySends\": 1,\n    \"defect\": false\n  },\n  \"D_retry_sem_reenvio\": {\n    \"retryOutcome\": \"sent\",\n    \"retryDeduplicated\": true,\n    \"gatewaySends\": 1,\n    \"noBlindResend\": true\n  },\n  \"B_orfa_sem_reconciliacao\": {\n    \"messageId\": \"edc1e456-a3e5-4753-9daa-4b8531f96e60\",\n    \"deliveryStatus\": \"unknown_reconciling\",\n    \"hasReceiptReconciler\": true,\n    \"hasOrphanList\": true,\n    \"hasExplicitResolve\": true,\n    \"defect\": false\n  },\n  \"C_retencao_sem_politica\": {\n    \"messageId\": \"5225a935-4fc5-4a6e-90c6-6f2a145a78ac\",\n    \"hasExpireStale\": true,\n    \"hasListExpired\": true,\n    \"hasPurge\": true,\n    \"unknownRetainedAfterTtl\": \"unknown_reconciling\",\n    \"defect\": false\n  },\n  \"verdict\": \"NO_DEFECT_OBSERVED\"\n}\n\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): gateway timeout após aceite\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): crash janela\n[deliverOutbound] Resultado ambíguo (reconciliação explícita): ambiguo\n"
+    }
+  ],
+  "exitCode": 0
+}

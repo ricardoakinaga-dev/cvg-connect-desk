@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-09-12T21:03:54.802Z",
+  "postgres": {
+    "status": "started",
+    "port": 56532,
+    "dataDir": "/tmp/cvg-aaa-runs/review-20260912/pg/data",
+    "pid": 2903137
+  },
+  "marker": {
+    "runId": "review-20260912",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-12 18:03:55.612324-03"
+  },
+  "migrations": {
+    "exit": 0,
+    "tail": [
+      "",
+      "Running migrations...",
+      "Migrations completed successfully"
+    ]
+  },
+  "tables": "38",
+  "sessionsColumns": "id,user_id,token,expires_at,created_at,ip_address,user_agent,token_hash,last_seen_at,absolute_expires_at,revoked_at,revoked_reason,ip_hash,user_agent_hash",
+  "authSuite": {
+    "exit": 0,
+    "tail": [
+      "{\"level\":30,\"time\":1789247040080,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"userId\":\"39cece72-90ce-4a67-bf7c-1beb9a5756d3\",\"msg\":\"All user sessions revoked\"}",
+      "{\"level\":30,\"time\":1789247040080,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-d\",\"res\":{\"statusCode\":200},\"responseTime\":1.7694950000000063,\"msg\":\"request completed\"}",
+      "{\"level\":30,\"time\":1789247040081,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"req\":{\"method\":\"GET\",\"url\":\"/auth/me\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}",
+      "{\"level\":30,\"time\":1789247040082,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-e\",\"res\":{\"statusCode\":401},\"responseTime\":1.0970030000003135,\"msg\":\"request completed\"}",
+      "{\"level\":30,\"time\":1789247040082,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"req\":{\"method\":\"GET\",\"url\":\"/auth/me\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}",
+      "{\"level\":30,\"time\":1789247040083,\"pid\":2903587,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-f\",\"res\":{\"statusCode\":401},\"responseTime\":1.315570000000207,\"msg\":\"request completed\"}",
+      " ✓ src/__tests__/auth-routes.integration.test.ts (6 tests) 751ms",
+      "",
+      " Test Files  1 passed (1)",
+      "      Tests  6 passed (6)",
+      "   Start at  18:03:57",
+      "   Duration  2.72s (transform 672ms, setup 0ms, collect 1.57s, tests 751ms, environment 0ms, prepare 120ms)"
+    ]
+  },
+  "negativeNoSchema": {
+    "exit": 1,
+    "tail": [
+      "",
+      "Caused by: error: relation \"audit_logs\" does not exist",
+      " ❯ ../../node_modules/.pnpm/pg-pool@3.13.0_pg@8.20.0/node_modules/pg-pool/index.js:45:11",
+      " ❯ ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/node-postgres/session.ts:149:14",
+      " ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:71:12",
+      " ❯ src/__tests__/auth-routes.integration.test.ts:50:7",
+      "",
+      "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯",
+      "Serialized Error: { length: 109, severity: 'ERROR', code: '42P01', detail: undefined, hint: undefined, position: '13', internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, dataType: undefined, constraint: undefined, file: 'parse_relation.c', routine: 'parserOpenTable' }",
+      "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+    ]
+  },
+  "finishedAt": "2026-09-12T21:04:03.853Z",
+  "result": "MATCHES_PEER_CLAIM"
+}

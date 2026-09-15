@@ -1,0 +1,483 @@
+ M .env.production.example
+ M .github/scripts/certification-aggregator.mjs
+ M .github/workflows/ci.yml
+ M .github/workflows/dr-e2e.yml
+ M .github/workflows/postgres-real-tests.yml
+ M .github/workflows/security.yml
+ M .github/workflows/smoke-e2e.yml
+ M .github/workflows/staging-integrations.yml
+ M .github/workflows/triple-aaa-certification.yml
+ M .github/workflows/triple-aaa-gate.yml
+ M .gitignore
+ M apps/desk-api/Dockerfile
+ M apps/desk-api/package.json
+ M apps/desk-api/src/__tests__/chat-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/contact-groups-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/contacts-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/dead-letter-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/events-polling.integration.test.ts
+ M apps/desk-api/src/__tests__/kanban-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/labels-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/outbound-idempotency.integration.test.ts
+ M apps/desk-api/src/__tests__/runtime-config.test.ts
+ M apps/desk-api/src/__tests__/sectors-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/transfers-routes.integration.test.ts
+ M apps/desk-api/src/__tests__/webhook-inbound.integration.test.ts
+ M apps/desk-api/src/app.ts
+ M apps/desk-api/src/internal-auth.ts
+ M apps/desk-api/src/runtime-config.ts
+ M apps/desk-api/tsconfig.json
+ M apps/desk-web/Dockerfile
+ M apps/desk-web/nginx.conf
+ M apps/desk-web/package.json
+ M apps/desk-web/src/App.tsx
+ M apps/desk-web/src/__tests__/realtime.test.ts
+ M apps/desk-web/src/components/ErrorBoundary.tsx
+ M apps/desk-web/src/components/layout/Layout.css
+ M apps/desk-web/src/components/layout/Layout.tsx
+ M apps/desk-web/src/index.css
+ M apps/desk-web/src/lib/api.ts
+ M apps/desk-web/src/lib/realtime.ts
+ M apps/desk-web/src/pages/Admin.css
+ M apps/desk-web/src/pages/Admin.tsx
+ M apps/desk-web/src/pages/Alerts.css
+ M apps/desk-web/src/pages/Alerts.tsx
+ M apps/desk-web/src/pages/Audit.css
+ M apps/desk-web/src/pages/Audit.tsx
+ M apps/desk-web/src/pages/ContactGroups.css
+ M apps/desk-web/src/pages/ContactGroups.tsx
+ M apps/desk-web/src/pages/Contacts.css
+ M apps/desk-web/src/pages/Contacts.tsx
+ M apps/desk-web/src/pages/Dashboard.css
+ M apps/desk-web/src/pages/Dashboard.tsx
+ M apps/desk-web/src/pages/EntityPages.css
+ M apps/desk-web/src/pages/Inbox.css
+ M apps/desk-web/src/pages/Inbox.tsx
+ M apps/desk-web/src/pages/Kanban.css
+ M apps/desk-web/src/pages/Kanban.tsx
+ M apps/desk-web/src/pages/Labels.css
+ M apps/desk-web/src/pages/Labels.tsx
+ M apps/desk-web/src/pages/Login.css
+ M apps/desk-web/src/pages/Login.tsx
+ M apps/desk-web/src/pages/Notes.css
+ M apps/desk-web/src/pages/Notes.tsx
+ M apps/desk-web/src/pages/Patients.tsx
+ M apps/desk-web/src/pages/Sectors.css
+ M apps/desk-web/src/pages/Sectors.tsx
+ M apps/desk-web/src/pages/Settings.css
+ M apps/desk-web/src/pages/Settings.tsx
+ M apps/desk-web/src/pages/Tasks.css
+ M apps/desk-web/src/pages/Tasks.tsx
+ M apps/desk-web/src/pages/Tutors.tsx
+ M apps/desk-web/src/premium-surfaces.css
+ M apps/desk-web/src/store/auth.ts
+ M apps/message-worker/Dockerfile
+ M apps/message-worker/package.json
+ M apps/message-worker/src/__tests__/health.test.ts
+ M apps/message-worker/src/__tests__/worker-structure.test.ts
+ M apps/message-worker/src/dead-letter.ts
+ M apps/message-worker/src/health.ts
+ M apps/message-worker/src/healthcheck.ts
+ M apps/message-worker/src/index.ts
+ M apps/message-worker/src/polling.ts
+ M apps/message-worker/tsconfig.json
+ M apps/realtime-service/Dockerfile
+ M apps/realtime-service/package.json
+ M apps/realtime-service/src/__tests__/realtime-auth-behavioral.test.ts
+ M apps/realtime-service/src/__tests__/realtime-fanout.test.ts
+ M apps/realtime-service/src/__tests__/realtime-projector.test.ts
+ M apps/realtime-service/src/__tests__/realtime-revalidation.test.ts
+ M apps/realtime-service/src/__tests__/realtime-three-replica.test.ts
+ M apps/realtime-service/src/index.ts
+ M docker-compose.staging.yml
+ M docker-compose.yml
+ M docs/00-meta/README.md
+ M docs/AI_SAFETY.md
+ M docs/ARCHITECTURE.md
+ M docs/GAPS-TECNICOS.md
+ M docs/LGPD_DATA_SUBJECT_REQUESTS.md
+ M docs/OBSERVABILITY.md
+ M docs/RUNBOOK.md
+ M docs/TEST_MATRIX.md
+ M docs/THREAT_MODEL.md
+ M docs/TRIPLE_AAA_CERTIFICATION.md
+ M eslint.config.js
+ M infra/prometheus/prometheus.yml
+ M infra/scripts/query-performance.mjs
+ M modules/admin/package.json
+ M modules/admin/src/application/use-cases/index.ts
+ M modules/admin/src/infrastructure/repositories/admin.repository.ts
+ M modules/admin/src/presentation/http/admin.controller.ts
+ M modules/admin/src/presentation/http/dead-letter-persistent.controller.ts
+ M modules/admin/src/types/index.ts
+ M modules/alerts/package.json
+ M modules/alerts/src/__tests__/repository-structure.test.ts
+ M modules/alerts/src/application/use-cases/acknowledge-alert.use-case.ts
+ M modules/alerts/src/application/use-cases/create-alert.use-case.ts
+ M modules/alerts/src/application/use-cases/resolve-alert.use-case.ts
+ M modules/alerts/src/infrastructure/repositories/alert.repository.ts
+ M modules/alerts/src/presentation/http/alert.controller.ts
+ M modules/audit/package.json
+ M modules/audit/src/infrastructure/repositories/audit.repository.ts
+ M modules/audit/src/presentation/http/audit.controller.ts
+ M modules/auth/package.json
+ M modules/chat/package.json
+ M modules/chat/src/__tests__/receive-inbound-idempotency.test.ts
+ M modules/chat/src/__tests__/secretary-handoff.integration.test.ts
+ M modules/chat/src/application/use-cases/index.ts
+ M modules/chat/src/application/use-cases/process-message-with-secretary.use-case.ts
+ M modules/chat/src/application/use-cases/receive-inbound-message.use-case.ts
+ M modules/chat/src/application/use-cases/send-outbound-message.use-case.ts
+ M modules/chat/src/index.ts
+ M modules/chat/src/infrastructure/repositories/conversation.repository.ts
+ M modules/chat/src/infrastructure/repositories/inbound-contact.repository.ts
+ M modules/chat/src/infrastructure/repositories/index.ts
+ M modules/chat/src/infrastructure/repositories/message.repository.ts
+ M modules/chat/src/infrastructure/repositories/outbound-delivery.repository.ts
+ M modules/chat/src/presentation/http/index.ts
+ M modules/chat/src/presentation/http/outbound.controller.ts
+ M modules/chat/src/presentation/http/webhook-inbound.controller.ts
+ M modules/chatwoot-compat/package.json
+ M modules/contact-groups/package.json
+ M modules/contact-groups/src/application/use-cases/index.ts
+ M modules/contact-groups/src/infrastructure/repositories/contact-group.repository.ts
+ M modules/contact-groups/src/presentation/http/contact-group.controller.ts
+ M modules/contacts/package.json
+ M modules/contacts/src/infrastructure/repositories/contact.repository.ts
+ M modules/contacts/src/presentation/http/contact.controller.ts
+ M modules/dashboard/package.json
+ M modules/dashboard/src/infrastructure/dashboard.repository.ts
+ M modules/gateway-adapter/package.json
+ M modules/gateway-adapter/src/__tests__/gateway-contracts.test.ts
+ M modules/gateway-adapter/src/__tests__/provider-chaos.test.ts
+ M modules/gateway-adapter/src/application/use-cases/index.ts
+ M modules/gateway-adapter/src/infrastructure/gateway-normalizer.ts
+ M modules/gateway-adapter/src/infrastructure/gateway-service.ts
+ M modules/gateway-adapter/src/presentation/http/gateway.controller.ts
+ M modules/kanban/package.json
+ M modules/kanban/src/infrastructure/kanban.repository.ts
+ M modules/kanban/src/presentation/http/kanban.controller.ts
+ M modules/labels/package.json
+ M modules/labels/src/infrastructure/repositories/label.repository.ts
+ M modules/labels/src/presentation/http/label.controller.ts
+ M modules/notes/package.json
+ M modules/notes/src/application/use-cases/create-note.use-case.ts
+ M modules/notes/src/infrastructure/repositories/note.repository.ts
+ M modules/notes/src/presentation/http/note.controller.ts
+ M modules/patients/package.json
+ M modules/patients/src/presentation/http/patient.controller.ts
+ M modules/privacy/package.json
+ M modules/privacy/src/index.ts
+ M modules/privacy/src/presentation/http/privacy.controller.ts
+ M modules/secretary-adapter/package.json
+ M modules/secretary-adapter/src/__tests__/ai-bypass.test.ts
+ M modules/secretary-adapter/src/__tests__/ai-policy.test.ts
+ M modules/secretary-adapter/src/__tests__/ai-tools.test.ts
+ M modules/secretary-adapter/src/__tests__/invoke-secretary.integration.test.ts
+ M modules/secretary-adapter/src/__tests__/trigger-handoff.integration.test.ts
+ M modules/secretary-adapter/src/application/ai-policy.ts
+ M modules/secretary-adapter/src/application/ai-tools.ts
+ M modules/secretary-adapter/src/application/use-cases/invoke-secretary.use-case.ts
+ M modules/secretary-adapter/src/application/use-cases/trigger-handoff.use-case.ts
+ M modules/secretary-adapter/src/index.ts
+ M modules/secretary-adapter/src/infrastructure/index.ts
+ M modules/secretary-adapter/src/infrastructure/request-builder.ts
+ M modules/secretary-adapter/src/infrastructure/response-handler.ts
+ M modules/secretary-adapter/src/types.ts
+ M modules/sectors/package.json
+ M modules/sectors/src/infrastructure/repositories/sector.repository.ts
+ M modules/sectors/src/presentation/http/sector.controller.ts
+ M modules/tasks/package.json
+ M modules/tasks/src/application/use-cases/create-task.use-case.ts
+ M modules/tasks/src/application/use-cases/update-task-status.use-case.ts
+ M modules/tasks/src/infrastructure/repositories/task.repository.ts
+ M modules/tasks/src/presentation/http/task.controller.ts
+ M modules/transfers/package.json
+ M modules/transfers/src/__tests__/use-cases.test.ts
+ M modules/transfers/src/application/use-cases/index.ts
+ M modules/transfers/src/infrastructure/repositories/transfer.repository.ts
+ M modules/transfers/src/presentation/http/transfer.controller.ts
+ M modules/tutors/package.json
+ M modules/tutors/src/presentation/http/tutor.controller.ts
+ M package.json
+ M packages/auth/package.json
+ M packages/auth/src/__tests__/authorize.test.ts
+ M packages/auth/src/authorize.ts
+ M packages/auth/src/index.ts
+ M packages/auth/src/infrastructure/repositories/auth.repository.ts
+ M packages/auth/src/middleware.ts
+ M packages/auth/src/presentation/http/auth.controller.ts
+ M packages/auth/src/rbac-middleware.ts
+ M packages/auth/src/rbac.ts
+ M packages/auth/src/sector-permissions.ts
+ M packages/database/package.json
+ M packages/database/src/check-migrations.ts
+ M packages/database/src/index.ts
+ M packages/database/src/schema.ts
+ M packages/database/src/seed.ts
+ M packages/database/src/webhook-replay.ts
+ M packages/database/supabase/migrations/meta/_journal.json
+ M packages/events/package.json
+ M packages/events/src/__tests__/outbox-behavioral.test.ts
+ M packages/events/src/__tests__/outbox.test.ts
+ M packages/events/src/__tests__/persistent-dead-letter.test.ts
+ M packages/events/src/index.ts
+ M packages/events/src/outbox-publisher.ts
+ M packages/events/src/outbox-reader.ts
+ M packages/events/src/realtime-bus.ts
+ M packages/integrations/package.json
+ M packages/integrations/src/secretary-client.ts
+ M packages/media/package.json
+ M packages/media/src/__tests__/clamav-real.test.ts
+ M packages/media/src/__tests__/media-pipeline.test.ts
+ M packages/media/src/index.ts
+ M packages/media/src/repository.ts
+ M packages/media/src/scanner.ts
+ M packages/messaging-contracts/package.json
+ M packages/messaging-contracts/src/index.ts
+ M packages/realtime/package.json
+ M packages/realtime/src/index.ts
+ M packages/realtime/src/projections.ts
+ M packages/shared/package.json
+ M packages/shared/src/__tests__/result.test.ts
+ M packages/shared/src/__tests__/webhook-guard.test.ts
+ M packages/shared/src/media-policy.ts
+ M packages/shared/src/metrics.ts
+ M packages/shared/src/redact.ts
+ M packages/shared/src/webhook-anti-replay.ts
+ M packages/shared/src/webhook-guard.ts
+ M packages/shared/src/webhook-security-stats.ts
+ M packages/shared/vitest.config.ts
+ M packages/tracing/package.json
+ M packages/tracing/src/__tests__/tracing.test.ts
+ M pnpm-lock.yaml
+ M scripts/production-readiness.mjs
+ M scripts/triple-aaa-verify.mjs
+ M services/db-init/Dockerfile
+ M tsconfig.json
+ M turbo.json
+?? .gauntlet-v2-archive-20260912/
+?? .gauntlet/
+?? .github/scripts/certification-aggregator.test.mjs
+?? apps/desk-api/src/__tests__/aaa-03.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-04.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-05.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-09.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-10.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-11.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-12.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-17.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-18.integration.test.ts
+?? apps/desk-api/src/__tests__/aaa-19.integration.test.ts
+?? apps/desk-api/src/__tests__/production/
+?? apps/desk-web/src/__tests__/aaa-13.test.ts
+?? apps/desk-web/src/__tests__/aaa-13.test.tsx
+?? apps/desk-web/src/__tests__/aaa-21.test.tsx
+?? apps/desk-web/src/__tests__/aaa-29.test.tsx
+?? apps/desk-web/src/__tests__/aaa-30.test.tsx
+?? apps/desk-web/src/__tests__/aaa-31.test.tsx
+?? apps/desk-web/src/__tests__/production/
+?? apps/desk-web/src/__tests__/realtime-connection-status.test.ts
+?? apps/desk-web/src/components/__tests__/
+?? apps/desk-web/src/components/layout/ConnectionStatus.tsx
+?? apps/desk-web/src/components/layout/__tests__/
+?? apps/desk-web/src/components/ui/Badge.tsx
+?? apps/desk-web/src/components/ui/Button.tsx
+?? apps/desk-web/src/components/ui/Card.tsx
+?? apps/desk-web/src/components/ui/StateMessage.tsx
+?? apps/desk-web/src/components/ui/TextField.tsx
+?? apps/desk-web/src/components/ui/__tests__/
+?? apps/desk-web/src/components/ui/index.ts
+?? apps/desk-web/src/hooks/__tests__/
+?? apps/desk-web/src/hooks/useRealtimeStatus.ts
+?? apps/desk-web/src/navigation.ts
+?? apps/desk-web/src/pages/Patients.css
+?? apps/desk-web/src/pages/Tutors.css
+?? apps/message-worker/src/contract.ts
+?? apps/message-worker/src/errors.ts
+?? apps/message-worker/src/handlers.ts
+?? apps/message-worker/src/processor.ts
+?? apps/realtime-service/src/__tests__/aaa-05-isolation.test.ts
+?? apps/realtime-service/src/__tests__/realtime-deadline-budget.test.ts
+?? apps/realtime-service/src/__tests__/realtime-health.test.ts
+?? apps/realtime-service/src/authorization.ts
+?? docs/auditorias/
+?? docs/design/cvg-design-system.json
+?? docs/design/cvg-design-system.md
+?? docs/design/cvg-page-state-adoption.json
+?? docs/execucao-aaa-2026-09-12/
+?? docs/melhorias-2026-09-13-r3/
+?? docs/melhorias-2026-09-13/
+?? docs/producao-2026-09-13/
+?? docs/security/
+?? e2e/aaa/
+?? e2e/production/
+?? e2e/smoke/aaa-06-remote.spec.d.ts
+?? e2e/smoke/aaa-06-remote.spec.d.ts.map
+?? e2e/smoke/aaa-06-remote.spec.js
+?? e2e/smoke/aaa-06-remote.spec.js.map
+?? e2e/smoke/aaa-06-remote.spec.ts
+?? e2e/smoke/create-task.test.d.ts
+?? e2e/smoke/create-task.test.d.ts.map
+?? e2e/smoke/create-task.test.js
+?? e2e/smoke/create-task.test.js.map
+?? e2e/smoke/inbox-authenticated.test.d.ts
+?? e2e/smoke/inbox-authenticated.test.d.ts.map
+?? e2e/smoke/inbox-authenticated.test.js
+?? e2e/smoke/inbox-authenticated.test.js.map
+?? e2e/smoke/kanban.test.d.ts
+?? e2e/smoke/kanban.test.d.ts.map
+?? e2e/smoke/kanban.test.js
+?? e2e/smoke/kanban.test.js.map
+?? e2e/smoke/login-flow.test.d.ts
+?? e2e/smoke/login-flow.test.d.ts.map
+?? e2e/smoke/login-flow.test.js
+?? e2e/smoke/login-flow.test.js.map
+?? e2e/smoke/send-message.test.d.ts
+?? e2e/smoke/send-message.test.d.ts.map
+?? e2e/smoke/send-message.test.js
+?? e2e/smoke/send-message.test.js.map
+?? e2e/smoke/support.d.ts
+?? e2e/smoke/support.d.ts.map
+?? e2e/smoke/support.js
+?? e2e/smoke/support.js.map
+?? e2e/support/aaa/
+?? e2e/support/mock-evolution-server.d.ts
+?? e2e/support/mock-evolution-server.d.ts.map
+?? e2e/support/mock-evolution-server.js
+?? e2e/support/mock-evolution-server.js.map
+?? e2e/support/production/
+?? e2e/support/start-e2e-stack.d.ts
+?? e2e/support/start-e2e-stack.d.ts.map
+?? e2e/support/start-e2e-stack.js
+?? e2e/support/start-e2e-stack.js.map
+?? modules/admin/src/__tests__/use-cases-app-error.test.ts
+?? modules/admin/src/types/fastify-openapi.d.ts
+?? modules/admin/tsconfig.json
+?? modules/alerts/src/infrastructure/audit.ts
+?? modules/alerts/tsconfig.json
+?? modules/audit/tsconfig.json
+?? modules/auth/tsconfig.json
+?? modules/chat/src/__tests__/aaa-08-atomicity.test.ts
+?? modules/chat/src/__tests__/chat-ports.integration.test.ts
+?? modules/chat/src/__tests__/execute-inbound-secretary.test.ts
+?? modules/chat/src/__tests__/outbound-delivery-surface.test.ts
+?? modules/chat/src/application/audit.ts
+?? modules/chat/src/application/ports/
+?? modules/chat/src/application/use-cases/conversation-operations.use-case.ts
+?? modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts
+?? modules/chat/src/application/use-cases/inbound-media-pipeline.ts
+?? modules/chat/src/application/use-cases/legacy-media-migration.ts
+?? modules/chat/src/infrastructure/repositories/inbound-atomic.repository.ts
+?? modules/chat/src/infrastructure/repositories/outbound-atomic.repository.ts
+?? modules/chat/src/presentation/http/conversation-operations.controller.ts
+?? modules/chat/src/presentation/http/media-read.controller.ts
+?? modules/chat/src/presentation/http/media-upload.controller.ts
+?? modules/chat/src/presentation/http/message-dto.ts
+?? modules/chat/src/types/
+?? modules/chat/tsconfig.json
+?? modules/chatwoot-compat/tsconfig.json
+?? modules/contact-groups/src/types/fastify-openapi.d.ts
+?? modules/contact-groups/tsconfig.json
+?? modules/contacts/src/types/fastify-openapi.d.ts
+?? modules/contacts/tsconfig.json
+?? modules/gateway-adapter/src/__tests__/gateway-ports.test.ts
+?? modules/gateway-adapter/src/__tests__/provider-reconciliation.test.ts
+?? modules/gateway-adapter/src/types/fastify-openapi.d.ts
+?? modules/gateway-adapter/tsconfig.json
+?? modules/kanban/src/types/fastify-openapi.d.ts
+?? modules/kanban/tsconfig.json
+?? modules/labels/src/types/fastify-openapi.d.ts
+?? modules/labels/tsconfig.json
+?? modules/notes/src/__tests__/create-note-author.test.ts
+?? modules/notes/src/infrastructure/audit.ts
+?? modules/notes/tsconfig.json
+?? modules/privacy/src/application/contact-graph.ts
+?? modules/privacy/src/application/data-inventory.ts
+?? modules/privacy/src/application/erasure-operation.ts
+?? modules/privacy/src/application/media-copy-port.ts
+?? modules/privacy/src/application/privacy-access.ts
+?? modules/privacy/src/application/privacy-audit.ts
+?? modules/privacy/src/application/privacy-policy.ts
+?? modules/privacy/src/application/redaction.ts
+?? modules/privacy/src/application/residual-scan.ts
+?? modules/privacy/src/application/scoped-export.ts
+?? modules/privacy/src/types/
+?? modules/privacy/tsconfig.json
+?? modules/secretary-adapter/src/__tests__/invoke-secretary-not-configured.test.ts
+?? modules/secretary-adapter/src/__tests__/response-handler.test.ts
+?? modules/secretary-adapter/src/__tests__/secretary-invocation.repository.test.ts
+?? modules/secretary-adapter/src/infrastructure/repositories/
+?? modules/secretary-adapter/src/infrastructure/secretary-client-init.ts
+?? modules/secretary-adapter/tsconfig.json
+?? modules/sectors/src/types/fastify-openapi.d.ts
+?? modules/sectors/tsconfig.json
+?? modules/tasks/src/__tests__/task-filters.integration.test.ts
+?? modules/tasks/src/__tests__/task-routes-validation.test.ts
+?? modules/tasks/src/infrastructure/audit.ts
+?? modules/tasks/src/types/
+?? modules/tasks/tsconfig.json
+?? modules/transfers/src/infrastructure/audit.ts
+?? modules/transfers/src/types/fastify-openapi.d.ts
+?? modules/transfers/tsconfig.json
+?? packages/auth/src/__tests__/permission-service.test.ts
+?? packages/auth/src/__tests__/rbac-effective.test.ts
+?? packages/auth/src/__tests__/rbac-middleware.test.ts
+?? packages/auth/src/__tests__/resource-authz.test.ts
+?? packages/auth/src/__tests__/session-policy.test.ts
+?? packages/auth/src/permission-service.ts
+?? packages/auth/src/resource-authz.ts
+?? packages/auth/src/session-policy.ts
+?? packages/auth/tsconfig.json
+?? packages/database/supabase/migrations/0019_outbox_lease.sql
+?? packages/database/supabase/migrations/0020_messages_keyset_indexes.sql
+?? packages/database/supabase/migrations/0021_outbound_idempotency_contract.sql
+?? packages/database/supabase/migrations/0022_privacy_operations.sql
+?? packages/database/supabase/migrations/0023_sessions_timezone_harmonization.sql
+?? packages/database/supabase/migrations/0024_webhook_replay_claim.sql
+?? packages/database/supabase/migrations/0025_role_permissions_backfill.sql
+?? packages/database/supabase/migrations/0026_worker_effect_receipts.sql
+?? packages/database/supabase/migrations/0027_secretary_invocations.sql
+?? packages/database/supabase/migrations/0028_ai_budget_and_approval_hardening.sql
+?? packages/database/supabase/migrations/0029_media_intake_recovery.sql
+?? packages/events/src/__tests__/aaa-07-lease-real.test.ts
+?? packages/events/src/outbox-lease.ts
+?? packages/integrations/src/__tests__/
+?? packages/integrations/tsconfig.json
+?? packages/media/src/__tests__/aaa-10-media-boundary.test.ts
+?? packages/media/src/legacy.ts
+?? packages/media/tsconfig.json
+?? packages/messaging-contracts/src/__tests__/ports.test.ts
+?? packages/messaging-contracts/src/ports.ts
+?? packages/messaging-contracts/tsconfig.json
+?? packages/realtime/src/authorization.ts
+?? packages/realtime/src/channels.ts
+?? packages/realtime/src/routing.ts
+?? packages/realtime/tsconfig.json
+?? packages/shared/src/__tests__/webhook-anti-replay.test.ts
+?? packages/shared/src/__tests__/webhook-postgres-replay.test.ts
+?? packages/shared/tsconfig.json
+?? packages/tracing/tsconfig.json
+?? playwright.aaa.config.d.ts
+?? playwright.aaa.config.d.ts.map
+?? playwright.aaa.config.js
+?? playwright.aaa.config.js.map
+?? playwright.aaa.config.ts
+?? playwright.aaa06.config.d.ts
+?? playwright.aaa06.config.d.ts.map
+?? playwright.aaa06.config.js
+?? playwright.aaa06.config.js.map
+?? playwright.aaa06.config.ts
+?? playwright.config.d.ts
+?? playwright.config.d.ts.map
+?? playwright.config.js
+?? playwright.config.js.map
+?? playwright.production.config.ts
+?? scripts/production/
+?? test-results/
+?? tools/
+?? vitest.config.d.ts
+?? vitest.config.d.ts.map
+?? vitest.config.js
+?? vitest.config.js.map
+

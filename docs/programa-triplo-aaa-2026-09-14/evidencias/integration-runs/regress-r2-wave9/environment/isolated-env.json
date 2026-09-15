@@ -1,0 +1,24 @@
+{
+  "runId": "regress-r2-wave9",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61332/cvg_aaa_regress_r2_wave9_w49",
+  "databaseName": "cvg_aaa_regress_r2_wave9_w49",
+  "databasePort": 61332,
+  "redisUrl": "redis://127.0.0.1:57170",
+  "redisPort": 57170,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2303061,
+    "dataDir": "/tmp/cvg-aaa-runs/regress-r2-wave9/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2303081,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "regress-r2-wave9",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-15 01:56:27.977462-03"
+  }
+}

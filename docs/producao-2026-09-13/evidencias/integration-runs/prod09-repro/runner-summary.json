@@ -1,0 +1,30 @@
+{
+  "runId": "prod09-repro",
+  "workerIndex": 23,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58732/cvg_aaa_prod09_repro_w23",
+  "redisUrl": "redis://127.0.0.1:56910",
+  "startedAt": "2026-09-13T16:06:42.251Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-09/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "{\"msg\":\"[Worker] Starting message worker\",\"consumer_id\":\"worker\",\"handlers\":[\"handoff.completed\",\"secretary.invocation\",\"message.persisted\"],\"poll_interval_ms\":200,\"level\":\"info\"}\n{\"msg\":\"[Worker] Worker started successfully\",\"level\":\"info\"}\n{\"msg\":\"[Worker] Claimed events from outbox with lease\",\"count\":1,\"owner\":\"repro-2490054\",\"lease_seconds\":120,\"level\":\"info\"}\n{\"msg\":\"[Worker] Processing handoff.completed\",\"event_type\":\"handoff.completed\",\"event_id\":\"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-lost\",\"correlation_id\":\"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-corr\",\"conversation_id\":\"9a2a1676-52b6-419b-9840-3967e7a22b63\",\"previousHandler\":\"bot\",\"newHandler\":\"human\",\"level\":\"info\"}\n{\"msg\":\"[Worker] Successfully processed event\",\"event_type\":\"handoff.completed\",\"event_id\":\"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-lost\",\"correlation_id\":\"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-corr\",\"handler\":\"handleHandoffCompleted\",\"level\":\"info\"}\n{\n  \"generatedAt\": \"2026-09-13T16:06:41.677Z\",\n  \"runId\": \"prod09-repro\",\n  \"workerIndex\": \"23\",\n  \"database\": \"postgresql://***@127.0.0.1:58732/cvg_aaa_prod09_repro_w23\",\n  \"scenarios\": {\n    \"A_replay_sem_dedup\": {\n      \"description\": \"mesmo eventId aplicado 2x (replay)\",\n      \"eventId\": \"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-replay\",\n      \"alertsCreated\": 0,\n      \"expectedWithDedup\": 1,\n      \"defect\": false\n    },\n    \"B_err_engolido_ack_sem_efeito\": {\n      \"description\": \"falha injetada no INSERT do alerta; worker processa o evento\",\n      \"eventId\": \"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-lost\",\n      \"processedAtSet\": true,\n      \"consumerRetryCount\": 0,\n      \"alertsCreated\": 0,\n      \"deadLetterRows\": 0,\n      \"defect\": true\n    }\n  },\n  \"verdict\": \"NO_DEFECT_OBSERVED\"\n}\n\n{\"msg\":\"[Worker] Failed to create alert for handoff\",\"conversation_id\":\"9a2a1676-52b6-419b-9840-3967e7a22b63\",\"error\":\"Failed query: insert into \\\"alerts\\\" (\\\"id\\\", \\\"conversation_id\\\", \\\"task_id\\\", \\\"type\\\", \\\"title\\\", \\\"message\\\", \\\"severity\\\", \\\"status\\\", \\\"triggered_by\\\", \\\"acknowledged_by\\\", \\\"acknowledged_at\\\", \\\"resolved_by\\\", \\\"resolved_at\\\", \\\"metadata\\\", \\\"created_at\\\", \\\"updated_at\\\") values (default, $1, default, $2, $3, $4, $5, $6, default, default, default, default, default, $7, default, default) returning \\\"id\\\", \\\"conversation_id\\\", \\\"task_id\\\", \\\"type\\\", \\\"title\\\", \\\"message\\\", \\\"severity\\\", \\\"status\\\", \\\"triggered_by\\\", \\\"acknowledged_by\\\", \\\"acknowledged_at\\\", \\\"resolved_by\\\", \\\"resolved_at\\\", \\\"metadata\\\", \\\"created_at\\\", \\\"updated_at\\\"\\nparams: 9a2a1676-52b6-419b-9840-3967e7a22b63,handoff,Conversa transferida para atendimento humano,Motivo: repro-err-engolido,info,active,{\\\"previousHandler\\\":\\\"bot\\\",\\\"newHandler\\\":\\\"human\\\",\\\"eventId\\\":\\\"prod09-repro-38b84eb4-52a7-480e-8b31-6f8070641649-lost\\\"}\",\"level\":\"error\"}\n"
+    }
+  ],
+  "exitCode": 0
+}

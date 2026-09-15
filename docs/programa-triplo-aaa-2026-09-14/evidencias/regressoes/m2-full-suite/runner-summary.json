@@ -1,0 +1,54 @@
+{
+  "runId": "regress-m2",
+  "workerIndex": 40,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60432/cvg_aaa_regress_m2_w40",
+  "redisUrl": "redis://127.0.0.1:57080",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T02:07:27.248Z",
+  "finishedAt": "2026-09-15T02:08:31.254Z",
+  "command": "pnpm test:ci",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60432/cvg_aaa_regress_m2_w40",
+    "REDIS_URL": "redis://127.0.0.1:57080",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "regress-m2",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/regress-m2",
+    "AAA_WORKER_INDEX": "40"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T02:07:27.248Z",
+      "finishedAt": "2026-09-15T02:07:28.948Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T02:07:28.949Z",
+      "finishedAt": "2026-09-15T02:07:29.647Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm test:ci",
+      "startedAt": "2026-09-15T02:07:29.647Z",
+      "finishedAt": "2026-09-15T02:08:31.254Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "evel\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Message-based auth\",\"client_id\":\"client_1789438110147_dqxs52c\",\"auth_method\":\"message-token\",\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Client authenticated\",\"client_id\":\"client_1789438110147_dqxs52c\",\"user_id\":\"user-network\",\"level\":\"info\"}\n{\"msg\":\"[Realtime] Starting token revalidation timer\",\"client_id\":\"client_1789438110147_dqxs52c\",\"interval_ms\":250,\"deadline_ms\":5000,\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Connection closed\",\"client_id\":\"client_1789438110147_dqxs52c\",\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n\n ✓ src/__tests__/realtime-auth-behavioral.test.ts (8 tests) 3490ms\n   ✓ RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure  382ms\n   ✓ RealtimeServer behavioral auth flow > 403 na revalidação é tratado como revogação: fecha 4002  379ms\n   ✓ RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada  1054ms\n   ✓ RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)  1030ms\n\n Test Files  11 passed (11)\n      Tests  89 passed (89)\n   Start at  23:08:25\n   Duration  5.57s (transform 1.19s, setup 0ms, collect 11.97s, tests 9.38s, environment 3ms, prepare 1.32s)\n\n",
+      "stderrTail": "http_status\":403,\"level\":\"warn\"}\n{\"msg\":\"[Realtime] Revalidation failure — closing connection\",\"client_id\":\"client_1789438108713_zkj9osz\",\"reason\":\"Token revoked: 403\",\"close_code\":4002,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438109092_puhnti2\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438109092_puhnti2\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789438109092_puhnti2\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438110147_dqxs52c\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438110147_dqxs52c\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789438110147_dqxs52c\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

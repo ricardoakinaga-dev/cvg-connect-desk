@@ -1,0 +1,492 @@
+{
+  "role": "read-only frontend scout, not final independent critic",
+  "timestamp": "2026-09-13T19:38:52.348694+00:00",
+  "findings": [
+    {
+      "id": "FE01",
+      "severity": "High",
+      "cards": [
+        "PROD-29"
+      ],
+      "title": "Drawer fechado amplia Inbox 1024 para 1318 pixels e continua no DOM acessível",
+      "evidence": "inbox-1024-selected.png; browser-observations.json: geometry 1318/1024",
+      "source": "apps/desk-web/src/pages/Inbox.css:17; apps/desk-web/src/pages/Inbox.tsx:1240",
+      "recommendation": "Fechar drawer com geometria contida e inert/aria-hidden conforme estado; medir scrollWidth e navegação por Tab nos breakpoints.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE02",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Operação no contexto incompleta: transferência desabilitada; cadastro abre lista genérica",
+      "evidence": "inbox-1440-selected.png",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:1127; apps/desk-web/src/pages/Inbox.tsx:1249",
+      "recommendation": "Implementar atribuição/status/handoff/transferência/tags e links exatos; contexto de tarefa/nota/tutor/paciente via recursos autorizados.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE03",
+      "severity": "High",
+      "cards": [
+        "PROD-19"
+      ],
+      "title": "Busca e contagens consideram apenas conversas carregadas; parâmetros de consulta não incluem busca/status/responsável/labels",
+      "evidence": "render.cjs fixture anuncia segunda página; browser-observations.json registra consultas",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:335; apps/desk-web/src/pages/Inbox.tsx:880; apps/desk-web/src/pages/Inbox.tsx:894",
+      "recommendation": "Levar busca/filtros ao servidor autorizado e distinguir totais globais dos itens carregados.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE04",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Timeline rotula qualquer histórico como Hoje",
+      "evidence": "inbox-375-selected.png e inbox-1440-selected.png; fixture usa 10/11 setembro",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:1162",
+      "recommendation": "Agrupar por data local real e tratar timezone, mudança de dia e empates.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE05",
+      "severity": "High",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "asset:// é chip sem ação; documento/vídeo não têm componente de leitura completo",
+      "evidence": "inbox-1440-selected.png, arquivo exame-luna-fixture.pdf sem botão/link",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:1164",
+      "recommendation": "Resolver leitura/download autorizado e estados pending/infected/revogado/expirado; não reconduzir mídia para URL arbitrária.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE06",
+      "severity": "Medium",
+      "cards": [
+        "PROD-20"
+      ],
+      "title": "Rascunhos e intenções existem só em memória do Inbox; sair/remontar perde estado",
+      "evidence": "Inspeção state/ref, nenhuma persistência por conversa na página",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:246; apps/desk-web/src/pages/Inbox.tsx:274",
+      "recommendation": "Definir recuperação segura por identidade/conversa durante 401/relogin/navegação; preservar intenção idempotente sem compartilhar dados entre usuários.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE07",
+      "severity": "High",
+      "cards": [
+        "PROD-21"
+      ],
+      "title": "Tarefa não permite atribuição/vínculos no formulário nem abrir conversa do card",
+      "evidence": "tasks-create-1440.png: apenas título/descrição/prioridade/prazo; assignee 10000000",
+      "source": "apps/desk-web/src/pages/Tasks.tsx:129; apps/desk-web/src/pages/Tasks.tsx:357",
+      "recommendation": "Seletores humanos autorizados e edição/links de conversa/tutor/paciente/assignee; provar persistência e atualização.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE08",
+      "severity": "High",
+      "cards": [
+        "PROD-22"
+      ],
+      "title": "Nota exige ID técnico e apresenta referência truncada sem navegação",
+      "evidence": "notes-create-1440.png: ID da referência e #20000000",
+      "source": "apps/desk-web/src/pages/Notes.tsx:95; apps/desk-web/src/pages/Notes.tsx:170; apps/desk-web/src/pages/Notes.tsx:243",
+      "recommendation": "Pesquisa/seletor por nomes, preseleção contextual e links exatos.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE09",
+      "severity": "High",
+      "cards": [
+        "PROD-22",
+        "PROD-25"
+      ],
+      "title": "Ficha de contato carrega/cria notas apenas na primeira conversa",
+      "evidence": "Inspeção do caminho loadContactNotes e criação",
+      "source": "apps/desk-web/src/pages/Contacts.tsx:188; apps/desk-web/src/pages/Contacts.tsx:305",
+      "recommendation": "Agregar notas de todas conversas autorizadas com procedência e paginação; evitar escolha implícita da primeira conversa.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE10",
+      "severity": "Medium",
+      "cards": [
+        "PROD-23"
+      ],
+      "title": "Alertas têm ack/resolve mas não navegam ao recurso relacionado",
+      "evidence": "alerts-1440.png: fixture tem conversationId/taskId, sem link",
+      "source": "apps/desk-web/src/pages/Alerts.tsx:105; apps/desk-web/src/pages/Alerts.tsx:245",
+      "recommendation": "Adicionar links autorizados para tarefa/conversa e reconciliar status entre operadores.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE11",
+      "severity": "High",
+      "cards": [
+        "PROD-24"
+      ],
+      "title": "Grupos só exibem membros; instrução para adicionar pela ficha não corresponde a controle ali",
+      "evidence": "ContactGroups mostra membros e texto de orientação; Contacts apenas renderiza badges grupos/labels",
+      "source": "apps/desk-web/src/pages/ContactGroups.tsx:354; apps/desk-web/src/pages/ContactGroups.tsx:363; apps/desk-web/src/pages/Contacts.tsx:452",
+      "recommendation": "Conectar ações adicionar/remover membros e labels; editar grupo/setor conforme permissões e invalidar consultas.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE12",
+      "severity": "Medium",
+      "cards": [
+        "PROD-25"
+      ],
+      "title": "Paciente ainda usa tutorId singular; N:N não representado pela UI",
+      "evidence": "Formulário e payload com tutorId único",
+      "source": "apps/desk-web/src/pages/Patients.tsx:68; apps/desk-web/src/pages/Patients.tsx:144; apps/desk-web/src/pages/Patients.tsx:322",
+      "recommendation": "Resolver D03 e adaptar API/UI/migração compatível a múltiplos tutores; não declarar N:N entregue.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE13",
+      "severity": "High",
+      "cards": [
+        "PROD-26"
+      ],
+      "title": "Admin não possui editor de permissões por papel/vínculo usuário-papel nem gestão completa de membros de times/filas",
+      "evidence": "admin-correct-fixture-1440.png; admin-roles-1440.png",
+      "source": "apps/desk-web/src/pages/Admin.tsx:739; apps/desk-web/src/pages/Admin.tsx:745",
+      "recommendation": "Manter editor de setores existente, adicionar editor por capacidade efetiva, associação papel e membros com audit/revogação.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE14",
+      "severity": "High",
+      "cards": [
+        "PROD-27"
+      ],
+      "title": "Kanban move por select/drag, mas card não abre conversa e só há filtro de setor",
+      "evidence": "kanban-1440.png; card sem anchor/onClick de navegação",
+      "source": "apps/desk-web/src/pages/Kanban.tsx:92; apps/desk-web/src/pages/Kanban.tsx:265",
+      "recommendation": "Conectar deep-link de conversa e filtros agente/label/prioridade/período/grupo; manter alternativa teclado e feedback de falha.",
+      "status": "OPEN",
+      "evidence_kind": "BROWSER+STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE15",
+      "severity": "High",
+      "cards": [
+        "PROD-30"
+      ],
+      "title": "Tasks/Alerts/Contacts/Kanban/Dashboard não assinam realtime nem executam polling bounded",
+      "evidence": "Busca por setInterval/realtime/addEventListener nessas páginas sem ocorrência; fetch inicial/mutação/manual",
+      "source": "apps/desk-web/src/pages/Tasks.tsx:84; apps/desk-web/src/pages/Alerts.tsx:76; apps/desk-web/src/pages/Kanban.tsx:108",
+      "recommendation": "Invalidação ou polling limitado e estado stale/offline; preservar formulário sujo e reconciliar reconexão.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE16",
+      "severity": "Medium",
+      "cards": [
+        "PROD-28"
+      ],
+      "title": "Monólitos de página e duplicação de estados continuam; features/inbox ausente",
+      "evidence": "Inbox1254 linhas, Admin1342, Contacts682; loadFailureFrom repetido",
+      "source": "apps/desk-web/src/pages/Inbox.tsx:1; apps/desk-web/src/pages/Admin.tsx:1; apps/desk-web/src/pages/Contacts.tsx:1",
+      "recommendation": "Extrações por ownership real de consultas/mutações e adoção de primitivos; preservar comportamento em capturas equivalentes.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "FE17",
+      "severity": "Medium",
+      "cards": [
+        "PROD-38"
+      ],
+      "title": "Percurso E2E produção completo não está implementado na pasta de suites",
+      "evidence": "e2e/production contém somente 01-harness-identity.spec.ts; config permite reuseExistingServer local",
+      "source": "playwright.production.config.ts:41; e2e/production/01-harness-identity.spec.ts:1",
+      "recommendation": "Criar cenário de atendimento com serviços isolados identificados e impedir reutilização sem prova de identidade; esta auditoria não executou o stack.",
+      "status": "OPEN",
+      "evidence_kind": "STATIC",
+      "confidence": "HIGH"
+    }
+  ],
+  "cards": [
+    {
+      "card": "PROD-17",
+      "status": "PARTIAL_VERIFIED",
+      "assessment": "Boot aguardou /auth/me, sem consultas operacionais antes; deep-link sem capacidade negado; erro de rede recuperável; mobile Escape retorna foco e sidebar inert. 401/403 reais, rotação/WS/cache e principal alterado integrados NOT_RUN."
+    },
+    {
+      "card": "PROD-19",
+      "status": "FAIL",
+      "assessment": "AC1–3 incompletos FE02/03; AC4 parcial (polling Inbox presente), integração concorrente NOT_RUN."
+    },
+    {
+      "card": "PROD-20",
+      "status": "FAIL",
+      "assessment": "AC1/2 falham FE04/05; AC3 parcial FE06; WSS remoto/upload/cancelamento integrados NOT_RUN."
+    },
+    {
+      "card": "PROD-21",
+      "status": "FAIL",
+      "assessment": "AC1/2 incompletos FE07; AC3 não tem invalidação FE15; AC4 HTTP+PG NOT_RUN."
+    },
+    {
+      "card": "PROD-22",
+      "status": "FAIL",
+      "assessment": "AC1/3 falham FE08/09; autoria server-side não retestada; AC4 parcial, formulário renderizado."
+    },
+    {
+      "card": "PROD-23",
+      "status": "PARTIAL",
+      "assessment": "Ack/resolve renderizados; links e atualização faltam FE10/15. Geração/dedup/scheduler backend fora do scout."
+    },
+    {
+      "card": "PROD-24",
+      "status": "FAIL",
+      "assessment": "AC1 incompleto FE11; edição/revogação/membership HTTP+browser NOT_RUN."
+    },
+    {
+      "card": "PROD-25",
+      "status": "FAIL",
+      "assessment": "AC2 incompleto FE09; AC5 N:N ausente FE12; D03 consta OPEN, não ratificação presumida."
+    },
+    {
+      "card": "PROD-26",
+      "status": "FAIL",
+      "assessment": "AC1/2/5 incompletos FE13; editor setor existente. D05 OPEN, ausência de aprovação IA fictícia é correta. Audit/revogação integradas NOT_RUN."
+    },
+    {
+      "card": "PROD-27",
+      "status": "FAIL",
+      "assessment": "AC1 navegação e AC2 filtros incompletos FE14; alternativa select presente; sincronização FE15; D04 OPEN."
+    },
+    {
+      "card": "PROD-28",
+      "status": "PARTIAL",
+      "assessment": "Primitivos e tokens existem; extração/ownership e ledger não fechados FE16; antes/depois não aplicável ao scout."
+    },
+    {
+      "card": "PROD-29",
+      "status": "FAIL",
+      "assessment": "AC1 reproduzido FE01. AC2 matriz parcial (não todas 16 rotas×5); leitor de tela/contraste/zoom/motion AC3 NOT_RUN. Capturas nativas e JSON existentes, não crítica final."
+    },
+    {
+      "card": "PROD-30",
+      "status": "FAIL",
+      "assessment": "AC1 atualização ausente FE15; KPI backend/PG AC2/3 não avaliado nesta lane."
+    },
+    {
+      "card": "PROD-38",
+      "status": "NOT_RUN",
+      "assessment": "Apenas browser sintético com mocks; nenhum percurso serviços reais, nenhum aceite integrado concedido FE17."
+    }
+  ],
+  "renders": [
+    {
+      "file": "kanban-1440.png",
+      "sha256": "5d369fa039bc4a91d25d0cb08fd7bf96fb477ce533f13d37f1d0172a07164c7c",
+      "captured_at": "2026-09-13T19:34:47.958452+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "alerts-1440.png",
+      "sha256": "f8f6e1ae8f2ce916a066555d82e5fd6ec9233cd32a5b93292f6f0a3359014d03",
+      "captured_at": "2026-09-13T19:34:46.581466+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "auth-boot-confirmed-1440.png",
+      "sha256": "7043380f546b8d981189b9527dbc5f9bd0b87e267f5f30a2698e02011dd54cc4",
+      "captured_at": "2026-09-13T19:36:40.081232+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "admin-1440.png",
+      "sha256": "3c03edf5803d1e2b1954f98d935f5ed4a9a11691f3274090e22d8a88dc75fe21",
+      "captured_at": "2026-09-13T19:34:47.234459+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "tasks-create-1440.png",
+      "sha256": "cd3233ebf926d8c53886b177af4bd68236237f6d3306a4ae0fe823fec7b03f84",
+      "captured_at": "2026-09-13T19:34:45.034483+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "tasks-1440.png",
+      "sha256": "c09087dca2614b98c7a4b8a3708f2208a05cb30a10368dd29b9b26a4c8ce3117",
+      "captured_at": "2026-09-13T19:34:44.896485+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "auth-offline-retry-1440.png",
+      "sha256": "7c4414f7d839eb2081a86696b29527a5bfe2ab0bee1a84360cc52cafdcb96ce4",
+      "captured_at": "2026-09-13T19:36:41.277219+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-1440-list.png",
+      "sha256": "74447e05bcfc026c83a0dc63d7fed569ea68b403804d81e4ca1dd714b34a7f0b",
+      "captured_at": "2026-09-13T19:34:43.833497+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "shell-mobile-nav-open.png",
+      "sha256": "42ec58b2a3fdb47dca23191f03f9fa692321ba53a579308941f751fcc038f2d7",
+      "captured_at": "2026-09-13T19:36:42.007211+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "contacts-1440.png",
+      "sha256": "6b013f574a96ec143b1d29c822caccf64991d870312554ab5a4f39c186e6855f",
+      "captured_at": "2026-09-13T19:34:48.713443+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-1024-list.png",
+      "sha256": "3f4e0d141f01eff9668e85e14584fcc8bc008edd5e785a94e6c0ea607e91fff2",
+      "captured_at": "2026-09-13T19:34:42.840507+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "auth-boot-pending-1440.png",
+      "sha256": "41a57d341b63533fecb6b95da5dcfe10278c38e6ccbdc62abea1764e1eece46c",
+      "captured_at": "2026-09-13T19:36:38.268251+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-375-list.png",
+      "sha256": "0a268d472baaa57a78915bd1bb50560476cd55386374c2b54cc4bee714c7b2a2",
+      "captured_at": "2026-09-13T19:34:42.183515+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-1024-context.png",
+      "sha256": "92723e37c7e647980afca1f834707cd9c8bbdabded76442e2b2118489b3251a0",
+      "captured_at": "2026-09-13T19:34:43.511500+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-375-selected.png",
+      "sha256": "5a07a85ff7faa80618eb76068577b715efb12614f0c30efe8130ae4f81faa87b",
+      "captured_at": "2026-09-13T19:34:42.520511+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-1440-selected.png",
+      "sha256": "534f5cd3a2f16cfa409fc340675ec0ac1538268eaac70f3fda31f12d3e3045e9",
+      "captured_at": "2026-09-13T19:34:44.175493+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "notes-create-1440.png",
+      "sha256": "8aff39462ce89df660d3b14ab5b5f4d3bbb7515fe471ba8738d602309055b026",
+      "captured_at": "2026-09-13T19:34:45.883474+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "admin-roles-1440.png",
+      "sha256": "63c5f1ec1ac5e3c6b9d58d59501cac9d68320a5c5313e9ca091a253c445f46c3",
+      "captured_at": "2026-09-13T19:36:37.758257+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "admin-correct-fixture-1440.png",
+      "sha256": "e8986f1f43ac7aa024335596a78646435991dcd11c30517f1a5da37adee72617",
+      "captured_at": "2026-09-13T19:36:37.596258+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "inbox-1024-selected.png",
+      "sha256": "d082a5b66e1beedc423bebe22d2228c28295c05a45e10b29d79ea9c4a0aa2d92",
+      "captured_at": "2026-09-13T19:34:43.243503+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "auth-deeplink-denied-1440.png",
+      "sha256": "14aee48553c9e9d4e4136a828b4cdb7f246df22e567810720a70fbd15e3c36fd",
+      "captured_at": "2026-09-13T19:36:40.687225+00:00",
+      "fixture": "synthetic-mocked-api"
+    },
+    {
+      "file": "notes-1440.png",
+      "sha256": "c5823e41aed58a8614763c7dd5005b7fc13747d4fdb83e2065d0d0934a9e8883",
+      "captured_at": "2026-09-13T19:34:45.757476+00:00",
+      "fixture": "synthetic-mocked-api"
+    }
+  ],
+  "limitations": [
+    "Mocks prove frontend behavior only; no backend authz/persistence/provider/scanner/realtime guarantee",
+    "Partial responsive matrix; screen reader, contrast, zoom/reflow, vitals NOT_RUN",
+    "Initial admin-1440.png is INVALID_FIXTURE: mock returned entries rather than expected data/stats; corrected in admin-correct-fixture-1440.png; not counted as product failure",
+    "Initial Vite dev WS attempted localhost:8080 and was refused; second harness intercepts all WebSockets. No existing server used. No real data.",
+    "Canonical message fixture provided ascending input where API may use descending; no message-order defect claimed from captures."
+  ],
+  "mocked_endpoints": [
+    "/admin/dead-letters",
+    "/admin/dead-letters/stats",
+    "/admin/queues",
+    "/admin/roles",
+    "/admin/teams",
+    "/admin/users",
+    "/admin/webhook-security/stats",
+    "/alerts",
+    "/auth/me",
+    "/contacts",
+    "/conversations",
+    "/conversations/20000000-0000-0000-0000-000000000001/messages",
+    "/conversations/20000000-0000-0000-0000-000000000001/read",
+    "/kanban/board",
+    "/notes",
+    "/sectors",
+    "/tasks"
+  ],
+  "inspected_renders": [
+    "inbox-1024-selected.png",
+    "inbox-375-selected.png",
+    "inbox-1440-selected.png",
+    "tasks-create-1440.png",
+    "notes-create-1440.png",
+    "alerts-1440.png",
+    "admin-1440.png (invalid fixture)",
+    "admin-correct-fixture-1440.png",
+    "kanban-1440.png",
+    "auth-boot-pending-1440.png",
+    "auth-deeplink-denied-1440.png",
+    "auth-offline-retry-1440.png",
+    "shell-mobile-nav-open.png"
+  ]
+}

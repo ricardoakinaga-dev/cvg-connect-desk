@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { RealtimeClient } from '../lib/realtime.ts';
+import { RealtimeClient, resolveRealtimeUrl } from '../lib/realtime.ts';
 
 type SentMessage = { type: string; token?: string; channel?: string };
 
@@ -42,6 +42,14 @@ class MockWebSocket {
 
 function parseSentMessages(socket: MockWebSocket): SentMessage[] {
   return socket.sent.map((message) => JSON.parse(message) as SentMessage);
+}
+
+function effectiveUrl(client: RealtimeClient): string {
+  return (client as unknown as { url: string }).url;
+}
+
+function createLogger() {
+  return { log: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() };
 }
 
 function createHarness(reconnectDelayMs = 25) {
@@ -322,5 +330,131 @@ describe('RealtimeClient', () => {
     // Stale fecha o socket e agenda reconnect (backoff 50ms).
     vi.advanceTimersByTime(100);
     expect(sockets).toHaveLength(2);
+  });
+});
+
+describe('resolveRealtimeUrl (C08-AAA06)', () => {
+  it('U1: origem remota HTTP usa a mesma origem e /ws/', () => {
+    expect(resolveRealtimeUrl({ location: { protocol: 'http:', host: 'desk.example:8080' }, dev: false }))
+      .toBe('ws://desk.example:8080/ws/');
+  });
+
+  it('U2: HTTPS resolve para wss (sem mixed content)', () => {
+    expect(resolveRealtimeUrl({ location: { protocol: 'https:', host: 'desk.example' }, dev: false }))
+      .toBe('wss://desk.example/ws/');
+  });
+
+  it('U3: override absoluto é preservado literalmente', () => {
+    expect(resolveRealtimeUrl({ envUrl: 'wss://rt.example/ws', location: { protocol: 'https:', host: 'desk.example' }, dev: false }))
+      .toBe('wss://rt.example/ws');
+  });
+
+  it('U4: override em path resolve na mesma origem com protocolo da página', () => {
+    expect(resolveRealtimeUrl({ envUrl: '/custom/ws', location: { protocol: 'https:', host: 'desk.example' }, dev: false }))
+      .toBe('wss://desk.example/custom/ws');
+  });
+
+  it('U5: baseUrl vence o env', () => {
+    expect(resolveRealtimeUrl({ baseUrl: 'ws://realtime.test', envUrl: 'wss://rt.example', dev: false }))
+      .toBe('ws://realtime.test');
+  });
+
+  it('U6: DEV sem env mantém localhost:8080 (DC08-9)', () => {
+    expect(resolveRealtimeUrl({ location: { protocol: 'https:', host: 'desk.example' }, dev: true }))
+      .toBe('ws://localhost:8080');
+  });
+
+  it('U7: produção sem location e sem env devolve vazio (fallback explícito, sem lançar)', () => {
+    expect(resolveRealtimeUrl({ location: null, dev: false })).toBe('');
+    expect(resolveRealtimeUrl({ envUrl: '/custom/ws', location: null, dev: false })).toBe('');
+    expect(resolveRealtimeUrl({ envUrl: '   ', location: null, dev: false })).toBe('');
+  });
+
+  it('U8: token nunca aparece na URL nem no log; auth segue por mensagem', () => {
+    const socket = new MockWebSocket('wss://desk.example/ws/');
+    const logs: unknown[][] = [];
+    const logger = {
+      log: (...args: unknown[]) => { logs.push(args); },
+      warn: (...args: unknown[]) => { logs.push(args); },
+      error: (...args: unknown[]) => { logs.push(args); },
+      debug: (...args: unknown[]) => { logs.push(args); },
+    };
+    const client = new RealtimeClient({
+      baseUrl: 'wss://desk.example/ws/',
+      logger,
+      socketFactory: () => socket as unknown as WebSocket,
+    });
+
+    client.connect('segredo-token-123');
+    socket.open();
+
+    expect(effectiveUrl(client)).not.toContain('segredo-token-123');
+    expect(JSON.stringify(logs)).not.toContain('segredo-token-123');
+    expect(JSON.parse(socket.sent[0])).toEqual({ type: 'auth', token: 'segredo-token-123' });
+  });
+});
+
+describe('RealtimeClient URL resolution (C08-AAA06)', () => {
+  it('C1: envUrl do construtor é usado sem depender do ambiente de teste', () => {
+    const client = new RealtimeClient({
+      envUrl: 'wss://rt.example/ws',
+      location: null,
+      dev: false,
+      logger: createLogger(),
+      socketFactory: (url) => new MockWebSocket(url) as unknown as WebSocket,
+    });
+
+    expect(effectiveUrl(client)).toBe('wss://rt.example/ws');
+  });
+
+  it('C2: construtor usa window.location para resolver /ws/ na mesma origem', () => {
+    const client = new RealtimeClient({
+      envUrl: '',
+      dev: false,
+      logger: createLogger(),
+      socketFactory: (url) => new MockWebSocket(url) as unknown as WebSocket,
+    });
+
+    const scheme = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    expect(effectiveUrl(client)).toBe(`${scheme}//${window.location.host}/ws/`);
+  });
+
+  it('C3: baseUrl do construtor vence envUrl', () => {
+    const client = new RealtimeClient({
+      baseUrl: 'ws://realtime.test',
+      envUrl: 'wss://rt.example/ws',
+      location: null,
+      dev: false,
+      logger: createLogger(),
+      socketFactory: (url) => new MockWebSocket(url) as unknown as WebSocket,
+    });
+
+    expect(effectiveUrl(client)).toBe('ws://realtime.test');
+  });
+
+  it('C4: fallback vazio avisa e não tenta conectar nem agenda reconexão', () => {
+    vi.useFakeTimers();
+    const logger = createLogger();
+    const socketFactory = vi.fn((url: string) => new MockWebSocket(url) as unknown as WebSocket);
+    const client = new RealtimeClient({
+      envUrl: '',
+      location: null,
+      dev: false,
+      reconnectDelayMs: 25,
+      logger,
+      socketFactory,
+    });
+
+    expect(effectiveUrl(client)).toBe('');
+
+    client.connect('jwt-123');
+
+    expect(socketFactory).not.toHaveBeenCalled();
+    const warned = logger.warn.mock.calls.flat().join(' ');
+    expect(warned).toContain('Cannot connect');
+    expect(warned).toContain('realtime URL');
+
+    vi.advanceTimersByTime(60_000);
+    expect(socketFactory).not.toHaveBeenCalled();
   });
 });

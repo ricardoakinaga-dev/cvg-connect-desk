@@ -137,8 +137,12 @@ describe('Webhook inbound integration', () => {
       headers,
       payload: body,
     });
-    expect(second.statusCode).toBe(409);
-    expect(second.json()).toMatchObject({ reason: 'duplicate_event_id' });
+    expect(second.statusCode).toBe(200);
+    expect(second.json()).toMatchObject({
+      success: true,
+      deduplicated: true,
+      eventId,
+    });
 
     await cleanupWebhookArtifacts(`${externalConversationId}-replay`, `${externalMessageId}-replay`);
   });

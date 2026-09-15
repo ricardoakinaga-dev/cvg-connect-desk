@@ -1,5 +1,5 @@
 import { db, schema } from '@cvg/database';
-import { eq, desc, and, gte, lte } from 'drizzle-orm';
+import { eq, desc, and, gte, lte, sql } from 'drizzle-orm';
 
 export interface AuditLogEntry {
   id: string;
@@ -21,6 +21,7 @@ export interface AuditFilter {
   entityType?: string;
   entityId?: string;
   action?: string;
+  correlationId?: string;
   startDate?: Date;
   endDate?: Date;
 }
@@ -74,11 +75,22 @@ export const auditRepository = {
     if (filter?.action) {
       conditions.push(eq(schema.auditLogs.action, filter.action));
     }
+    if (filter?.correlationId) {
+      conditions.push(eq(schema.auditLogs.correlationId, filter.correlationId));
+    }
     if (filter?.startDate) {
-      conditions.push(gte(schema.auditLogs.createdAt, filter.startDate));
+      // audit_logs.created_at é TIMESTAMP sem fuso (DT01): converte o instante
+      // UTC do filtro para o wall time do fuso da sessão antes de comparar.
+      conditions.push(gte(
+        schema.auditLogs.createdAt,
+        sql`(${filter.startDate}::timestamptz AT TIME ZONE current_setting('TimeZone'))`,
+      ));
     }
     if (filter?.endDate) {
-      conditions.push(lte(schema.auditLogs.createdAt, filter.endDate));
+      conditions.push(lte(
+        schema.auditLogs.createdAt,
+        sql`(${filter.endDate}::timestamptz AT TIME ZONE current_setting('TimeZone'))`,
+      ));
     }
 
     if (conditions.length > 0) {
@@ -86,7 +98,7 @@ export const auditRepository = {
     }
 
     const result = await query
-      .orderBy(desc(schema.auditLogs.createdAt))
+      .orderBy(desc(schema.auditLogs.createdAt), desc(schema.auditLogs.id))
       .limit(limit)
       .offset(offset);
 
@@ -101,7 +113,7 @@ export const auditRepository = {
         eq(schema.auditLogs.entityType, entityType),
         eq(schema.auditLogs.entityId, entityId)
       ))
-      .orderBy(desc(schema.auditLogs.createdAt));
+      .orderBy(desc(schema.auditLogs.createdAt), desc(schema.auditLogs.id));
   },
 
   async findByUser(userId: string, limit = 50): Promise<AuditLogEntry[]> {

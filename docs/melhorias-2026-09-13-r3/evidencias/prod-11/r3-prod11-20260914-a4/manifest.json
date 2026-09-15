@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-11",
+  "runId": "r3-prod11-20260914-a4",
+  "attempt": 4,
+  "command": "CVG_PROGRAM_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3 CVG_RUNTIME_DIR=/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r3/evidencias/prod-11/r3-prod11-20260914-a4/runtime CVG_EVIDENCE_SEGMENT=r3-prod11-20260914-a4 AAA_RUN_ID=r3-prod11-20260914-a4 AAA_WORKER_INDEX=38 AAA_ATTEMPT=4 pnpm --filter @cvg/desk-api exec vitest run src/__tests__/production/prod-11.test.ts",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-14T00:47:45.000Z",
+  "finishedAt": "2026-09-14T00:47:54.862Z",
+  "durationMs": 9862,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "689c78b44cf51bfd3acecb4571b0d8b16d5c8878c3058bb956680b1afbd44492",
+    "sourceFileCount": 1452,
+    "imageDigest": null,
+    "runId": "r3-prod11-20260914-a4",
+    "attempt": "4",
+    "sealedAt": "2026-09-14T00:47:44.500Z"
+  },
+  "artifacts": [
+    {
+      "path": "crash-send.ts",
+      "sha256": "08d1c348a82658dd01a95b282acf24cde52fe34fa7f4df25cabe1f875a1879ba"
+    },
+    {
+      "path": "prod-11-evidence.json",
+      "sha256": "ac1f26028efd9ff7ef2cea1192a48793b72d8c0312bfecdb12a70a7a2e2d749f"
+    },
+    {
+      "path": "runtime/environment/isolated-env.json",
+      "sha256": "cec561c726921c770fb9f6d44c5a1137b4b6a7d27307237814548cbef6974bda"
+    },
+    {
+      "path": "prod-11.test.log",
+      "sha256": "9bb44772c67499005c126fcd8e766e4483e974cb50ace309c2ca40d4a94c0db0"
+    }
+  ],
+  "limitations": [
+    "PostgreSQL/Redis locais e sandbox HTTP do Gateway; nenhum provider externo ou dado de produção.",
+    "Revisão independente permanece pendente."
+  ]
+}

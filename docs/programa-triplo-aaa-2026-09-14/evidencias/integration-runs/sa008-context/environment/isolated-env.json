@@ -1,0 +1,24 @@
+{
+  "runId": "sa008-context",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59432/cvg_aaa_sa008_context_w30",
+  "databaseName": "cvg_aaa_sa008_context_w30",
+  "databasePort": 59432,
+  "redisUrl": "redis://127.0.0.1:56980",
+  "redisPort": 56980,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 959588,
+    "dataDir": "/tmp/cvg-aaa-runs/sa008-context/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 959636,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa008-context",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 22:09:42.862064-03"
+  }
+}

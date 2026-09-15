@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "regress-m2",
+    "redis": {
+      "stopped": true,
+      "pid": 1295811
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1295793
+    }
+  }
+}

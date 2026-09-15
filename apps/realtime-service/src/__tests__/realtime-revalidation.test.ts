@@ -3,8 +3,10 @@
  *
  * Tests for G-02: periodic token revalidation and G-03: message-based auth.
  *
- * These tests verify the code structure for the periodic revalidation feature.
- * Behavioral tests against a live WebSocket server require integration test setup.
+ * NOTA AAA-05 (C02 D-C02-7): o default de revalidação foi corrigido de 5 min
+ * para <= 5 s (deadline de revogação). As asserções estruturais abaixo refletem
+ * o contrato congelado; a prova comportamental com sockets reais + PostgreSQL
+ * está em aaa-05-isolation.test.ts.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -17,6 +19,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 describe('Realtime Token Revalidation Implementation', () => {
   const realtimePath = resolve(__dirname, '../index.ts');
   const content = readFileSync(realtimePath, 'utf-8');
+  const revalidateSection = content.slice(
+    content.indexOf('revalidateToken(clientId: string)'),
+    content.indexOf('private handleRevalidationFailure'),
+  );
 
   describe('G-02: Periodic Token Revalidation', () => {
     it('has revalidateIntervalMs configuration', () => {
@@ -27,8 +33,10 @@ describe('Realtime Token Revalidation Implementation', () => {
       expect(content).toContain('REALTIME_AUTH_REVALIDATE_MS');
     });
 
-    it('has default interval of 300000ms (5 minutes)', () => {
-      expect(content).toContain('300000');
+    it('bounds the revalidation period to the 5s revocation deadline (C02)', () => {
+      expect(content).toContain('AUTH_DEADLINE_MS = 5000');
+      expect(content).toContain('DEFAULT_REVALIDATE_MS = 2000');
+      expect(content).not.toContain('300000');
     });
 
     it('has startRevalidationTimer method', () => {
@@ -44,11 +52,7 @@ describe('Realtime Token Revalidation Implementation', () => {
     });
 
     it('calls /auth/me for revalidation', () => {
-      // The revalidateToken method should call /auth/me like initial auth
-      const revalidateSection = content.match(/async revalidateToken[\s\S]*?(?=async|private|stop|$)/);
-      if (revalidateSection) {
-        expect(revalidateSection[0]).toContain('/auth/me');
-      }
+      expect(revalidateSection).toContain('/auth/me');
     });
 
     it('uses setInterval for periodic revalidation', () => {
@@ -87,6 +91,11 @@ describe('Realtime Token Revalidation Implementation', () => {
 
     it('clears client via clearClient on failure', () => {
       expect(content).toContain('clearClient(clientId)');
+    });
+
+    it('sweeps membership authorization after a valid session revalidation', () => {
+      expect(content).toContain('sweepAuthorizations');
+      expect(content).toContain('subscription.revoked');
     });
   });
 
@@ -128,8 +137,6 @@ describe('Realtime Token Revalidation Implementation', () => {
     });
 
     it('connection close clears timer', () => {
-      // When close handler is called, clearClient should be used
-      // Note: actual string is ws.on('close', not ws.on('close')
       expect(content.indexOf("ws.on('close',")).toBeGreaterThan(-1);
       expect(content).toContain('clearClient(clientId)');
     });
@@ -139,6 +146,7 @@ describe('Realtime Token Revalidation Implementation', () => {
     it('logs configured revalidation interval on startup', () => {
       expect(content).toContain('[Realtime] Starting token revalidation timer');
       expect(content).toContain('interval_ms');
+      expect(content).toContain('deadline_ms');
     });
   });
 
@@ -168,23 +176,22 @@ describe('Realtime Token Revalidation Implementation', () => {
     });
 
     it('stops revalidation if client no longer authenticated', () => {
-      const revalidateSection = content.match(/async revalidateToken[\s\S]*?(?=async|private|stop|$)/);
-      if (revalidateSection) {
-        expect(revalidateSection[0]).toContain('!client.authenticated');
-      }
+      expect(revalidateSection).toContain('!client.authenticated');
     });
   });
 
   describe('Network Error Handling', () => {
     it('network errors during revalidation do not disconnect client', () => {
-      // Network errors are logged but don't trigger handleRevalidationFailure
-      const revalidateSection = content.match(/async revalidateToken[\s\S]*?(?=async|private|stop|$)/);
-      if (revalidateSection) {
-        const section = revalidateSection[0];
-        const hasNetworkErrorHandling = section.includes('Token revalidation error');
-        const doesNotCallFailureOnNetworkError = !section.match(/catch.*\{[\s\S]*?handleRevalidationFailure/);
-        expect(hasNetworkErrorHandling).toBe(true);
-      }
+      const section = content.slice(
+        content.indexOf('revalidateToken(clientId: string)'),
+        content.indexOf('private handleRevalidationFailure'),
+      );
+      const hasNetworkErrorHandling = section.includes('Token revalidation error');
+      const catchBlock = section.slice(section.indexOf('} catch (error)'));
+      const doesNotCallFailureOnNetworkError = !catchBlock.match(/catch[\s\S]*?handleRevalidationFailure/);
+      expect(hasNetworkErrorHandling).toBe(true);
+      expect(doesNotCallFailureOnNetworkError).toBe(true);
+      expect(section).toContain("return 'unavailable'");
     });
   });
 });
@@ -194,9 +201,11 @@ describe('Env Configuration Documentation', () => {
   const content = readFileSync(realtimePath, 'utf-8');
 
   it('documents REALTIME_AUTH_REVALIDATE_MS in constructor', () => {
-    // The env var should be read in the constructor
-    const constructorMatch = content.match(/constructor[\s\S]*?\{[\s\S]*?\}/);
-    expect(constructorMatch).toBeTruthy();
-    expect(constructorMatch![0]).toContain('REALTIME_AUTH_REVALIDATE_MS');
+    const constructorStart = content.indexOf('constructor(');
+    const constructorEnd = content.indexOf('start(): void');
+    expect(constructorStart).toBeGreaterThan(-1);
+    expect(constructorEnd).toBeGreaterThan(constructorStart);
+    const constructorSection = content.slice(constructorStart, constructorEnd);
+    expect(constructorSection).toContain('REALTIME_AUTH_REVALIDATE_MS');
   });
 });

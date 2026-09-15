@@ -1,149 +1,213 @@
 #!/usr/bin/env node
 /**
- * Triple AAA master gate FINAL (§26).
- * Orquestra: lint, typecheck, unit, postgres-real, migration-check, build,
- * security-audit, cobertura, DR evidence, staging evidence, query perf.
+ * Triple AAA master gate FINAL (§26) — PROD-02.
+ *
+ * Orquestra checks reais e avalia cada prova como manifesto vinculado ao
+ * candidato (commit/lock/source e, quando exigido, imageDigest). Sem PASS
+ * narrativo; FAIL/BLOCKED/NOT_RUN/SKIPPED/INVALID/MISSING reprovam.
  * Gera artifacts/triple-aaa-report.json + .md.
- * Honestidade: evidência externa (CI) só conta via files em artifacts/ci-evidence/.
+ *
+ * Uso:
+ *   node scripts/triple-aaa-verify.mjs [--run|--evaluate]
+ *     [--root <dir>] [--checks-file <json>] [--evidence-dir <dir>]
+ *     [--candidate <sha>] [--image-digest <sha256:...>]
+ *     [--with-external-evidence]
+ *
+ * TRIPLE_AAA_CERTIFIED nunca é emitido aqui: exige política de release e
+ * verificação de tag/assinatura em fluxo dedicado.
  */
-import { execSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { mkdirSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  CERTIFICATION_POLICY,
+  DEFAULT_CHECKS,
+  evaluateGate,
+  readChecksFile,
+  readSealedCandidate,
+  resolveCandidate,
+  runCheck,
+  sealCandidate,
+  summarizeRejections,
+  writeGateReports,
+} from './production/evidence-gate.mjs';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const artifactsDir = join(root, 'artifacts');
-mkdirSync(artifactsDir, { recursive: true });
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const defaultRoot = resolve(scriptDir, '..');
 
-const gates = {};
-function run(name, command, env = {}) {
-  const started = Date.now();
-  try {
-    execSync(command, { cwd: root, stdio: 'pipe', timeout: 1500000, env: { ...process.env, ...env } });
-    gates[name] = { status: 'PASS', durationMs: Date.now() - started };
-    console.log(`[gate] ${name}: PASS (${Date.now() - started}ms)`);
-  } catch (error) {
-    const output = [error.stdout?.toString(), error.stderr?.toString()].filter(Boolean).join('\n').slice(-2000);
-    gates[name] = { status: 'FAIL', durationMs: Date.now() - started, output };
-    console.log(`[gate] ${name}: FAIL`);
+function parseArgs(argv) {
+  const options = {
+    mode: 'run',
+    root: defaultRoot,
+    checksFile: null,
+    evidenceDir: null,
+    artifactsDir: null,
+    candidate: null,
+    imageDigest: null,
+    withExternal: false,
+  };
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    const next = () => {
+      index += 1;
+      if (index >= argv.length) throw new Error(`valor ausente para ${arg}`);
+      return argv[index];
+    };
+    if (arg === '--run') options.mode = 'run';
+    else if (arg === '--evaluate' || arg === '--evidence-only') options.mode = 'evaluate';
+    else if (arg === '--root') options.root = resolve(next());
+    else if (arg === '--checks-file') options.checksFile = resolve(next());
+    else if (arg === '--evidence-dir') options.evidenceDir = resolve(next());
+    else if (arg === '--artifacts-dir') options.artifactsDir = resolve(next());
+    else if (arg === '--candidate') options.candidate = next();
+    else if (arg === '--image-digest') options.imageDigest = next();
+    else if (arg === '--with-external-evidence') options.withExternal = true;
+    else if (arg === '--help' || arg === '-h') options.help = true;
+    else throw new Error(`argumento desconhecido: ${arg}`);
   }
+  return options;
 }
 
-const DB_ENV = { DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/connect_desk_db' };
+function printHelp() {
+  console.log(
+    [
+      'Uso: node scripts/triple-aaa-verify.mjs [--run|--evaluate] [opções]',
+      '',
+      '  --run                      executa os checks e grava manifestos (padrão)',
+      '  --evaluate                 apenas avalia manifestos já selados',
+      '  --root <dir>               raiz do candidato (default: raiz do repo)',
+      '  --checks-file <json>       lista de checks (default: pipeline completo)',
+      '  --evidence-dir <dir>       diretório de manifestos/logs (default: <root>/artifacts/evidence)',
+      '  --artifacts-dir <dir>      diretório dos relatórios (default: <root>/artifacts)',
+      '  --candidate <sha>          commit do candidato (default: git HEAD; obrigatório fora de git)',
+      '  --image-digest <sha256:…>  digest esperado para checks com imagem',
+      '  --with-external-evidence   torna checks externos (CI) requeridos',
+      '',
+      'Exit 0 somente com state=VERIFIED_CANDIDATE (todos os checks requeridos PASS vinculados ao mesmo candidato).',
+    ].join('\n'),
+  );
+}
 
-run('install', 'pnpm install --frozen-lockfile');
-run('lint', 'pnpm --filter @cvg/desk-web exec eslint . --max-warnings 100');
-run('typecheck', 'pnpm --filter @cvg/desk-web exec tsc --noEmit -p tsconfig.json');
-run('unit', 'pnpm exec turbo run test --force --concurrency=2', DB_ENV);
-run('postgres-real', 'pnpm test:postgres-real', DB_ENV);
-run('migration-check', 'pnpm --filter @cvg/database db:check', {
-  DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres',
-});
-run('build', 'pnpm --filter @cvg/desk-web build');
+function main() {
+  const options = parseArgs(process.argv.slice(2));
+  if (options.help) {
+    printHelp();
+    return 0;
+  }
+  const root = options.root;
+  const artifactsDir = options.artifactsDir ?? join(root, 'artifacts');
+  const evidenceDir = options.evidenceDir ?? join(artifactsDir, 'evidence');
+  const checks = options.checksFile ? readChecksFile(options.checksFile) : DEFAULT_CHECKS;
+  mkdirSync(evidenceDir, { recursive: true });
+
+  const excludes = [evidenceDir, artifactsDir];
+  const execution = {
+    runId: process.env.GITHUB_RUN_ID ?? null,
+    attempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
+  };
+  const liveBefore = resolveCandidate({
+    root,
+    commit: options.candidate ?? process.env.SHA ?? null,
+    expectedImageDigest: options.imageDigest,
+    excludes,
+    ...execution,
+  });
+  if (!liveBefore.commit) {
+    console.error('[gate] candidato sem commit: use --candidate <sha> fora de um repositório git');
+    return 2;
+  }
+
+  let sealed;
+  let sealMissing = false;
+  if (options.mode === 'run') {
+    sealCandidate(evidenceDir, liveBefore);
+    for (const check of checks) {
+      if (check.external || check.artifact) continue;
+      process.stdout.write(`[gate] ${check.id}: executando… `);
+      const manifest = runCheck(check, { root, evidenceDir, candidate: liveBefore });
+      console.log(manifest.status);
+    }
+    sealed = readSealedCandidate(evidenceDir).candidate;
+  } else {
+    const sealedResult = readSealedCandidate(evidenceDir);
+    if (sealedResult.ok) {
+      sealed = sealedResult.candidate;
+    } else {
+      // Evidência ausente é estado inequívoco, não erro de uso: o relatório sai
+      // com cada check MISSING e exit != 0.
+      console.error(`[gate] ${sealedResult.error}`);
+      sealed = liveBefore;
+      sealMissing = true;
+    }
+  }
+
+  const liveAfter = resolveCandidate({
+    root,
+    commit: options.candidate ?? process.env.SHA ?? null,
+    expectedImageDigest: options.imageDigest,
+    excludes,
+    ...execution,
+  });
+
+  const report = evaluateGate({
+    checks,
+    evidenceDir,
+    candidate: sealed,
+    withExternal: options.withExternal,
+    artifactDir: artifactsDir,
+    root,
+  });
+
+  const drift = [];
+  if (liveAfter.commit !== sealed.commit) drift.push(`commit (selo=${sealed.commit} atual=${liveAfter.commit})`);
+  if (liveAfter.lockfileSha256 !== sealed.lockfileSha256) drift.push('lockfileSha256');
+  if (liveAfter.sourceSha256 !== sealed.sourceSha256) drift.push('sourceSha256');
+  if (liveAfter.imageDigest !== sealed.imageDigest) drift.push('imageDigest');
+  if (liveAfter.runId !== sealed.runId) drift.push('runId');
+  if (liveAfter.attempt !== sealed.attempt) drift.push('attempt');
+  report.liveCandidate = {
+    commit: liveAfter.commit,
+    lockfileSha256: liveAfter.lockfileSha256,
+    sourceSha256: liveAfter.sourceSha256,
+    imageDigest: liveAfter.imageDigest,
+    runId: liveAfter.runId,
+    attempt: liveAfter.attempt,
+    checkedAt: new Date().toISOString(),
+  };
+  report.sealMissing = sealMissing;
+  report.candidateDrift = drift;
+  if (sealMissing) {
+    report.state = 'FAILED';
+    report.final = 'FAILED';
+    report.rejected = [
+      ...report.rejected,
+      {
+        check: 'candidate-seal',
+        status: 'MISSING',
+        reasons: ['candidate.json ausente/inválido; evidência não pode ser avaliada sem selo do candidato'],
+      },
+    ];
+    report.honesty = `${report.honesty} Selo do candidato ausente ou inválido.`;
+  }
+  if (drift.length > 0) {
+    report.state = 'FAILED';
+    report.final = 'FAILED';
+    report.honesty = `${report.honesty} Drift do candidato entre selo e avaliação: ${drift.join(', ')}.`;
+  }
+
+  const { jsonPath, mdPath } = writeGateReports(artifactsDir, report);
+  console.log(`\nFINAL: ${report.state}`);
+  console.log(`Checks: ${JSON.stringify(report.counts)}`);
+  if (report.rejected.length > 0) console.log(`Reprovados: ${summarizeRejections(report)}`);
+  if (drift.length > 0) console.log(`Drift: ${drift.join(', ')}`);
+  console.log(`Certificação: ${CERTIFICATION_POLICY.state} (${CERTIFICATION_POLICY.reason})`);
+  console.log(`Reports: ${jsonPath} + ${mdPath}`);
+  return report.state === 'VERIFIED_CANDIDATE' ? 0 : 1;
+}
 
 try {
-  execSync('pnpm audit --audit-level=critical', { cwd: root, stdio: 'pipe', timeout: 300000 });
-  gates['critical-security-audit'] = { status: 'PASS' };
-  console.log('[gate] critical-security-audit: PASS');
-} catch {
-  gates['critical-security-audit'] = { status: 'FAIL' };
-  console.log('[gate] critical-security-audit: FAIL');
+  process.exitCode = main();
+} catch (error) {
+  console.error(`[gate] erro fatal: ${error instanceof Error ? error.message : error}`);
+  process.exitCode = 2;
 }
-
-// Coverage gate (shared — padrão de referência dos módulos críticos).
-try {
-  execSync('pnpm --filter @cvg/shared exec vitest run --coverage 2>&1 | grep -q "All files"', { cwd: root, stdio: 'pipe', timeout: 300000 });
-  gates['coverage'] = { status: 'PASS', detail: 'thresholds 85/80/85/85 (medido 94.6/87.8/94.9/94.6)' };
-  console.log('[gate] coverage: PASS');
-} catch {
-  gates['coverage'] = { status: 'FAIL' };
-  console.log('[gate] coverage: FAIL');
-}
-
-// Evidência local (artifacts) — só PASS se arquivo existe E result=PASS.
-const localEvidence = {
-  'dr-e2e': ['artifacts/dr-e2e-report.json', 'result'],
-  'staging-otel': ['artifacts/staging-otel.json', 'result'],
-  'query-performance': ['artifacts/query-performance.json', 'queries'],
-};
-for (const [name, [rel, key]] of Object.entries(localEvidence)) {
-  const path = join(root, rel);
-  if (existsSync(path)) {
-    try {
-      const data = JSON.parse(readFileSync(path, 'utf8'));
-      const ok = key === 'queries' ? Object.values(data[key]).every((q) => q.acceptable !== false && !q.error) : data[key] === 'PASS';
-      gates[name] = ok ? { status: 'PASS' } : { status: 'FAIL' };
-    } catch {
-      gates[name] = { status: 'FAIL' };
-    }
-  } else {
-    gates[name] = { status: 'NOT_RUN' };
-  }
-  console.log(`[gate] ${name}: ${gates[name].status}`);
-}
-
-// Evidência externa (CI) — só conta se arquivos existirem.
-const externalMarkers = {
-  'external-codeql': 'artifacts/ci-evidence/codeql.json',
-  'external-gitleaks': 'artifacts/ci-evidence/gitleaks.json',
-  'external-trivy': 'artifacts/ci-evidence/trivy.json',
-  'external-sbom': 'artifacts/ci-evidence/sbom.json',
-  'external-e2e': 'artifacts/ci-evidence/e2e.json',
-};
-const withExternal = process.argv.includes('--with-external-evidence');
-for (const [name, rel] of Object.entries(externalMarkers)) {
-  const path = join(root, rel);
-  if (withExternal && existsSync(path)) {
-    try {
-      const data = JSON.parse(readFileSync(path, 'utf8'));
-      gates[name] = { status: data.status === 'PASS' ? 'PASS' : 'FAIL' };
-    } catch {
-      gates[name] = { status: 'FAIL' };
-    }
-  } else {
-    gates[name] = { status: 'NOT_RUN' };
-  }
-}
-
-const localNames = Object.keys(gates).filter((n) => !n.startsWith('external-') && n !== 'critical-security-audit' && n !== 'coverage');
-const localPass = Object.entries(gates)
-  .filter(([n]) => !n.startsWith('external-'))
-  .every(([, v]) => v.status === 'PASS');
-const externalPass = Object.entries(gates)
-  .filter(([n]) => n.startsWith('external-'))
-  .every(([, v]) => v.status === 'PASS');
-const anyExternalNotRun = Object.entries(gates).some(([n, v]) => n.startsWith('external-') && v.status === 'NOT_RUN');
-
-const commit = execSync('git rev-parse HEAD').toString().trim();
-let aaa = { aaa1: 'NOT VERIFIED', aaa2: 'NOT VERIFIED', aaa3: 'NOT VERIFIED' };
-let final = 'FAILED';
-if (localPass) {
-  // AAA-1: arquitetura/correção coberta pelos gates locais (incl. DR/query).
-  aaa.aaa1 = 'VERIFIED';
-  final = anyExternalNotRun ? 'CONDITIONAL' : 'VERIFIED_CANDIDATE';
-}
-if (localPass && !anyExternalNotRun && withExternal && externalPass) {
-  aaa = { aaa1: 'VERIFIED', aaa2: 'VERIFIED', aaa3: 'VERIFIED' };
-  final = 'TRIPLE_AAA_CERTIFIED';
-}
-
-const report = {
-  repository: 'ricardoakinaga-dev/cvg-connect-desk',
-  branch: 'main',
-  commit,
-  timestamp: new Date().toISOString(),
-  tools: { node: process.version, pnpm: execSync('pnpm -v').toString().trim(), turbo: '2.8.21' },
-  gates,
-  aaaStatuses: aaa,
-  final,
-  honesty: 'PASS apenas com evidência executada; NOT_RUN = evidência ausente (CONDITIONAL). TRIPLE_AAA_CERTIFIED exige tag manual.',
-};
-writeFileSync(join(artifactsDir, 'triple-aaa-report.json'), `${JSON.stringify(report, null, 2)}\n`);
-writeFileSync(
-  join(artifactsDir, 'triple-aaa-report.md'),
-  `# Triple AAA Report — ${commit.slice(0, 8)}\n\n- State: **${final}**\n- AAA-1: ${aaa.aaa1} · AAA-2: ${aaa.aaa2} · AAA-3: ${aaa.aaa3}\n- Timestamp: ${report.timestamp}\n\n| Gate | Status |\n|---|---|\n${Object.entries(gates).map(([k, v]) => `| ${k} | ${v.status} |`).join('\n')}\n`,
-);
-console.log(`\nFINAL: ${final}`);
-console.log(`AAA-1: ${aaa.aaa1} · AAA-2: ${aaa.aaa2} · AAA-3: ${aaa.aaa3}`);
-console.log(`Reports: artifacts/triple-aaa-report.json + .md`);
-process.exitCode = final === 'FAILED' ? 1 : 0;

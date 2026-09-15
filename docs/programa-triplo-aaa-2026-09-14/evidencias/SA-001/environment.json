@@ -1,0 +1,47 @@
+{
+  "captured_at": "2026-09-14T21:41:00-03:00",
+  "owner": "lead-opencode-2026-09-14",
+  "candidate": {
+    "git_head": "754f9badac46278e77d21de91c58eedb15e80581",
+    "branch": "main",
+    "worktree_entries": 493,
+    "modified_tracked": 262,
+    "untracked": 231,
+    "identity_rule": "HEAD + worktree; HEAD isolado não identifica o produto",
+    "candidate_id": "754f9bad+worktree",
+    "freeze_label": "worktree-493 (rótulo do instante de congelamento)",
+    "definitions": {
+      "status_entries": "linhas de git status --short (diretórios não rastreados colapsados); 493 no congelamento",
+      "untracked_files": "arquivos individuais (git ls-files --others): 9828 no congelamento; 231 era o número de ENTRADAS colapsadas do status",
+      "modified_tracked": "arquivos rastreados modificados: 262 no congelamento"
+    },
+    "reconciliation": "O manifesto foi regenerado após a abertura do programa (510 entradas de status, 9903 arquivos não rastreados) porque o próprio programa adiciona artefatos de evidência/teste; o candidato canônico é identificado por HEAD+worktree e pelo manifesto, não por um contador. Diferença 493→510 e 262→266 é trabalho do programa, listado por git_state/diff_status em candidate-manifest.json."
+  },
+  "tools": {
+    "node": "v24.20.0",
+    "pnpm": "10.33.0",
+    "python": "3.12.3",
+    "docker": "29.1.3",
+    "docker_compose": "2.40.3+ds1-0ubuntu1~24.04.1",
+    "git": "2.43.0"
+  },
+  "host": {
+    "os": "Linux ricardo-System-Product-Name 7.0.0-31-generic #31~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC x86_64",
+    "cpus": 16,
+    "disk_home": "916G total, 451G free"
+  },
+  "shared_resources_observed": {
+    "local_postgres_5432": "LISTEN (processo próprio do host, não reservado ao programa)",
+    "local_redis_6379": "LISTEN (processo próprio do host, não reservado ao programa)",
+    "containers_terceiros": [
+      "cvg-communication-suite-* (outro projeto; intocados)",
+      "cvg-phase3-pg (outro projeto; intocado)"
+    ],
+    "policy": "Nenhum recurso compartilhado pode ser derrubado/alterado; testes usam runner isolado (SA-003)."
+  },
+  "prior_evidence": {
+    "audit_report": "docs/auditorias/2026-09-14/RELATORIO.md",
+    "audit_status": "BASELINE histórico; não é PASS do candidato novo",
+    "planning_evidence": "docs/programa-triplo-aaa-2026-09-14/evidencias-planejamento/"
+  }
+}

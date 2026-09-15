@@ -1,9 +1,16 @@
 import { vi } from 'vitest';
 
-vi.mock('@cvg/audit', () => ({
-  createAuditLog: vi.fn().mockResolvedValue(undefined),
-  registerAuditRoutes: vi.fn().mockResolvedValue(undefined),
-}));
+// `createAuditLog`/rotas continuam mockados para isolar o teste; a auditoria
+// TRANSACIONAL (`insertAuditLog`, SA-006/AC2) permanece real porque participa do
+// commit do caso de uso sob prova.
+vi.mock('@cvg/audit', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@cvg/audit')>();
+  return {
+    ...actual,
+    createAuditLog: vi.fn().mockResolvedValue(undefined),
+    registerAuditRoutes: vi.fn().mockResolvedValue(undefined),
+  };
+});
 
 vi.mock('@cvg/secretary-adapter', () => ({
   triggerHandoff: vi.fn().mockResolvedValue(undefined),

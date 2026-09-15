@@ -1,0 +1,14 @@
+{
+  "command": [
+    "pnpm",
+    "--filter",
+    "@cvg/realtime-service",
+    "exec",
+    "tsx",
+    "src/index.ts"
+  ],
+  "exit": 1,
+  "environment": "NODE_ENV=test; DATABASE_URL points to invalid loopback port1; failure before I/O",
+  "node": "v24.20.0",
+  "limit": "host native CLI; Docker not executed"
+}

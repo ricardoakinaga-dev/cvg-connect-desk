@@ -1,0 +1,272 @@
+{
+  "audit": "R3",
+  "scope": "backend focused BE-A01..06; all repository reads read-only; artifacts only /tmp; no host/prod/external DB",
+  "evidence": {
+    "unit_tests": {
+      "result": "PASS",
+      "files": 5,
+      "tests": 38,
+      "command": "DATABASE_URL=postgresql://invalid:invalid@127.0.0.1:1/invalid pnpm exec vitest run --config /tmp/cvg-audit-r3-dvlqz0my/backend/vitest.config.mjs",
+      "log": "/tmp/cvg-audit-r3-dvlqz0my/backend/unit-tests.log",
+      "limit": "mocks/in-memory; webhook-postgres-replay is not PostgreSQL integration"
+    },
+    "pool_probe": "/tmp/cvg-audit-r3-dvlqz0my/backend/pool-probe.json"
+  },
+  "old_findings": [
+    {
+      "id": "BE-A01",
+      "status": "PARTIAL",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:190",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:224",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:340"
+      ],
+      "criteria": [
+        "PROD-10-AC2",
+        "PROD-10-R2-AC5",
+        "PROD-12-R2-AC5"
+      ],
+      "proof": "unknown e processing preservados; caller não chama provider nesses resultados; finalizações agora condicionam status processing e attemptCount. 10 testes unitários atuais de repo/caller passaram.",
+      "limitation": "Store simulado não prova crash/restart distribuído nem contrato oficial Secretary.",
+      "remaining": "R3-BE01: processing órfão é ACKed sem retomada/reconciliação. Resposta IA não recebe checkpoint antes da entrega; falha outbound classificada não ambígua marca failed e retry reexecuta IA. Separar resultado IA durável de delivery e ratificar reconciliação externa."
+    },
+    {
+      "id": "BE-A02",
+      "status": "RESOLVED",
+      "evidence_state": "CURRENT",
+      "references": [
+        "packages/shared/src/webhook-anti-replay.ts:155",
+        "packages/shared/src/webhook-anti-replay.ts:247",
+        "packages/shared/src/webhook-anti-replay.ts:282",
+        "packages/shared/src/__tests__/webhook-guard.test.ts:346"
+      ],
+      "criteria": [
+        "PROD-07-R2-AC5"
+      ],
+      "proof": "InMemory e PG comparam payloadHash; assinatura atual é autenticada e armazenada na nova claim. Regressão renewed timestamp/signature passa; payload divergente continua negado.",
+      "limitation": "Resolução do defeito específico; testes PG aqui são mocks. HTTP+PG crash e contrato Gateway oficial continuam NOT_RUN nesta lane.",
+      "remaining": "Revalidar PROD-07-AC1..4 em PG/processos próprios e sandbox oficial; identidade/origem/retenção precisa contrato inteiro."
+    },
+    {
+      "id": "BE-A03",
+      "status": "RESOLVED",
+      "evidence_state": "CURRENT",
+      "references": [
+        "packages/shared/src/webhook-guard.ts:243",
+        "packages/shared/src/webhook-guard.ts:262",
+        "packages/shared/src/__tests__/webhook-guard.test.ts:291"
+      ],
+      "criteria": [
+        "PROD-07-AC4"
+      ],
+      "proof": "completed retorna HTTP200 success/deduplicated/eventId após autenticação; regressão unitária passa.",
+      "limitation": "ACK200 coerente C03 local não prova aceitação real do Gateway; teste usa reply simulado.",
+      "remaining": "Provar resposta perdida pós-commit seguida de redelivery oficial sem efeito duplicado."
+    },
+    {
+      "id": "BE-A04",
+      "status": "PARTIAL",
+      "evidence_state": "CURRENT",
+      "references": [
+        "apps/message-worker/src/index.ts:226",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:398",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:409",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:457"
+      ],
+      "criteria": [
+        "PROD-14-AC3",
+        "PROD-14-R2-AC5"
+      ],
+      "proof": "Caller runtime existe; SQL claim SKIP LOCKED inclui SCAN_FAILED, lease owner único por lote, tentativa/backoff/limite duráveis e métricas. Lock de sessão por mensagem serializa publicação entre processos.",
+      "limitation": "Nenhum MinIO/ClamAV/PG/processo real foi executado nesta lane. Probe pool simulado reproduz R3-BE02.",
+      "remaining": "Corrigir contenção entre pool de lock e pool de trabalho; provar lote>=50 e scanner lento/crash real. Recuperação atual rebaixa à URL de origem para refetch mesmo com bytes em quarentena: verificar origem expirada e retomar bytes privados quando possível."
+    },
+    {
+      "id": "BE-A05",
+      "status": "OPEN",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/privacy/src/presentation/http/privacy.controller.ts:406",
+        "modules/privacy/src/presentation/http/privacy.controller.ts:445",
+        "modules/privacy/src/application/data-subject-service.ts:143",
+        "modules/privacy/src/application/data-subject-service.ts:157"
+      ],
+      "criteria": [
+        "PROD-16-R2-AC5",
+        "PROD-16-AC2",
+        "PROD-16-AC3",
+        "G02",
+        "G05"
+      ],
+      "proof": "Rota legada ainda chama anonymizeContactData sem scope/policy/confirm; função altera contato global e sender em todas conversas, sem transação de audit. Nenhuma correção observada nessa fronteira.",
+      "limitation": "CURRENT estático conectado; mutação HTTP/PG não executada.",
+      "remaining": "Bloquear legado com D02 OPEN ou delegar ao mesmo núcleo erasure; HTTP+PG A/B com contato compartilhado, dry-run e falha após primeira escrita/retry."
+    },
+    {
+      "id": "BE-A06",
+      "status": "OPEN",
+      "evidence_state": "CURRENT",
+      "references": [
+        "modules/chat/src/application/use-cases/conversation-operations.use-case.ts:77",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:70",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:124",
+        "modules/chat/src/presentation/http/conversation-operations.controller.ts:176"
+      ],
+      "criteria": [
+        "PROD-18-AC3",
+        "PROD-18-R2-AC5"
+      ],
+      "proof": "sameInstant(undefined) ainda true; schemas exigem somente novo valor. Busca de expectedUpdatedAt/expectedStatus/expectedHandler/expectedAssigned em apps/desk-web/src não retorna ocorrência.",
+      "limitation": "CURRENT estático; integração PROD05/18 executada por root. Passes que enviam expected* não cobrem omission bypass.",
+      "remaining": "Versão obrigatória e íntegra em DTO/API/web, rollout definido, sem-versão explicitamente rejeitado, dois operadores obsoleto recebe409 sem escrita. Versão inteira evita truncamento/mutações no mesmo ms."
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "R3-BE01",
+      "severity": "High",
+      "confidence": "high",
+      "title": "Crash após admissão Secretary deixa processing órfão e redelivery reconhecida como concluída",
+      "references": [
+        "modules/secretary-adapter/src/infrastructure/repositories/secretary-invocation.repository.ts:204",
+        "modules/chat/src/application/use-cases/execute-inbound-secretary.use-case.ts:235",
+        "apps/message-worker/src/processor.ts:188",
+        "apps/message-worker/src/processor.ts:191"
+      ],
+      "criteria": [
+        "PROD-10-AC2",
+        "PROD-10-R2-AC5",
+        "G03"
+      ],
+      "evidence_kind": "CURRENT_CONNECTED_STATIC_AND_EXISTING_MOCK_TEST",
+      "proof": "Schedule: begin comita processing; processo cai antes/depois do provider; worker seguinte recebe in_progress sem idade/owner/checkpoint, caller retorna processing; processor faz ACK independente desse status. Teste unitário atual confirma retorno sem IA em processing, mas não exige job/reconciliação durável posterior.",
+      "impact": "Não duplica IA (correção positiva), mas pode perder processamento/resposta para sempre e remover evento pendente. Crash antes do provider e depois do efeito precisam estados diferentes.",
+      "proposed": "Preservar intenção/reconciliação pendente; adicionar checkpoint mínimo e política de abandono segura. processing órfão vira unknown auditável ou retomável apenas quando se comprova ausência do efeito; não reabrir cegamente.",
+      "acceptance": "Matar processo logo após begin, após resposta IA e antes da persistência/entrega; restart converge por resultado persistido ou reconciliação explicitamente pendente, nunca mero ACK de trabalho perdido; provar uma chamada externa.",
+      "limitation": "Sem crash de processo/PG real; achado derivado de caminho conectado e semântica atual. Complementa residual BE-A01, não refuta correção unknown."
+    },
+    {
+      "id": "R3-BE02",
+      "severity": "High",
+      "confidence": "high",
+      "title": "Recovery de mídia pode esgotar pool com locks que aguardam outra conexão do mesmo pool",
+      "references": [
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:145",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:178",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:488",
+        "modules/chat/src/application/use-cases/inbound-media-pipeline.ts:518",
+        "packages/database/src/index.ts:12",
+        "apps/message-worker/src/index.ts:70"
+      ],
+      "criteria": [
+        "PROD-14-R2-AC5",
+        "PROD-14-AC3",
+        "G04"
+      ],
+      "evidence_kind": "CURRENT_EXTRACTED_FUNCTION_MOCKED_POOL_PROBE",
+      "proof": "withMessageLock segura pool.connect enquanto callback usa repositórios db do mesmo pool. Recovery dispara lote50 sem limite de concorrência; pool default10. Função real extraída/transpilada + pool capacidade10: concorrência1 completa1; concorrência10/50 completa0,10 clientes retidos e10/50 aguardando. Fonte em pool-probe.cjs e resultado pool-probe.json.",
+      "impact": "Espera circular até timeout de aquisição5s (default real), retries/falhas evitáveis e pressão que atinge worker/health; lotes podem gastar tentativas sem scan. Não alegar deadlock infinito, pois timeout existe.",
+      "proposed": "Evitar reaquisição do mesmo pool sob todos locks: passar executor da conexão de lock quando adequado ou limitar concorrência com capacidade reservada e timeout. Não resolver apenas elevando pool arbitrariamente.",
+      "acceptance": "PG isolado, pool10/lote50 e jobs normais concorrentes: todos progridem, nenhum connection timeout por auto-saturação; scanner lento, lease expiry, shutdown/restart, sem asset duplicado e retry budget só consumido por tentativas reais.",
+      "limitation": "Pool simulado prova interleaving possível, não taxa/frequência em PG real. Aquisição/queries dependem de timing; integrar teste real antes de fechar."
+    }
+  ],
+  "remaining_plan": [
+    {
+      "task": "PROD-04",
+      "action_and_acceptance": "Completar matriz HTTP/WS ação+recurso, revogação entre check/query e entrega<=5s; corrigir bypass privacy em16.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-05",
+      "action_and_acceptance": "Usar resultado atual root HTTP+PG; ainda exigir duas rotações concorrentes, bordas7d/30d/24h, timezone/legado, sucessorWS e boot semJWT.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-06",
+      "action_and_acceptance": "Fresh+upgrade populado, UTC/SaoPaulo preservando deadlines, checksum/drift/readiness, interrupção/restart; D03 proposta sem bloquear sessão.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-07",
+      "action_and_acceptance": "Resign e ACK locais corrigidos; restante PG/processo crash antes/depoiscommit, skew/mismatch/storedown e Gateway oficial.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-08",
+      "action_and_acceptance": "Duplicata concorrente primeira mensagem com/sem externalConversationId; rollback de cada escrita, keyset empates/inserts, órfãos dry-run.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-09",
+      "action_and_acceptance": "Efeito+recibo no mesmo tx, Err impedeACK, staleACK/NACK, crash pós-efeito, poisonDLQ e restart real.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-10",
+      "action_and_acceptance": "BE-A01 parcial/R3-BE01; checkpoint IA+delivery, processing órfão seguro, unknown com dono reconciliação; crash/timeout/handoff tardio oficial.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-11",
+      "action_and_acceptance": "Sem revalidação integral nesta lane: idempotência ator/conversa/payload/TTL, callback/reset/429/unknown e atomicidade PG+Gateway oficial.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-12",
+      "action_and_acceptance": "Lote50 sequencial continua em index221 e sem renewal observado no processor; provar waiting/running leases três réplicas, fencingefeito, Redisdown e DLQretry autorizado.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-13",
+      "action_and_acceptance": "Admissão budget durável vista em repo; provar concorrência/restart e D05/tools enforcement, canonical payload approval, revogação/usoúnico.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-14",
+      "action_and_acceptance": "Caller+SCAN_FAILED/lease/backoff corrigidos; R3-BE02, scanner/MinIO reais crash→read, fonte expirada/quarentena e recuperação lote50 semstarvation.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-15",
+      "action_and_acceptance": "Não revalidado: HTTP imagem produção+MinIO/ClamAV,16MiB+overhead/abort, assetid cruzado, assinatura expirada/revogada e outbound sóasset.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-16",
+      "action_and_acceptance": "BE-A05 OPEN; núcleo único legado/erasure, D02, escopo A/B, idempotência/checkpoints/residualscan/restore, não mutar irreversível defaultdryrun.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    },
+    {
+      "task": "PROD-17",
+      "action_and_acceptance": "Coordenação frontend: boot/rotate/logout invalidam WS/cache, rede401/403 diferentes, principal novo sem herança; matriz autorizada real.",
+      "assessment": "NOT_REVALIDATED_IN_THIS_LANE"
+    },
+    {
+      "task": "PROD-18",
+      "action_and_acceptance": "Testes root não bastam ao omissionCAS BE-A06; exigir precondição API/DTO/web, version íntegra/rollout, stale409, atomicidade operação+outbox/audit e matriz sessão.",
+      "assessment": "FOCUSED_REVIEW_ONLY"
+    }
+  ],
+  "verdict": "NOT_READY",
+  "decision_record": {
+    "invariants": [
+      "Unknown external effect is never retried blindly",
+      "Durable accepted work is not silently ACKed without outcome or recovery",
+      "Scoped actor never mutates another sector",
+      "Stale operator cannot overwrite committed state",
+      "Recovery progresses under bounded resource use"
+    ],
+    "minimum_design": "Reuse current PG receipts/outbox/claims and existing erasure core; durable result checkpoint, mandatory CAS, bounded media concurrency. No broker or parallel provider transport needed.",
+    "not_run": [
+      "PG concurrency/process crash",
+      "Gateway/Secretary official sandbox",
+      "MinIO/ClamAV",
+      "HTTP privacy mutation",
+      "full auth matrix",
+      "full04–18 regression"
+    ],
+    "authority": "No production approval; narrow resolved findings do not close entire cards/gates."
+  }
+}

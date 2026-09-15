@@ -1,0 +1,54 @@
+{
+  "runId": "regress-r2-wave4",
+  "workerIndex": 49,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61332/cvg_aaa_regress_r2_wave4_w49",
+  "redisUrl": "redis://127.0.0.1:57170",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T04:01:23.551Z",
+  "finishedAt": "2026-09-15T04:02:36.186Z",
+  "command": "pnpm test:ci",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61332/cvg_aaa_regress_r2_wave4_w49",
+    "REDIS_URL": "redis://127.0.0.1:57170",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "regress-r2-wave4",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/regress-r2-wave4",
+    "AAA_WORKER_INDEX": "49"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T04:01:23.551Z",
+      "finishedAt": "2026-09-15T04:01:25.310Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T04:01:25.310Z",
+      "finishedAt": "2026-09-15T04:01:26.029Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm test:ci",
+      "startedAt": "2026-09-15T04:01:26.029Z",
+      "finishedAt": "2026-09-15T04:02:36.186Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Connection closed\",\"client_id\":\"client_1789444954618_yr8cv33\",\"level\":\"info\"}\n\nstdout | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n\n ✓ src/__tests__/realtime-auth-behavioral.test.ts (8 tests) 3470ms\n   ✓ RealtimeServer behavioral auth flow > revalidates the stored token and closes the connection on failure  379ms\n   ✓ RealtimeServer behavioral auth flow > 403 na revalidação é tratado como revogação: fecha 4002  380ms\n   ✓ RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada  1053ms\n   ✓ RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)  1030ms\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Connection closed\",\"client_id\":\"client_1789444953281_gow0fka\",\"level\":\"info\"}\n\nstdout | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02)\n{\"msg\":\"[Realtime] Server stopped\",\"level\":\"info\"}\n\n ✓ src/__tests__/sa-013-ws-authz.test.ts (2 tests) 3934ms\n   ✓ SA-013 — WS: negativas de recurso com decisão real (G02) > subscribe a conversa de outro setor é negado (decisão real) sem entregar evento; canal inexistente responde igual  743ms\n   ✓ SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)  2718ms\n\n Test Files  12 passed (12)\n      Tests  91 passed (91)\n   Start at  01:02:30\n   Duration  5.43s (transform 1.05s, setup 0ms, collect 9.67s, tests 12.86s, environment 3ms, prepare 1.23s)\n\n",
+      "stderrTail": " failed\",\"client_id\":\"client_1789444953565_1mlx5hh\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789444953565_1mlx5hh\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha não-autenticação (503) não é revogação: conexão permanece autenticada\n{\"msg\":\"[Realtime] Token revalidation failed\",\"client_id\":\"client_1789444953565_1mlx5hh\",\"http_status\":503,\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789444954618_yr8cv33\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789444954618_yr8cv33\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\nstderr | src/__tests__/sa-013-ws-authz.test.ts > SA-013 — WS: negativas de recurso com decisão real (G02) > revogação de permissão no banco interrompe entrega já autorizada em <= 5s (subscription.revoked)\n{\"msg\":\"[Realtime] Channel revoked after revalidation\",\"client_id\":\"client_1789444953281_gow0fka\",\"channel\":\"conversation:2629538f-0643-4ac7-964e-93b2c3478b3e\",\"reason\":\"missing-permission\",\"level\":\"warn\"}\n\nstderr | src/__tests__/realtime-auth-behavioral.test.ts > RealtimeServer behavioral auth flow > falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)\n{\"msg\":\"[Realtime] Token revalidation error\",\"client_id\":\"client_1789444954618_yr8cv33\",\"error\":\"fetch failed\",\"level\":\"error\"}\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

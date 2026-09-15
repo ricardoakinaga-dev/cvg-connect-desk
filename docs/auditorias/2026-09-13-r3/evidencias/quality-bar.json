@@ -1,0 +1,31 @@
+{
+  "version": "R3-v1",
+  "created_at": "2026-09-13T22:10:02.299828+00:00",
+  "mode": "audit-product; update-docs; plan-next-round; no product implementation/deploy",
+  "criteria": [
+    "Verify submitted metrics Bearer fail-closed and Compose/Prometheus token wiring via current code/public path.",
+    "Recheck claimed suites safely and distinguish submitted from executed evidence.",
+    "Reassess previous32 findings and44tasks/55 requirements with status resolved/partial/open/not-revalidated, never repeat stale defects as current.",
+    "Preserve product/historical audit; update canonical docs and produce executable R3 plan with complete lineage and dependencies.",
+    "Separate independent report/plan review from product release approval."
+  ],
+  "contracts": [
+    {
+      "path": "docs/melhorias-2026-09-13/BACKLOG.json",
+      "sha256": "d9c09a66f5679ae3db7e3ac964bcf60fdef360affa6e49b01b4635c89fbaf238"
+    },
+    {
+      "path": "docs/melhorias-2026-09-13/CRITERIOS.md",
+      "sha256": "de5845c0180b70c9985139089ad29973a6cd4384362dd3a2225286d9832d0d3e"
+    },
+    {
+      "path": "docs/melhorias-2026-09-13/CONTRATOS.md",
+      "sha256": "3957dda55795f46e63aa2fa07c9b23e5e043511d71b7bcf48d12821b8aeb9c9c"
+    },
+    {
+      "path": "docs/auditorias/2026-09-13-entregas/ACHADOS.json",
+      "sha256": "311a6278debab5efd8a505b3fa0e3ffa16586d04486ad4f123ea2f57152ffc4a"
+    }
+  ],
+  "profile": "T2 brownfield audit/replanning; up to3 read-only lanes and fresh final critic; root docs writer"
+}

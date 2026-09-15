@@ -1,0 +1,4 @@
+
+29 passed, 0 failed
+ADVERSARIAL Docker+aggregate failed, staging absent: VERIFIED_CANDIDATE
+PUSH dependency-review skips per workflow: FAILED

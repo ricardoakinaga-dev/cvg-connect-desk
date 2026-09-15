@@ -1,0 +1,54 @@
+{
+  "runId": "sa013-regress-desk",
+  "workerIndex": 47,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_sa013_regress_desk_w47",
+  "redisUrl": "redis://127.0.0.1:57150",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:50:19.301Z",
+  "finishedAt": "2026-09-15T03:50:29.037Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sector-authz.integration.test.ts src/__tests__/dynamic-permissions.integration.test.ts src/__tests__/sa-006-role-permissions.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:61132/cvg_aaa_sa013_regress_desk_w47",
+    "REDIS_URL": "redis://127.0.0.1:57150",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa013-regress-desk",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa013-regress-desk",
+    "AAA_WORKER_INDEX": "47"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:50:19.301Z",
+      "finishedAt": "2026-09-15T03:50:21.227Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:50:21.227Z",
+      "finishedAt": "2026-09-15T03:50:22.021Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sector-authz.integration.test.ts src/__tests__/dynamic-permissions.integration.test.ts src/__tests__/sa-006-role-permissions.integration.test.ts",
+      "startedAt": "2026-09-15T03:50:22.021Z",
+      "finishedAt": "2026-09-15T03:50:29.036Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "n/roles\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789444228849,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"userId\":\"cc3ae977-3ac2-4cee-86fd-c880e280d8be\",\"userRoles\":[],\"userPermissions\":0,\"requiredPermissions\":[\"admin:read\"],\"msg\":\"Access denied - insufficient permissions\"}\n{\"level\":30,\"time\":1789444228849,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-3\",\"res\":{\"statusCode\":403},\"responseTime\":7.518994999999904,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444228853,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"GET\",\"url\":\"/sectors/f76169a8-9c50-4a07-bfa6-4e0fd461dbae/conversations\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789444228859,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":200},\"responseTime\":6.254423000000088,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789444228860,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"req\":{\"method\":\"GET\",\"url\":\"/sectors/f76169a8-9c50-4a07-bfa6-4e0fd461dbae/conversations\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":40,\"time\":1789444228864,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"userId\":\"cc3ae977-3ac2-4cee-86fd-c880e280d8be\",\"sectorId\":\"f76169a8-9c50-4a07-bfa6-4e0fd461dbae\",\"requiredLevel\":\"read\",\"msg\":\"Access denied - no sector membership\"}\n{\"level\":30,\"time\":1789444228865,\"pid\":1859086,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"res\":{\"statusCode\":403},\"responseTime\":4.1048849999999675,\"msg\":\"request completed\"}\n ✓ src/__tests__/dynamic-permissions.integration.test.ts (2 tests) 450ms\n\n Test Files  3 passed (3)\n      Tests  14 passed (14)\n   Start at  00:50:22\n   Duration  6.25s (transform 1.04s, setup 0ms, collect 3.92s, tests 1.72s, environment 0ms, prepare 189ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

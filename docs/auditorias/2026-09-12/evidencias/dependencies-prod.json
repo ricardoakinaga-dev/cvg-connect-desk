@@ -1,0 +1,652 @@
+{
+  "actions": [],
+  "advisories": {
+    "1119441": {
+      "findings": [
+        {
+          "version": "11.1.0",
+          "paths": [
+            "modules__auth>uuid"
+          ]
+        },
+        {
+          "version": "9.0.1",
+          "paths": [
+            "modules__gateway-adapter>uuid"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/uuidjs/uuid/security/advisories/GHSA-w5hq-g745-h8pq\n- https://github.com/uuidjs/uuid/commit/3d2c5b0342f0fcb52a5ac681c3d47c13e7444b34\n- https://github.com/uuidjs/uuid/releases/tag/v14.0.0\n- https://nvd.nist.gov/vuln/detail/CVE-2026-41907\n- https://github.com/uuidjs/uuid/commit/32389c887c9e75f90442ee4cc95bbab0c4e8346e\n- https://github.com/uuidjs/uuid/commit/3d61d6ac1f782cf6b1dd8661c60f11722cd49a0d\n- https://github.com/uuidjs/uuid/commit/9d27ddf7046ce496ef39569ff84d948eeff9cb2a\n- https://github.com/uuidjs/uuid/releases/tag/v11.1.1\n- https://github.com/uuidjs/uuid/releases/tag/v12.0.1\n- https://github.com/uuidjs/uuid/releases/tag/v13.0.1\n- https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+      "created": "2026-04-22T20:53:24.000Z",
+      "id": 1119441,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nThe `v3()`, `v5()`, and `v6()` [API methods](https://github.com/uuidjs/uuid#api-summary) (not `uuid` release versions) accept external output buffers but do not reject out-of-range writes (small `buf` or large `offset`).  \nBy contrast, `v4()`, `v1()`, and `v7()` API methods explicitly throw `RangeError` on invalid bounds.\n\nThis inconsistency allows **silent partial writes** into caller-provided buffers.\n\n\n### Affected code\n\n- `src/v35.ts` (`v3()`/`v5()` path) writes `buf[offset + i]` without bounds validation.\n- `src/v6.ts` writes `buf[offset + i]` without bounds validation.\n\n### Reproducible PoC\n\n```bash\ncd /home/StrawHat/uuid\nnpm ci\nnpm run build\n\nnode --input-type=module -e \"\nimport {v4,v5,v6} from './dist-node/index.js';\nconst ns='6ba7b810-9dad-11d1-80b4-00c04fd430c8';\nfor (const [name,fn] of [\n  ['v4()',()=>v4({},new Uint8Array(8),4)],\n  ['v5()',()=>v5('x',ns,new Uint8Array(8),4)],\n  ['v6()',()=>v6({},new Uint8Array(8),4)],\n]) {\n  try { fn(); console.log(name,'NO_THROW'); }\n  catch(e){ console.log(name,'THREW',e.name); }\n}\"\n```\n\nObserved:\n\n- `v4() THREW RangeError`\n- `v5() NO_THROW`\n- `v6() NO_THROW`\n\nExample partial overwrite evidence captured during audit:\n\n```text\nsame true buf [\n  170, 170, 170, 170,\n   75, 224, 100,  63\n]\nv6 [\n  187, 187, 187, 187,\n   31,  19, 185,  64\n]\n```\n\n### Security impact\n\n- **Primary**: integrity/robustness issue (silent partial output).\n- If an application assumes full UUID writes into preallocated buffers, this can produce malformed/truncated/partially stale identifiers without error.\n- In systems where caller-controlled offsets/buffer sizes are exposed indirectly, this may become a security-relevant logic flaw.\n\n### Suggested fix\n\nAdd the same guard used by `v4()`/`v1()`/`v7()`:\n\n```ts\nif (offset < 0 || offset + 16 > buf.length) {\n  throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);\n}\n```\n\nApply to:\n\n- `src/v35.ts` (covers `v3()` and `v5()`)\n- `src/v6.ts`",
+      "reported_by": null,
+      "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-41907"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "uuid",
+      "vulnerable_versions": "<11.1.1",
+      "github_advisory_id": "GHSA-w5hq-g745-h8pq",
+      "recommendation": "Upgrade to version 11.1.1 or later",
+      "patched_versions": ">=11.1.1",
+      "updated": "2026-05-21T18:25:57.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-787",
+        "CWE-1285"
+      ],
+      "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq"
+    },
+    "1120680": {
+      "findings": [
+        {
+          "version": "0.27.4",
+          "paths": [
+            "apps__desk-api>tsx>esbuild"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/evanw/esbuild/security/advisories/GHSA-g7r4-m6w7-qqqr\n- https://github.com/evanw/esbuild/releases/tag/v0.28.1\n- https://github.com/advisories/GHSA-g7r4-m6w7-qqqr",
+      "created": "2026-06-12T20:08:53.000Z",
+      "id": 1120680,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nThe development server contains a path traversal vulnerability on Windows when serving files from `servedir`.\n\nDue to the use of `path.Clean()` (which only normalizes forward-slash `/` separators) instead of a Windows-aware path normalization function, it is possible to craft requests using backslashes (`\\`) that bypass the intended directory containment logic. An attacker can escape the configured `servedir` root and access arbitrary files on the filesystem.\nThis issue affects Windows environments only.\n\n### Details\n\nThe request path is sanitized using:\n```go\n// https://github.com/evanw/esbuild/blob/v0.27.3/pkg/api/serve_other.go#L165\nqueryPath := path.Clean(req.URL.Path)[1:]\n```\n\n\nHowever:\n- `path.Clean()` is POSIX-style and only understands `/` (docs: `https://pkg.go.dev/path#Clean`)\n- On Windows, `\\` is a valid path separator\n- `path.Clean()` does not treat `\\` as a separator\n\nLater, the server constructs the absolute path:\n```go\n// https://github.com/evanw/esbuild/blob/v0.27.3/pkg/api/serve_other.go#L221\nabsPath := h.fs.Join(h.servedir, queryPath)\n```\n\nIf `queryPath` contains sequences such as:\n```\n..\\..\\..\\..\\..\\..\\..\\Windows\\system.ini\n```\n\n`path.Clean()` will not normalize them, but the Windows filesystem will interpret `\\` as directory separators when resolving `absPath`.\nBecause the implementation does not verify that the final resolved path remains within `servedir`, it allows directory traversal outside the intended root directory.\n### Vulnerable Code\n\n```go\n// https://github.com/evanw/esbuild/blob/v0.27.3/pkg/api/serve_other.go#L165\n\tqueryPath := path.Clean(req.URL.Path)[1:]\n\t....\n\t// Check for a file in the \"servedir\" directory\n\tif h.servedir != \"\" && kind != fs.FileEntry {\n\t\tabsPath := h.fs.Join(h.servedir, queryPath)\n\t\tif absDir := h.fs.Dir(absPath); absDir != absPath {\n\t\t\tif entries, err, _ := h.fs.ReadDirectory(absDir); err == nil {\n\t\t\t\tif entry, _ := entries.Get(h.fs.Base(absPath)); entry != nil && entry.Kind(h.fs) == fs.FileEntry {\n\t....\t\t\t\t\n```\n\n\n### Steps to reproduce\n\n```\nnpm install --save-exact --save-dev esbuild\n\necho \"console.log(1)\" > app.js\n\n.\\node_modules\\.bin\\esbuild --version\n0.27.3\n\n.\\node_modules\\.bin\\esbuild app.js --bundle --outdir=www --servedir=www --watch\n\ncurl -i --path-as-is \"http://localhost:8000/..\\..\\..\\..\\..\\..\\..\\Windows\\system.ini\"\n<content of Windows\\system.ini>\n```\n\n\n### Impact\n\n- Arbitrary file read on Windows\n- Exposure of sensitive files",
+      "reported_by": null,
+      "title": "esbuild allows arbitrary file read when running the development server on Windows",
+      "metadata": null,
+      "cves": [],
+      "access": "public",
+      "severity": "low",
+      "module_name": "esbuild",
+      "vulnerable_versions": ">=0.27.3 <0.28.1",
+      "github_advisory_id": "GHSA-g7r4-m6w7-qqqr",
+      "recommendation": "Upgrade to version 0.28.1 or later",
+      "patched_versions": ">=0.28.1",
+      "updated": "2026-06-12T20:08:54.000Z",
+      "cvss": {
+        "score": 2.5,
+        "vectorString": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:L/A:N"
+      },
+      "cwe": [
+        "CWE-22"
+      ],
+      "url": "https://github.com/advisories/GHSA-g7r4-m6w7-qqqr"
+    },
+    "1124011": {
+      "findings": [
+        {
+          "version": "1.30.1",
+          "paths": [
+            "packages__tracing>@opentelemetry/sdk-trace-node>@opentelemetry/propagator-jaeger"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/open-telemetry/opentelemetry-js/security/advisories/GHSA-45rx-2jwx-cxfr\n- https://nvd.nist.gov/vuln/detail/CVE-2026-59892\n- https://github.com/open-telemetry/opentelemetry-js/commit/b1c196d49d54caae59741cca0a9d57d101d7ea88\n- https://github.com/open-telemetry/opentelemetry-js/releases/tag/v2.9.0\n- https://github.com/advisories/GHSA-45rx-2jwx-cxfr",
+      "created": "2026-07-21T19:07:28.000Z",
+      "id": 1124011,
+      "npm_advisory_id": null,
+      "overview": "## Summary\n\n`@opentelemetry/propagator-jaeger` decodes incoming HTTP header values with `decodeURIComponent()` without handling decode errors. A single request carrying a malformed percent-encoded value (for example a bare `%`) in an `uber-trace-id` or `uberctx-*` header throws an uncaught `URIError`, terminating any Node.js process that uses `JaegerPropagator` as its active propagator.\n\n\n## Impact\n\n**Denial of Service:** Any unauthenticated remote attacker who can send an HTTP request to a service that has `JaegerPropagator` registered as the global propagator (e.g. via `OTEL_PROPAGATORS=jaeger` or `propagation.setGlobalPropagator(new JaegerPropagator())`) can terminate the process with a single request. Confidentiality and integrity are not affected.\n\n## Am I affected?\n\nThis issue affects only a specific, opt-in configuration. If you use OpenTelemetry's default propagators (W3C TraceContext and Baggage), you are **not** affected.          \n\nYou are affected only if you have registered `JaegerPropagator` as the active propagator. Check for:\n\n- `@opentelemetry/propagator-jaeger` in your dependency tree, **and**\n- `OTEL_PROPAGATORS` set to `jaeger` (Jaeger only), **or** a direct `propagation.setGlobalPropagator(new JaegerPropagator())` call in your code.\n\nNote: if `JaegerPropagator` is combined with other propagators through a `CompositePropagator` (for example `OTEL_PROPAGATORS=jaeger,tracecontext`), the process does not terminate - the composite propagator catches the error - but affected requests silently fail to extract context. You should still upgrade.\n\n\n## Patched versions\n\n- `@opentelemetry/propagator-jaeger` 2.9.0\n\n## Remediation\n\nUpdate `@opentelemetry/propagator-jaeger` to 2.9.0 or later. The propagator now ignores header values it cannot decode instead of throwing.\n\n**Interim mitigation (if you cannot update):** Trace-context headers should never be accepted unfiltered from untrusted callers. Until you can upgrade, strip or validate the `uber-trace-id` and `uberctx-*` headers on inbound requests at your edge - for example with a reverse proxy, API gateway, or load balancer (nginx, Envoy, etc.) - so that only trusted upstream services can set them.\n\n## Details\n\n`JaegerPropagator.extract()` calls `decodeURIComponent()` on raw header values at two unguarded call sites: the `uber-trace-id` trace header and each `uberctx-*` baggage value. `decodeURIComponent()` throws `URIError: URI malformed` on invalid percent-encoding. Because the HTTP instrumentation extracts context before its request-handler error wrapper, and a single configured propagator is not wrapped in a `CompositePropagator` (which would otherwise catch the error), the exception propagates as an `uncaughtException` and terminates the process.\n\n## Proof of concept\n\nAgainst a service using `JaegerPropagator`:\n\n```bash\ncurl -H 'uberctx-user: %' http://target/\n# or\ncurl -H 'uber-trace-id: %' http://target/\n```\n\nThe Node.js process exits with `URIError: URI malformed` and subsequent requests are refused.",
+      "reported_by": null,
+      "title": "OpenTelemetry JavaScript: Denial of service in `JaegerPropagator` via unhandled exception on a malformed header",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-59892"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "@opentelemetry/propagator-jaeger",
+      "vulnerable_versions": "<2.9.0",
+      "github_advisory_id": "GHSA-45rx-2jwx-cxfr",
+      "recommendation": "Upgrade to version 2.9.0 or later",
+      "patched_versions": ">=2.9.0",
+      "updated": "2026-07-21T19:07:29.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+      },
+      "cwe": [
+        "CWE-248"
+      ],
+      "url": "https://github.com/advisories/GHSA-45rx-2jwx-cxfr"
+    },
+    "1124064": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-v2hh-gcrm-f6hx\n- https://nvd.nist.gov/vuln/detail/CVE-2026-16221\n- https://github.com/fastify/fast-uri/commit/0542a216860fd70c062a4730e620576f62ded057\n- https://github.com/fastify/fast-uri/commit/2d50fbabc80e4d0884fe0f6a98fe118ce6faa353\n- https://github.com/fastify/fast-uri/commit/9438266d6a7ded688c8bc7c4ba506da17f44a17b\n- https://cna.openjsf.org/security-advisories.html\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.3\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.4\n- https://github.com/fastify/fast-uri/releases/tag/v4.1.1\n- https://github.com/advisories/GHSA-v2hh-gcrm-f6hx",
+      "created": "2026-07-21T22:08:28.000Z",
+      "id": 1124064,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` v4.1.0 and earlier do not treat a literal backslash (U+005C) as an authority delimiter. Node's native WHATWG `URL` (used by `fetch()`, `undici`, and Node's `http`/`https` clients) normalizes `\\` to `/` for special schemes (`http`, `https`, `ws`, `wss`, `ftp`, `file`), so the two parsers extract different hosts from the same input string.\n\nFor example, `http://evil.com\\@allowed.com` is treated by `fast-uri` as host `allowed.com` with userinfo `evil.com\\`, while Node's WHATWG URL parser and `fetch()` see host `evil.com` with path `/@allowed.com`.\n\nApplications that use `fast-uri` to enforce host-based policy (allowlists, denylists, loopback/SSRF filtering, redirect validation, outbound proxy routing) before passing the same URL into Node's URL or `fetch()` consumers see a policy/use desync and can be steered to an unintended destination, including cloud metadata endpoints, loopback, or internal hosts.\n\n### Patches\n\nUpgrade to `fast-uri` v4.1.1, v3.1.4, or v2.4.3.\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to host confusion via literal backslash authority delimiter",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-16221"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <=3.1.3",
+      "github_advisory_id": "GHSA-v2hh-gcrm-f6hx",
+      "recommendation": "Upgrade to version 3.1.4 or later",
+      "patched_versions": ">=3.1.4",
+      "updated": "2026-07-21T22:08:29.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-436"
+      ],
+      "url": "https://github.com/advisories/GHSA-v2hh-gcrm-f6hx"
+    },
+    "1124268": {
+      "findings": [
+        {
+          "version": "6.30.3",
+          "paths": [
+            "apps__desk-web>react-router-dom>react-router"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/remix-run/react-router/security/advisories/GHSA-wrjc-x8rr-h8h6\n- https://github.com/remix-run/react-router/pull/15176\n- https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v7180\n- https://github.com/remix-run/react-router/releases/tag/react-router@7.18.0\n- http://github.com/remix-run/react-router/pull/15176\n- https://github.com/advisories/GHSA-wrjc-x8rr-h8h6",
+      "created": "2026-07-23T19:38:28.000Z",
+      "id": 1124268,
+      "npm_advisory_id": null,
+      "overview": "This is a follow up to [CVE-2025-68470](https://github.com/remix-run/react-router/security/advisories/GHSA-9jcx-v3wj-wh4m).  React Router was alerted to certain scenarios in which the fix there was incomplete so there still existed some scenarios where attacker supplied paths passed to navigation mechanisms could result in unexpected external navigations.",
+      "reported_by": null,
+      "title": "React Router: Open redirect via backslash in <Link> and useNavigate (CVE-2025-68470 bypass)",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-53669"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "react-router",
+      "vulnerable_versions": ">=6.0.0 <7.18.0",
+      "github_advisory_id": "GHSA-wrjc-x8rr-h8h6",
+      "recommendation": "Upgrade to version 7.18.0 or later",
+      "patched_versions": ">=7.18.0",
+      "updated": "2026-07-23T19:38:29.000Z",
+      "cvss": {
+        "score": 0,
+        "vectorString": null
+      },
+      "cwe": [
+        "CWE-601"
+      ],
+      "url": "https://github.com/advisories/GHSA-wrjc-x8rr-h8h6"
+    },
+    "1124272": {
+      "findings": [
+        {
+          "version": "6.30.3",
+          "paths": [
+            "apps__desk-web>react-router-dom>react-router"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/remix-run/react-router/security/advisories/GHSA-337j-9hxr-rhxg\n- https://github.com/remix-run/react-router/pull/15175\n- https://github.com/remix-run/react-router/commit/9d22943fd46c8ae4b08236425fa3549e10e9ad1a\n- https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v7180\n- https://github.com/remix-run/react-router/releases/tag/react-router@7.18.0\n- https://github.com/advisories/GHSA-337j-9hxr-rhxg",
+      "created": "2026-07-23T19:34:14.000Z",
+      "id": 1124272,
+      "npm_advisory_id": null,
+      "overview": "If application code allows attacker supplied input to overwrite certain aspects of errors caught by the SSR process, then it was possible for attacker to trigger unexpected constructor execution on the client which would trigger outbound network traffic.  This is only possible with very specific (and unlikely) application layer code.\n\n> [!NOTE]\n> This does not impact your application if you are using Declarative Mode.  This only impacts Framework Mode and Data Mode applications doing manual SSR/hydration",
+      "reported_by": null,
+      "title": "React Router: Arbitrary Constructor Injection via deserializeErrors() in React Router SSR Hydration",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-53666"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "react-router",
+      "vulnerable_versions": ">=6.4.0 <7.18.0",
+      "github_advisory_id": "GHSA-337j-9hxr-rhxg",
+      "recommendation": "Upgrade to version 7.18.0 or later",
+      "patched_versions": ">=7.18.0",
+      "updated": "2026-07-23T19:34:16.000Z",
+      "cvss": {
+        "score": 6.1,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+      },
+      "cwe": [
+        "CWE-470"
+      ],
+      "url": "https://github.com/advisories/GHSA-337j-9hxr-rhxg"
+    },
+    "1130720": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-7p8r-x3mc-p8w7\n- https://nvd.nist.gov/vuln/detail/CVE-2026-18446\n- https://github.com/fastify/fast-uri/commit/f3c6c905f47831007490f466c5945012e905cc52\n- https://cna.openjsf.org/security-advisories.html\n- https://github.com/fastify/fast-uri/releases/tag/v4.1.2\n- https://github.com/advisories/GHSA-7p8r-x3mc-p8w7",
+      "created": "2026-08-03T19:16:43.000Z",
+      "id": 1130720,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` v4.1.1 and earlier require a literal `//` to recognize a URI authority, so a reference that uses `\\\\`, `/\\`, or `\\/` as the authority introducer (in place of `//`, after an optional scheme) is parsed with no authority: the sequence and everything after it fold into the path. Node's native WHATWG `URL` (used by `fetch()`, `undici`, and Node's `http`/`https` clients) instead treats `\\` as interchangeable with `/` for special schemes (`http`, `https`, `ws`, `wss`, `ftp`, `file`), so the two parsers extract different hosts from the same input.\n\nFor example, `fast-uri` resolves `\\\\evil.com/path` against base `https://allowed.com/` to `https://allowed.com/%5C%5Cevil.com/path` (confined to the trusted host), while Node's WHATWG URL resolves the same reference to `https://evil.com/path`.\n\nApplications that use `fast-uri` to enforce host-based policy (allowlists, denylists, loopback/SSRF filtering, redirect validation, outbound proxy routing) before passing the same URL into Node's URL or `fetch()` consumers see a policy/use desync and can be steered to an unintended destination.\n\n### Patches\n\nUpgrade to `fast-uri` v4.1.2, v3.1.5, v2.4.4.\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to host confusion via backslash authority introducer",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-18446"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <3.1.5",
+      "github_advisory_id": "GHSA-7p8r-x3mc-p8w7",
+      "recommendation": "Upgrade to version 3.1.5 or later",
+      "patched_versions": ">=3.1.5",
+      "updated": "2026-08-03T19:16:43.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-436"
+      ],
+      "url": "https://github.com/advisories/GHSA-7p8r-x3mc-p8w7"
+    },
+    "1136293": {
+      "findings": [
+        {
+          "version": "1.23.2",
+          "paths": [
+            "apps__desk-web>react-router-dom>@remix-run/router"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/remix-run/react-router/security/advisories/GHSA-2j2x-hqr9-3h42\n- https://nvd.nist.gov/vuln/detail/CVE-2026-40181\n- https://github.com/remix-run/react-router/commit/d77f6b1\n- https://github.com/advisories/GHSA-2j2x-hqr9-3h42",
+      "created": "2026-06-03T20:58:01.000Z",
+      "id": 1136293,
+      "npm_advisory_id": null,
+      "overview": "Certain URLs passed to the `redirect` function can trigger an open redirect to an external domain depending on the level of validation done by the application prior to returning the `redirect`.\n\n> [!NOTE]\n> This does not impact your React Router application if you are using [Declarative Mode](https://reactrouter.com/start/modes#declarative) (`<BrowserRouter>`)",
+      "reported_by": null,
+      "title": "React Router's same-origin redirect with path starting // causes open redirect via protocol-relative URL reinterpretation",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-40181"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "@remix-run/router",
+      "vulnerable_versions": ">=1.3.0 <1.23.3",
+      "github_advisory_id": "GHSA-2j2x-hqr9-3h42",
+      "recommendation": "Upgrade to version 1.23.3 or later",
+      "patched_versions": ">=1.23.3",
+      "updated": "2026-08-04T21:26:11.000Z",
+      "cvss": {
+        "score": 0,
+        "vectorString": null
+      },
+      "cwe": [
+        "CWE-601"
+      ],
+      "url": "https://github.com/advisories/GHSA-2j2x-hqr9-3h42"
+    },
+    "1136303": {
+      "findings": [
+        {
+          "version": "6.30.3",
+          "paths": [
+            "apps__desk-web>react-router-dom>react-router"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/remix-run/react-router/security/advisories/GHSA-2j2x-hqr9-3h42\n- https://nvd.nist.gov/vuln/detail/CVE-2026-40181\n- https://github.com/remix-run/react-router/commit/d77f6b1\n- https://github.com/advisories/GHSA-2j2x-hqr9-3h42",
+      "created": "2026-06-03T20:58:01.000Z",
+      "id": 1136303,
+      "npm_advisory_id": null,
+      "overview": "Certain URLs passed to the `redirect` function can trigger an open redirect to an external domain depending on the level of validation done by the application prior to returning the `redirect`.\n\n> [!NOTE]\n> This does not impact your React Router application if you are using [Declarative Mode](https://reactrouter.com/start/modes#declarative) (`<BrowserRouter>`)",
+      "reported_by": null,
+      "title": "React Router's same-origin redirect with path starting // causes open redirect via protocol-relative URL reinterpretation",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-40181"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "react-router",
+      "vulnerable_versions": ">=6.7.0 <6.30.4",
+      "github_advisory_id": "GHSA-2j2x-hqr9-3h42",
+      "recommendation": "Upgrade to version 6.30.4 or later",
+      "patched_versions": ">=6.30.4",
+      "updated": "2026-08-04T21:26:11.000Z",
+      "cvss": {
+        "score": 0,
+        "vectorString": null
+      },
+      "cwe": [
+        "CWE-601"
+      ],
+      "url": "https://github.com/advisories/GHSA-2j2x-hqr9-3h42"
+    },
+    "1145559": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-q3j6-qgpj-74h6\n- https://nvd.nist.gov/vuln/detail/CVE-2026-6321\n- https://cna.openjsf.org/security-advisories.html\n- https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-6321.json\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.1\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.1\n- https://bugzilla.redhat.com/show_bug.cgi?id=2466582\n- https://access.redhat.com/security/cve/CVE-2026-6321\n- https://access.redhat.com/errata/RHSA-2026:42079\n- https://access.redhat.com/errata/RHSA-2026:42078\n- https://access.redhat.com/errata/RHSA-2026:37385\n- https://access.redhat.com/errata/RHSA-2026:34342\n- https://access.redhat.com/errata/RHSA-2026:26420\n- https://access.redhat.com/errata/RHSA-2026:26416\n- https://access.redhat.com/errata/RHSA-2026:26234\n- https://access.redhat.com/errata/RHSA-2026:26214\n- https://access.redhat.com/errata/RHSA-2026:25123\n- https://access.redhat.com/errata/RHSA-2026:25089\n- https://access.redhat.com/errata/RHSA-2026:24977\n- https://access.redhat.com/errata/RHSA-2026:24866\n- https://access.redhat.com/errata/RHSA-2026:24766\n- https://access.redhat.com/errata/RHSA-2026:24473\n- https://access.redhat.com/errata/RHSA-2026:21338\n- https://access.redhat.com/errata/RHSA-2026:20338\n- https://access.redhat.com/errata/RHSA-2026:19238\n- https://access.redhat.com/errata/RHSA-2026:56431\n- https://access.redhat.com/errata/RHSA-2026:56366\n- https://access.redhat.com/errata/RHSA-2026:57013\n- https://access.redhat.com/errata/RHSA-2026:56928\n- https://github.com/advisories/GHSA-q3j6-qgpj-74h6",
+      "created": "2026-05-08T17:15:09.000Z",
+      "id": 1145559,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` v3.1.0 and earlier decodes percent-encoded path separators (`%2F`) and dot segments (`%2E`) before applying dot-segment removal in `normalize()` and `equal()`. This makes encoded path data behave like real `/` and `..`, so distinct URIs collapse onto the same normalized path.\n\nFor example, `http://example.com/public/%2e%2e/admin` normalizes to `http://example.com/admin`, and `equal()` considers them the same URI.\n\nApplications that normalize or compare attacker-controlled URLs to enforce path-based policy can be bypassed. A path that looks confined under an allowed prefix can normalize to a different location.\n\n### Patches\n\nUpgrade to `fast-uri` >= 3.1.1, or if you are in the v2.x release line, v2.4.1\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to path traversal via percent-encoded dot segments",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-6321"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <=3.1.0",
+      "github_advisory_id": "GHSA-q3j6-qgpj-74h6",
+      "recommendation": "Upgrade to version 3.1.1 or later",
+      "patched_versions": ">=3.1.1",
+      "updated": "2026-08-20T15:33:05.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-22"
+      ],
+      "url": "https://github.com/advisories/GHSA-q3j6-qgpj-74h6"
+    },
+    "1153168": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-v39h-62p7-jpjc\n- https://nvd.nist.gov/vuln/detail/CVE-2026-6322\n- https://cna.openjsf.org/security-advisories.html\n- https://access.redhat.com/errata/RHSA-2026:37186\n- https://access.redhat.com/errata/RHSA-2026:37385\n- https://access.redhat.com/errata/RHSA-2026:37628\n- https://access.redhat.com/errata/RHSA-2026:40118\n- https://access.redhat.com/errata/RHSA-2026:40945\n- https://access.redhat.com/errata/RHSA-2026:41066\n- https://access.redhat.com/errata/RHSA-2026:41928\n- https://access.redhat.com/errata/RHSA-2026:41951\n- https://access.redhat.com/errata/RHSA-2026:42078\n- https://access.redhat.com/errata/RHSA-2026:42142\n- https://access.redhat.com/errata/RHSA-2026:43038\n- https://access.redhat.com/security/cve/CVE-2026-6322\n- https://bugzilla.redhat.com/show_bug.cgi?id=2466684\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.1\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.2\n- https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-6322.json\n- https://access.redhat.com/errata/RHSA-2026:25271\n- https://access.redhat.com/errata/RHSA-2026:25273\n- https://access.redhat.com/errata/RHSA-2026:26225\n- https://access.redhat.com/errata/RHSA-2026:26234\n- https://access.redhat.com/errata/RHSA-2026:28571\n- https://access.redhat.com/errata/RHSA-2026:29197\n- https://access.redhat.com/errata/RHSA-2026:29795\n- https://access.redhat.com/errata/RHSA-2026:29796\n- https://access.redhat.com/errata/RHSA-2026:29800\n- https://access.redhat.com/errata/RHSA-2026:29834\n- https://access.redhat.com/errata/RHSA-2026:30076\n- https://access.redhat.com/errata/RHSA-2026:33683\n- https://access.redhat.com/errata/RHSA-2026:34160\n- https://access.redhat.com/errata/RHSA-2026:34342\n- https://access.redhat.com/errata/RHSA-2026:34374\n- https://access.redhat.com/errata/RHSA-2026:34766\n- https://access.redhat.com/errata/RHSA-2026:34770\n- https://access.redhat.com/errata/RHSA-2026:36651\n- https://access.redhat.com/errata/RHSA-2026:36754\n- https://access.redhat.com/errata/RHSA-2026:54395\n- https://access.redhat.com/errata/RHSA-2026:56366\n- https://access.redhat.com/errata/RHSA-2026:56431\n- https://access.redhat.com/errata/RHSA-2026:54555\n- https://access.redhat.com/errata/RHSA-2026:56928\n- https://access.redhat.com/errata/RHSA-2026:56968\n- https://access.redhat.com/errata/RHSA-2026:57013\n- https://access.redhat.com/errata/RHSA-2026:57487\n- https://access.redhat.com/errata/RHSA-2026:60520\n- https://access.redhat.com/errata/RHSA-2026:60855\n- https://access.redhat.com/errata/RHSA-2026:61783\n- https://github.com/advisories/GHSA-v39h-62p7-jpjc",
+      "created": "2026-05-08T19:13:01.000Z",
+      "id": 1153168,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` v3.1.1 and earlier decodes percent-encoded authority delimiters (`%40` as `@`, `%3A` as `:`) inside the host component and serializes them back as raw characters. This changes the URI structure, turning a hostname into userinfo plus a different host.\n\nFor example, `http://trusted.com%40evil.com/` normalizes to `http://trusted.com@evil.com/`, which reparses as host `evil.com` with userinfo `trusted.com`.\n\nApplications that normalize untrusted URLs before host allowlist checks, redirect validation, or outbound request routing can be steered to a different authority than the original URL appeared to contain.\n\n### Patches\n\nUpgrade to `fast-uri` >= 3.1.2, or if you are in the v2.x release line, v2.4.1\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to host confusion via percent-encoded authority delimiters",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-6322"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <=3.1.1",
+      "github_advisory_id": "GHSA-v39h-62p7-jpjc",
+      "recommendation": "Upgrade to version 3.1.2 or later",
+      "patched_versions": ">=3.1.2",
+      "updated": "2026-09-01T15:31:44.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-140",
+        "CWE-436"
+      ],
+      "url": "https://github.com/advisories/GHSA-v39h-62p7-jpjc"
+    },
+    "1153174": {
+      "findings": [
+        {
+          "version": "1.30.1",
+          "paths": [
+            "packages__tracing>@opentelemetry/exporter-trace-otlp-http>@opentelemetry/core"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/open-telemetry/opentelemetry-js/security/advisories/GHSA-8988-4f7v-96qf\n- https://nvd.nist.gov/vuln/detail/CVE-2026-54285\n- https://github.com/advisories/GHSA-8988-4f7v-96qf",
+      "created": "2026-06-15T20:38:30.000Z",
+      "id": 1153174,
+      "npm_advisory_id": null,
+      "overview": "## Overview\n\n`W3CBaggagePropagator.extract()` in `@opentelemetry/core` does not enforce size limits when parsing inbound `baggage` HTTP headers. The W3C Baggage specification recommends a maximum of 8,192 bytes and 180 entries; these limits were only enforced on the outbound (`inject()`) path, not on the inbound (`extract()`) path. Parsing oversized baggage causes memory allocation proportional to the header size without any cap.\n\n## Impact\n\nThe practical availability impact for most Node.js deployments is limited. Node.js enforces a default `--max-http-header-size` of 16,384 bytes on the total combined size of all HTTP headers, constraining what an external attacker can deliver before the propagator is reached. Additionally, the header is already in memory (parsed by the HTTP layer) by the time it reaches the propagator - the additional allocation is the overhead of splitting into entry objects, not an unbounded read.\n\nThe risk is higher when transport-layer limits are absent - e.g., non-HTTP transports (messaging systems, custom `TextMapGetter` implementations) or deployments that have raised `--max-http-header-size`.\n\n## Remediation\n\nUpdate `@opentelemetry/core` to version 2.8.0 or later. The fix enforces limits consistent with the W3C Baggage specification at the propagator level:\n\n- Maximum total baggage size: 8,192 bytes\n- Maximum number of entries: 180\n- Maximum per-entry size: 4,096 bytes\n\nHeaders that exceed these limits are truncated at the point the limit is reached.\n\n## Workarounds\n\nEnsure header size limits are configured at the server or gateway level. The default Node.js HTTP header limit (16 KB) mitigates external attack vectors independently of this fix. For non-HTTP transports receiving baggage from untrusted sources, validate input size before passing it to the propagator.\n\n## References\n\n- [W3C Baggage Specification - Limits](https://www.w3.org/TR/baggage/#limits)\n- opentelemetry-java: [GHSA-rcgg-9c38-7xpx](https://github.com/open-telemetry/opentelemetry-java/security/advisories/GHSA-rcgg-9c38-7xpx)\n- opentelemetry-go: [GHSA-mh2q-q3fh-2475](https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-mh2q-q3fh-2475)\n\n## Credit\n\nReported by tonghuaroot.",
+      "reported_by": null,
+      "title": "OpenTelemetry Core: Unbounded memory allocation in W3C Baggage propagation",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-54285"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "@opentelemetry/core",
+      "vulnerable_versions": "<2.8.0",
+      "github_advisory_id": "GHSA-8988-4f7v-96qf",
+      "recommendation": "Upgrade to version 2.8.0 or later",
+      "patched_versions": ">=2.8.0",
+      "updated": "2026-09-01T17:41:32.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": [
+        "CWE-770"
+      ],
+      "url": "https://github.com/advisories/GHSA-8988-4f7v-96qf"
+    },
+    "1158524": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-f65p-4m7j-42xc\n- https://nvd.nist.gov/vuln/detail/CVE-2026-75975\n- https://github.com/fastify/fast-uri/commit/3728465caacef4b16bc84b7d14760f1c8fe41595\n- https://github.com/fastify/fast-uri/commit/607bfbe953f28a14c2e06ae64aff38c81ca2937f\n- https://github.com/fastify/fast-uri/commit/9161eded1ff55fad9d9714c6ad6c0f0283547799\n- https://cna.openjsf.org/security-advisories.html\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.5\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.6\n- https://github.com/fastify/fast-uri/releases/tag/v4.1.3\n- https://github.com/advisories/GHSA-f65p-4m7j-42xc",
+      "created": "2026-09-02T15:43:30.000Z",
+      "id": 1158524,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` does not validate the complete RFC 3986 grammar for bracketed IPv6 literals, so a malformed literal with invalid trailing text is silently truncated to a different valid IPv6 address with no error reported. For example, `normalize('http://[::not-valid]/private')` returns `http://[::]/private`, and `[fc00::not-hex]` and `[fe80::not-hex]` collapse to `[fc00::]` and `[fe80::]`. An application that normalizes an untrusted URL before an outbound request, redirect, or host-policy check can be routed to a local or private address such as loopback (`::1`), unique-local, or link-local. Because `parse().error` is unset for these inputs, checking it does not protect the consumer.\n\n### Patches\n\nUpgrade to `fast-uri` 2.4.5, 3.1.6, or 4.1.3. Malformed IPv6 literals are now rejected with a host error instead of being normalized to a valid address.\n\n### Workarounds\n\nReject untrusted URLs whose host is a bracketed IPv6 literal before passing them to `fast-uri`, or route outbound requests against an explicit allowlist of addresses rather than trusting the normalized host.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to server-side request forgery via malformed IPv6 normalization",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-75975"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <3.1.6",
+      "github_advisory_id": "GHSA-f65p-4m7j-42xc",
+      "recommendation": "Upgrade to version 3.1.6 or later",
+      "patched_versions": ">=3.1.6",
+      "updated": "2026-09-02T15:43:32.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-20",
+        "CWE-918"
+      ],
+      "url": "https://github.com/advisories/GHSA-f65p-4m7j-42xc"
+    },
+    "1158530": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-jqff-g426-hqxp\n- https://nvd.nist.gov/vuln/detail/CVE-2026-76172\n- https://github.com/fastify/fast-uri/commit/37f3417c82994279656854f83ce938acd81c3862\n- https://github.com/fastify/fast-uri/commit/a941e626411f576f8d90883231e57b6c9d0ff98b\n- https://github.com/fastify/fast-uri/commit/c6a74bfd9d8c6b0df5362b3c7ae88d8021cb1e39\n- https://cna.openjsf.org/security-advisories.html\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.5\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.6\n- https://github.com/fastify/fast-uri/releases/tag/v4.1.3\n- https://github.com/advisories/GHSA-jqff-g426-hqxp",
+      "created": "2026-09-02T15:41:53.000Z",
+      "id": 1158530,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` decodes percent-encoded characters in the scheme component with the legacy global `unescape()` and serializes the result back as raw characters, without re-escaping it or validating it as a scheme. A scheme that decodes to characters outside the RFC 3986 scheme grammar can therefore introduce structure the original input did not contain.\n\nFor example, `%2f%2fevil.example:/pwn` parses with no authority (`parse().host` is `undefined`), but `resolve()` and `normalize()` return `//evil.example:/pwn`, which reparses with host `evil.example`. The `%uXXXX` form (`%u002f%u002fevil.example:/pwn`) produces the same result, and a scheme containing `%0d%0a` reaches the output as a raw CR LF.\n\nApplications that normalize or resolve untrusted URLs before a redirect check, host allowlist, or outbound request decision, especially ones that treat a missing authority as same-origin, can be steered to an attacker-chosen authority, and a normalized URI placed in a response header can carry an injected CR LF.\n\n### Patches\n\nUpgrade to `fast-uri` >= 4.1.3, or >= 3.1.6 in the v3.x release line, or >= 2.4.5 in the v2.x release line.\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to host confusion via percent-encoded scheme normalization",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-76172"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <3.1.6",
+      "github_advisory_id": "GHSA-jqff-g426-hqxp",
+      "recommendation": "Upgrade to version 3.1.6 or later",
+      "patched_versions": ">=3.1.6",
+      "updated": "2026-09-02T15:41:56.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-177"
+      ],
+      "url": "https://github.com/advisories/GHSA-jqff-g426-hqxp"
+    },
+    "1193652": {
+      "findings": [
+        {
+          "version": "6.30.3",
+          "paths": [
+            "apps__desk-web>react-router-dom"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/remix-run/react-router/security/advisories/GHSA-jjmj-jmhj-qwj2\n- https://github.com/remix-run/react-router/pull/14718\n- https://github.com/remix-run/react-router/commit/3a5b5ad0e5cf9918c646509563f5c41a89226ff3\n- https://github.com/remix-run/react-router/blob/main/CHANGELOG.md#v7180\n- https://github.com/remix-run/react-router/releases/tag/react-router@7.18.0\n- https://nvd.nist.gov/vuln/detail/CVE-2026-53668\n- https://github.com/remix-run/react-router/blob/v6/CHANGELOG.md#v6306\n- https://github.com/remix-run/react-router/releases/tag/react-router@6.30.6\n- https://github.com/advisories/GHSA-jjmj-jmhj-qwj2",
+      "created": "2026-07-23T19:36:31.000Z",
+      "id": 1193652,
+      "npm_advisory_id": null,
+      "overview": "Applications with open redirects could permit attacker crafted links to result in redirects to unexpected external location or XSS vectors.",
+      "reported_by": null,
+      "title": "React Router: Open redirect leading to XSS",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-53668"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "react-router-dom",
+      "vulnerable_versions": ">=6.30.2 <=6.30.5",
+      "github_advisory_id": "GHSA-jjmj-jmhj-qwj2",
+      "recommendation": "Upgrade to version 6.30.6 or later",
+      "patched_versions": ">=6.30.6",
+      "updated": "2026-09-08T15:09:29.000Z",
+      "cvss": {
+        "score": 6.9,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:L/A:N"
+      },
+      "cwe": [
+        "CWE-79",
+        "CWE-601"
+      ],
+      "url": "https://github.com/advisories/GHSA-jjmj-jmhj-qwj2"
+    },
+    "1204921": {
+      "findings": [
+        {
+          "version": "3.1.0",
+          "paths": [
+            "apps__desk-api>@fastify/swagger>json-schema-resolver>fast-uri"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/fastify/fast-uri/security/advisories/GHSA-4c8g-83qw-93j6\n- https://nvd.nist.gov/vuln/detail/CVE-2026-13676\n- https://github.com/fastify/fast-uri/pull/188\n- https://github.com/fastify/fast-uri/commit/2a6d357a18a68e6d812824379fd3388a1ae50d05\n- https://github.com/fastify/fast-uri/commit/21ea1f9d70495c931f55dff893a8fa38f4f2e6bd\n- https://github.com/fastify/fast-uri/commit/01db48010f594b98f7b323be18b393791c66ed1d\n- https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-13676.json\n- https://github.com/fastify/fast-uri/releases/tag/v4.0.1\n- https://github.com/fastify/fast-uri/releases/tag/v3.1.3\n- https://github.com/fastify/fast-uri/releases/tag/v2.4.2\n- https://cna.openjsf.org/security-advisories.html\n- https://bugzilla.redhat.com/show_bug.cgi?id=2494197\n- https://access.redhat.com/security/cve/CVE-2026-13676\n- https://access.redhat.com/errata/RHSA-2026:41929\n- https://access.redhat.com/errata/RHSA-2026:41928\n- https://access.redhat.com/errata/RHSA-2026:41066\n- https://access.redhat.com/errata/RHSA-2026:40945\n- https://access.redhat.com/errata/RHSA-2026:40262\n- https://access.redhat.com/errata/RHSA-2026:40118\n- https://access.redhat.com/errata/RHSA-2026:37628\n- https://access.redhat.com/errata/RHSA-2026:37585\n- https://access.redhat.com/errata/RHSA-2026:37186\n- https://access.redhat.com/errata/RHSA-2026:43038\n- https://access.redhat.com/errata/RHSA-2026:42815\n- https://access.redhat.com/errata/RHSA-2026:40765\n- https://access.redhat.com/errata/RHSA-2026:44239\n- https://access.redhat.com/errata/RHSA-2026:44268\n- https://access.redhat.com/errata/RHSA-2026:48126\n- https://access.redhat.com/errata/RHSA-2026:48124\n- https://access.redhat.com/errata/RHSA-2026:49642\n- https://access.redhat.com/errata/RHSA-2026:50479\n- https://access.redhat.com/errata/RHSA-2026:50340\n- https://access.redhat.com/errata/RHSA-2026:47728\n- https://access.redhat.com/errata/RHSA-2026:51196\n- https://access.redhat.com/errata/RHSA-2026:51197\n- https://access.redhat.com/errata/RHSA-2026:51342\n- https://access.redhat.com/errata/RHSA-2026:51348\n- https://access.redhat.com/errata/RHSA-2026:51349\n- https://access.redhat.com/errata/RHSA-2026:50758\n- https://access.redhat.com/errata/RHSA-2026:54760\n- https://access.redhat.com/errata/RHSA-2026:56366\n- https://access.redhat.com/errata/RHSA-2026:56431\n- https://access.redhat.com/errata/RHSA-2026:57013\n- https://access.redhat.com/errata/RHSA-2026:57191\n- https://access.redhat.com/errata/RHSA-2026:57194\n- https://access.redhat.com/errata/RHSA-2026:57590\n- https://access.redhat.com/errata/RHSA-2026:59593\n- https://access.redhat.com/errata/RHSA-2026:60386\n- https://access.redhat.com/errata/RHSA-2026:60520\n- https://access.redhat.com/errata/RHSA-2026:61314\n- https://access.redhat.com/errata/RHSA-2026:63371\n- https://access.redhat.com/errata/RHSA-2026:66488\n- https://access.redhat.com/errata/RHSA-2026:66545\n- https://github.com/advisories/GHSA-4c8g-83qw-93j6",
+      "created": "2026-07-21T19:03:11.000Z",
+      "id": 1204921,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\n`fast-uri` versions `>= 2.3.1, <= 4.0.0` fail to canonicalize Unicode/IDN hostnames for HTTP-family URLs. The IDN conversion path calls `URL.domainToASCII(...)` on the global WHATWG `URL` constructor, where that helper does not exist. The resulting `TypeError` is silently routed into `parsed.error`, but `parse()`, `normalize()`, and `equal()` all return with the host left in its original Unicode form.\n\nFor example, `http://127。0。0。1/` is treated by `fast-uri` as host `127。0。0。1`, while Node's WHATWG URL parser and `fetch()` canonicalize the same input to `127.0.0.1`.\n\nApplications that use `fast-uri` to enforce host-based policy (denylists, loopback filtering, redirect validation, outbound proxy routing) before passing the same URL into Node's URL or `fetch()` consumers see a policy/use desync and can be steered to an unintended destination.\n\n### Patches\n\nUpgrade to `fast-uri` v4.0.1, v3.1.3, or v2.4.2\n\n### Workarounds\n\nNone. Upgrade to the patched version.",
+      "reported_by": null,
+      "title": "fast-uri vulnerable to host confusion via failed IDN canonicalization",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-13676"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "fast-uri",
+      "vulnerable_versions": ">=3.0.0 <3.1.3",
+      "github_advisory_id": "GHSA-4c8g-83qw-93j6",
+      "recommendation": "Upgrade to version 3.1.3 or later",
+      "patched_versions": ">=3.1.3",
+      "updated": "2026-09-11T15:32:26.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-436",
+        "CWE-551"
+      ],
+      "url": "https://github.com/advisories/GHSA-4c8g-83qw-93j6"
+    }
+  },
+  "muted": [],
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 8,
+      "high": 8,
+      "critical": 0
+    },
+    "dependencies": 278,
+    "devDependencies": 0,
+    "optionalDependencies": 0,
+    "totalDependencies": 278
+  }
+}

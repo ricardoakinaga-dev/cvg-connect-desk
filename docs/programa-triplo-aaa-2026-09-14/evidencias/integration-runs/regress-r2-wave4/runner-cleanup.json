@@ -1,0 +1,15 @@
+{
+  "provisioned": true,
+  "storageScanner": false,
+  "isolated": {
+    "runId": "regress-r2-wave4",
+    "redis": {
+      "stopped": true,
+      "pid": 1931693
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1931660
+    }
+  }
+}

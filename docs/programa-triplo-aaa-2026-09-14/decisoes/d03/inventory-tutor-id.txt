@@ -1,0 +1,121 @@
+# Inventário de consumidores de tutorId/tutor_id — gerado por comando reproduzível
+# Comando: grep -rn --include='*.ts' --include='*.tsx' --include='*.sql' -E 'tutorId|tutor_id' packages modules apps | grep -v node_modules | grep -v '/dist/' | grep -v '\.d\.ts' | sort
+# Data: 2026-09-15T03:32:15Z
+# Candidato: 754f9bad+worktree
+
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:188:    let tutorId: string | undefined;
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:193:      tutorId = tutor.id;
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:194:      const [patient] = await db.insert(schema.patients).values({ name: `Paciente Distinto ${linkSuffix}`, species: 'canino', tutorId }).returning();
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:203:      tutorId,
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:206:    const created = { id, phone: fixture.phone, name: fixture.name, email: fixture.email, externalId: fixture.externalId, tutorId, patientId };
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:507:      const tutorIds = contactFixtures.map((c) => c.tutorId).filter((v): v is string => Boolean(v));
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:510:      if (tutorIds.length > 0) await db.delete(schema.tutors).where(inArray(schema.tutors.id, tutorIds)).catch(() => undefined);
+apps/desk-api/src/__tests__/aaa-17.integration.test.ts:77:  tutorId?: string;
+apps/desk-api/src/__tests__/production/prod-04.test.ts:139:let tutorId = '';
+apps/desk-api/src/__tests__/production/prod-04.test.ts:497:  tutorId = tutor.id;
+apps/desk-api/src/__tests__/production/prod-04.test.ts:498:  createdTutorIds.push(tutorId);
+apps/desk-api/src/__tests__/production/prod-04.test.ts:499:  const [patient] = await db.insert(schema.patients).values({ name: `P04 paciente ${suffix}`, species: 'cao', tutorId }).returning();
+apps/desk-api/src/__tests__/production/prod-04.test.ts:730:      { label: 'tutores id', url: `/tutors/${tutorId}` },
+apps/desk-api/src/__tests__/production/prod-06.test.ts:11: *   AC3 — inventário tutor_patients N:N × patients.tutor_id com proposta D03
+apps/desk-api/src/__tests__/production/prod-06.test.ts:1304:describe('PROD-06 AC3 — inventário tutor_patients N:N × patient.tutorId', () => {
+apps/desk-api/src/__tests__/production/prod-06.test.ts:1309:    expect(dataModel).toContain('(`tutor_id`, `patient_id`) em `tutor_patients`');
+apps/desk-api/src/__tests__/production/prod-06.test.ts:1314:    expect((schemaModule.patients.tutorId as { name: string }).name).toBe('tutor_id');
+apps/desk-api/src/__tests__/production/prod-06.test.ts:1320:    expect(patientRepository).toContain('schema.patients.tutorId');
+apps/desk-api/src/__tests__/production/prod-06.test.ts:1325:    expect(tutorRepository).toContain('schema.patients.tutorId');
+apps/desk-api/src/__tests__/production/prod-06.test.ts:408:      `INSERT INTO patients (name, tutor_id) VALUES ('PROD06 paciente legado', $1) RETURNING id`,
+apps/desk-api/src/__tests__/production/prod-06.test.ts:412:      `INSERT INTO contacts (name, tutor_id, patient_id) VALUES ('PROD06 contato legado', $1, $2) RETURNING id`,
+apps/desk-web/src/lib/api.ts:522:  tutorId: string | null;
+apps/desk-web/src/lib/api.ts:826:  list: (filters?: { search?: string; tutorId?: string; species?: string }) => {
+apps/desk-web/src/lib/api.ts:829:    if (filters?.tutorId) params.set('tutorId', filters.tutorId);
+apps/desk-web/src/lib/api.ts:835:  create: (data: { name: string; species?: string; breed?: string; tutorId?: string }) => api.post<Patient>('/patients', data),
+apps/desk-web/src/lib/api.ts:836:  update: (id: string, data: { name: string; species?: string | null; breed?: string | null; tutorId?: string | null }) => api.put<Patient>(`/patients/${id}`, data),
+apps/desk-web/src/pages/Inbox.tsx:1069:        if (contact.tutorId && tutorApi?.get) {
+apps/desk-web/src/pages/Inbox.tsx:1071:            setContextTutor(await tutorApi.get(contact.tutorId));
+apps/desk-web/src/pages/Inbox.tsx:1947:            {contextContact?.tutorId && <a href={`/tutors?tutorId=${encodeURIComponent(contextContact.tutorId)}`}><Icon name="tutors" size={15} /><span>Tutor: {contextTutor?.name || 'abrir cadastro'}</span></a>}
+apps/desk-web/src/pages/Inbox.tsx:1949:            {!selectedConvData.contactId && !contextContact?.tutorId && !contextContact?.patientId && <span className="context-muted">Nenhum vínculo identificado.</span>}
+apps/desk-web/src/pages/Inbox.tsx:75:  tutorId?: string | null;
+apps/desk-web/src/pages/Patients.tsx:114:    setForm({ name: '', species: '', breed: '', tutorId: '' });
+apps/desk-web/src/pages/Patients.tsx:124:    setForm({ name: patient.name, species: patient.species || '', breed: patient.breed || '', tutorId: patient.tutorId || '' });
+apps/desk-web/src/pages/Patients.tsx:144:      const data = { name: form.name.trim(), species: form.species || undefined, breed: form.breed || undefined, tutorId: form.tutorId || undefined };
+apps/desk-web/src/pages/Patients.tsx:145:      if (editing) await patientApi.update(editing.id, { ...data, species: data.species || null, breed: data.breed || null, tutorId: data.tutorId || null });
+apps/desk-web/src/pages/Patients.tsx:187:  const currentTutorMissing = !!form.tutorId && !tutors.some((tutor) => tutor.id === form.tutorId);
+apps/desk-web/src/pages/Patients.tsx:322:                value={form.tutorId}
+apps/desk-web/src/pages/Patients.tsx:324:                onChange={(event) => setForm({ ...form, tutorId: event.target.value })}
+apps/desk-web/src/pages/Patients.tsx:329:                {currentTutorMissing && <option value={form.tutorId}>Tutor vinculado atual</option>}
+apps/desk-web/src/pages/Patients.tsx:68:  const [form, setForm] = useState({ name: '', species: '', breed: '', tutorId: '' });
+apps/desk-web/src/pages/Tasks.tsx:10:  tutorId?: string | null;
+apps/desk-web/src/pages/Tasks.tsx:24:  tutorId?: string;
+apps/desk-web/src/pages/Tasks.tsx:265:      tutorId: newTask.tutorId || undefined,
+apps/desk-web/src/pages/Tasks.tsx:341:  const tutorLabel = (tutorId: string) => references.tutors.find(tutor => tutor.id === tutorId)?.name || 'Tutor vinculado';
+apps/desk-web/src/pages/Tasks.tsx:34:  tutorId: string;
+apps/desk-web/src/pages/Tasks.tsx:461:                <select id="task-tutor" className="ui-input" value={newTask.tutorId} onChange={event => setNewTask({ ...newTask, tutorId: event.target.value })}>
+apps/desk-web/src/pages/Tasks.tsx:534:            const hasContext = Boolean(task.conversationId || task.tutorId || task.patientId);
+apps/desk-web/src/pages/Tasks.tsx:544:                    {task.tutorId && <span className="task-context-link task-context-link--static"><Icon name="tutors" size={14} /><span>Tutor · {tutorLabel(task.tutorId)}</span></span>}
+apps/desk-web/src/pages/Tasks.tsx:64:  tutorId: '',
+apps/desk-web/src/__tests__/entities.test.tsx:75:      tutorId: 'tutor-1',
+modules/contacts/src/types/index.ts:7:  tutorId: string | null;
+modules/patients/src/application/use-cases/index.ts:23:async function validateTutor(tutorId: string | null | undefined) {
+modules/patients/src/application/use-cases/index.ts:24:  if (tutorId && !(await repo.tutorExists(tutorId))) {
+modules/patients/src/application/use-cases/index.ts:30:export async function listPatients(filters?: { search?: string; tutorId?: string; species?: string }) {
+modules/patients/src/application/use-cases/index.ts:43:    const tutorError = await validateTutor(input.tutorId);
+modules/patients/src/application/use-cases/index.ts:50:      tutorId: input.tutorId ?? null,
+modules/patients/src/application/use-cases/index.ts:65:    const tutorError = await validateTutor(input.tutorId);
+modules/patients/src/infrastructure/repositories/patient.repository.ts:102:      patient.tutorId
+modules/patients/src/infrastructure/repositories/patient.repository.ts:105:          .where(eq(schema.tutors.id, patient.tutorId))
+modules/patients/src/infrastructure/repositories/patient.repository.ts:18:    if (filters?.tutorId) conditions.push(eq(schema.patients.tutorId, filters.tutorId));
+modules/patients/src/infrastructure/repositories/patient.repository.ts:27:      tutorId: schema.patients.tutorId,
+modules/patients/src/infrastructure/repositories/patient.repository.ts:34:      .leftJoin(schema.tutors, eq(schema.patients.tutorId, schema.tutors.id))
+modules/patients/src/infrastructure/repositories/patient.repository.ts:46:      tutorId: row.tutorId,
+modules/patients/src/infrastructure/repositories/patient.repository.ts:6:  async findAll(filters?: { search?: string; tutorId?: string; species?: string }) {
+modules/patients/src/infrastructure/repositories/patient.repository.ts:72:      tutorId: input.tutorId ?? null,
+modules/patients/src/infrastructure/repositories/patient.repository.ts:83:    if (input.tutorId !== undefined) updateData.tutorId = input.tutorId;
+modules/patients/src/presentation/http/patient.controller.ts:30:          tutorId: { type: 'string', format: 'uuid' },
+modules/patients/src/presentation/http/patient.controller.ts:37:      const query = request.query as { search?: string; tutorId?: string; species?: string };
+modules/patients/src/presentation/http/patient.controller.ts:71:          tutorId: { type: ['string', 'null'], format: 'uuid' },
+modules/patients/src/presentation/http/patient.controller.ts:98:          tutorId: { type: ['string', 'null'], format: 'uuid' },
+modules/patients/src/__tests__/use-cases.test.ts:27:    const result = await useCases.createPatient({ name: 'Rex', tutorId: 'missing-tutor' });
+modules/patients/src/__tests__/use-cases.test.ts:39:      name: ' Rex ', species: ' Cachorro ', breed: ' SRD ', tutorId: 'tutor-1',
+modules/patients/src/__tests__/use-cases.test.ts:44:      name: 'Rex', species: 'Cachorro', breed: 'SRD', tutorId: 'tutor-1', externalId: undefined,
+modules/patients/src/types/index.ts:13:  tutorId?: string | null;
+modules/patients/src/types/index.ts:23:  tutorId: string | null;
+modules/patients/src/types/index.ts:5:  tutorId?: string | null;
+modules/privacy/src/application/contact-graph.ts:104:      .where(inArray(schema.patients.tutorId, linkedTutorIds));
+modules/privacy/src/application/contact-graph.ts:98:  const linkedTutorIds = unique([contact.tutorId]);
+modules/privacy/src/application/scoped-export.ts:166:    linked: { tutorIds: graph.linkedTutorIds, patientIds: graph.linkedPatientIds },
+modules/privacy/src/application/scoped-export.ts:49:  linked: { tutorIds: string[]; patientIds: string[] };
+modules/secretary-adapter/src/application/use-cases/invoke-secretary.use-case.ts:135:        tutorId: input.tutorId,
+modules/secretary-adapter/src/application/use-cases/invoke-secretary.use-case.ts:18:  tutorId?: string;
+modules/secretary-adapter/src/infrastructure/request-builder.ts:12:    tutorId?: string;
+modules/secretary-adapter/src/infrastructure/request-builder.ts:30:        tutorId: context.tutorId,
+modules/secretary-adapter/src/__tests__/invoke-secretary.integration.test.ts:138:            tutorId: 'tutor-123',
+modules/secretary-adapter/src/__tests__/invoke-secretary.integration.test.ts:181:      tutorId: 'tutor-123',
+modules/secretary-adapter/src/types.ts:14:      tutorId?: string;
+modules/tasks/src/application/use-cases/create-task.use-case.ts:10:  tutorId?: string;
+modules/tasks/src/application/use-cases/create-task.use-case.ts:48:        tutorId: input.tutorId,
+modules/tasks/src/presentation/http/task.controller.ts:122:            tutorId: { type: 'string' },
+modules/tasks/src/presentation/http/task.controller.ts:85:  tutorId?: string;
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:100:      db.select({ count: count() }).from(schema.contacts).where(eq(schema.contacts.tutorId, id)),
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:101:      db.select({ count: count() }).from(schema.tasks).where(eq(schema.tasks.tutorId, id)),
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:78:        .where(eq(schema.patients.tutorId, id))
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:83:        .where(eq(schema.contacts.tutorId, id)),
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:86:        .where(eq(schema.tasks.tutorId, id)),
+modules/tutors/src/infrastructure/repositories/tutor.repository.ts:99:      db.select({ count: count() }).from(schema.patients).where(eq(schema.patients.tutorId, id)),
+modules/tutors/src/__tests__/repository-structure.test.ts:10:    expect(repository).toContain('schema.contacts.tutorId');
+modules/tutors/src/__tests__/repository-structure.test.ts:11:    expect(repository).toContain('schema.patients.tutorId');
+modules/tutors/src/__tests__/repository-structure.test.ts:12:    expect(repository).toContain('schema.tasks.tutorId');
+packages/database/src/schema.ts:146:  tutorId: uuid('tutor_id').references(() => tutors.id),
+packages/database/src/schema.ts:161:  tutorIdx: index('idx_tasks_tutor').on(t.tutorId),
+packages/database/src/schema.ts:19:  tutorId: uuid('tutor_id').references(() => tutors.id),
+packages/database/src/schema.ts:46:  tutorId: uuid('tutor_id').references(() => tutors.id),
+packages/database/supabase/migrations/0001_chat_core.sql:22:	"tutor_id" uuid REFERENCES "public"."tutors"("id"),
+packages/database/supabase/migrations/0001_chat_core.sql:33:	"tutor_id" uuid,
+packages/database/supabase/migrations/0006_tasks_tutor_patient.sql:10:CREATE INDEX IF NOT EXISTS idx_tasks_tutor ON tasks(tutor_id);
+packages/database/supabase/migrations/0006_tasks_tutor_patient.sql:2:-- Description: Adiciona tutorId e patientId na tabela tasks
+packages/database/supabase/migrations/0006_tasks_tutor_patient.sql:4:-- Adicionar colunas tutorId e patientId
+packages/database/supabase/migrations/0006_tasks_tutor_patient.sql:6:ADD COLUMN IF NOT EXISTS tutor_id uuid REFERENCES tutors(id),
+packages/database/supabase/migrations/0013_security_correctness.sql:28:UPDATE contacts SET tutor_id = NULL WHERE tutor_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM tutors WHERE tutors.id = contacts.tutor_id);
+packages/database/supabase/migrations/0013_security_correctness.sql:35:  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'contacts_tutor_id_fkey' AND conrelid = 'contacts'::regclass) THEN
+packages/database/supabase/migrations/0013_security_correctness.sql:36:    ALTER TABLE contacts ADD CONSTRAINT contacts_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutors(id);
+
+# Total de linhas:
+113

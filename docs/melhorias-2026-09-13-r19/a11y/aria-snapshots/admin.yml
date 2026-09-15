@@ -1,0 +1,113 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - text: Governança operacional
+  - heading "Administração" [level=1]
+  - paragraph: Gerencie usuários, papéis, filas, times e dead-letters
+  - button "Novo usuário"
+  - group "Seções de administração":
+    - button "Usuários" [pressed]
+    - button "Papéis"
+    - button "Filas"
+    - button "Times"
+    - button "Dead-letter"
+  - strong: "Usuários:"
+  - text: Pessoas que acessam o sistema (atendentes, veterinários, recepcionistas). Cada usuário tem login, senha e permissões específicas por setor.
+  - region "Usuários":
+    - table:
+      - rowgroup:
+        - row "Nome Email Status Criado Setores Ações":
+          - columnheader "Nome"
+          - columnheader "Email"
+          - columnheader "Status"
+          - columnheader "Criado"
+          - columnheader "Setores"
+          - columnheader "Ações"
+      - rowgroup:
+        - row "AAA Admin aaa-admin@cvg.test Ativo 14/09/2026, 02:14 Setores Excluir usuário AAA Admin":
+          - cell "AAA Admin":
+            - strong: AAA Admin
+          - cell "aaa-admin@cvg.test"
+          - cell "Ativo"
+          - cell "14/09/2026, 02:14"
+          - cell "Setores":
+            - button "Setores"
+          - cell "Excluir usuário AAA Admin":
+            - button "Excluir usuário AAA Admin"
+        - row "AAA Agente A aaa-agente-a@cvg.test Ativo 14/09/2026, 02:14 Setores Excluir usuário AAA Agente A":
+          - cell "AAA Agente A":
+            - strong: AAA Agente A
+          - cell "aaa-agente-a@cvg.test"
+          - cell "Ativo"
+          - cell "14/09/2026, 02:14"
+          - cell "Setores":
+            - button "Setores"
+          - cell "Excluir usuário AAA Agente A":
+            - button "Excluir usuário AAA Agente A"
+        - row "AAA Agente B aaa-agente-b@cvg.test Ativo 14/09/2026, 02:14 Setores Excluir usuário AAA Agente B":
+          - cell "AAA Agente B":
+            - strong: AAA Agente B
+          - cell "aaa-agente-b@cvg.test"
+          - cell "Ativo"
+          - cell "14/09/2026, 02:14"
+          - cell "Setores":
+            - button "Setores"
+          - cell "Excluir usuário AAA Agente B":
+            - button "Excluir usuário AAA Agente B"
+        - row "AAA Sem Setor aaa-sem-setor@cvg.test Ativo 14/09/2026, 02:14 Setores Excluir usuário AAA Sem Setor":
+          - cell "AAA Sem Setor":
+            - strong: AAA Sem Setor
+          - cell "aaa-sem-setor@cvg.test"
+          - cell "Ativo"
+          - cell "14/09/2026, 02:14"
+          - cell "Setores":
+            - button "Setores"
+          - cell "Excluir usuário AAA Sem Setor":
+            - button "Excluir usuário AAA Sem Setor"

@@ -4,8 +4,6 @@
 #
 # Uso: docker compose -f docker-compose.staging.yml up -d --build
 # Depois: pnpm staging:smoke (valida MinIO real + ClamAV real + Collector real)
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15-alpine
@@ -36,12 +34,16 @@ services:
       retries: 20
 
   minio:
-    image: quay.io/minio/minio:latest
+    image: quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
+      # Local-only KMS secret so the S3-compatible smoke exercises the same
+      # AES256 server-side encryption contract used by the media pipeline.
+      MINIO_KMS_SECRET_KEY: "cvg-staging-key:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+      MINIO_KMS_AUTO_ENCRYPTION: "on"
     ports:
       - "127.0.0.1:9100:9000"
       - "127.0.0.1:9101:9001"
@@ -73,7 +75,9 @@ services:
     ports:
       - "127.0.0.1:4318:4318"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:13133/ || exit 1"]
+      # The contrib image is distroless; there is no /bin/sh, wget or curl.
+      # Validate the loaded config from the same binary instead of a shell probe.
+      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol/otelcol-config.yaml"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -81,8 +85,23 @@ services:
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
+    environment:
+      METRICS_TOKEN: staging-metrics-token
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        umask 077
+        printf '%s' "$$METRICS_TOKEN" > /tmp/metrics_token
+        exec /bin/prometheus \
+          --config.file=/etc/prometheus/prometheus.yml \
+          --storage.tsdb.path=/prometheus
     volumes:
       - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheusdata:/prometheus
+    tmpfs:
+      - /tmp
     ports:
       - "127.0.0.1:9090:9090"
 
@@ -131,6 +150,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
       REDIS_URL: redis://redis:6379
+      REDIS_REQUIRED: "true"
       PORT: 3000
       JWT_SECRET: staging-jwt-only-not-secret
       WEBHOOK_SECRET: staging-webhook-only-not-secret
@@ -165,7 +185,7 @@ services:
       otel-collector:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/readiness"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -179,12 +199,39 @@ services:
       DATABASE_URL: postgresql://connect_desk:staging_dev_only@postgres:5432/connect_desk_db
       REDIS_URL: redis://redis:6379
       WORKER_HEALTH_PORT: 9090
+      METRICS_TOKEN: staging-metrics-token
       OTEL_ENABLED: "true"
       OTEL_SERVICE_NAME: message-worker
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+      MEDIA_STORAGE_DRIVER: s3
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: cvg-media
+      S3_ACCESS_KEY_ID: minioadmin
+      S3_SECRET_ACCESS_KEY: minioadmin
+      S3_FORCE_PATH_STYLE: "true"
+      MEDIA_MAX_BYTES: 16777216
+      MEDIA_REQUIRE_SCAN: all
+      MEDIA_PIPELINE_ENABLED: "true"
+      MALWARE_SCANNER: clamav
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: "3310"
+      MEDIA_RECOVERY_BATCH_SIZE: 50
+      MEDIA_RECOVERY_LEASE_SECONDS: 120
+      MEDIA_RECOVERY_MAX_ATTEMPTS: 8
+      MEDIA_RECOVERY_BACKOFF_BASE_MS: 1000
+      MEDIA_RECOVERY_BACKOFF_MAX_MS: 300000
     depends_on:
       db-init:
         condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
       otel-collector:
         condition: service_healthy
     restart: unless-stopped
@@ -200,6 +247,7 @@ services:
       DESK_API_URL: http://desk-api:3000
       REALTIME_PORT: 8080
       INTERNAL_EVENTS_SECRET: staging-internal-events-only
+      METRICS_TOKEN: staging-metrics-token
       OTEL_ENABLED: "true"
       OTEL_SERVICE_NAME: realtime-service
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
@@ -227,6 +275,7 @@ services:
 volumes:
   pgdata:
   miniodata:
+  prometheusdata:
 
 networks:
   default:

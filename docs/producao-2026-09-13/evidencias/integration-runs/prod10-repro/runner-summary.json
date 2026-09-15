@@ -1,0 +1,30 @@
+{
+  "runId": "prod10-repro",
+  "workerIndex": 24,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58832/cvg_aaa_prod10_repro_w24",
+  "redisUrl": "redis://127.0.0.1:56920",
+  "startedAt": "2026-09-13T16:49:05.372Z",
+  "command": "pnpm exec tsx docs/producao-2026-09-13/evidencias/prod-10/repro-antes.ts",
+  "steps": [
+    {
+      "label": "db:types",
+      "status": 0
+    },
+    {
+      "label": "db:migrate",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n\n"
+    },
+    {
+      "label": "db:seed",
+      "status": 0,
+      "output": "\n> @cvg/database@0.0.0 db:seed /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/seed.ts\n\nStarting seed...\nRole already exists: Admin\nRole already exists: Receptionist\nRole already exists: Veterinarian\nRole already exists: Manager\nPermission already exists: chat:read\nPermission already exists: chat:write\nPermission already exists: chat:delete\nPermission already exists: tasks:read\nPermission already exists: tasks:write\nPermission already exists: tasks:delete\nPermission already exists: notes:read\nPermission already exists: notes:write\nPermission already exists: notes:delete\nPermission already exists: alerts:read\nPermission already exists: alerts:write\nPermission already exists: alerts:delete\nPermission already exists: dashboard:read\nPermission already exists: admin:read\nPermission already exists: admin:write\nCreated permission: audit:read\nRole Admin: 15 associações de permissão garantidas\nRole Receptionist: 8 associações de permissão garantidas\nRole Veterinarian: 9 associações de permissão garantidas\nRole Manager: 9 associações de permissão garantidas\nCreated admin user: admin@cvg.com\nAssigned Admin role to user\nSeed completed!\n\n"
+    },
+    {
+      "label": "command",
+      "status": 0,
+      "output": "[deliverOutbound] Mensagem aceita pelo gateway: gw-1\n{\n  \"generatedAt\": \"2026-09-13T16:49:01.347Z\",\n  \"runId\": \"prod10-repro\",\n  \"workerIndex\": \"24\",\n  \"database\": \"postgresql://***@127.0.0.1:58832/cvg_aaa_prod10_repro_w24\",\n  \"scenarios\": {\n    \"A_webhook_sincrono\": {\n      \"description\": \"Secretary lenta (3000ms) no caminho do webhook\",\n      \"isOk\": true,\n      \"elapsedMs\": 3364,\n      \"secretaryDelayMs\": 3000,\n      \"gatewaySends\": 1,\n      \"outboundReplies\": 1,\n      \"defect\": true\n    },\n    \"B_duplicata_nao_recupera_invocacao\": {\n      \"description\": \"1ª chamada falha na IA; reenvio do mesmo messageId com IA disponível\",\n      \"firstIsOk\": true,\n      \"firstSecretaryCalls\": 1,\n      \"duplicateIsOk\": true,\n      \"duplicateSecretaryCalls\": 0,\n      \"persistedMessages\": 1,\n      \"outboundRepliesForB\": 0,\n      \"defect\": true\n    },\n    \"C_worker_apenas_loga\": {\n      \"description\": \"handler real do worker para o evento durável do inbound\",\n      \"handlerReturn\": null,\n      \"invocationStateRows\": 0,\n      \"defect\": true\n    }\n  },\n  \"verdict\": \"DEFECT_REPRODUCED\"\n}\n\n"
+    }
+  ],
+  "exitCode": 0
+}

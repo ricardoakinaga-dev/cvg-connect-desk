@@ -1,0 +1,98 @@
+[
+  {
+    "route": "login",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "inbox",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "contacts",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "tutors",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "patients",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "kanban",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "tasks",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "notes",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "alerts",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "dashboard",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "sectors",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "labels",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "contact-groups",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "admin",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "audit",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  },
+  {
+    "route": "settings",
+    "reduced": true,
+    "scrollBehavior": "auto",
+    "offenders": []
+  }
+]

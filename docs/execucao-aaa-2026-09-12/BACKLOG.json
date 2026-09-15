@@ -1,0 +1,3057 @@
+{
+  "schema": "cvg-aaa-planning-v1",
+  "version": 1,
+  "kind": "planning_catalog_not_runtime_ledger",
+  "created_at": "2026-09-12",
+  "baseline_revision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "audit_path": "docs/auditorias/2026-09-12/RELATORIO.md",
+  "audit_sha256": "e72652f18547f59ccb176ed993dde12138dbfb8a68f84b45f4984cd4c7930571",
+  "scope": "Plano executivo, roadmap, backlog e pacotes de execução futuros. Nenhuma tarefa de produto foi implementada por este catálogo.",
+  "status_policy": "PLANNED neste catálogo; progresso futuro pertence a runtime/ com evidência. Dependência satisfeita exige revisão e integração, não edição manual desta lista.",
+  "max_total_agents": 4,
+  "suggested_builder_slots": 2,
+  "reserved_review_slots": 1,
+  "areas": [
+    {
+      "id": 1,
+      "name": "Arquitetura e modularidade",
+      "baseline_score": 65,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-02",
+        "AAA-14",
+        "AAA-16",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Autenticação e sessões",
+      "baseline_score": 45,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-03",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Autorização e isolamento por setor",
+      "baseline_score": 25,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-04",
+        "AAA-05",
+        "AAA-19",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "API, validação e proteção de webhooks",
+      "baseline_score": 75,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-04",
+        "AAA-09",
+        "AAA-10",
+        "AAA-23",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Banco de dados e integridade",
+      "baseline_score": 60,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-07",
+        "AAA-08",
+        "AAA-11",
+        "AAA-12",
+        "AAA-17",
+        "AAA-24",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Eventos, filas e idempotência",
+      "baseline_score": 45,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-07",
+        "AAA-08",
+        "AAA-12",
+        "AAA-25",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Integrações Gateway e Secretary",
+      "baseline_score": 65,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-02",
+        "AAA-08",
+        "AAA-12",
+        "AAA-23",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Atualizações em tempo real",
+      "baseline_score": 35,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-03",
+        "AAA-05",
+        "AAA-06",
+        "AAA-23",
+        "AAA-25",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Frontend e fluxos operacionais",
+      "baseline_score": 70,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-11",
+        "AAA-13",
+        "AAA-20",
+        "AAA-21",
+        "AAA-22",
+        "AAA-28",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Acessibilidade técnica",
+      "baseline_score": 65,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-20",
+        "AAA-21",
+        "AAA-22",
+        "AAA-28",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Anexos e segurança de mídia",
+      "baseline_score": 45,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-10",
+        "AAA-13",
+        "AAA-23",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Desempenho e escalabilidade",
+      "baseline_score": 50,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-07",
+        "AAA-11",
+        "AAA-25",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Observabilidade e disponibilidade",
+      "baseline_score": 60,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-09",
+        "AAA-18",
+        "AAA-25",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Testes e evidência de qualidade",
+      "baseline_score": 65,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-00",
+        "AAA-14",
+        "AAA-16",
+        "AAA-23",
+        "AAA-26",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Build, CI e implantação",
+      "baseline_score": 30,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-02",
+        "AAA-06",
+        "AAA-09",
+        "AAA-14",
+        "AAA-16",
+        "AAA-26",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Dependências e cadeia de fornecimento",
+      "baseline_score": 40,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-15",
+        "AAA-26",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Privacidade e rastreabilidade",
+      "baseline_score": 50,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-01",
+        "AAA-17",
+        "AAA-19",
+        "AAA-28"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Documentação e recuperação",
+      "baseline_score": 65,
+      "target_minimum": 90,
+      "task_ids": [
+        "AAA-00",
+        "AAA-24",
+        "AAA-27",
+        "AAA-28"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "AAA-00",
+      "title": "Revalidar baseline e preparar infraestrutura isolada",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        14,
+        18
+      ],
+      "dependencies": [],
+      "phase": 0,
+      "owner_role": "lead + QA infraestrutura",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "e2e/support",
+        "docker-compose.smoke.yml",
+        "docs/execucao-aaa-2026-09-12/runtime",
+        "playwright.aaa.config.ts",
+        "packages/database/src/schema.d.ts",
+        "packages/database/src/schema.d.ts.map"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "compose-topology",
+        "isolated-db:AAA-00",
+        "ports:AAA-00",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C00"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Registrar commit, worktree e hashes; preservar relatório e runs gauntlet anteriores.",
+        "Descobrir PostgreSQL/Redis local dedicado ou CI efêmero sem depender exclusivamente de Docker; recusar banco sem marcador de teste.",
+        "Produzir fixtures sintéticas, portas exclusivas por worker, comando de teardown restrito e inventário de checks existentes.",
+        "Fixar dataset e perfil de benchmark e demonstrar falha deliberada do harness; nada de green por skip.",
+        "Criar playwright.aaa.config.ts para e2e/aaa em stack isolada; manter smoke original independente e documentar invocação explícita dos dois conjuntos.",
+        "Inventariar serviços exigidos em cada gate e provisionar MinIO/ClamAV/OTel isolados antes dos cartões que exigem sua prova; nenhuma dependência posterior pode ser usada como pré-requisito implícito de aceite anterior."
+      ],
+      "checks": [
+        {
+          "command": "git status --short",
+          "availability": "EXISTING",
+          "environment": "read-only"
+        },
+        {
+          "command": "pnpm --filter @cvg/database db:types",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Registrar commit, worktree e hashes; preservar relatório e runs gauntlet anteriores."
+    },
+    {
+      "id": "AAA-01",
+      "title": "Congelar contratos e decisões de fronteira",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        9,
+        11,
+        17
+      ],
+      "dependencies": [
+        "AAA-00"
+      ],
+      "phase": 0,
+      "owner_role": "lead arquitetura/produto",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/DECISOES.md"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-01",
+        "ports:AAA-01"
+      ],
+      "contracts": [
+        "C00",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Definir esquema de sessão, identidade, acesso por conversa e entrega realtime sem conteúdo global.",
+        "Definir contratos transacionais e de lease/ACK, idempotência, paginação, erro e upload.",
+        "Resolver D01–D04 ou registrar tarefa dependente como bloqueada; decisões de retenção não são presumidas pelo agente.",
+        "Versionar contratos e consumidores; alterar contrato invalida dependentes até revisão.",
+        "Entregar tabela para C00–C09: produtor/consumidores, schema/exemplo positivo/exemplo negativo, política de erro, teste de consumidor, compatibilidade, versão e decisão pendente. Revisor deve testar a coerência semântica, não só plan.py validate."
+      ],
+      "checks": [
+        {
+          "command": "python3 docs/execucao-aaa-2026-09-12/plan.py validate",
+          "availability": "EXISTING",
+          "environment": "read-only"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Definir esquema de sessão, identidade, acesso por conversa e entrega realtime sem conteúdo global."
+    },
+    {
+      "id": "AAA-02",
+      "title": "Eliminar o ciclo Chat/Gateway",
+      "status": "PLANNED",
+      "findings": [
+        "A04"
+      ],
+      "areas": [
+        1,
+        7,
+        15
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 1,
+      "owner_role": "backend arquitetura",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "modules/chat",
+        "modules/gateway-adapter",
+        "packages/messaging-contracts",
+        "pnpm-lock.yaml",
+        "apps/desk-api/src/app.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "dependency-graph",
+        "isolated-db:AAA-02",
+        "ports:AAA-02"
+      ],
+      "contracts": [
+        "C02",
+        "C03"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Remover dependências estáticas e dinâmicas bidirecionais preservando receive/send/handoff.",
+        "Manter adapters dependentes de portas/contratos; composição explícita sem mover o ciclo para outro pacote.",
+        "Turbo constrói DAG sem erro; contratos e cenários do gateway continuam passando."
+      ],
+      "checks": [
+        {
+          "command": "pnpm exec turbo run build --dry=json",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm --filter @cvg/gateway-adapter test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Remover dependências estáticas e dinâmicas bidirecionais preservando receive/send/handoff."
+    },
+    {
+      "id": "AAA-03",
+      "title": "Unificar validação e renovação de sessões",
+      "status": "PLANNED",
+      "findings": [
+        "A01"
+      ],
+      "areas": [
+        2,
+        8
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 1,
+      "owner_role": "backend segurança",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "packages/auth",
+        "apps/desk-api/src/__tests__/aaa-03.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-03",
+        "ports:AAA-03"
+      ],
+      "contracts": [
+        "C01"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Login, middleware, me, rotate e logout-all compartilham regras de validade.",
+        "Expiração normal/absoluta, idle, revogação e usuário desativado negados; rotação preserva deadline absoluto.",
+        "Duas rotações simultâneas do mesmo token não criam duas sessões ativas; logout/inatividade não ressuscitam token."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-03.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/auth test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Login, middleware, me, rotate e logout-all compartilham regras de validade."
+    },
+    {
+      "id": "AAA-04",
+      "title": "Aplicar autorização por recurso em todas rotas relacionadas",
+      "status": "PLANNED",
+      "findings": [
+        "A02"
+      ],
+      "areas": [
+        3,
+        4
+      ],
+      "dependencies": [
+        "AAA-02",
+        "AAA-03"
+      ],
+      "phase": 1,
+      "owner_role": "backend autorização",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "packages/auth",
+        "modules/chat/src/presentation",
+        "modules/chat/src/application/use-cases",
+        "modules/gateway-adapter/src/presentation/http/gateway.controller.ts",
+        "modules/notes/src/presentation",
+        "modules/tasks/src/presentation",
+        "modules/alerts/src/presentation",
+        "modules/contacts/src/presentation",
+        "apps/desk-api/src/__tests__/aaa-04.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-04",
+        "ports:AAA-04"
+      ],
+      "contracts": [
+        "C01",
+        "C02"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Inventariar todas rotas que recebem IDs de conversa/recurso e aplicar permissão + membership no servidor.",
+        "A/B/admin/sem-role/sem-setor: listar, abrir, enviar, marcar lida e acessar recursos relacionados não vazam dados.",
+        "Retirada de membership e role invalida decisões em sessão ativa; resposta nega sem revelar conteúdo."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-04.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sector-authz.integration.test.ts src/__tests__/dynamic-permissions.integration.test.ts",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Inventariar todas rotas que recebem IDs de conversa/recurso e aplicar permissão + membership no servidor."
+    },
+    {
+      "id": "AAA-05",
+      "title": "Isolar canais e destinatários realtime",
+      "status": "PLANNED",
+      "findings": [
+        "A03"
+      ],
+      "areas": [
+        3,
+        8
+      ],
+      "dependencies": [
+        "AAA-04"
+      ],
+      "phase": 1,
+      "owner_role": "backend realtime",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "apps/realtime-service",
+        "packages/realtime",
+        "apps/desk-api/src/internal-auth.ts",
+        "apps/desk-api/src/app.ts",
+        "apps/desk-api/src/__tests__/aaa-05.integration.test.ts",
+        "apps/realtime-service/src/__tests__/aaa-05-isolation.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-05",
+        "ports:AAA-05"
+      ],
+      "contracts": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Remover payloads sensíveis do global; autorizar subscription e envio por destinatário, não só handshake.",
+        "Revalidar sessão e membership durante conexão; limitar payload/inscrições e fechar em falha de autorização.",
+        "Sockets reais de setores A/B comprovam isolamento, reconexão, revogação e três réplicas sem vazamento.",
+        "Retirada de acesso interrompe entrega em no máximo 5 s no perfil de C00; deadline inclui cache/revalidação, não só periodicidade de timer."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/aaa-05-isolation.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/realtime-auth-behavioral.test.ts",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Remover payloads sensíveis do global; autorizar subscription e envio por destinatário, não só handshake."
+    },
+    {
+      "id": "AAA-06",
+      "title": "Corrigir endereço de realtime na implantação web",
+      "status": "PLANNED",
+      "findings": [
+        "A05"
+      ],
+      "areas": [
+        8,
+        15
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 1,
+      "owner_role": "frontend/infra",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "apps/desk-web/Dockerfile",
+        "apps/desk-web/nginx.conf",
+        "apps/desk-web/src/lib/realtime.ts",
+        "apps/desk-web/src/__tests__/realtime.test.ts",
+        "docker-compose.yml",
+        "e2e/smoke/aaa-06-remote.spec.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "compose-topology",
+        "isolated-db:AAA-06",
+        "ports:AAA-06"
+      ],
+      "contracts": [
+        "C02",
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Imagem padrão usa origem pública correta, /ws e ws/wss conforme protocolo.",
+        "Navegador remoto em HTTPS conecta sem localhost nem mixed content; reconnect mantém fluxo.",
+        "Override explícito funciona em dev; tokens nunca aparecem em URL/log do fluxo novo."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/realtime.test.ts",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm exec playwright test e2e/smoke/aaa-06-remote.spec.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Imagem padrão usa origem pública correta, /ws e ws/wss conforme protocolo."
+    },
+    {
+      "id": "AAA-07",
+      "title": "Implementar lease e ACK cercado por proprietário",
+      "status": "PLANNED",
+      "findings": [
+        "A06"
+      ],
+      "areas": [
+        5,
+        6,
+        12
+      ],
+      "dependencies": [
+        "AAA-02",
+        "AAA-01"
+      ],
+      "phase": 2,
+      "owner_role": "backend eventos/dados",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "packages/events",
+        "packages/database/src/schema.ts",
+        "packages/database/supabase/migrations",
+        "apps/message-worker",
+        "apps/realtime-service/src/index.ts",
+        "apps/desk-api/src/app.ts",
+        "packages/events/src/__tests__/aaa-07-lease-real.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-07",
+        "ports:AAA-07",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C03"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Claim atômico por consumidor com lease_owner, lease_until e fencing; stale ACK não finaliza lease novo.",
+        "Worker, realtime e HTTP usam mesma semântica de claim; limitar/validar since antes de reservar.",
+        "Dois workers do mesmo consumidor não processam lease simultâneo; queda recupera; consumidores diferentes permanecem independentes."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/events exec vitest run src/__tests__/aaa-07-lease-real.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/events test:real-db",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Claim atômico por consumidor com lease_owner, lease_until e fencing; stale ACK não finaliza lease novo."
+    },
+    {
+      "id": "AAA-08",
+      "title": "Persistir mensagem, estado e outbox atomicamente",
+      "status": "PLANNED",
+      "findings": [
+        "A07"
+      ],
+      "areas": [
+        5,
+        6,
+        7
+      ],
+      "dependencies": [
+        "AAA-07"
+      ],
+      "phase": 2,
+      "owner_role": "backend transações",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "modules/chat",
+        "packages/events/src/outbox-publisher.ts",
+        "packages/events/src/realtime-bus.ts",
+        "packages/database",
+        "modules/secretary-adapter",
+        "modules/chat/src/__tests__/aaa-08-atomicity.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-08",
+        "ports:AAA-08",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C03"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Mesmo executor transacional grava mensagem, contador/estado e intenção; hint Redis somente após commit.",
+        "Retry após crash não perde evento; eventos têm identidade estável e não multiplicam efeitos.",
+        "Falhas antes/depois do commit e indisponibilidade Redis/Secretary preservam atendimento humano e recuperação."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/chat exec vitest run src/__tests__/aaa-08-atomicity.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/chat exec vitest run src/__tests__/receive-inbound-idempotency.test.ts",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Mesmo executor transacional grava mensagem, contador/estado e intenção; hint Redis somente após commit."
+    },
+    {
+      "id": "AAA-09",
+      "title": "Corrigir readiness e dependências operacionais",
+      "status": "PLANNED",
+      "findings": [
+        "A08"
+      ],
+      "areas": [
+        4,
+        13,
+        15
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 1,
+      "owner_role": "backend observabilidade",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "apps/desk-api/src/app.ts",
+        "apps/desk-api/src/runtime-config.ts",
+        "apps/desk-api/src/__tests__/aaa-09.integration.test.ts",
+        "packages/database/src/check-migrations.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-09",
+        "ports:AAA-09"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "DB indisponível ou schema incompatível retorna 503; liveness permanece separado.",
+        "Schema esperado é comparado ao ledger de migrations; Redis autenticado/TLS ou falha é tratado corretamente.",
+        "Dependências opcionais degradam explicitamente, sem vazar detalhes sensíveis de conexão."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-09.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "DB indisponível ou schema incompatível retorna 503; liveness permanece separado."
+    },
+    {
+      "id": "AAA-10",
+      "title": "Unificar contrato e segurança de anexos",
+      "status": "PLANNED",
+      "findings": [
+        "A09"
+      ],
+      "areas": [
+        4,
+        11
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 2,
+      "owner_role": "backend mídia",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "packages/media",
+        "packages/shared/src/media-policy.ts",
+        "modules/chat/src/application/use-cases/send-outbound-message.use-case.ts",
+        "modules/chat/src/presentation",
+        "apps/desk-api/src/app.ts",
+        "apps/desk-web/nginx.conf",
+        "docker-compose.yml",
+        "apps/desk-api/src/__tests__/aaa-10.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "compose-topology",
+        "isolated-db:AAA-10",
+        "ports:AAA-10"
+      ],
+      "contracts": [
+        "C05"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Arquivo 16 MiB passa por transporte definido; excesso falha com 413 e contrato de erro recuperável.",
+        "Documentos só podem ser entregues após CLEAN; scanner ausente/timeout/infectado bloqueia e preserva quarentena.",
+        "Validar tamanho real, MIME/magic bytes, URL/destino, redirecionamentos e armazenamento privado.",
+        "MinIO e ClamAV reais com clean/EICAR/timeout; configuração implantada habilita a política definida."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/media test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-10.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Arquivo 16 MiB passa por transporte definido; excesso falha com 413 e contrato de erro recuperável."
+    },
+    {
+      "id": "AAA-11",
+      "title": "Paginar conversas e selecionar últimas mensagens no banco",
+      "status": "PLANNED",
+      "findings": [
+        "A10"
+      ],
+      "areas": [
+        5,
+        9,
+        12
+      ],
+      "dependencies": [
+        "AAA-04"
+      ],
+      "phase": 2,
+      "owner_role": "backend consultas",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "modules/chat/src/infrastructure/repositories",
+        "modules/chat/src/presentation/http/outbound.controller.ts",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/aaa-11.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-11",
+        "ports:AAA-11",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C02",
+        "C06"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Paginação por cursor estável com limite máximo; frontend recebe contrato versionado compatível.",
+        "Última mensagem e última inbound usam SQL/índice apropriado sem transferir histórico completo.",
+        "Fixture com empates de timestamp, conversa sem mensagens e inserção concorrente não repete/perde página nem expõe outro setor."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-11.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "node infra/scripts/query-performance.mjs",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Paginação por cursor estável com limite máximo; frontend recebe contrato versionado compatível."
+    },
+    {
+      "id": "AAA-12",
+      "title": "Garantir idempotência transacional no envio",
+      "status": "PLANNED",
+      "findings": [
+        "A11"
+      ],
+      "areas": [
+        5,
+        6,
+        7
+      ],
+      "dependencies": [
+        "AAA-08",
+        "AAA-04"
+      ],
+      "phase": 2,
+      "owner_role": "backend mensagens",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "modules/chat",
+        "modules/gateway-adapter",
+        "packages/database/src/schema.ts",
+        "packages/database/supabase/migrations",
+        "apps/desk-api/src/__tests__/aaa-12.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-12",
+        "ports:AAA-12",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C03",
+        "C04"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Chave com escopo/TTL definidos e hash de payload; payload divergente com mesma chave retorna conflito.",
+        "Mensagem e delivery são atômicos; corrida perde sem linha órfã e sem segundo envio.",
+        "Crash após aceite do provider exige reconciliação; nunca prometer exactly-once externo sem contrato do provider."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-12.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/outbound-idempotency.integration.test.ts",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Chave com escopo/TTL definidos e hash de payload; payload divergente com mesma chave retorna conflito."
+    },
+    {
+      "id": "AAA-13",
+      "title": "Conectar composer ao contrato de envio e anexos",
+      "status": "PLANNED",
+      "findings": [
+        "A09",
+        "A11"
+      ],
+      "areas": [
+        9,
+        11
+      ],
+      "dependencies": [
+        "AAA-10",
+        "AAA-11",
+        "AAA-12"
+      ],
+      "phase": 3,
+      "owner_role": "frontend fluxos",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/pages/Inbox.css",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/__tests__/aaa-13.test.tsx",
+        "apps/desk-web/src/__tests__/aaa-13.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-13",
+        "ports:AAA-13"
+      ],
+      "contracts": [
+        "C04",
+        "C05",
+        "C06"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Uma chave por intenção; duplo clique/retry usa mesma chave; envio tem pending/sent/failed/reconcile.",
+        "Erro visível e acessível preserva rascunho/anexo; troca de conversa durante resposta não corrompe estado.",
+        "Histórico paginado, upload no limite e recuperação de offline funcionam sem controles fictícios."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/aaa-13.test.tsx",
+          "availability": "TO_CREATE",
+          "environment": "browser-mocked"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/inbox.test.tsx",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Uma chave por intenção; duplo clique/retry usa mesma chave; envio tem pending/sent/failed/reconcile."
+    },
+    {
+      "id": "AAA-14",
+      "title": "Tornar builds e gates reproduzíveis",
+      "status": "PLANNED",
+      "findings": [
+        "A12"
+      ],
+      "areas": [
+        1,
+        14,
+        15
+      ],
+      "dependencies": [
+        "AAA-02",
+        "AAA-15",
+        "AAA-06"
+      ],
+      "phase": 2,
+      "owner_role": "plataforma build",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "turbo.json",
+        "tsconfig.json",
+        "eslint.config.js",
+        "apps",
+        "packages",
+        "modules",
+        ".github/workflows/ci.yml",
+        "services/db-init/Dockerfile"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": true,
+      "resource_locks": [
+        "dependency-graph",
+        "isolated-db:AAA-14",
+        "ports:AAA-14"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Cada pacote executa build/lint/typecheck real quando aplicável; nenhuma tarefa echo simula controle.",
+        "Remover tsc || true e passWithNoTests de suítes obrigatórias; avisos seguem uma política única documentada.",
+        "Todos Dockerfiles usam lock congelado e runtime suportado definido; prod resolve as versões auditadas.",
+        "Mudanças abrangentes só nos manifests/config/Dockerfiles; não corrigir lógica de domínio neste cartão."
+      ],
+      "checks": [
+        {
+          "command": "pnpm install --frozen-lockfile",
+          "availability": "EXISTING",
+          "environment": "isolated checkout"
+        },
+        {
+          "command": "pnpm exec turbo run lint typecheck build --dry=json",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Cada pacote executa build/lint/typecheck real quando aplicável; nenhuma tarefa echo simula controle."
+    },
+    {
+      "id": "AAA-15",
+      "title": "Atualizar dependências e triar alertas",
+      "status": "PLANNED",
+      "findings": [
+        "A13"
+      ],
+      "areas": [
+        16
+      ],
+      "dependencies": [
+        "AAA-02"
+      ],
+      "phase": 1,
+      "owner_role": "plataforma supply chain",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "apps",
+        "packages",
+        "modules"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": true,
+      "resource_locks": [
+        "dependency-graph",
+        "isolated-db:AAA-15",
+        "ports:AAA-15"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Triar caminhos runtime/dev e configuração atingida para cada alerta, registrar correção/exceção com expiração.",
+        "Nenhum Critical/High explorável ou sem triagem no candidato; objetivo zero High/Critical nas dependências implantadas.",
+        "Atualizar por grupos compatíveis, registrar changelog e testar contratos afetados; não suprimir scanner.",
+        "Ownership amplo limita-se a manifests e lockfile; qualquer mudança de fonte exige redistribuição pelo lead."
+      ],
+      "checks": [
+        {
+          "command": "pnpm audit --json",
+          "availability": "EXISTING",
+          "environment": "network"
+        },
+        {
+          "command": "pnpm audit --prod --json",
+          "availability": "EXISTING",
+          "environment": "network"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Triar caminhos runtime/dev e configuração atingida para cada alerta, registrar correção/exceção com expiração."
+    },
+    {
+      "id": "AAA-16",
+      "title": "Eliminar dívida de tipos e lint sem enfraquecer regras",
+      "status": "PLANNED",
+      "findings": [
+        "A12"
+      ],
+      "areas": [
+        1,
+        14,
+        15
+      ],
+      "dependencies": [
+        "AAA-14"
+      ],
+      "phase": 2,
+      "owner_role": "integrador TypeScript",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "apps",
+        "packages",
+        "modules",
+        "global.d.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": true,
+      "resource_locks": [
+        "isolated-db:AAA-16",
+        "ports:AAA-16"
+      ],
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Zerar diagnósticos reais preservando runtime: nenhum ts-nocheck/any/cast artificial para esconder erro.",
+        "Corrigir causas em contratos/deps duplicadas antes de sintoma; manter teste negativo para alterações semânticas.",
+        "pnpm lint/typecheck/build passam no checkout limpo e em todos serviços; runtime inicia nas imagens."
+      ],
+      "checks": [
+        {
+          "command": "pnpm lint",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm typecheck",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm build",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Zerar diagnósticos reais preservando runtime: nenhum ts-nocheck/any/cast artificial para esconder erro."
+    },
+    {
+      "id": "AAA-17",
+      "title": "Cobrir privacidade, retenção e cópias de dados",
+      "status": "PLANNED",
+      "findings": [
+        "A14"
+      ],
+      "areas": [
+        5,
+        17
+      ],
+      "dependencies": [
+        "AAA-01",
+        "AAA-08",
+        "AAA-12"
+      ],
+      "phase": 3,
+      "owner_role": "backend privacidade",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "modules/privacy",
+        "modules/audit",
+        "modules/chat/src/application",
+        "modules/notes/src/application",
+        "packages/database",
+        "docs/LGPD_DATA_SUBJECT_REQUESTS.md",
+        "apps/desk-api/src/__tests__/aaa-17.integration.test.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-17",
+        "ports:AAA-17",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C07"
+      ],
+      "decision_gates": [
+        "D02"
+      ],
+      "acceptance": [
+        "Inventariar contato/conversa/mensagem/notas/outbox/DLQ/mídia/audit/backup e tutores relacionados.",
+        "Política D02 aprovada governa manter/pseudonimizar/apagar; anonimização parcial não é anunciada como eliminação completa.",
+        "Operação transacional/idempotente ou retomável com checkpoint, auditoria minimizada e reconciliação de falha.",
+        "Exportação por escopo autorizado e teste de reidentificação residual sobre fixture, sem usar dados reais."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/privacy test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/privacy-dsar.integration.test.ts",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-17.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Inventariar contato/conversa/mensagem/notas/outbox/DLQ/mídia/audit/backup e tutores relacionados."
+    },
+    {
+      "id": "AAA-18",
+      "title": "Limitar cardinalidade e proteger métricas",
+      "status": "PLANNED",
+      "findings": [
+        "A15"
+      ],
+      "areas": [
+        13
+      ],
+      "dependencies": [
+        "AAA-09"
+      ],
+      "phase": 2,
+      "owner_role": "backend métricas",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "apps/desk-api/src/app.ts",
+        "packages/shared/src/metrics.ts",
+        "apps/desk-api/src/__tests__/aaa-18.integration.test.ts",
+        "docker-compose.yml",
+        "infra/prometheus"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "compose-topology",
+        "isolated-db:AAA-18",
+        "ports:AAA-18"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Rotas não registradas usam label fixo; 10 mil URLs distintas não geram uma série por URL.",
+        "Exposição exige token/rede definida em produção; token chega ao container sem ser logado.",
+        "Monitores continuam coletando; histogramas e counters não vazam payload/PII."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-18.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/shared test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Rotas não registradas usam label fixo; 10 mil URLs distintas não geram uma série por URL."
+    },
+    {
+      "id": "AAA-19",
+      "title": "Vincular autoria de notas à identidade autenticada",
+      "status": "PLANNED",
+      "findings": [
+        "A16"
+      ],
+      "areas": [
+        3,
+        17
+      ],
+      "dependencies": [
+        "AAA-04"
+      ],
+      "phase": 1,
+      "owner_role": "backend notas",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "modules/notes",
+        "apps/desk-api/src/__tests__/aaa-19.integration.test.ts",
+        "apps/desk-web/src/lib/api.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-19",
+        "ports:AAA-19"
+      ],
+      "contracts": [
+        "C01",
+        "C02"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Autor padrão vem da sessão e ignora/rejeita spoof de authorId.",
+        "Delegação só existe se explicitamente definida e autorizada; histórico preserva ator e autor de forma verdadeira.",
+        "Teste HTTP A escreve tentando atribuir a B e prova que autoria não é falsificada; leitura respeita recurso."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/aaa-19.integration.test.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm --filter @cvg/notes test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Autor padrão vem da sessão e ignora/rejeita spoof de authorId."
+    },
+    {
+      "id": "AAA-20",
+      "title": "Consolidar design system operacional CVG",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-01"
+      ],
+      "phase": 2,
+      "owner_role": "frontend design system",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "apps/desk-web/src/index.css",
+        "apps/desk-web/src/premium-surfaces.css",
+        "apps/desk-web/src/components",
+        "apps/desk-web/src/hooks",
+        "docs/design",
+        "apps/desk-web/src/pages/EntityPages.css"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-20",
+        "ports:AAA-20"
+      ],
+      "contracts": [
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Preservar marca/assets existentes; inventariar tokens, componentes, estados e regras de densidade sem mudar contratos backend.",
+        "Tokens semânticos, tipografia e primitivas documentadas cobrem foco, disabled, loading, error e status sem depender de cor.",
+        "Shell 375/390/768/1024/1440 sem overflow global; navegação e foco em painel mobile funcionam.",
+        "Tokens/assets têm procedência e orçamento; geração externa de imagens é opcional e não condição inventada de aceite."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web build",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Preservar marca/assets existentes; inventariar tokens, componentes, estados e regras de densidade sem mudar contratos backend."
+    },
+    {
+      "id": "AAA-21",
+      "title": "Polir Login, Inbox, Dashboard e integração do cliente",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-13",
+        "AAA-20",
+        "AAA-06",
+        "AAA-19"
+      ],
+      "phase": 3,
+      "owner_role": "frontend superfícies",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "apps/desk-web/src/pages/Login.tsx",
+        "apps/desk-web/src/pages/Login.css",
+        "apps/desk-web/src/pages/Inbox.tsx",
+        "apps/desk-web/src/pages/Inbox.css",
+        "apps/desk-web/src/pages/Dashboard.tsx",
+        "apps/desk-web/src/pages/Dashboard.css",
+        "apps/desk-web/src/App.tsx",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/store/auth.ts",
+        "apps/desk-web/src/__tests__/aaa-21.test.tsx"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-21",
+        "ports:AAA-21"
+      ],
+      "contracts": [
+        "C01",
+        "C04",
+        "C05",
+        "C06",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Login, Inbox e Dashboard cobertos pela matriz DESIGN_QA; contrato cliente para demais páginas integrado sem esconder falhas com mocks.",
+        "Loading/empty/error/forbidden/offline/retry e sucesso refletem rede; indicador Online não é estático.",
+        "Sessão expirada limpa estado sensível; navegação teclado/toque e operações preservam contexto.",
+        "Render e interação verificáveis antes/depois, sem redesign arbitrário nem dados institucionais inventados."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/aaa-21.test.tsx",
+          "availability": "TO_CREATE",
+          "environment": "browser-mocked"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Login, Inbox e Dashboard cobertos pela matriz DESIGN_QA; contrato cliente para demais páginas integrado sem esconder falhas com mocks."
+    },
+    {
+      "id": "AAA-22",
+      "title": "Validar acessibilidade e excelência visual independente",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-21",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31",
+        "AAA-16"
+      ],
+      "phase": 4,
+      "owner_role": "QA acessibilidade + críticos visuais",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "e2e/aaa",
+        "playwright.config.ts",
+        "docs/execucao-aaa-2026-09-12/runtime/visual",
+        "e2e/aaa/accessibility.spec.ts",
+        "e2e/aaa/visual.spec.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-22",
+        "ports:AAA-22"
+      ],
+      "contracts": [
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Matriz rota/estado/viewport executada; teclado, foco, zoom, leitor de tela e reduced-motion registrados.",
+        "WCAG 2.2 AA aplicável sem falhas essenciais; relatório completo de critérios aplicáveis, não só axe.",
+        "Dois críticos visuais sem histórico recebem A/B aleatório e rubric completa; terceiro adjudica desacordo.",
+        "Pontuação visual ponderada >=95/100, confiança alta, sem Critical/High; casos não executados impedem AAA."
+      ],
+      "checks": [
+        {
+          "command": "pnpm exec playwright test e2e/aaa/accessibility.spec.ts e2e/aaa/visual.spec.ts --config playwright.aaa.config.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Matriz rota/estado/viewport executada; teclado, foco, zoom, leitor de tela e reduced-motion registrados."
+    },
+    {
+      "id": "AAA-23",
+      "title": "Executar integração e E2E contra serviços reais",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        4,
+        7,
+        8,
+        11,
+        14
+      ],
+      "dependencies": [
+        "AAA-03",
+        "AAA-04",
+        "AAA-05",
+        "AAA-06",
+        "AAA-07",
+        "AAA-08",
+        "AAA-09",
+        "AAA-10",
+        "AAA-11",
+        "AAA-12",
+        "AAA-13",
+        "AAA-16",
+        "AAA-17",
+        "AAA-18",
+        "AAA-19",
+        "AAA-21",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ],
+      "phase": 4,
+      "owner_role": "QA integração",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "e2e",
+        "apps/desk-api/src/__tests__",
+        "apps/realtime-service/src/__tests__",
+        "packages/media/src/__tests__",
+        "modules/secretary-adapter/src/__tests__"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-23",
+        "ports:AAA-23"
+      ],
+      "contracts": [
+        "C00",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "PostgreSQL/Redis/MinIO/ClamAV/OTel reais isolados; Gateway/Secretary sandbox distinguem contrato simulado e integração real.",
+        "Login→inbound→atribuição→resposta→realtime→notas/tarefas→auditoria/privacidade validado via navegador.",
+        "Permissões, HMAC/antirreplay, SSRF/mídia, falhas, retries e reconciliação têm negativos; suítes obrigatórias sem skip.",
+        "Não chamar provider real de clientes nem enviar mensagens externas; sandbox/provider oficial de teste quando autorizado."
+      ],
+      "checks": [
+        {
+          "command": "pnpm test:postgres-real",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm test:e2e",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "STAGING_SMOKE=1 pnpm --filter @cvg/media test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm exec playwright test e2e/aaa/system.spec.ts --config playwright.aaa.config.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "PostgreSQL/Redis/MinIO/ClamAV/OTel reais isolados; Gateway/Secretary sandbox distinguem contrato simulado e integração real."
+    },
+    {
+      "id": "AAA-24",
+      "title": "Comprovar migrations e recuperação de desastre",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        5,
+        18
+      ],
+      "dependencies": [
+        "AAA-08",
+        "AAA-12",
+        "AAA-17",
+        "AAA-16"
+      ],
+      "phase": 4,
+      "owner_role": "DBA/SRE",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "infra/scripts",
+        "packages/database/src/check-migrations.ts",
+        "docs/DISASTER_RECOVERY.md",
+        ".github/workflows/dr-e2e.yml"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-24",
+        "ports:AAA-24",
+        "schema-migrations"
+      ],
+      "contracts": [
+        "C00",
+        "C03",
+        "C07",
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Aplicar migrations em banco vazio e cópia sintética anterior; checksum/schema corretos.",
+        "Backup→destruir apenas DB marcado de teste→restore→integridade→boot→smoke com evidência real.",
+        "RPO <=24h e RTO <=2h conforme política existente; demonstrar ensaio cronometrado e procedimento de execução contínua.",
+        "Testar corrupção de backup, checksum, retenção e reaplicação da política de privacidade após restore."
+      ],
+      "checks": [
+        {
+          "command": "bash infra/scripts/dr-e2e.sh",
+          "availability": "EXISTING",
+          "environment": "disposable database ONLY"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Aplicar migrations em banco vazio e cópia sintética anterior; checksum/schema corretos."
+    },
+    {
+      "id": "AAA-25",
+      "title": "Medir carga, falhas, observabilidade e UX performance",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        6,
+        8,
+        12,
+        13
+      ],
+      "dependencies": [
+        "AAA-07",
+        "AAA-08",
+        "AAA-11",
+        "AAA-18",
+        "AAA-21",
+        "AAA-16",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ],
+      "phase": 4,
+      "owner_role": "SRE performance",
+      "risk": "R2",
+      "effort_points": 8,
+      "write_paths": [
+        "infra/scripts",
+        "infra/prometheus",
+        "infra/otel",
+        "infra/grafana",
+        "docs/SLO.md",
+        "e2e/aaa/performance.spec.ts"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-25",
+        "ports:AAA-25"
+      ],
+      "contracts": [
+        "C00",
+        "C03",
+        "C08",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Dataset e perfil fixados: 10k conversas, 100k mensagens, 100 sessões, 10min aquecimento+30min medição; registrar hardware/versões/rede e 3 execuções.",
+        "P95 inbound <250ms e realtime <500ms; erros inesperados <0,1%; perda/duplicação de efeitos nos cenários determinísticos igual a zero.",
+        "Browser LCP<=2,5s INP<=200ms CLS<=0,1 no perfil definido; separar laboratório de percentil de campo.",
+        "Collector recebe spans correlacionados; dashboards e alertas disparam e recuperam em falhas injetadas; SLO mensal não é provado por ensaio curto.",
+        "Corrigir definição e aritmética de SLO em docs/SLO.md: janela mensal explícita, consultas válidas e duplicação de efeito distinta de dedup bem-sucedida."
+      ],
+      "checks": [
+        {
+          "command": "node infra/scripts/query-performance.mjs",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "node scripts/otel-e2e-check.mjs",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm exec playwright test e2e/aaa/performance.spec.ts --config playwright.aaa.config.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated"
+        },
+        {
+          "command": "node infra/scripts/aaa-load.mjs",
+          "availability": "TO_CREATE",
+          "environment": "isolated load profile C00"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Dataset e perfil fixados: 10k conversas, 100k mensagens, 100 sessões, 10min aquecimento+30min medição; registrar hardware/versões/rede e 3 execuções."
+    },
+    {
+      "id": "AAA-26",
+      "title": "Executar gates de segurança e evidência CI por SHA",
+      "status": "PLANNED",
+      "findings": [
+        "A12",
+        "A13",
+        "L01"
+      ],
+      "areas": [
+        14,
+        15,
+        16
+      ],
+      "dependencies": [
+        "AAA-15",
+        "AAA-16",
+        "AAA-23",
+        "AAA-24",
+        "AAA-25",
+        "AAA-22"
+      ],
+      "phase": 5,
+      "owner_role": "release engenharia",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        ".github",
+        "scripts/triple-aaa-verify.mjs",
+        "scripts/production-readiness.mjs",
+        "scripts/staging-smoke.mjs"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-26",
+        "ports:AAA-26"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "CI completa faz build/lint/typecheck/test/DB/E2E/DR/OTel/carga/scanners em candidato exato.",
+        "CodeQL/Gitleaks/Trivy/SBOM/dependency-review têm artefatos atuais; não confundir workflow configurado com executado.",
+        "Agregador rejeita ausência, falha, skip obrigatório, SHA divergente e evidência adulterada; caso conhecido ruim é bloqueado.",
+        "Imagem analisada é a mesma que passa smoke; nenhuma tag/deploy/promoção executada sem escopo explícito."
+      ],
+      "checks": [
+        {
+          "command": "pnpm triple-aaa:verify",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm production-readiness",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "CI completa faz build/lint/typecheck/test/DB/E2E/DR/OTel/carga/scanners em candidato exato."
+    },
+    {
+      "id": "AAA-27",
+      "title": "Reconciliar documentação e runbooks com o candidato",
+      "status": "PLANNED",
+      "findings": [
+        "A06",
+        "A12",
+        "L01"
+      ],
+      "areas": [
+        18
+      ],
+      "dependencies": [
+        "AAA-23",
+        "AAA-24",
+        "AAA-25",
+        "AAA-26"
+      ],
+      "phase": 5,
+      "owner_role": "tech writer técnico/lead",
+      "risk": "R2",
+      "effort_points": 3,
+      "write_paths": [
+        "README.md",
+        "docs/00-meta/README.md",
+        "docs/TRIPLE_AAA_CERTIFICATION.md",
+        "docs/TEST_MATRIX.md",
+        "docs/RUNBOOK.md",
+        "docs/ARCHITECTURE.md",
+        "docs/AUTHORIZATION.md",
+        "docs/PRODUCTION_DEPLOYMENT.md",
+        "docs/GAPS-TECNICOS.md"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-27",
+        "ports:AAA-27"
+      ],
+      "contracts": [
+        "C08"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Afirmações antigas preservadas como histórico e substituídas por referências ao SHA/evidências atuais.",
+        "Runbook instalação/operação/incidente/restore/replay traz comandos atuais, donos e rollback ensaiado.",
+        "Notas 18 áreas recalculadas por evidência com risco residual explícito; nenhum A01–A16/L01 ocultado."
+      ],
+      "checks": [
+        {
+          "command": "python3 docs/execucao-aaa-2026-09-12/plan.py validate",
+          "availability": "EXISTING",
+          "environment": "read-only"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Afirmações antigas preservadas como histórico e substituídas por referências ao SHA/evidências atuais."
+    },
+    {
+      "id": "AAA-28",
+      "title": "Gauntlet final do candidato integrado",
+      "status": "PLANNED",
+      "findings": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "L01"
+      ],
+      "areas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "dependencies": [
+        "AAA-00",
+        "AAA-01",
+        "AAA-02",
+        "AAA-03",
+        "AAA-04",
+        "AAA-05",
+        "AAA-06",
+        "AAA-07",
+        "AAA-08",
+        "AAA-09",
+        "AAA-10",
+        "AAA-11",
+        "AAA-12",
+        "AAA-13",
+        "AAA-14",
+        "AAA-15",
+        "AAA-16",
+        "AAA-17",
+        "AAA-18",
+        "AAA-19",
+        "AAA-20",
+        "AAA-21",
+        "AAA-22",
+        "AAA-23",
+        "AAA-24",
+        "AAA-25",
+        "AAA-26",
+        "AAA-27",
+        "AAA-29",
+        "AAA-30",
+        "AAA-31"
+      ],
+      "phase": 5,
+      "owner_role": "crítico final fresco + lead",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "docs/execucao-aaa-2026-09-12/runtime/final"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-28",
+        "ports:AAA-28"
+      ],
+      "contracts": [
+        "C00",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Novo crítico sem histórico, distinto dos anteriores e read-only, inspeciona código/artefatos e executa checks no candidato integrado.",
+        "Todos gates obrigatórios PASS/current; nenhum P0/P1 High/Critical aberto; produto >=95/100 e cada área >=90/100.",
+        "Reproduções históricas convertem-se em testes que rejeitam o bug; original conhecido ruim deve falhar o harness de aceitação.",
+        "Ata separa candidato técnico aprovado de autorização de deploy; evidência ausente resulta NOT_VERIFIED ou FAIL, nunca certificado."
+      ],
+      "checks": [
+        {
+          "command": "pnpm lint",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm typecheck",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm test",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm build",
+          "availability": "EXISTING",
+          "environment": "local"
+        },
+        {
+          "command": "pnpm test:postgres-real",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm test:e2e",
+          "availability": "EXISTING",
+          "environment": "isolated"
+        },
+        {
+          "command": "pnpm exec playwright test --config playwright.aaa.config.ts",
+          "availability": "TO_CREATE",
+          "environment": "isolated, harness created by AAA-00 and suites AAA-22/23/25"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Novo crítico sem histórico, distinto dos anteriores e read-only, inspeciona código/artefatos e executa checks no candidato integrado."
+    },
+    {
+      "id": "AAA-29",
+      "title": "Polir cadastros e notas",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-13",
+        "AAA-20",
+        "AAA-06",
+        "AAA-19",
+        "AAA-21"
+      ],
+      "phase": 3,
+      "owner_role": "frontend páginas 29",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "apps/desk-web/src/pages/Contacts.tsx",
+        "apps/desk-web/src/pages/Contacts.css",
+        "apps/desk-web/src/pages/Tutors.tsx",
+        "apps/desk-web/src/pages/Tutors.css",
+        "apps/desk-web/src/pages/Patients.tsx",
+        "apps/desk-web/src/pages/Patients.css",
+        "apps/desk-web/src/pages/Notes.tsx",
+        "apps/desk-web/src/pages/Notes.css",
+        "apps/desk-web/src/__tests__/aaa-29.test.tsx"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-29",
+        "ports:AAA-29"
+      ],
+      "contracts": [
+        "C01",
+        "C02",
+        "C06",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Rotas Contacts, Tutors, Patients, Notes usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success.",
+        "Formulários, tabelas e ações mantêm teclado/toque/foco e recuperam erro sem perder dados digitados.",
+        "Nenhuma alteração em CSS global, EntityPages.css, App.tsx ou lib/api.ts; solicitar integração ao dono do contrato se necessária.",
+        "Capturar rota/estado/viewports do DESIGN_QA com APIs reais para aceite funcional e fixtures controladas apenas para layout."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/aaa-29.test.tsx",
+          "availability": "TO_CREATE",
+          "environment": "browser-mocked"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json",
+        "apps/desk-web/src/index.css",
+        "apps/desk-web/src/premium-surfaces.css",
+        "apps/desk-web/src/pages/EntityPages.css",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/App.tsx"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Rotas Contacts, Tutors, Patients, Notes usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success."
+    },
+    {
+      "id": "AAA-30",
+      "title": "Polir operações e Kanban",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-13",
+        "AAA-20",
+        "AAA-06",
+        "AAA-19",
+        "AAA-21"
+      ],
+      "phase": 3,
+      "owner_role": "frontend páginas 30",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "apps/desk-web/src/pages/Tasks.tsx",
+        "apps/desk-web/src/pages/Tasks.css",
+        "apps/desk-web/src/pages/Alerts.tsx",
+        "apps/desk-web/src/pages/Alerts.css",
+        "apps/desk-web/src/pages/Sectors.tsx",
+        "apps/desk-web/src/pages/Sectors.css",
+        "apps/desk-web/src/pages/Labels.tsx",
+        "apps/desk-web/src/pages/Labels.css",
+        "apps/desk-web/src/pages/ContactGroups.tsx",
+        "apps/desk-web/src/pages/ContactGroups.css",
+        "apps/desk-web/src/pages/Kanban.tsx",
+        "apps/desk-web/src/pages/Kanban.css",
+        "apps/desk-web/src/__tests__/aaa-30.test.tsx"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-30",
+        "ports:AAA-30"
+      ],
+      "contracts": [
+        "C01",
+        "C02",
+        "C06",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Rotas Tasks, Alerts, Sectors, Labels, ContactGroups, Kanban usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success.",
+        "Formulários, tabelas e ações mantêm teclado/toque/foco e recuperam erro sem perder dados digitados.",
+        "Nenhuma alteração em CSS global, EntityPages.css, App.tsx ou lib/api.ts; solicitar integração ao dono do contrato se necessária.",
+        "Capturar rota/estado/viewports do DESIGN_QA com APIs reais para aceite funcional e fixtures controladas apenas para layout."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/aaa-30.test.tsx",
+          "availability": "TO_CREATE",
+          "environment": "browser-mocked"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json",
+        "apps/desk-web/src/index.css",
+        "apps/desk-web/src/premium-surfaces.css",
+        "apps/desk-web/src/pages/EntityPages.css",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/App.tsx"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Rotas Tasks, Alerts, Sectors, Labels, ContactGroups, Kanban usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success."
+    },
+    {
+      "id": "AAA-31",
+      "title": "Polir administração, auditoria e configurações",
+      "status": "PLANNED",
+      "findings": [
+        "L01"
+      ],
+      "areas": [
+        9,
+        10
+      ],
+      "dependencies": [
+        "AAA-13",
+        "AAA-20",
+        "AAA-06",
+        "AAA-19",
+        "AAA-21"
+      ],
+      "phase": 3,
+      "owner_role": "frontend páginas 31",
+      "risk": "R2",
+      "effort_points": 5,
+      "write_paths": [
+        "apps/desk-web/src/pages/Admin.tsx",
+        "apps/desk-web/src/pages/Admin.css",
+        "apps/desk-web/src/pages/Audit.tsx",
+        "apps/desk-web/src/pages/Audit.css",
+        "apps/desk-web/src/pages/Settings.tsx",
+        "apps/desk-web/src/pages/Settings.css",
+        "apps/desk-web/src/__tests__/aaa-31.test.tsx"
+      ],
+      "read_paths": [
+        "docs/auditorias/2026-09-12/RELATORIO.md",
+        "package.json",
+        "docs/execucao-aaa-2026-09-12/CONTRATOS.md",
+        "docs/execucao-aaa-2026-09-12/QUALIDADE.json",
+        "docs/execucao-aaa-2026-09-12/EXECUCAO_MULTIAGENTE.md",
+        "docs/execucao-aaa-2026-09-12/DESIGN_QA.md"
+      ],
+      "exclusive_repo": false,
+      "resource_locks": [
+        "isolated-db:AAA-31",
+        "ports:AAA-31"
+      ],
+      "contracts": [
+        "C01",
+        "C02",
+        "C06",
+        "C09"
+      ],
+      "decision_gates": [],
+      "acceptance": [
+        "Rotas Admin, Audit, Settings usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success.",
+        "Formulários, tabelas e ações mantêm teclado/toque/foco e recuperam erro sem perder dados digitados.",
+        "Nenhuma alteração em CSS global, EntityPages.css, App.tsx ou lib/api.ts; solicitar integração ao dono do contrato se necessária.",
+        "Capturar rota/estado/viewports do DESIGN_QA com APIs reais para aceite funcional e fixtures controladas apenas para layout."
+      ],
+      "checks": [
+        {
+          "command": "pnpm --filter @cvg/desk-web exec vitest run src/__tests__/aaa-31.test.tsx",
+          "availability": "TO_CREATE",
+          "environment": "browser-mocked"
+        },
+        {
+          "command": "pnpm --filter @cvg/desk-web test",
+          "availability": "EXISTING",
+          "environment": "local"
+        }
+      ],
+      "rollback": "Trabalhar em branch/worktree isolada; preservar baseline e diff. Reverter apenas commits próprios ainda não integrados. Para mudança de schema, entregar procedimento expand/contract e roll-forward testado; nunca apagar dados de produção.",
+      "evidence_required": [
+        "diff e commit base/candidato + SHA-256 dos arquivos relevantes",
+        "comandos executados, exit code e logs sanitizados; testes novos identificados",
+        "reprodução negativa antes/depois e regressão da fronteira afetada",
+        "review independente sem histórico e verificação de integridade antes/depois",
+        "manifesto da evidência ligado ao contrato vigente; integração e reteste pelo lead"
+      ],
+      "budget": "Uma hipótese concreta por tentativa; até 2 retrabalhos sem nova decomposição. Replanejar se faltar evidência nova. Pontos expressam tamanho relativo, não horas nem limite de qualidade.",
+      "next_action": "Revalidar os caminhos e o achado no candidato atual, obter dependências verificadas e reproduzir o caso negativo antes de alterar código.",
+      "forbidden_paths": [
+        "docs/auditorias/2026-09-12",
+        ".gauntlet",
+        ".gauntlet-v2-archive-20260912",
+        "docs/execucao-aaa-2026-09-12/BACKLOG.json",
+        "apps/desk-web/src/index.css",
+        "apps/desk-web/src/premium-surfaces.css",
+        "apps/desk-web/src/pages/EntityPages.css",
+        "apps/desk-web/src/lib/api.ts",
+        "apps/desk-web/src/App.tsx"
+      ],
+      "return_status": "IMPLEMENTED (nunca DONE pelo builder)",
+      "objective": "Rotas Admin, Audit, Settings usam tokens/contratos congelados e estados reais loading/empty/error/forbidden/success."
+    }
+  ]
+}

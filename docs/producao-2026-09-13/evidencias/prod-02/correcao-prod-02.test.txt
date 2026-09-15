@@ -1,0 +1,30 @@
+✔ AC4 — execução real do gate produz selo bom aceito e reavaliação idempotente (317.984893ms)
+✔ AC3 — manifesto por check contém comando, ambiente, horário, resultado, hashes e escopo (0.564133ms)
+✔ AC3 — métrica de coverage vem da medição (sem percentual fixo no código/relatório) (1.141499ms)
+✔ AC1 — WRONG-SHA (outro candidato) é rejeitado e log da falha é conservado (53.821999ms)
+✔ AC1 — lockfileSha256 divergente é rejeitado (53.053485ms)
+✔ AC1 — sourceSha256 divergente é rejeitado (56.278381ms)
+✔ AC1 — imageDigest divergente é rejeitado (55.728916ms)
+✔ AC1 — evidência anterior ao selo (STALE de outro candidato) é rejeitada (54.522194ms)
+✔ AC1 — JSON vazio é rejeitado (51.443732ms)
+✔ AC1 — JSON truncado é rejeitado (55.17378ms)
+✔ AC1 — query set vazio é rejeitado (58.68486ms)
+✔ AC1 — PASS só narrativo (log ausente) é rejeitado (50.536699ms)
+✔ AC2 — FAIL, BLOCKED, NOT_RUN e SKIPPED impedem VERIFIED_CANDIDATE (207.409726ms)
+✔ AC2 — check requerido ausente (MISSING) reprova com estado inequívoco (53.891127ms)
+✔ AC2 — FAIL externo com --with-external-evidence reprova (exit != 0) (49.997854ms)
+✔ AC2 — payload externo sem vínculo de candidato é rejeitado (56.696121ms)
+✔ AC4 — selo local nunca é TRIPLE_AAA_CERTIFIED e exige política de release (0.350484ms)
+✔ M1 — sourceSha256 cobre untracked de repo git, com determinismo, e exclui evidências do repo (28.188938ms)
+✔ M1 — selo do CLI detecta alteração de untracked e ignora novas evidências no repo (195.113646ms)
+✔ AC1/M2 — artefato derivado PASS velho, sem lock/source ou futuro é rejeitado (nunca PASS) (205.211673ms)
+✔ AC2/M2 — externo derivado com identidade ausente ou velha é rejeitado (STALE no derivado) (110.174877ms)
+✔ L2 — defaults de banco exigem cvg_aaa_* em porta dedicada, nunca a instância do host (59.463041ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1861.535819

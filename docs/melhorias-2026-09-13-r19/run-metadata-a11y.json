@@ -1,0 +1,18 @@
+{
+  "task": "AAA-22",
+  "generatedAt": "2026-09-14T08:17:47.644Z",
+  "webBase": "http://127.0.0.1:4383",
+  "apiBase": "http://127.0.0.1:4640",
+  "fixtureProfile": "minimal",
+  "runRoot": "/tmp/cvg-aaa-runs/r3-aaa22-20260914-a16",
+  "evidenceDir": "/home/ricardo/cvg-connect-desk/docs/melhorias-2026-09-13-r19",
+  "node": "v24.20.0",
+  "axeVersion": "4.13.0 (vendorizado em e2e/aaa/vendor/axe.min.js)",
+  "viewports": [
+    "375x812",
+    "390x844",
+    "768x1024",
+    "1024x768",
+    "1440x900"
+  ]
+}

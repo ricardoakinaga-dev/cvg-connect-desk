@@ -1,0 +1,43 @@
+{
+  "steps": [
+    {
+      "label": "migrate",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@cvg/database",
+        "run",
+        "db:migrate"
+      ],
+      "start": "2026-09-13T22:14:01.258Z",
+      "end": "2026-09-13T22:14:02.229Z",
+      "exit": 0
+    },
+    {
+      "label": "aaa05",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@cvg/realtime-service",
+        "exec",
+        "vitest",
+        "run",
+        "src/__tests__/aaa-05-isolation.test.ts"
+      ],
+      "start": "2026-09-13T22:14:02.229Z",
+      "end": "2026-09-13T22:14:18.683Z",
+      "exit": 0
+    }
+  ],
+  "teardown": {
+    "runId": "r3-aaa05",
+    "redis": {
+      "stopped": true,
+      "pid": 1289763
+    },
+    "postgres": {
+      "stopped": true,
+      "pid": 1289648
+    }
+  }
+}

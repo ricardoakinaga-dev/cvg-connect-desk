@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-09-14T07:39:12.727Z",
+  "runId": "prod11",
+  "workerIndex": 38,
+  "database": "cvg_aaa_prod11_w38",
+  "postgresPort": 60232,
+  "redisPort": 57060,
+  "cases": [
+    {
+      "case": "AC1-retida-conflito-escopo",
+      "messages": 2,
+      "deliveries": 2,
+      "events": 2,
+      "conflict": "IDEMPOTENCY_KEY_CONFLICT",
+      "gatewayRequests": 3
+    },
+    {
+      "case": "AC1-corrida-14",
+      "messages": 1,
+      "deliveries": 1,
+      "events": 1,
+      "gatewayRequests": 1,
+      "distinctMessageIds": 1
+    },
+    {
+      "case": "AC1-ttl",
+      "expired": true,
+      "outcome": "failed",
+      "lastError": "idempotency_ttl_expired",
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC2-callback-sucesso",
+      "initial": "unknown_reconciling",
+      "final": "sent",
+      "messageFinal": "delivered",
+      "duplicateAttemptCountStable": true,
+      "lateFailureIgnored": true,
+      "gatewayRequests": 3
+    },
+    {
+      "case": "AC2-callback-falha",
+      "final": "failed",
+      "retryOutcome": "failed",
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC2-429",
+      "outcome": "failed",
+      "gatewayRequests": 3,
+      "retryDeduplicated": true
+    },
+    {
+      "case": "AC2-corrida-callback-retry",
+      "finalDelivery": "sent",
+      "finalMessage": "delivered",
+      "gatewayRequests": 1,
+      "retryDeduplicated": true
+    },
+    {
+      "case": "AC3-orfa-listavel-resolvivel",
+      "listedBefore": true,
+      "resolvedOnce": true,
+      "duplicateSecondNoop": true,
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC2-confirmacao-gateway",
+      "finalStatus": "sent",
+      "externalMessageId": "gw-ext-48087a9e-e385-4485-b75b-5d1df83b6e4a",
+      "idempotent": true,
+      "gatewayRequests": 1
+    },
+    {
+      "case": "AC3-crash-entre-envio-e-callback",
+      "statusAfterCrash": "@pending",
+      "retryDeduplicated": true,
+      "finalStatus": "sent",
+      "finalMessage": "delivered",
+      "gatewayRequests": 1,
+      "childExit": {
+        "code": null,
+        "signal": "SIGKILL"
+      }
+    },
+    {
+      "case": "AC4-ttl-politica",
+      "beforeTtlCandidates": 0,
+      "dryRunApplied": 0,
+      "expiredStatus": "failed",
+      "expiredLastError": "idempotency_ttl_expired",
+      "rowRetained": true,
+      "unknownNeverPurged": true
+    },
+    {
+      "case": "AC4-purge-retencao",
+      "purgedTerminalOld": 1,
+      "unknownPreserved": true,
+      "freshPreserved": true,
+      "tombstoneCreated": true,
+      "retryAfterPurge": 409,
+      "gatewayRequests": 3
+    }
+  ]
+}

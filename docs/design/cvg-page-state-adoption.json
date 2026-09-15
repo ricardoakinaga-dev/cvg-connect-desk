@@ -1,0 +1,30 @@
+{
+  "id": "CVG-PAGE-STATE-ADOPTION",
+  "created_for": "AAA-20 (fix round)",
+  "blocking": true,
+  "contract": "C09/DESIGN_QA: loading com role=status, erro com role=alert e mensagem real; erro de API nunca silenciado como vazio",
+  "primitive_source": "apps/desk-web/src/components/ui/StateMessage.tsx",
+  "shell": {
+    "owner": "AAA-20",
+    "status": "adopted",
+    "note": "ErrorBoundary usa ErrorState; conectividade real via ConnectionStatus/useRealtimeStatus"
+  },
+  "pages": [
+    { "route": "/login", "owner": "AAA-21", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/inbox", "owner": "AAA-21", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/dashboard", "owner": "AAA-21", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/contacts", "owner": "AAA-29", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/tutors", "owner": "AAA-29", "loading": "required", "error": "required", "status": "partial: role=alert presente em .entity-error; adotar ErrorState" },
+    { "route": "/patients", "owner": "AAA-29", "loading": "required", "error": "required", "status": "partial: role=alert presente em .entity-error; adotar ErrorState" },
+    { "route": "/notes", "owner": "AAA-29", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/tasks", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending: falha de API cai em vazio silencioso (observado)" },
+    { "route": "/alerts", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/sectors", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/labels", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/contact-groups", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/kanban", "owner": "AAA-30", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/admin", "owner": "AAA-31", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/audit", "owner": "AAA-31", "loading": "required", "error": "required", "status": "pending" },
+    { "route": "/settings", "owner": "AAA-31", "loading": "required", "error": "required", "status": "pending" }
+  ]
+}

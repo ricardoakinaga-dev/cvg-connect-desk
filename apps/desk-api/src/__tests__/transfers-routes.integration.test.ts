@@ -10,7 +10,7 @@ describe('Transfers routes integration', () => {
   const passwordHash = '$2a$10$UX/LcD/6NKhheDIZmbHyN.a6Hc8SW6ytZ/LCCZW3un3h5vJ9n/1h6';
   const email = `transfer.integration.${Date.now()}@example.com`;
   const userId = randomUUID();
-  let adminRoleId = randomUUID();
+  let adminRoleId: string = randomUUID();
   const testContactId = randomUUID();
   const sectorAId = randomUUID();
   const sectorBId = randomUUID();
@@ -89,7 +89,6 @@ describe('Transfers routes integration', () => {
       id: testContactId,
       name: `Transfer Contact ${Date.now()}`,
       phone: `+55199${Date.now()}`.slice(0, 15),
-      type: 'patient',
     });
 
     // Insert test conversation
@@ -111,6 +110,9 @@ describe('Transfers routes integration', () => {
     await db.delete(schema.sectors).where(eq(schema.sectors.id, sectorAId));
     await db.delete(schema.sectors).where(eq(schema.sectors.id, sectorBId));
     await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
+    // PROD-18: a transferência real passou a gravar trilha de auditoria no
+    // mesmo `tx`; remover a trilha antes do usuário respeita a FK.
+    await db.delete(schema.auditLogs).where(eq(schema.auditLogs.userId, userId));
     await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
     await db.delete(schema.users).where(eq(schema.users.id, userId));
     await app.close();
@@ -274,7 +276,7 @@ describe('Transfers routes integration', () => {
     expect(response.statusCode).toBe(404);
   });
 
-  it('aceitar transferencia ja aceita retorna 400', async () => {
+  it('aceitar transferencia ja aceita retorna 200 deduplicado (PROD-18 idempotente)', async () => {
     // Create auto-accept transfer (already accepted)
     const createResp = await app.inject({
       method: 'POST',
@@ -297,10 +299,11 @@ describe('Transfers routes integration', () => {
       headers: { authorization: `Bearer ${token}` },
     });
 
-    expect(acceptResp.statusCode).toBe(400);
+    expect(acceptResp.statusCode).toBe(200);
+    expect((acceptResp.json() as { deduplicated?: boolean }).deduplicated).toBe(true);
   });
 
-  it('rejeitar transferencia ja rejeitada retorna 400', async () => {
+  it('rejeitar transferencia ja rejeitada retorna 200 deduplicado (PROD-18 idempotente)', async () => {
     // Create pending transfer
     const createResp = await app.inject({
       method: 'POST',
@@ -330,6 +333,7 @@ describe('Transfers routes integration', () => {
       headers: { authorization: `Bearer ${token}` },
     });
 
-    expect(rejectResp.statusCode).toBe(400);
+    expect(rejectResp.statusCode).toBe(200);
+    expect((rejectResp.json() as { deduplicated?: boolean }).deduplicated).toBe(true);
   });
 });

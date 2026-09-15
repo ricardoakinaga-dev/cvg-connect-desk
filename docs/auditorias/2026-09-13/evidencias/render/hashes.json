@@ -1,0 +1,475 @@
+{
+  "collectedAt": "2026-09-13T12:56:23.565587+00:00",
+  "files": [
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/main.tsx",
+      "sha256": "14a10dee4aaa2130d9f57c136db7f16f95f524d60d77146b17776e91c2ab626c",
+      "mtime": "2026-09-12T00:01:13.379558+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/App.tsx",
+      "sha256": "9c5ddb8e0d60481cf93fbba5ea0024f066e304a552ce482ff21dd3469535d931",
+      "mtime": "2026-09-13T09:59:27.416619+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Audit.tsx",
+      "sha256": "e6135a2c2e8bff476a1c13248190a6438db112c3db60a843cfb61afceff59107",
+      "mtime": "2026-09-13T10:50:17.205496+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Login.tsx",
+      "sha256": "8d0e97a2f42626c62fbc64217b18bd605d83c4c6f5b91526a5d402bb8ce28ff1",
+      "mtime": "2026-09-13T09:59:41.578448+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Contacts.tsx",
+      "sha256": "306fd6a14a4f30789a8b0a8c8d4af69e9bef5c58b6583f81f5180251ede61178",
+      "mtime": "2026-09-13T10:34:44.679203+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Labels.tsx",
+      "sha256": "326df35ef1ae55c26ae913f9e6ccbcee3f83a67ef6f70df62a08cd66dcde382b",
+      "mtime": "2026-09-13T10:47:49.263493+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Tutors.tsx",
+      "sha256": "3a273c8dc0a486d1f03c15571ca9f116017a1f98199dbe5504c60e15eefbca97",
+      "mtime": "2026-09-13T10:34:44.679571+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Notes.tsx",
+      "sha256": "90ea1b623053e612cd10e79e4656d62736df97041238b77a0fc91a02dcf325e1",
+      "mtime": "2026-09-13T10:34:44.680038+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Dashboard.tsx",
+      "sha256": "e3325cf25ed52a7ece90fbf9a58a0dd985c9fdc99e345c402e716e761ddbbf89",
+      "mtime": "2026-09-13T10:09:58.302359+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/ContactGroups.tsx",
+      "sha256": "ff674c54b99f431ff3bbde82b55cf221e4e1cd2fe9370cf3a4eb9492889d53f1",
+      "mtime": "2026-09-13T10:48:24.326268+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Alerts.tsx",
+      "sha256": "e1be088df1930ce307d04c271da8d3848f0ad7afc53fd19f1dd1af6be7b8fc12",
+      "mtime": "2026-09-13T11:25:01.759814+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Kanban.tsx",
+      "sha256": "b69038169a4ec97166b6a9dd74078014c5562766b8be19391cf5dd69d1f5d063",
+      "mtime": "2026-09-13T11:29:37.369393+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Admin.tsx",
+      "sha256": "2c46644a72db5e49ec479fd4a443f9276924aaf773720064a3f1c752a2ffae40",
+      "mtime": "2026-09-13T11:24:55.244469+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Sectors.tsx",
+      "sha256": "05af3134dcf3a62ab37b15c884715a8928442ce815be4ab5503133febfe1ac4b",
+      "mtime": "2026-09-13T11:25:01.760120+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Patients.tsx",
+      "sha256": "a12bba134a939fc76b059c7e5a5af23c8c97e35a6bdfad9ff4f18ee11095fa51",
+      "mtime": "2026-09-13T10:34:44.679749+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Inbox.tsx",
+      "sha256": "3f7a3eeb1e564233d59a8b002ec3be8c60816e40ab505e7076027bb8f234183e",
+      "mtime": "2026-09-13T10:07:30.799648+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Settings.tsx",
+      "sha256": "ede24dc4dbcafae0123145f832a5b865c7572e80cd4637c6adef182b02e4f4d3",
+      "mtime": "2026-09-13T10:50:41.011326+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Tasks.tsx",
+      "sha256": "a471a59369c96f3dc316ebb03ee79434f5d149825f0efd1b441bad963ea10f1c",
+      "mtime": "2026-09-13T11:25:01.759474+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ErrorBoundary.tsx",
+      "sha256": "d0ddd9db1592302cf258f55d6bb67f343dbc02240896d4eefad1e2e21bc2edef",
+      "mtime": "2026-09-13T04:21:57.104946+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/admin.test.tsx",
+      "sha256": "b24dafdfe6333bf8536189fb679c238091e7e4b04597a28a7d653b4c2e649556",
+      "mtime": "2026-09-12T00:01:13.379038+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/login.test.tsx",
+      "sha256": "0460776ace39b8a856763544695d7a885968bccefad4c4997d88d2f937b04609",
+      "mtime": "2026-09-12T00:01:13.379132+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-29.test.tsx",
+      "sha256": "207ac41a53c7fec8edf31f246fac5f80c01df4e669d469449e42af3709194579",
+      "mtime": "2026-09-13T10:28:07.142383+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-13.test.tsx",
+      "sha256": "c3b7a62998627ad5f14e5e38e502ea144bfc85b6b22d9626eab9ddb559695766",
+      "mtime": "2026-09-13T07:32:12.883121+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-31.test.tsx",
+      "sha256": "62377cebb4b949c6936e43a148f0a431a71bb2478d470d371f2a480eaeebdd85",
+      "mtime": "2026-09-13T10:53:34.765837+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/inbox.test.tsx",
+      "sha256": "ebc46b802f946918817693af9e28daeef076a647a14cf0f4a8f7592af14f99de",
+      "mtime": "2026-09-12T17:34:28.859910+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/entities.test.tsx",
+      "sha256": "f9bbd916925d229bce23e56f88c32c98e60aeb298e1026b2bc03121aeff733df",
+      "mtime": "2026-09-12T15:21:58.055238+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-21.test.tsx",
+      "sha256": "9bf218d0da2bfa2a4b1237d9424551a6bb733fea24625a96b68d5b6be1cd0122",
+      "mtime": "2026-09-13T10:10:35.715017+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/kanban.test.tsx",
+      "sha256": "b1361c98857a61a3b6c58cf5b7657349767ac369b46c8cbf748ec7c169e44812",
+      "mtime": "2026-09-12T00:01:13.379132+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-30.test.tsx",
+      "sha256": "e3e69ada8d65321bef5b7d34f2d01e2899f7e9be5d6e9eacc0c422d64c7bfd04",
+      "mtime": "2026-09-13T10:50:52.345243+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/hooks/__tests__/useRealtimeStatus.test.tsx",
+      "sha256": "898b18c457e5d09fc61eab588bb690499e07fdd13e38f180d85ac9ea545491e3",
+      "mtime": "2026-09-13T04:47:40.083147+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/Badge.tsx",
+      "sha256": "91b1e674ec81edfa1d2377a6e0e7fb2dc19be400a7741e9efe7c78e40b207363",
+      "mtime": "2026-09-13T04:20:58.664626+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/StateMessage.tsx",
+      "sha256": "e1754fb0498b411fc1288a32db033122b8ba43197a1a2d69f8635cbcc85dbcb1",
+      "mtime": "2026-09-13T04:21:01.709461+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/Card.tsx",
+      "sha256": "ac8d2e27c7fd5b38ffeda6a1538b02990a64ad193588eae626bcb2b431e1ed83",
+      "mtime": "2026-09-13T04:20:59.211154+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/Icon.tsx",
+      "sha256": "7eb317a290a460a34f0a2cea62812642947b3962d11152135be3cb97e4c4fd13",
+      "mtime": "2026-09-12T17:06:55.007102+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/TextField.tsx",
+      "sha256": "272707884acaa743a861d33011ef0234e08d6e9b9e12fc1755e8ef482e9d4f36",
+      "mtime": "2026-09-13T04:21:00.298070+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/Button.tsx",
+      "sha256": "b667c6c2095f75b42073acab175a77c1dfd201cd217125e37f5e243425105056",
+      "mtime": "2026-09-13T04:20:57.913989+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/__tests__/ErrorBoundary.test.tsx",
+      "sha256": "b878b2f3117cd83a9252c63936006a56a4a96399995ca0f3fdda936825be0141",
+      "mtime": "2026-09-13T04:35:07.253244+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/layout/ConnectionStatus.tsx",
+      "sha256": "c02740431a8cbc8d73771c51edba15dc29a2772fb92a247b35fce813735be394",
+      "mtime": "2026-09-13T04:46:43.198465+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/layout/Layout.tsx",
+      "sha256": "a4fdfaa6976d41939b687e945fe0d181a6c2e9d71e1642d085594c8937c50b51",
+      "mtime": "2026-09-13T04:55:04.130582+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/__tests__/primitives.test.tsx",
+      "sha256": "c6b6c6fc8dca5ea9dab21ad5bdc87f8a69ab13b4ca7c1ca80fe3c0bfc577f948",
+      "mtime": "2026-09-13T04:22:33.280593+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/layout/__tests__/ConnectionStatus.test.tsx",
+      "sha256": "0ddcce7bd0e8acb59b0d99499d1a35f732122a72dea4d8daa8ce8dba0798d00d",
+      "mtime": "2026-09-13T04:47:42.397889+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/layout/__tests__/Layout.test.tsx",
+      "sha256": "f53ba63a78e7a20e1433426ead509583dab7f4fa3d31923c5b42eeb754dafe6b",
+      "mtime": "2026-09-13T04:47:48.758443+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/vite-env.d.ts",
+      "sha256": "fd014bc87287165129ab7e0e33188863962de981551a90701d39395fb466206a",
+      "mtime": "2026-09-12T00:01:13.380558+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/hooks/useRealtimeStatus.ts",
+      "sha256": "86aff8b11a60562f209d64649adbc82ce65aea00c0ce3f6014bd5d5f5f3cd990",
+      "mtime": "2026-09-13T04:46:41.081621+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/hooks/useModalFocus.ts",
+      "sha256": "7cf23befc40f9b7f5d2dd4e09412e093817cce5eb859bb590c3adb0ec53826d2",
+      "mtime": "2026-09-12T19:00:05.576797+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/lib/realtime.ts",
+      "sha256": "235c26a74667b565c3efb1a41e0d1532c56aa8ca03fb3de738db5da7abc71c41",
+      "mtime": "2026-09-13T04:48:38.867339+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/lib/api.ts",
+      "sha256": "bc8966e0656cdeadcdc4cfa22747e536e8115114c7e1d385c9e556b9c237d191",
+      "mtime": "2026-09-13T09:59:12.985792+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/aaa-13.test.ts",
+      "sha256": "1941b3dca7a98b86237ab5b11ca961a74de9f272af4d90aa21e4e9e13ead172d",
+      "mtime": "2026-09-13T07:23:52.105639+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/auth-store.test.ts",
+      "sha256": "beb021e8f67dc6cf3cfcb2e2c97f5e6e06c38fc90f2ac32c30d8380aad3d7cfe",
+      "mtime": "2026-09-12T00:01:13.379132+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/realtime.test.ts",
+      "sha256": "c96e01e9114377961624c20016755707521a243b2ef6451fd6be2308873a9cb5",
+      "mtime": "2026-09-13T01:29:14.964837+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/realtime-connection-status.test.ts",
+      "sha256": "d163d58969880eabd60492bd103e39db1c108f9ec15b00596c464b26fb6112da",
+      "mtime": "2026-09-13T04:48:39.163336+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/__tests__/api-client.test.ts",
+      "sha256": "205e3ae365fa2d11d4dd209c0e18d9211f07f7d229923b4c4c8860058d1a497a",
+      "mtime": "2026-09-12T00:01:13.379132+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/store/auth.ts",
+      "sha256": "457900d30f6130a3bcca53109c97cabb7f08856610cd12ec84b6d820eefa4703",
+      "mtime": "2026-09-13T09:59:20.726699+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/ui/index.ts",
+      "sha256": "b198cff23ea074b431aa93df82b884480f14cb2135917dd1755a50eebd0228ce",
+      "mtime": "2026-09-13T04:21:02.121931+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/index.css",
+      "sha256": "f3c819cca7e11c15394820f25dbb2ae4cbb97355388d29e47b0509e37f8a6253",
+      "mtime": "2026-09-13T04:46:58.046509+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/premium-surfaces.css",
+      "sha256": "25ddc21f7c41bb4a51f3b26cb9a7c707a2986f17591029f889c23ef65ebe455d",
+      "mtime": "2026-09-13T04:25:34.423895+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Sectors.css",
+      "sha256": "cac4ed56b0b7b9ba0479d1ac1a2b5793ae77403b8d2736f0472e8dce503320bd",
+      "mtime": "2026-09-13T10:47:26.647634+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Admin.css",
+      "sha256": "0aa40485eca2f8e8b32a9672ae4c8b7a5c9ddc8a652164d554902f21de60f0f8",
+      "mtime": "2026-09-13T11:25:03.184350+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Login.css",
+      "sha256": "b1d3b97c800d9ff0ef018fa03f96f0b4a52438050c3c28d13068bb9bac4beedd",
+      "mtime": "2026-09-13T10:03:23.199515+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Dashboard.css",
+      "sha256": "35716ff8024e363911fc8a7b7cd86130d13648cf29d592410121dc9cb1daa070",
+      "mtime": "2026-09-13T10:03:42.449387+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Notes.css",
+      "sha256": "bee79d638d9e26b5733f5938a35453acb6e33ae12456355c60b5c4d90014d60d",
+      "mtime": "2026-09-13T10:34:44.680320+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Contacts.css",
+      "sha256": "7d92aa490b4fffad35ffa56248646d3ec4ae1d00f26ce41693f8307678430519",
+      "mtime": "2026-09-13T10:26:34.941113+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Inbox.css",
+      "sha256": "2c9254c8af2b47193df07a21bd95a270d060d0e9a71f638d09034b45f8bef8a4",
+      "mtime": "2026-09-13T10:16:05.362802+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Tasks.css",
+      "sha256": "3fc96dac08193a1451b02c7213cfe950178db4330b7eb25fa36af3f8a4156836",
+      "mtime": "2026-09-13T10:46:50.998850+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/ContactGroups.css",
+      "sha256": "72fb74c728931255b0b09a4693d0a5d46f615481bba7d8469362b41292c69fe2",
+      "mtime": "2026-09-13T10:48:34.656200+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Patients.css",
+      "sha256": "e3c447ac43e11f32641fe1df2b25e7243fa15d350f858495909faae7bb9be509",
+      "mtime": "2026-09-13T10:25:20.245927+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Kanban.css",
+      "sha256": "ff0eec19e3d9400807a7f6449d74e334618cb217765b2b3c0343482e65c19e61",
+      "mtime": "2026-09-13T10:49:20.920889+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Labels.css",
+      "sha256": "804f3ba2089ecc118cdfad4556eae90c01e974e1f6c45298965913d55b79804a",
+      "mtime": "2026-09-13T10:47:59.203430+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Settings.css",
+      "sha256": "6c6274965cb74e4d23f22de120258dea70966bd6eaa97466e1514f751545b2a2",
+      "mtime": "2026-09-13T10:50:48.258273+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/EntityPages.css",
+      "sha256": "08c61aa3aab8f4c6d26b4c55596c2451e417c1bd0fcd55895faee438c9a9f064",
+      "mtime": "2026-09-13T04:25:34.424049+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Audit.css",
+      "sha256": "2e2e1f00b7311f732108d684b013ed31c2b1ba4469cb1a55094ffeaea1d098f6",
+      "mtime": "2026-09-13T10:50:24.355445+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Tutors.css",
+      "sha256": "10532fa4ebfd852b7b46d236ed9006ed1b85ca666f4cc75f0e76258e0ae29f12",
+      "mtime": "2026-09-13T10:25:19.706933+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/pages/Alerts.css",
+      "sha256": "18d897ea4ad1d722954eb3e1ea1dcb2fbcc1376bcc02aa4e28754f5bbcd27851",
+      "mtime": "2026-09-13T10:47:07.364752+00:00"
+    },
+    {
+      "path": "/home/ricardo/cvg-connect-desk/apps/desk-web/src/components/layout/Layout.css",
+      "sha256": "9282efcb230bac1afd129b925fc2a3362cc85aa2c458df8f9b3dc810d880bd4a",
+      "mtime": "2026-09-13T04:47:06.637240+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/notes-375.png",
+      "sha256": "8aa72e6924481434e658b7be29388388645469c79568e9f44cc323412eaf8a2c",
+      "mtime": "2026-09-13T12:53:15.137772+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/login-1440.png",
+      "sha256": "020ccec9b71dce87bd560a4fc107e8fbb22a443d7786ca8268bd660a6b64e6a9",
+      "mtime": "2026-09-13T12:53:31.131561+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/notes-768.png",
+      "sha256": "37cd2f8c3a8d140fc0f8da8c780f411c0f0c39fb50f19292710037f118aaff0d",
+      "mtime": "2026-09-13T12:53:23.971655+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/inbox-1024.png",
+      "sha256": "39fee3a8753c9f04d86b8df1dc5020aec2ff1aa7c5e5c2829ffe09cc8c8d61b4",
+      "mtime": "2026-09-13T12:53:26.931616+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/inbox-1440.png",
+      "sha256": "6a9d5c991d21ceabd7e5b359ce73a5b44b0886e87c8575d939d4130386bca3b7",
+      "mtime": "2026-09-13T12:53:32.560542+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/tasks-1024.png",
+      "sha256": "95ae9a4ffb9f0e7624d56a13e80513443a4d39f31a57ed14208ad41a1c946d83",
+      "mtime": "2026-09-13T12:53:28.265598+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/notes-1024.png",
+      "sha256": "0c4bcd6cb9e4bd7dd59095aa0652726c66d2587a6b7eca418eae4f1293939771",
+      "mtime": "2026-09-13T12:53:29.518582+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/tasks-375.png",
+      "sha256": "8a64b3bb28fac9b12bc055b9919fb24f0a0589e6b3c7bc68c3e2d63c2fb85e5e",
+      "mtime": "2026-09-13T12:53:14.072786+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/tasks-768.png",
+      "sha256": "fcb790f3048266ae016753433dbea2ce77c9ee0e226e0ca4db182ae704cc9ebf",
+      "mtime": "2026-09-13T12:53:22.740671+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/tasks-1440.png",
+      "sha256": "841ad0eee7876fa53307eed344ddf273993a85af0e0046e512289a89995468a7",
+      "mtime": "2026-09-13T12:53:33.932523+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/inbox-375.png",
+      "sha256": "64e4f3cf2c42e0cfa04f18f3acc827b41e780037960bc444b84db89a529e093c",
+      "mtime": "2026-09-13T12:53:12.988800+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/login-390.png",
+      "sha256": "a72becae1051675b1726abde6e8d6d29ef1d356a4dd40fbe140d07157df98305",
+      "mtime": "2026-09-13T12:53:16.135759+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/notes-390.png",
+      "sha256": "ffd3f11df98012744f3fe09510e742188329bc079c8f73566a3b2d648cde1fc4",
+      "mtime": "2026-09-13T12:53:19.581713+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/inbox-768.png",
+      "sha256": "c208170b07e3a4ab7aff56e5971ca94ab474835c0f01b04ad2791b5a75c713cb",
+      "mtime": "2026-09-13T12:53:21.644113+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/inbox-390.png",
+      "sha256": "916c2576aa1d3a77628c76a4874d2796d544997c0116f608202cb745b11cb502",
+      "mtime": "2026-09-13T12:53:17.150745+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/tasks-390.png",
+      "sha256": "43cb48ed0fced1167ba57aa3cb0fdb4a8db34859f5ea7ce9fa915aadc0c52298",
+      "mtime": "2026-09-13T12:53:18.441728+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/login-1024.png",
+      "sha256": "fb3756d9a518f1cc94d45e69e28da9ba7ab5d36379c4b0ac14a111d4ae90773a",
+      "mtime": "2026-09-13T12:53:25.464635+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/login-768.png",
+      "sha256": "b25bc09afd8b2a812d2e308ffe33f3575a3d1e36d211407a469af75abc6fb923",
+      "mtime": "2026-09-13T12:53:20.706698+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/login-375.png",
+      "sha256": "cabccd1a8e024b863ca78326332516ff5074174893b11afda9dc1af566d05360",
+      "mtime": "2026-09-13T12:53:11.948814+00:00"
+    },
+    {
+      "path": "/tmp/cvg-audit-20260913/frontend-render/notes-1440.png",
+      "sha256": "b30f51b5e64cd22ee0d0c2da4874e5d5fdc98cf4159a3eb312ac3426dbc68e4d",
+      "mtime": "2026-09-13T12:53:35.291506+00:00"
+    }
+  ]
+}

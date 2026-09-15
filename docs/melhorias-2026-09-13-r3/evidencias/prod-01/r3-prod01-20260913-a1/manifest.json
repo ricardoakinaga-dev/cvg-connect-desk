@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "task": "PROD-01",
+  "runId": "r3-prod01-20260913-a1",
+  "attempt": 1,
+  "command": "node --test scripts/production/prod-01.test.mjs",
+  "tool": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T23:39:59.869Z",
+  "finishedAt": "2026-09-13T23:39:59.955Z",
+  "durationMs": 86,
+  "candidate": {
+    "repository": null,
+    "commit": "754f9badac46278e77d21de91c58eedb15e80581",
+    "lockfileSha256": "f115807dc5d65208d76c7d0b690bb494bd3ad55393c707d08523ebab9bce57ba",
+    "sourceSha256": "1bf7b0478dce47d09fee2c229b2ac647b6f79de0a49a9ddac1176e667f8b8684",
+    "sourceFileCount": 1450,
+    "imageDigest": null,
+    "runId": "r3-prod01-20260913-a1",
+    "attempt": "1",
+    "sealedAt": "2026-09-13T23:39:59.869Z"
+  },
+  "artifacts": [
+    {
+      "path": "prod-01.test.log",
+      "sha256": "49eca2acd3b6cea7d102a687c6a1ed6cf0264c69c7c6f61bdd12d03bb7ff24e5"
+    }
+  ],
+  "limitations": [
+    "Revisão documental local; decisões D01-D06 e aceites de provider permanecem pendentes."
+  ]
+}

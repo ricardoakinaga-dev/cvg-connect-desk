@@ -1,0 +1,237 @@
+--- before/docs/ARCHITECTURE.md
++++ after/docs/ARCHITECTURE.md
+@@ -1,28 +1,32 @@
+-# Arquitetura — estado auditado em13/09/2026
++# Arquitetura — estado auditado em 13/09/2026, R3
+ 
+-**Candidato:** `754f9bad` + worktree identificado na [auditoria de entregas](auditorias/2026-09-13-entregas/RELATORIO.md). Estado de produção: NOT_READY.
++**Candidato:** HEAD `754f9bad` + worktree identificado por hashes na [auditoria R3](auditorias/2026-09-13-r3/RELATORIO.md). **Produção: NOT_READY.**
+ 
+ ## Fluxo e runtimes
+ 
+-Gateway autenticado → desk-api → PostgreSQL (mensagem, estado, recibos e outbox) → message-worker / realtime-service → interface React. O worker processa intenção de Secretary; resposta passa pela entrega outbound e sua reconciliação. O processamento de mídia começa após persistência; sua recuperação durável ainda precisa de integração ao runtime.
++Gateway autenticado → desk-api → PostgreSQL (mensagem, recibos, estado e outbox) → message-worker/realtime-service → interface React. O worker processa intenção Secretary e entrega outbound; reconciliação e resultado durável da IA ainda exigem fechamento. Outbox/DLQ são persistentes.
+ 
+-| Runtime | Responsabilidade atual | Limite auditado |
++| Runtime | Comportamento observado | Limite atual |
+ |---|---|---|
+-| desk-api | HTTP, autenticação, ação/recurso, webhooks, operações transacionais, polling e readiness | Retry reassinado e rota legada de anonimização ainda precisam correção |
+-| message-worker | Consumidor outbox, efeitos deduplicados, Secretary assíncrona, ACK/NACK/DLQ, health do processo/loop | Reconciliação unknown e comportamento sob lease expirado/provider lento precisam fechamento |
+-| realtime-service | WebSocket por mensagem, autorização/revalidação, fanout e health/readiness | Matriz multirréplica e revogação integrais precisam prova atual |
+-| desk-web | React, bootstrap /auth/me, Inbox/cadastros/Kanban/admin | Contexto, mídia, ações, sincronização e responsive ainda incompletos |
++| desk-api | Sessões opacas, ação/recurso, webhook, operações transacionais, polling/readiness | Privacidade legada contorna núcleo; CAS opcional nas operações |
++| message-worker | Outbox, leases/dedup, Secretary assíncrona, ACK/NACK/DLQ e health do loop | processing órfão pode receber ACK; recuperação de mídia pode saturar o pool |
++| realtime-service | WebSocket autorizado e revalidado; handler health/readiness/metrics | CLI nativa falha ao importar metrics ESM/CommonJS; testes sob Vitest passam |
++| desk-web | React, auth/me antes de consultas, Inbox/cadastros/Kanban/admin | Ações/contexto/mídia/vínculos/sincronização e matriz responsive/a11y incompletos |
+ 
+ ## Persistência e contratos
+ 
+-Sessões opacas armazenam hash e preservam deadlines normal/absoluto/idle. PostgreSQL mantém outbox com consumidores e leases por owner/generation, DLQ persistente, recibos de ingresso/envio e registros de invocação IA. Transações operacionais abrangem entidade/histórico/auditoria/outbox; precondição de versão ainda é opcional em operações de conversa.
++Sessões armazenam hash e deadlines normal/absoluto/idle. PostgreSQL mantém outbox, consumidores, leases, DLQ, recibos e invocações IA. Retry autenticado com assinatura renovada e mesmo payload é aceito; recibo completed recebe2xx. Provas atuais desses dois defeitos são unitárias; confirmação provider/PG/crash permanece adicional.
+ 
+-Mídia usa asset privado, quarentena e scan; DTOs evitam expor URL de origem. Recovery existente é chamado por migração/testes, sem ligação automática observada no runtime. A nova erasure verifica política e escopo; /anonymize legado ainda possui caminho separado inseguro.
++unknown/processing não reabrem automaticamente a IA, mas falta retomada/reconciliação durável para processing órfão. Operações de conversa abrangem entidade/histórico/auditoria/outbox; expected* seguem opcionais e o cliente não os envia. Exigir versão ponta a ponta está planejado.
+ 
+-OTel SDK e configuração de exportação existem; Compose transmite variáveis aos runtimes. Isso não prova spans completos no Collector nem alertas roteados. Conexões WebSocket em memória não significam outbox ou DLQ em memória.
++Mídia usa asset privado, quarentena e scan. Recovery agora é chamado pelo worker, inclui SCAN_FAILED e possui lease/backoff/tentativas; risco de concorrência pool10/lote50 precisa correção e prova PG real. Nova erasure verifica política/escopo, enquanto /anonymize legado ainda possui caminho separado inseguro.
+ 
+-## Decisões preservadas
++## Observabilidade e inicialização
+ 
+-Manter módulos, outbox PostgreSQL e sessões opacas; nenhum novo broker ou troca de stack é justificado pela auditoria. Tutor–paciente continua1:N no código, com proposta N:N e D03 aberta. Ferramentas IA permanecem desabilitadas por padrão com D05 aberta. D02 e condições operacionais continuam dependentes dos responsáveis.
++OTel SDK/configuração existem. Compose transmite METRICS_TOKEN para API/worker/realtime e Prometheus; scraper usa Bearer credentials_file. Handler realtime em produção responde503 sem token configurado,401 com credencial ausente/incorreta e200 com Bearer correto. Esses testes HTTP não provam scrape real.
+ 
+-Contratos e diferenças obrigatórias estão em [CONTRATOS](melhorias-2026-09-13/CONTRATOS.md); plano de evolução em [roadmap](melhorias-2026-09-13/ROADMAP.md). Este documento descreve código observado e limites, não certificação.
++A importação nomeada de metrics de @cvg/shared impede o entrypoint tsx observado de iniciar em Node24.20.0. PROD-05 atual falha no hook antes dos17 testes. Dockerfile usa esse comando, mas imagem real não foi executada nesta rodada. [Evidência](auditorias/2026-09-13-r3/evidencias/realtime-native-boot.log). PROD-44 corrige bootstrap; PROD-35/36 provam a imagem/ambiente final.
++
++## Direção preservada
++
++Manter módulos, outbox PostgreSQL e sessões opacas. Nenhum broker novo ou troca de stack foi justificado. Tutor–paciente permanece1:N, proposta N:N depende de D03; ferramentas IA desabilitadas por padrão dependem de D05. [Contratos](melhorias-2026-09-13-r3/CONTRATOS.md), [decisões](melhorias-2026-09-13-r3/DECISOES.md) e [roadmap](melhorias-2026-09-13-r3/ROADMAP.md).
+--- before/docs/TEST_MATRIX.md
++++ after/docs/TEST_MATRIX.md
+@@ -1,22 +1,28 @@
+-# Matriz de testes — auditoria de entregas13/09/2026
++# Matriz de testes — auditoria R3, 13/09/2026
+ 
+-Resultados abaixo pertencem ao candidato auditado identificado por hashes. PASS é do check listado, não de toda a área ou da prontidão produtiva. Contagens anteriores foram preservadas no snapshot documental da auditoria.
++PASS refere-se ao check e candidato identificados, não ao aceite integral da área. Resultados antigos estão preservados nos snapshots. **PROD-05 atual falhou no bootstrap; não repetir17/17 recebido como validação atual.**
+ 
+-| Escopo atual | Resultado | Evidência / limite |
+-|---|---|---|
+-| Typecheck | PASS33/33 pacotes | [log](auditorias/2026-09-13-entregas/evidencias/typecheck.log) |
+-| Lint | PASS33/33, warnings dentro dos limites | [log](auditorias/2026-09-13-entregas/evidencias/lint.log) |
+-| Web unit/jsdom | PASS268/268,22 arquivos | [log](auditorias/2026-09-13-entregas/evidencias/web-unit.log); sem API real |
+-| Gates/runtime, suítes existentes | PASS94/94 | [log](auditorias/2026-09-13-entregas/evidencias/ops/unit-tests.log) |
+-| Auth + worker, frente backend | PASS29/29 | [relatório](auditorias/2026-09-13-entregas/evidencias/backend/report.md) |
+-| Secretary async PROD10 | PASS7/7 | [log](auditorias/2026-09-13-entregas/evidencias/integration-10/output.log); PG/Redis próprios, providers simulados |
+-| Budget/approval PROD13 | PASS11/11 | [log](auditorias/2026-09-13-entregas/evidencias/integration-13/output.log); PG próprio |
+-| Nova erasure PROD16 | PASS9/9 | [log](auditorias/2026-09-13-entregas/evidencias/integration-16/output.log); não cobre bypass legado |
+-| Operações PROD18 | PASS18/18 após corrigir ambiente de invocação | [log](auditorias/2026-09-13-entregas/evidencias/prod18-corrected.log); tentativa inicial INVALID preservada |
+-| Adversariais novos do gate | FAIL do requisito | [reprodução](auditorias/2026-09-13-entregas/evidencias/lead-gate-repro.log): três casos inválidos aceitos |
+-| Browser visual/bootstrap | PARTIAL | [capturas e observações](auditorias/2026-09-13-entregas/evidencias/frontend/RELATORIO.md); frontend real, API sintética |
+-| Build global, coverage completa e CI remoto | NOT_RUN nesta rodada | Não extrapolar tipos/lint ou resultados antigos |
+-| Provider oficial, storage/scanner representativos, tracing completo | NOT_RUN nesta rodada | Mocks não encerram aceite real |
+-| Carga, DR durável, matriz a11y completa, produção | NOT_RUN nesta rodada | Metas e procedimentos continuam obrigatórios |
++| Escopo | Estado | Resultado | Evidência / limite |
++|---|---|---|---|
++| Typecheck | PASS | 33/33 pacotes | [evidência](auditorias/2026-09-13-r3/evidencias/typecheck.log) — Sem cache; não comprova inicialização. |
++| Lint | PASS | 33/33 pacotes | [evidência](auditorias/2026-09-13-r3/evidencias/lint.log) — Warnings dentro dos limites. |
++| Web unit/jsdom | PASS | 268/268;22 arquivos | [evidência](auditorias/2026-09-13-r3/evidencias/web-unit.log) — Sem backend real. |
++| PROD-02/03/36 | PASS | 25+17+5=47/47 | [evidência](auditorias/2026-09-13-r3/evidencias/ops/node-tests.log) — Não cobre os novos adversariais; PROD36 não prova Docker. |
++| Realtime unit | PASS | 87/87;10 arquivos | [evidência](auditorias/2026-09-13-r3/evidencias/realtime-unit.log) — AAA05 executado separadamente; Vitest não prova bootstrap nativo. |
++| Realtime metrics HTTP | PASS | 3/3 | [evidência](auditorias/2026-09-13-r3/evidencias/ops/realtime-health.log) — Está incluído nos87; não somar. Handler em servidor HTTP local sob Vitest. |
++| AAA-05 isolado | PASS | 14/14 | [evidência](auditorias/2026-09-13-r3/evidencias/aaa05/results.json) — PG/Redis próprios+sockets reais; classe carregada pelo Vitest, não entrypoint CLI. |
++| PROD-05 atual | FAIL | 1 suite falhou;17 testes não executados | [evidência](auditorias/2026-09-13-r3/evidencias/integration-05/output.log) — Falha de bootstrap realtime no beforeAll; não são17 falhas de asserção. |
++| Bootstrap realtime nativo | FAIL | exit1 | [evidência](auditorias/2026-09-13-r3/evidencias/realtime-native-boot.log) — Erro de named export antes de I/O; não atribuir ao PG. |
++| PROD-18 atual | PASS | 18/18 | [evidência](auditorias/2026-09-13-r3/evidencias/integration-18/output.log) — PG/Redis isolados; precondições omitidas no cliente ainda não protegidas. |
++| Backend focado | PASS | 38/38;5 arquivos | [evidência](auditorias/2026-09-13-r3/evidencias/backend/unit-tests.log) — Mocks; nome postgres em suíte não significa PG real. |
++| Gate adversarial R3 | FAIL_REQUIREMENT | 4 cenários inválidos aceitos; controle vazio rejeitado | [evidência](auditorias/2026-09-13-r3/evidencias/ops/query-probe.log) — null, excedente, futuro e run/attempt ausentes; fixtures no validador real. |
++| Recovery pool probe | FAIL_REQUIREMENT | 1 job progride;10/50 não progridem na janela simulada | [evidência](auditorias/2026-09-13-r3/evidencias/backend/pool-probe.json) — Função real extraída+pool simulado; não alegar deadlock infinito/PG medido. |
++| Compose config | PASS | 2/2 arquivos | [evidência](auditorias/2026-09-13-r3/evidencias/compose-config.json) — Somente parsing/interpolação; não Docker up ou scrape. |
++| PROD-00 baseline hashes | PASS_STATIC | 42/42 sem drift | [evidência](auditorias/2026-09-13-r3/evidencias/ops/baseline-drift.json) — Recalculo de hashes; não reexecução dos8testes. |
++| PROD-00 suite | SUBMITTED_NOT_RERUN | 8/8 informado | Suite grava diretório histórico fixo; não executada nesta auditoria para preservá-lo. |
++| Browser UI parcial | PARTIAL | 23 PNGs;Inbox375/1024/1440 e páginas desktop | [evidência](auditorias/2026-09-13-r3/evidencias/frontend/RELATORIO-R3.md) — Vite real com API sintética; não E2E integrado; não16rotas×5viewports. |
++| git diff --check | PASS | exit0 | [evidência](auditorias/2026-09-13-r3/evidencias/diff-check.log) — Não substitui validação dos arquivos novos não rastreados. |
++| Docker/MinIO/ClamAV/SIGKILL/E2E real/DR/carga/CI remoto | NOT_RUN | Sem prova nesta rodada | Também sem build global/coverage atual/sandbox oficial/scrape real. Não inferir indisponibilidade do ambiente, apenas não executado. |
+ 
+-A [auditoria](auditorias/2026-09-13-entregas/RELATORIO.md) registra metodologia, falhas e limites. Os [critérios G01–G12](melhorias-2026-09-13/CRITERIOS.md) definem o fechamento futuro. Não há cobertura global atual medida por esta tabela.
++
++Não somar os3 testes de realtime-health aos87 da suíte: são sobrepostos. AAA0514/14 usa PG/Redis/sockets reais sob Vitest; não substitui processo CLI. Não há coverage global/build integral/CI remoto novo medido aqui. [Comandos e limites](auditorias/2026-09-13-r3/VERIFICACOES.json), [relatório](auditorias/2026-09-13-r3/RELATORIO.md) e [G01–G12](melhorias-2026-09-13-r3/CRITERIOS.md).
+--- before/docs/GAPS-TECNICOS.md
++++ after/docs/GAPS-TECNICOS.md
+@@ -1,15 +1,19 @@
+-# Pendências técnicas — revisão13/09/2026
++# Pendências técnicas — revisão R3, 13/09/2026
+ 
+-**Estado: NOT_READY.** A [auditoria das entregas](auditorias/2026-09-13-entregas/RELATORIO.md) substitui conclusões anteriores de ausência de blockers. O [backlog R2](melhorias-2026-09-13/BACKLOG.md) é a fonte de execução.
++**NOT_READY.** [Auditoria atual](auditorias/2026-09-13-r3/RELATORIO.md) e [backlog R3](melhorias-2026-09-13-r3/BACKLOG.md) são a referência de continuidade.
+ 
+-| Frente | Pendência comprovada ou prova faltante | Encaminhamento |
++| Frente | Pendência atual | Encaminhamento |
+ |---|---|---|
+-| Gate/CI | Digest divergente, manifesto contraditório e queries vazias aceitos; política de evento e identidade de imagem incompletas | PROD02/03/34/35 |
+-| Privacidade | Rota legada não aplica política/escopo/checkpoints da nova erasure | PROD16 |
+-| Ingresso/IA | Retry reassinado rejeitado; unknown reaberto sem confirmação remota | PROD07/10/13 |
+-| Mídia | Recovery não conectado ao runtime e SCAN_FAILED fora do filtro | PROD14/15/32 |
+-| Concorrência | Precondição opcional nas operações e ausente no cliente | PROD18/19/27 |
+-| Produto | Contexto/ações/mídia/seletores/admin e atualização entre operadores incompletos | PROD19–30 |
+-| Operação | CI/imagens/OTel/carga/restore/a11y integrados sem prova atual suficiente | PROD31–40 |
++| Bootstrap realtime | Named export metrics quebra entrypoint nativo; PROD05 não executa17 casos | PROD-44,05,34,36 |
++| Gate/CI | Números nulos/acima do budget/futuros e artefato derivado sem run/attempt recebem PASS; imagem entregue ainda não vinculada integralmente | PROD-02,03,33,35 |
++| Privacidade | /anonymize legado contorna política e escopo do núcleo | PROD-16 |
++| IA e crash | processing órfão pode receber ACK sem checkpoint/reconciliação | PROD-10,12,13 |
++| Mídia | Recovery ligado, mas risco de auto-saturação do pool; origem expirada e scanner/storage reais pendentes | PROD-14,15,32 |
++| Concorrência | Versão opcional nas operações e ausente na UI | PROD-18,19,27 |
++| Interface | FE01–17 abertos: drawer/foco, contexto/ações, timeline/mídia, vínculos/seletores/admin e atualização entre operadores | PROD-19–30,38 |
++| Operação | Smoke/DR inseguros ou incompletos; imagens, scrape/alertas, carga, SIGKILL físico e E2E real sem prova suficiente | PROD-31–40 |
++| Governança | D01–D06 abertas, atualização de backlog por execução e certificação final pendentes | PROD-00,01,39–43 |
+ 
+-Preservar avanços: autorização efetiva, recibos, worker assíncrono, budget persistente, pipeline privado, nova erasure, operações transacionais, auth bootstrap e health real. Outbox e DLQ são persistentes; OTel existe no código. Permanecem decisões D01–D06, limites de infraestrutura e autorização de release.
++Correções específicas confirmadas: retry com assinatura renovada, ACK2xx de completed, digest divergente, contradição comando/exit/log e evento desconhecido. Queries vazias já são recusadas. Baseline PROD00 atual42/42 hashes corresponde; não repetir o drift antigo. Handler de métricas está protegido e wiring Compose/Prometheus existe; falha de boot e falta de scrape impedem considerar observabilidade operacional concluída.
++
++Preservar demais entregas: sessões opacas, autorização efetiva, outbox/DLQ persistentes, pipeline privado, nova erasure, operações transacionais, auth bootstrap web e health do processo/loop.
+--- before/docs/THREAT_MODEL.md
++++ after/docs/THREAT_MODEL.md
+@@ -1,19 +1,20 @@
+-# Modelo de ameaças — estado auditado13/09/2026
++# Modelo de ameaças — revisão R3, 13/09/2026
+ 
+-Fronteiras: navegador/proxy/API, Gateway/Secretary, PostgreSQL/outbox/worker, Redis/WebSocket, storage/scanner, CI/registry e operadores. Este é um resumo técnico; não representa aprovação regulatória ou operacional.
++Fronteiras: navegador/proxy/API, Gateway/Secretary, PostgreSQL/outbox/worker, Redis/WebSocket, storage/scanner, CI/registry e operadores. Resumo técnico observado; não representa certificação regulatória ou operacional.
+ 
+-| Ameaça | Controle observado | Lacuna / prova necessária |
++| Ameaça | Controle observado | Lacuna / prova exigida |
+ |---|---|---|
+-| Sessão roubada ou acesso cruzado | Token opaco com hash, deadlines, ação/recurso e revogação | Matriz atual HTTP/WS e todos os endpoints, inclusive legados |
+-| Webhook forjado/repetido | HMAC/skew e recibo claim/complete/fail | Retry reassinado e resposta idempotente precisam contrato coerente |
+-| Efeito repetido/perdido sob crash | Outbox, leases, dedup, transações e DLQ persistente | unknown da IA, lease longo e confirmação de provider |
+-| Mutação de dados fora da política/escopo | Nova erasure com política e checkpoints | /anonymize legado contorna o núcleo; prioridade de correção |
+-| SSRF, malware e exposição de anexos | Validação, asset privado e quarentena/scan | Recovery de mídia e storage/scanner representativos ponta a ponta |
+-| Escrita concorrente perdida | Locks e CAS quando fornecido | Exigir precondição entre DTO/API/UI e tratar conflito |
+-| IA excedendo orçamento/autoridade | Admissão persistente e tools desabilitadas por padrão | Reconciliação de unknown; D05 e aprovadores necessários para ativar |
+-| PII em logs/traces | Redaction e telemetria implementadas | Revisão recursiva e prova real de toda cadeia |
+-| Release com evidência falsa | Gate/manifests e jobs requeridos | Adversariais demonstram falsos PASS; digest e payload precisam validação |
+-| Supply chain / imagem diferente da testada | Workflows de scan/SBOM e builds | Vincular mesmos manifest digests a scan/boot/E2E/promoção |
+-| Desastre / restauração indevida | Scripts de backup/restore disponíveis | Namespaces, checksum obrigatório, integridade de todas cópias, mídia e erasures |
++| Sessão roubada/acesso cruzado | Sessões opacas com hash/deadlines, ação/recurso e revogação | Matriz integral HTTP/WS e legados; PROD05 atual bloqueado por boot |
++| Webhook forjado/repetido | HMAC/skew e recibos; retry reassinado e ACK completed corrigidos | Prova HTTP+PG/crash e contrato provider oficial |
++| Efeito perdido/repetido | Outbox, leases/dedup e unknown preservado | processing órfão ACKed, resultado IA/checkpoint/reconciliação |
++| Mutação fora de escopo/política | Nova erasure com política e checkpoints | /anonymize legado ainda contorna núcleo; D02 |
++| SSRF/malware/anexo exposto | Asset privado, validação, quarentena/scan e recovery ligado | Contenção de pool e storage/scanner/revogação reais |
++| Escrita obsoleta | Locks e CAS quando fornecido | Versão obrigatória API/UI e conflito sem escrita |
++| IA excedendo orçamento/autoridade | Budget persistente, tools deny-default | Reconciliação e ratificação D05 antes de efeitos |
++| Indisponibilidade/telemetria ausente | Health/readiness e metrics com Bearer | Entry point realtime quebra no import; scrape/alerta real pendente |
++| PII em logs/traces | Redaction/telemetria implementadas | Revisão recursiva e cadeia real completa |
++| Release com evidência inválida | Gate corrigiu digest/comando/evento e queries vazias | Ainda aprova valores inválidos/budget/tempo e derivado sem run/attempt |
++| Artefato diferente do testado | Scan/SBOM e workflows | Mesmos digests em build/scan/boot/E2E/promoção |
++| Desastre/restauração indevida | Scripts de backup/restore | Namespaces seguros, checksum obrigatório, mídia/erasures e restore integral |
+ 
+-DLQ e outbox não são apenas memória; OTel SDK existe e o Compose transmite configuração. Esses controles não eliminam as lacunas acima. Detalhes e evidências na [auditoria](auditorias/2026-09-13-entregas/RELATORIO.md); decisões e execução no [programa R2](melhorias-2026-09-13/README.md).
++[Auditoria e fontes](auditorias/2026-09-13-r3/RELATORIO.md) · [Plano R3](melhorias-2026-09-13-r3/README.md). Resolução específica não dispensa controles integrados e decisões do responsável.
+--- before/docs/TRIPLE_AAA_CERTIFICATION.md
++++ after/docs/TRIPLE_AAA_CERTIFICATION.md
+@@ -1,11 +1,13 @@
+ # Estado de certificação e prontidão
+ 
+-**13/09/2026 — NOT_READY. Não há certificação atual demonstrada para o worktree auditado.**
++**13/09/2026, R3 — NOT_READY. Não há certificação atual demonstrada para o worktree auditado.**
+ 
+-A [auditoria das entregas](auditorias/2026-09-13-entregas/RELATORIO.md) encontrou falhas obrigatórias apesar de checks locais positivos. O gate atual aceita três tipos de evidência inválida. Portanto, VERIFIED_CANDIDATE produzido por ele não basta para qualificar o artefato.
++A [auditoria R3](auditorias/2026-09-13-r3/RELATORIO.md) revalidou entregas e encontrou falha de bootstrap realtime, novos falsos PASS no gate, riscos de recuperação e lacunas ainda abertas de dados/UI. PROD05 atual falhou antes dos17 testes; os87 testes realtime sob Vitest não provam o entrypoint nativo.
+ 
+-O relato anterior de release closure foi preservado no [snapshot documental](auditorias/2026-09-13-entregas/evidencias/documentation-before/docs/TRIPLE_AAA_CERTIFICATION.md). Seus números e resultados pertencem ao contexto declarado ali; não são selo do candidato atual.
++O gate corrigiu digest divergente, manifesto contraditório, evento desconhecido e queries vazias. Ainda aceita medições nulas/acima do budget/futuras e artefato derivado sem run/attempt. VERIFIED_CANDIDATE gerado por esse gate não é certificação suficiente.
+ 
+-Para nova decisão: corrigir gates e falhas, produzir evidência íntegra de G01–G12, realizar crítica independente PROD40 e preparar pacote PROD41 com fontes/lock/imagens/scan/runbooks/recuperação/owners. Implantação PROD42 exige autorização aplicável sobre esse pacote; estabilização e SLO de campo são PROD43.
++A crítica independente desta rodada avalia relatório/plano. **PROD-40 ainda exige crítica fresca do produto integrado**, após correções e G01–G12 completos. Docker/Compose, storage/scanner, SIGKILL físico, E2E real, imagens/CI, carga, restore e decisões D01–D06 precisam das provas/ratificações pertinentes.
+ 
+-[Critérios](melhorias-2026-09-13/CRITERIOS.md) · [Backlog](melhorias-2026-09-13/BACKLOG.md) · [Matriz atual de testes](TEST_MATRIX.md).
++PROD-41 prepara pacote revisável com fontes/lock/imagens/scans/migrações/recuperação/runbooks/owners. PROD-42 implanta quando autorizado; PROD-43 mede estabilização/SLO de campo. Não há commit ou deploy nesta auditoria.
++
++[Critérios](melhorias-2026-09-13-r3/CRITERIOS.md) · [Backlog](melhorias-2026-09-13-r3/BACKLOG.md) · [Matriz de testes](TEST_MATRIX.md). Histórico preservado: [R2](auditorias/2026-09-13-entregas/RELATORIO.md).
+--- before/docs/00-meta/README.md
++++ after/docs/00-meta/README.md
+@@ -1,9 +1,11 @@
+ # Mapa da Documentação — CVG Connect Desk
+ 
+ > **Status:** DOCUMENTO DE REFERÊNCIA
+-> **Atualizado:** 2026-09-13 — auditoria das entregas
++> **Atualizado:** 2026-09-13 — auditoria R3
+ 
+-**Referência atual — auditoria das entregas e continuidade:** [relatório R2](../auditorias/2026-09-13-entregas/RELATORIO.md) e [plano executivo, roadmap e backlog R2](../melhorias-2026-09-13/README.md). Produto NOT_READY; entregas parciais reconhecidas e falhas rastreadas.
++**Referência atual — auditoria R3 e continuidade:** [relatório R3](../auditorias/2026-09-13-r3/RELATORIO.md) e [plano executivo, roadmap e backlog R3](../melhorias-2026-09-13-r3/README.md). Produto NOT_READY; bootstrap realtime falha no processo nativo e os resultados/provas restantes estão discriminados.
++
++**Histórico R2:** [auditoria das entregas](../auditorias/2026-09-13-entregas/RELATORIO.md) e [plano anterior](../melhorias-2026-09-13/README.md), preservados como retrato da rodada anterior.
+ 
+ **Histórico de13/09:** [auditoria inicial](../auditorias/2026-09-13/RELATORIO.md) e [programa executado parcialmente](../producao-2026-09-13/README.md).
+ 
+@@ -22,7 +24,7 @@
+ - **Histórico** — auditorias e planos de momentos específicos
+ - **Análises** — estudos comparativos entre docs e código
+ 
+-**Problema conhecido:** os inventários e descrições históricos abaixo podem conter afirmações que não correspondem mais ao código atual. Para estado técnico, prevalecem ARCHITECTURE, TEST_MATRIX, GAPS-TECNICOS e a auditoria R2 vinculada acima. Este mapa ajuda a identificar qual documento consultar para cada necessidade.
++**Problema conhecido:** os inventários e descrições históricos abaixo podem conter afirmações que não correspondem mais ao código atual. Para estado técnico, prevalecem ARCHITECTURE, TEST_MATRIX, GAPS-TECNICOS e a auditoria R3 vinculada acima. Este mapa ajuda a identificar qual documento consultar para cada necessidade.
+ 
+ ---
+ 
+@@ -39,9 +41,9 @@
+ 
+ ---
+ 
+-## 3. Documentos de Estado Atual (Confiáveis)
++## 3. Referências operacionais a consultar com a auditoria atual
+ 
+-Estes documentos refletem o estado real do código:
++Os documentos abaixo são referências existentes; suas afirmações precisam ser confrontadas com a auditoria R3 e os documentos centrais atualizados.
+ 
+ | Documento | O Que Contém | Quando Usar |
+ |-----------|--------------|-------------|
+@@ -50,7 +52,7 @@
+ | `26-relatorio-analise-documentacao-vs-implementacao.md` | Análise técnica completa | Entender estado real do projeto |
+ | `27-relatorio-executivo-rastreabilidade-documentacao-vs-codigo.md` | Tabela de aderência docs vs código | Verificar se algo está implementado |
+ 
+-**Estes são os documentos mais confiáveis para consulta operacional.**
++**Para resultado técnico atual, prevalecem auditoria R3, ARCHITECTURE, TEST_MATRIX, GAPS-TECNICOS e o backlog R3.**
+ 
+ ---
+ 

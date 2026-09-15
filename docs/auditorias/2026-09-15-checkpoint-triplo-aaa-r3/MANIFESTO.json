@@ -1,0 +1,95 @@
+{
+  "kind": "audit-documentation-checkpoint-r3",
+  "created_at": "2026-09-15T10:52:23.053650Z",
+  "scope": "Todos os arquivos da auditoria R3, exceto este MANIFESTO.json para evitar autorreferência.",
+  "files": {
+    "ACHADOS.json": {
+      "size": 4950,
+      "sha256": "d0f8d32e02ee65f49ff0b7d993b3075f456b79ec0368cba4082540e9766a9b03"
+    },
+    "ARTIFACTS.json": {
+      "size": 6307,
+      "sha256": "22443cc5fafc577f0e05eb70c4c29298c47bfde291745d856faa3b331a1fb1d2"
+    },
+    "EVIDENCE-INVENTORY.json": {
+      "size": 1847,
+      "sha256": "b1a9540a8fbbe932c2fb0c81d1ca2e590f085c33316f37e03e072c8c231dc028"
+    },
+    "RELATORIO.md": {
+      "size": 12101,
+      "sha256": "39e2eb309dce3e476eb81f98fad4d7288769cedd67a0ce65c7bc2607990611c1"
+    },
+    "REVISAO-I1-01.md": {
+      "size": 1324,
+      "sha256": "d3319008779e720c9e9ca2ddeedbd285b5122b757d48c723e79806ca09d5fa87"
+    },
+    "REVISAO-I1-02.md": {
+      "size": 1089,
+      "sha256": "a76d07bbf780169bef1c1ae09db7bfb7ee7b13d7750dcd648eae4d4862431ff5"
+    },
+    "REVISAO-I1-03.md": {
+      "size": 872,
+      "sha256": "02d1253a8fac7a6ddef1b45f09fa1eaabf6e2d510bfa0e6e197d12b37baf57af"
+    },
+    "REVISAO-I1-04.md": {
+      "size": 740,
+      "sha256": "4bbc2c515996404d8c933e14c5dcc06abcc95ccadf54464b6c1035bd43a0d857"
+    },
+    "REVISAO-I1-05.md": {
+      "size": 567,
+      "sha256": "f6408a9232aa6514dc3d25b031e57984235404e2e8cf7b677cd9ee58723e576d"
+    },
+    "VALIDACAO.md": {
+      "size": 1840,
+      "sha256": "190dcb30615be47bb12e1e07de609ae4ab4fcf4ade4a41cfd02ef8eaeb048d69"
+    },
+    "VERIFICACOES.json": {
+      "size": 16052,
+      "sha256": "a3b2eff2f72b72cd50211e51bf5341626427d661e2586b5087e1ed0d96c74170"
+    },
+    "evidencias/build.log": {
+      "size": 3204,
+      "sha256": "f1fe35d306d02c1b42568c179172a1844c8cffccac900a66ce591d894ce08c70"
+    },
+    "evidencias/candidate-probes.json": {
+      "size": 1018,
+      "sha256": "675813c7f47e157015eaefd1a312335dbb2461360ba28c30b26f7555ab69aa7e"
+    },
+    "evidencias/documentation-validation.json": {
+      "size": 213,
+      "sha256": "e5861c4c2fdf1da7e64896290497ae776270a52d0075865f15f95b81d04e93cd"
+    },
+    "evidencias/lint.log": {
+      "size": 46965,
+      "sha256": "36d978f35169268217edf269783ea67d8c5f5d06db201f77417b3a7d22707843"
+    },
+    "evidencias/local-check-status.json": {
+      "size": 49,
+      "sha256": "c52be1006d8305a761488ac914c86b1f55b893adeedf679e55338f3ee2036f1e"
+    },
+    "evidencias/prod-36.log": {
+      "size": 5885,
+      "sha256": "9ecd6835b42678a2782f1cf6b01ffb991fd5daaf655e8c2000c09e3f1ad61694"
+    },
+    "evidencias/programa-validate.log": {
+      "size": 741,
+      "sha256": "91ef2afd62b36a17c11c3ab0be175666e6448c694341ed9e33472fe8e163f1a4"
+    },
+    "evidencias/route-audit.log": {
+      "size": 1081,
+      "sha256": "dd3346f9889f0371df39f4278948c355df64107e61a1fdeee8cfc03ff486e8a9"
+    },
+    "evidencias/tool-versions.log": {
+      "size": 72,
+      "sha256": "72b7ca0437447ebb1ac69ea8972c9169beb014b531e7a31faf144df886c22584"
+    },
+    "evidencias/typecheck.log": {
+      "size": 10117,
+      "sha256": "8f4ec64c96daf936db5e27c61f745e2e0cace364b0fc61f41b7383c1306bb258"
+    },
+    "reproduce-evidence-inventory.py": {
+      "size": 2957,
+      "sha256": "b8c331bad6331bc02548e9c1d0c1a6608deaf18fb828d642eeecb4c78f72e1bc"
+    }
+  }
+}

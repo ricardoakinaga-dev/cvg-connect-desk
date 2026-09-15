@@ -9,7 +9,9 @@ export type WebhookSecurityReason =
   | 'timestamp_too_old'
   | 'timestamp_too_future'
   | 'missing_event_id'
-  | 'duplicate_event_id';
+  | 'duplicate_event_id'
+  | 'event_payload_mismatch'
+  | 'event_in_progress';
 
 export interface WebhookSecurityDecision {
   reason: WebhookSecurityReason;
@@ -42,6 +44,8 @@ const reasonKeys: WebhookSecurityReason[] = [
   'timestamp_too_future',
   'missing_event_id',
   'duplicate_event_id',
+  'event_payload_mismatch',
+  'event_in_progress',
 ];
 
 function createInitialStats(): WebhookSecurityStats {
@@ -61,6 +65,8 @@ function createInitialStats(): WebhookSecurityStats {
       timestamp_too_future: 0,
       missing_event_id: 0,
       duplicate_event_id: 0,
+      event_payload_mismatch: 0,
+      event_in_progress: 0,
     },
     lastDecisionAt: null,
     lastDecision: null,

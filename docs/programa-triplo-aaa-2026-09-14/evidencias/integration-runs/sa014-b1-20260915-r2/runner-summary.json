@@ -1,0 +1,54 @@
+{
+  "runId": "sa014-b1-20260915-r2",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_r2_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:49:57.822Z",
+  "finishedAt": "2026-09-15T03:50:04.544Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-014-message-contract.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa014_b1_20260915_r2_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa014-b1-20260915-r2",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa014-b1-20260915-r2",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:49:57.822Z",
+      "finishedAt": "2026-09-15T03:50:00.047Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:50:00.047Z",
+      "finishedAt": "2026-09-15T03:50:00.935Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-014-message-contract.integration.test.ts",
+      "startedAt": "2026-09-15T03:50:00.935Z",
+      "finishedAt": "2026-09-15T03:50:04.544Z",
+      "exitStatus": 1,
+      "signal": null,
+      "stdoutTail": "s) > AC2/AC3 — intenção outbound antes do efeito e falha em pontos de escrita > falha no INSERT do mapping (trigger) ⇒ rollback total e provider NUNCA chamado; replay seguro cria 1 efeito 35ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC2/AC3 — intenção outbound antes do efeito e falha em pontos de escrita > falha no commit APÓS o aceite do provider conserva causalidade: retry não reenvia e receipt reconcilia UMA vez 40ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC2/AC3 — intenção outbound antes do efeito e falha em pontos de escrita > hash canônico: metadados em ordem diferente deduplicam; conteúdo divergente ⇒ 409 sem novo efeito 23ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC2/AC3 — intenção outbound antes do efeito e falha em pontos de escrita > aceite desconhecido entra em reconciliação explícita e é listável; nunca reenvia cegamente 30ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC4 — receipts e mensagens fora de ordem > receipts em ordem inversa não regridem delivered nem duplicam efeito 42ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC4 — receipts e mensagens fora de ordem > receipt ANTES da mensagem é no-op seguro e definido: sem linhas, intent listável e convergência na reentrega 43ms\n   ✓ SA-014 — contrato de mensagem durável e reconciliação (PG/Redis reais) > AC4 — receipts e mensagens fora de ordem > inbounds fora de ordem (sentAt mais novo primeiro) persistem uma vez cada, com timestamps próprios 22ms\n\n Test Files  1 failed (1)\n      Tests  8 passed (8)\n   Start at  00:50:01\n   Duration  2.88s (transform 933ms, setup 0ms, collect 1.93s, tests 729ms, environment 0ms, prepare 60ms)\n\nundefined\n/home/ricardo/cvg-connect-desk/apps/desk-api:\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/__tests__/sa-014-message-contract.integration.test.ts\n",
+      "stderrTail": "onciliação explícita): timeout do provider\n\n\n⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  src/__tests__/sa-014-message-contract.integration.test.ts [ src/__tests__/sa-014-message-contract.integration.test.ts ]\nError: Failed query: delete from \"contacts\" where \"contacts\".\"phone\" = $1\nparams: 5511444203615\n ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:73:11\n ❯ src/__tests__/sa-014-message-contract.integration.test.ts:307:3\n    305|   await cleanupConversations(trackedConversations.splice(0));\n    306|   await db.delete(schema.webhookReplayLog).where(like(schema.webhookRe…\n    307|   await db.delete(schema.contacts).where(eq(schema.contacts.phone, CON…\n       |   ^\n    308|   try {\n    309|     const events = await import('@cvg/events');\n\nCaused by: error: update or delete on table \"contacts\" violates foreign key constraint \"conversations_contact_id_fkey\" on table \"conversations\"\n ❯ ../../node_modules/.pnpm/pg-pool@3.13.0_pg@8.20.0/node_modules/pg-pool/index.js:45:11\n ❯ ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/node-postgres/session.ts:149:14\n ❯ NodePgPreparedQuery.queryWithCache ../../node_modules/.pnpm/drizzle-orm@0.45.2_@opentelemetry+api@1.9.1_@types+pg@8.20.0_pg@8.20.0/node_modules/src/pg-core/session.ts:71:12\n ❯ src/__tests__/sa-014-message-contract.integration.test.ts:307:3\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\nSerialized Error: { length: 345, severity: 'ERROR', code: '23503', detail: 'Key (id)=(655cb836-3782-4afc-aa05-426c00de8b2b) is still referenced from table \"conversations\".', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'conversations', dataType: undefined, constraint: 'conversations_contact_id_fkey', file: 'ri_triggers.c', routine: 'ri_ReportViolation' }\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 1
+}

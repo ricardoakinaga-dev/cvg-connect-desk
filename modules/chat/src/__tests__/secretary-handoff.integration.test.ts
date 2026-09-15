@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { and, asc, eq } from 'drizzle-orm';
 import { db, schema } from '@cvg/database';
 import { err, ok } from '@cvg/shared';
+import type { Ok, Result } from '@cvg/shared';
 
 vi.mock('@cvg/integrations', () => ({
   getSecretaryClient: vi.fn(),
@@ -17,7 +18,6 @@ import { receiveInboundMessage } from '../application/use-cases/receive-inbound-
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://connect_desk:root@localhost:5432/connect_desk_db';
 
-let realDbAvailable = false;
 let dbInitError = '';
 
 async function probeRealDatabase(): Promise<boolean> {
@@ -65,7 +65,11 @@ function collectEventCounts(events: Array<{ eventType: string }>) {
   }, {});
 }
 
-function parsePayload<T extends { status?: string; completedAt?: string; reason?: string }>(payload: unknown): T {
+function assertOk<T, E>(result: Result<T, E>): asserts result is Ok<T, E> {
+  expect(result.isOk()).toBe(true);
+}
+
+function parsePayload<T = unknown>(payload: unknown): T {
   return typeof payload === 'string' ? JSON.parse(payload) as T : payload as T;
 }
 
@@ -148,7 +152,7 @@ if (await probeRealDatabase()) {
           sender: '+5511988000001',
         });
 
-        expect(result.isOk()).toBe(true);
+        assertOk(result);
         expect(result.value).toMatchObject({
           classified: true,
           handoffTriggered: false,
@@ -230,7 +234,7 @@ if (await probeRealDatabase()) {
           sender: '+5511988000002',
         });
 
-        expect(result.isOk()).toBe(true);
+        assertOk(result);
         expect(result.value).toMatchObject({
           classified: true,
           handoffTriggered: true,
@@ -257,9 +261,9 @@ if (await probeRealDatabase()) {
         const handoffCompleted = events.find((event) => event.eventType === 'handoff.completed');
 
         expect(handoffRequested).toBeDefined();
-        expect(parsePayload(handoffRequested?.payload).reason).toBe('Caso urgente precisa de triagem humana');
+        expect(parsePayload<{ reason: string }>(handoffRequested?.payload).reason).toBe('Caso urgente precisa de triagem humana');
         expect(handoffCompleted).toBeDefined();
-        expect(parsePayload(handoffCompleted?.payload).completedAt).toEqual(expect.any(String));
+        expect(parsePayload<{ completedAt: string }>(handoffCompleted?.payload).completedAt).toEqual(expect.any(String));
 
         const conversation = await conversationRepository.findById(conversationId);
         expect(conversation?.currentHandler).toBe('bot');
@@ -311,7 +315,7 @@ if (await probeRealDatabase()) {
           sender: '+5511988000003',
         });
 
-        expect(result.isOk()).toBe(true);
+        assertOk(result);
         expect(result.value.handoffTriggered).toBe(false);
 
         const events = await db
@@ -328,13 +332,13 @@ if (await probeRealDatabase()) {
       }
     });
 
-    it('receiveInboundMessage persiste, audita e dispara handoff uma única vez', async () => {
+    it('receiveInboundMessage persiste, audita e deixa a intenção durável da Secretary (sem esperar IA)', async () => {
       const conversationId = randomUUID();
       const externalConversationId = `${conversationId}.external`;
       const externalMessageId = `${conversationId}.message`;
       const userId = randomUUID();
 
-      setSecretarySuccessResponse({
+      const secretaryClient = setSecretarySuccessResponse({
         success: true,
         response: 'Transferindo para humano',
         action: 'handoff',
@@ -367,7 +371,7 @@ if (await probeRealDatabase()) {
           userId,
         });
 
-        expect(result.isOk()).toBe(true);
+        assertOk(result);
         expect(result.value).toMatchObject({
           conversationId: expect.any(String),
           messageId: expect.any(String),
@@ -376,21 +380,24 @@ if (await probeRealDatabase()) {
 
         const conversation = await conversationRepository.findByExternalId(externalConversationId);
         expect(conversation).not.toBeNull();
-        expect(conversation?.currentHandler).toBe('human');
+        // PROD-10: o webhook não espera a IA nem muda o handler; a invocação
+        // assíncrona é quem decide handoff depois (worker com lease).
+        expect(conversation?.currentHandler).toBe('bot');
+        expect(secretaryClient.invoke).not.toHaveBeenCalled();
 
         const storedMessage = await messageRepository.findByExternalId(externalMessageId);
         expect(storedMessage).not.toBeNull();
         expect(storedMessage?.content).toBe('Tenho uma urgência com meu pet');
+        expect(storedMessage?.direction).toBe('inbound');
 
         const auditLogs = await db
           .select()
           .from(schema.auditLogs)
-          .where(and(eq(schema.auditLogs.entityType, 'conversation'), eq(schema.auditLogs.entityId, conversation?.id ?? '')));
+          .where(and(eq(schema.auditLogs.entityType, 'message'), eq(schema.auditLogs.entityId, storedMessage?.id ?? '')));
 
-        const handoffAudit = auditLogs.find((entry) => entry.action === 'conversation.handoff');
-        expect(handoffAudit).toBeDefined();
-        expect(handoffAudit?.userId).toBe(userId);
-        expect(handoffAudit?.metadata).toContain('Secretary requested handoff');
+        const inboundAudit = auditLogs.find((entry) => entry.action === 'message.inbound.received');
+        expect(inboundAudit).toBeDefined();
+        expect(inboundAudit?.userId).toBe(userId);
 
         const events = await db
           .select()
@@ -400,9 +407,9 @@ if (await probeRealDatabase()) {
 
         const counts = collectEventCounts(events.map((event) => ({ eventType: event.eventType })));
         expect(counts['conversation.created']).toBe(1);
-        expect(counts['secretary.invocation']).toBe(2);
-        expect(counts['handoff.requested']).toBe(1);
-        expect(counts['handoff.completed']).toBe(1);
+        expect(counts['secretary.invocation']).toBeUndefined();
+        expect(counts['handoff.requested']).toBeUndefined();
+        expect(counts['handoff.completed']).toBeUndefined();
 
         const messageEvents = await db
           .select()
@@ -411,18 +418,21 @@ if (await probeRealDatabase()) {
 
         const messagePersistedForConversation = messageEvents.filter((event) => parsePayload<{ conversationId: string }>(event.payload).conversationId === conversation!.id);
         expect(messagePersistedForConversation).toHaveLength(1);
+        // A intenção durável da invocação é o próprio message.persisted do
+        // inbound (o worker a reclama e executa a IA sob lease).
+        expect(parsePayload<{ direction: string }>(messagePersistedForConversation[0]!.payload).direction).toBe('inbound');
       } finally {
         await cleanupConversationArtifacts(conversationId);
         await cleanupUserArtifacts(userId);
       }
     });
 
-    it('receiveInboundMessage continua operando quando a Secretary falha', async () => {
+    it('receiveInboundMessage não depende da Secretary (invocação é assíncrona e degrada no worker)', async () => {
       const conversationId = randomUUID();
       const externalConversationId = `${conversationId}.failure.external`;
       const externalMessageId = `${conversationId}.failure.message`;
 
-      setSecretaryFailureResponse('Secretary unavailable');
+      const secretaryClient = setSecretaryFailureResponse('Secretary unavailable');
 
       try {
         const result = await receiveInboundMessage({
@@ -435,10 +445,15 @@ if (await probeRealDatabase()) {
         });
 
         expect(result.isOk()).toBe(true);
+        // A Secretary indisponível não é sequer chamada no caminho do webhook.
+        expect(secretaryClient.invoke).not.toHaveBeenCalled();
 
         const conversation = await conversationRepository.findByExternalId(externalConversationId);
         expect(conversation).not.toBeNull();
         expect(conversation?.currentHandler).toBe('bot');
+
+        const stored = await messageRepository.findByExternalId(externalMessageId);
+        expect(stored?.content).toBe('Mensagem que vai cair no fallback');
 
         const events = await db
           .select()
@@ -446,9 +461,20 @@ if (await probeRealDatabase()) {
           .where(eq(schema.outboxEvents.aggregateId, conversation!.id));
 
         const counts = collectEventCounts(events.map((event) => ({ eventType: event.eventType })));
-        expect(counts['secretary.invocation']).toBe(2);
+        expect(counts['secretary.invocation']).toBeUndefined();
         expect(counts['handoff.requested'] || 0).toBe(0);
         expect(counts['handoff.completed'] || 0).toBe(0);
+
+        // A intenção durável da invocação é o `message.persisted` do inbound
+        // (agregado = mensagem), commitado junto com a mensagem.
+        const messagePersistedEvents = await db
+          .select()
+          .from(schema.outboxEvents)
+          .where(eq(schema.outboxEvents.eventType, 'message.persisted'));
+        const forConversation = messagePersistedEvents.filter(
+          (event) => parsePayload<{ conversationId: string }>(event.payload).conversationId === conversation!.id,
+        );
+        expect(forConversation).toHaveLength(1);
       } finally {
         await cleanupConversationArtifacts(conversationId);
       }

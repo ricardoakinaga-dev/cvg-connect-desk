@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-09-14T07:39:00.808Z",
+  "runId": "prod15",
+  "workerIndex": 41,
+  "database": "cvg_aaa_prod15_w41",
+  "postgresPort": 60532,
+  "storage": {
+    "driver": "s3",
+    "endpoint": "",
+    "bucket": "",
+    "backend": "moto real (S3 protocol sandbox)",
+    "minio": "BLOCKED sem binário local; Docker sem permissão no socket; dono: plataforma"
+  },
+  "scanner": {
+    "driver": "clamav",
+    "host": "127.0.0.1",
+    "port": 53110,
+    "real": true
+  },
+  "limitBytes": 16777216,
+  "ttlSeconds": 120,
+  "users": {
+    "operatorUserId": "",
+    "outsiderUserId": "",
+    "adminUserId": ""
+  },
+  "conversations": {
+    "convA": "",
+    "convB": "",
+    "legacyConv": ""
+  },
+  "cases": []
+}

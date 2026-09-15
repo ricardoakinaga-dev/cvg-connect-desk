@@ -1,16 +1,35 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { eq } from 'drizzle-orm';
-import { db, schema } from '@cvg/database';
 import { authFailuresTotal } from '@cvg/shared';
-import { authRepository, hashSessionToken } from '../../infrastructure/repositories/auth.repository';
+import { authRepository } from '../../infrastructure/repositories/auth.repository';
+import { evaluateSession } from '../../session-policy';
+import { authenticate } from '../../middleware';
+import { resolveUserAccess } from '../../permission-service';
 
 interface LoginBody {
   email: string;
   password: string;
 }
 
-interface LogoutBody {
-  token?: string;
+/**
+ * SA-012/AC3: login não enumera contas. Usuário inexistente e usuário inativo
+ * recebem a MESMA resposta de credencial inválida e o mesmo custo de bcrypt
+ * (hash fictício com custo de produção) para não vazar existência/estado.
+ */
+const DUMMY_PASSWORD_HASH = '$2a$12$kUAoYWSvNXPrCn.3T3fFG.DPTeiIHYH9l0ZJT5QMK4m92NYxB55yC';
+
+function invalidCredentials(reply: FastifyReply) {
+  return reply.status(401).send({
+    error: 'UNAUTHORIZED',
+    message: 'Invalid credentials',
+  });
+}
+
+function bearerToken(request: FastifyRequest): string | null {
+  const authHeader = request.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.substring(7);
 }
 
 export async function registerAuthRoutes(app: FastifyInstance) {
@@ -46,10 +65,9 @@ export async function registerAuthRoutes(app: FastifyInstance) {
           } catch {
             // Métricas nunca quebram o login.
           }
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'Invalid credentials',
-          });
+          // Custo equivalente ao de um usuário real (anti-timing/enumeração).
+          await authRepository.verifyPassword(password, DUMMY_PASSWORD_HASH).catch(() => false);
+          return invalidCredentials(reply);
         }
 
         if (!user.isActive) {
@@ -58,10 +76,8 @@ export async function registerAuthRoutes(app: FastifyInstance) {
           } catch {
             // Métricas nunca quebram o login.
           }
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'User account is inactive',
-          });
+          await authRepository.verifyPassword(password, user.passwordHash).catch(() => false);
+          return invalidCredentials(reply);
         }
 
         const isValidPassword = await authRepository.verifyPassword(password, user.passwordHash);
@@ -72,13 +88,11 @@ export async function registerAuthRoutes(app: FastifyInstance) {
           } catch {
             // Métricas nunca quebram o login.
           }
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'Invalid credentials',
-          });
+          return invalidCredentials(reply);
         }
 
         const roles = await authRepository.getUserRoles(user.id);
+        const access = await resolveUserAccess(user.id);
         const token = await authRepository.createSession(user.id);
 
         request.log.info({
@@ -93,6 +107,10 @@ export async function registerAuthRoutes(app: FastifyInstance) {
             email: user.email,
             name: user.name,
             roles,
+            isActive: user.isActive,
+            createdAt: user.createdAt.toISOString(),
+            permissions: access.permissions,
+            permissionsAuthoritative: access.permissionsAuthoritative,
           },
           token,
         });
@@ -106,24 +124,22 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     }
   );
 
-  app.post<{ Body: LogoutBody }>(
+  app.post(
     '/auth/logout',
-    async (request: FastifyRequest<{ Body: LogoutBody }>, reply: FastifyReply) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        const token = bearerToken(request);
+
+        if (!token) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Missing token',
           });
         }
 
-        const token = authHeader.substring(7);
-        
         await authRepository.invalidateSession(token);
 
-        request.log.info({ token: token.substring(0, 8) + '...' }, 'User logged out');
+        request.log.info({ action: 'logout' }, 'User logged out');
 
         return reply.status(200).send({
           message: 'Logged out successfully',
@@ -142,30 +158,35 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     '/auth/logout-all',
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers.authorization;
+        const token = bearerToken(request);
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (!token) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Missing token',
           });
         }
 
-        const token = authHeader.substring(7);
-        const [session] = await db
-          .select()
-          .from(schema.sessions)
-          .where(eq(schema.sessions.token, hashSessionToken(token)));
-
-        if (!session || session.revokedAt) {
+        const now = new Date();
+        const session = await authRepository.findSessionByToken(token);
+        if (!session) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Invalid token',
           });
         }
 
-        await authRepository.invalidateAllUserSessions(session.userId);
-        request.log.info({ userId: session.userId }, 'All user sessions revoked');
+        const user = await authRepository.findUserById(session.userId);
+        const evaluation = evaluateSession(session, user, now);
+        if (!evaluation.ok) {
+          return reply.status(401).send({
+            error: 'UNAUTHORIZED',
+            message: evaluation.message,
+          });
+        }
+
+        await authRepository.invalidateAllUserSessions(evaluation.principal.id);
+        request.log.info({ userId: evaluation.principal.id }, 'All user sessions revoked');
 
         return reply.status(200).send({
           message: 'All sessions revoked successfully',
@@ -184,32 +205,27 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     '/auth/rotate',
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const authHeader = request.headers.authorization;
+        const token = bearerToken(request);
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (!token) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
             message: 'Missing token',
           });
         }
 
-        const oldToken = authHeader.substring(7);
-        const [session] = await db
-          .select()
-          .from(schema.sessions)
-          .where(eq(schema.sessions.token, hashSessionToken(oldToken)));
-
-        if (!session || session.revokedAt) {
+        const now = new Date();
+        const result = await authRepository.rotateSession(token, now);
+        if (!result.ok) {
           return reply.status(401).send({
             error: 'UNAUTHORIZED',
-            message: 'Invalid token',
+            message: result.message,
           });
         }
 
-        const token = await authRepository.rotateSession(oldToken, session.userId);
-        request.log.info({ userId: session.userId }, 'Session rotated');
+        request.log.info({ userId: result.userId }, 'Session rotated');
 
-        return reply.status(200).send({ token });
+        return reply.status(200).send({ token: result.token });
       } catch (error) {
         request.log.error(error, 'Session rotation failed');
         return reply.status(500).send({
@@ -222,67 +238,16 @@ export async function registerAuthRoutes(app: FastifyInstance) {
 
   app.get(
     '/auth/me',
+    { preHandler: [authenticate] },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        const authHeader = request.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'Missing token',
-          });
-        }
-
-        const token = authHeader.substring(7);
-        
-        const [session] = await db
-          .select()
-          .from(schema.sessions)
-          .where(eq(schema.sessions.token, hashSessionToken(token)));
-
-        if (!session || session.revokedAt) {
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'Invalid token',
-          });
-        }
-
-        if (session.expiresAt && new Date(session.expiresAt) < new Date()) {
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'Token expired',
-          });
-        }
-
-        const [user] = await db
-          .select()
-          .from(schema.users)
-          .where(eq(schema.users.id, session.userId));
-
-        if (!user || !user.isActive) {
-          return reply.status(401).send({
-            error: 'UNAUTHORIZED',
-            message: 'User not found or inactive',
-          });
-        }
-
-        const roles = await authRepository.getUserRoles(user.id);
-
-        return reply.status(200).send({
-          user: {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            roles,
-          },
-        });
-      } catch (error) {
-        request.log.error(error, 'Get current user failed');
-        return reply.status(500).send({
-          error: 'INTERNAL_ERROR',
-          message: 'Failed to get current user',
+      const user = request.user;
+      if (!user) {
+        return reply.status(401).send({
+          error: 'UNAUTHORIZED',
+          message: 'Invalid token',
         });
       }
+      return reply.status(200).send({ user });
     }
   );
 }

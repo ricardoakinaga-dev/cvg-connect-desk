@@ -1,0 +1,12 @@
+{
+  "port": 43543,
+  "baseURL": "http://127.0.0.1:43543",
+  "fixture": "SYNTHETIC MOCK API; no real persistence/authz/provider/E2E",
+  "startedAt": "2026-09-13T22:12:32.457399+00:00",
+  "head": "754f9badac46278e77d21de91c58eedb15e80581",
+  "browser": "Playwright Chromium fallback: no browser tools available",
+  "ownedVitePID": 1277530,
+  "stoppedAt": "2026-09-13T22:17:18.587256+00:00",
+  "teardown": "SIGTERM only own PID1277530, no preexisting service touched",
+  "portClosedAfterStop": true
+}

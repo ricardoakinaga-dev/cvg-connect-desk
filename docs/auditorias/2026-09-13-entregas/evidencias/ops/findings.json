@@ -1,0 +1,140 @@
+{
+  "scope": "PROD00–03,36; estado31–35/37–43",
+  "findings": [
+    {
+      "id": "OPS01",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-02",
+      "gates": "G01/G09",
+      "location": "scripts/triple-aaa-verify.mjs:160",
+      "title": "Digest esperado é ignorado na reavaliação",
+      "evidence": "O CLI passa o candidato selado ao evaluateGate e compara drift somente commit/lock/source. --evaluate --image-digest diferente aceita o digest antigo com VERIFIED_CANDIDATE exit 0.",
+      "reproduction": "node /tmp/cvg-audit-deliveries-ufq9_ejh/ops/probe.mjs",
+      "backlog": "Comparar imageDigest live/selado e exigir identidade de imagem não vazia para gates de imagem; regressão trocar apenas digest."
+    },
+    {
+      "id": "OPS02",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-02",
+      "gates": "G01/G08",
+      "location": "scripts/production/evidence-gate.mjs:544",
+      "title": "Manifesto contraditório com log vazio recebe PASS",
+      "evidence": "evaluateCheck aceita command=true em check pnpm typecheck, exitCode=99, log vazio hash correto e timestamp 2099; não valida comando esperado, exit 0, log não vazio, futuro, run/attempt. Reprodução direta retorna PASS sem razões.",
+      "reproduction": "node /tmp/cvg-audit-deliveries-ufq9_ejh/ops/probe.mjs",
+      "backlog": "Validar comando/escopo efetivos, exitCode/status, janela temporal, metadados e log não vazio; coverage exige métricas/denominadores e thresholds em vez de só status."
+    },
+    {
+      "id": "OPS03",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-02/33",
+      "gates": "G01/G11",
+      "location": "scripts/production/evidence-gate.mjs:371",
+      "title": "Query-performance sem medição recebe PASS",
+      "evidence": "queries:[{}] satisfaz minEntries=1 e ausência de acceptable:false/error; nenhum SQL, plano, tempo, dataset ou orçamento é exigido.",
+      "reproduction": "node /tmp/cvg-audit-deliveries-ufq9_ejh/ops/probe.mjs",
+      "backlog": "Schema por query exige identidade, plano/medição e orçamento, dataset/perfil; rejeitar objeto vazio e conjunto incompleto."
+    },
+    {
+      "id": "OPS04",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-03",
+      "gates": "G01/G09",
+      "location": ".github/scripts/certification-aggregator.mjs:451",
+      "title": "Evento desconhecido cai silenciosamente em push",
+      "evidence": "main resolve EVENT desconhecido como push; typo release pode remover coverage-global/load/DR obrigatórios do release. A própria evidência RELATORIO-CORRECOES de PROD02 registra L5 aberto.",
+      "reproduction": "Inspeção main requestedEvent/POLICIES fallback.",
+      "backlog": "Rejeitar enum desconhecido com exit não zero; testes EVENT=relase e dispatch sem política; manter required congelado por evento."
+    },
+    {
+      "id": "OPS05",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-32",
+      "gates": "G04/G10",
+      "location": "scripts/staging-smoke.mjs:42",
+      "title": "Smoke real MinIO não consegue provar delete",
+      "evidence": "DeleteObjectCommand não é importado na linha 11 e é instanciado na 42 (ReferenceError após put/get); HEAD de objeto apagado lança 404 e condição tem || true.",
+      "reproduction": "Inspeção import versus uso; não executado para evitar serviços externos.",
+      "backlog": "Importar DeleteObjectCommand, aceitar somente HEAD 404 esperado, remover tautologia, provar erro/credenciais/objeto e scanner com reais isolados."
+    },
+    {
+      "id": "OPS06",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-35/03",
+      "gates": "G09",
+      "location": ".github/workflows/triple-aaa-gate.yml:222",
+      "title": "Prova de imagem identifica build local, sem ligação com boot/scan/entrega",
+      "evidence": "Image identity extrai docker inspect .Id; builds próprios efêmeros não são publicados ou executados nesse job. Agregador valida formato/nomes/commit, sem comparar digest consumido no Smoke E2E/scans. SHA source não prova identidade de imagem entregue.",
+      "reproduction": "Inspeção jobs image-identity e REQUIRED image=true somente image-identity.",
+      "backlog": "Build once, registry manifest digest por serviço, boot/scan/E2E usando mesmos digests; agregador compara artefatos e source/lock/run."
+    },
+    {
+      "id": "OPS07",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-00/36/40",
+      "gates": "G01/G12",
+      "location": "docs/producao-2026-09-13/evidencias/prod-36/prod-36-evidence.json:1",
+      "title": "Conjunto entregue não sela candidato atual",
+      "evidence": "PROD36 só candidate commit/status/runs; faltam source/lock/digests/hashes e horários completos. runner-summary tampouco tem identidade de fonte. PROD00 fileHashes divergem em 6 de 42 arquivos, inclusive lock/schema/compose (baseline-drift.json). Provas históricas podem ser úteis, mas não qualificam worktree atual.",
+      "reproduction": "Comparação SHA256 read-only em baseline-drift.json; inspeção manifests.",
+      "backlog": "Reexecutar checks afetados e produzir manifestos C10 por run; separar histórico de prova atual, não regenerar selo sobrescrevendo baseline antigo."
+    },
+    {
+      "id": "OPS08",
+      "severity": "High",
+      "confidence": "high",
+      "task": "PROD-37",
+      "gates": "G11",
+      "location": "infra/scripts/dr-e2e.sh:11",
+      "title": "DR usa bancos fixos destrutivos e prova de fixture insuficiente",
+      "evidence": "DROP DATABASE de connect_desk_dr_src/dst sem marcador/owner; backup padrão /tmp; valida fixture final por grep de uma única tag, aceitando message presente com outbox/DLQ ausentes. pg-restore.sh:20 permite ausência de checksum. Sem prova durável RPO/restore mídia/erasures.",
+      "reproduction": "Inspeção estática somente; script não executado.",
+      "backlog": "Namespace por run e ownership, checksum obrigatório, backup durável privado, comparação exata de todas entidades/assets, RPO/RTO e teardown idempotente."
+    }
+  ],
+  "status": {
+    "PROD-00": "Histórico VERIFIED; identidade atual STALE; harness entregue, rerun destrutivo/escritor não executado",
+    "PROD-01": "IMPLEMENTED documental, decisões abertas sem ratificação fictícia; contratos C09 desatualizados frente ao worker health entregue",
+    "PROD-02": "REWORK: avanços reproduzidos mas OPS01–03 bloqueiam aceite",
+    "PROD-03": "REWORK/PARTIAL: política requerida e paginação entregues; OPS04/06; branch protection remota não comprovada",
+    "PROD-36": "IMPLEMENTED/PARTIAL: preflight/process health/loop/readiness e hardening entregues; AC3/4 externos pendentes e prova atual não selada",
+    "PROD-31": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-32": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-33": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-34": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-35": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-37": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-38": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-39": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-40": "PLANNED; implementações antecedentes parciais não equivalem a aceites verificados; evidência atual obrigatória ausente",
+    "PROD-41": "PLANNED operação condicional; nenhuma release/deploy/estabilização observada",
+    "PROD-42": "PLANNED operação condicional; nenhuma release/deploy/estabilização observada",
+    "PROD-43": "PLANNED operação condicional; nenhuma release/deploy/estabilização observada"
+  },
+  "tests": {
+    "command": "TMPDIR=/tmp/cvg-audit-deliveries-ufq9_ejh/ops node --test scripts/production/prod-02.test.mjs scripts/production/prod-03.test.mjs scripts/production/prod-36.test.mjs .github/scripts/certification-aggregator.test.mjs",
+    "passed": 94,
+    "failed": 0,
+    "skipped": 0,
+    "log": "/tmp/cvg-audit-deliveries-ufq9_ejh/ops/unit-tests.log"
+  },
+  "limits": [
+    "Read-only produto/docs; somente tmp escrito",
+    "Sem DB existente/Docker/deploy/mensagens/rede GitHub",
+    "PROD00 não executado: reescreve evidências no repo",
+    "Runtime DB/Redis/browser/real providers não reexecutados nesta lane",
+    "Nenhuma nota/score atribuída; gates obrigatórios não aprovados"
+  ],
+  "advances": [
+    "Gate cobre tracked+untracked e rejeita casos ruins já codificados; não emite CERTIFIED local",
+    "Agregador inclui docker/staging, fresh versus upgrade e release coverage/load explicitamente pendentes",
+    "Runtime worker observa processo/loop/fila; API/WS readiness e Redis probe reais no código",
+    "Compose read_only/cap_drop/no-new-privileges e OTEL pass-through implementados; antigas lacunas de worker SELECT1 e OTEL ausente já superadas"
+  ]
+}

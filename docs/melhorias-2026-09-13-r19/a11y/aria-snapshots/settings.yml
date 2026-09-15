@@ -1,0 +1,68 @@
+- link "Ir para o conteúdo":
+  - /url: "#main-content"
+- complementary "Navegação principal":
+  - link "CVG Connect Desk — ir para Inbox":
+    - /url: /inbox
+    - img "Logo do Centro Veterinário Guarapiranga"
+    - strong: CVG Connect
+    - text: Desk operacional
+  - status:
+    - strong: Tempo real inativo
+    - text: Nenhuma sessão de tempo real ativa
+  - navigation:
+    - text: Operação
+    - link "Inbox":
+      - /url: /inbox
+    - link "Contatos":
+      - /url: /contacts
+    - link "Tutores":
+      - /url: /tutors
+    - link "Pacientes":
+      - /url: /patients
+    - link "Kanban":
+      - /url: /kanban
+    - text: Trabalho
+    - link "Tarefas":
+      - /url: /tasks
+    - link "Notas":
+      - /url: /notes
+    - link "Alertas":
+      - /url: /alerts
+    - text: Gestão
+    - link "Dashboard":
+      - /url: /dashboard
+    - link "Setores":
+      - /url: /sectors
+    - link "Labels":
+      - /url: /labels
+    - link "Grupos":
+      - /url: /contact-groups
+    - link "Administração":
+      - /url: /admin
+    - link "Auditoria":
+      - /url: /audit
+  - link "AA AAA Admin Admin":
+    - /url: /settings
+    - text: AA
+    - strong: AAA Admin
+    - text: Admin
+  - button "Sair com segurança"
+- main:
+  - heading "Configurações" [level=1]
+  - heading "Perfil" [level=2]
+  - text: AAA Admin aaa-admin@cvg.test Ativo Membro desde 14 de setembro de 2026
+  - heading "Papéis atribuídos" [level=2]
+  - text: Admin
+  - heading "Permissões" [level=2]
+  - text: notes:delete alerts:delete alerts:read notes:write alerts:write tasks:write admin:read dashboard:read tasks:read admin:write chat:write notes:read tasks:delete chat:read chat:delete
+  - heading "Segurança Alterar Senha" [level=2]:
+    - text: Segurança
+    - button "Alterar Senha"
+  - heading "Sessão" [level=2]
+  - strong: "ID do Usuário:"
+  - code: 22222222-2222-4222-8222-2222222222a1
+  - strong: "Token:"
+  - code: 1f528b35-64b2-44aa-9…
+  - text: Os dados exibidos vêm de
+  - code: /auth/me
+  - text: ; nenhum valor é preenchido localmente em caso de falha.

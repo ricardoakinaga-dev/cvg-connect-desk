@@ -1,0 +1,8 @@
+ADVERSARIAL Docker+aggregate failed, staging absent: FAILED
+  docker=FAIL aggregate=FAIL staging=NOT_VERIFIED
+PUSH dependency-review skips per workflow: VERIFIED_CANDIDATE (WAIVED_WITH_SUBSTITUTE)
+RELEASE sem coverage-global/load: BLOCKED blockers=2
+POLICY pull_request: 25 requeridos, 0 waiver(s)
+POLICY push: 25 requeridos, 1 waiver(s)
+POLICY schedule: 6 requeridos, 0 waiver(s)
+POLICY release: 28 requeridos, 1 waiver(s)

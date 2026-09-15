@@ -1,0 +1,24 @@
+{
+  "runId": "prod15-reg-media",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60532/cvg_aaa_prod15_reg_media_w41",
+  "databaseName": "cvg_aaa_prod15_reg_media_w41",
+  "databasePort": 60532,
+  "redisUrl": "redis://127.0.0.1:57090",
+  "redisPort": 57090,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3531533,
+    "dataDir": "/tmp/cvg-aaa-runs/prod15-reg-media/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3531602,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod15-reg-media",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 15:11:28.39834-03"
+  }
+}

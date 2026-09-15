@@ -1,0 +1,497 @@
+
+apps/desk-web/src/pages/Inbox.tsx
+242:   const [selectedConvData, setSelectedConvData] = useState<ConversationView | null>(null);
+243: 
+244:   const [loading, setLoading] = useState(true);
+245:   const [searchTerm, setSearchTerm] = useState('');
+246:   const [drafts, setDrafts] = useState<Record<string, ConversationDraft>>({});
+247:   const [intentions, setIntentions] = useState<Record<string, ComposerIntention>>({});
+248:   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+249:   const [showNewConv, setShowNewConv] = useState(false);
+250:   const [showContext, setShowContext] = useState(false);
+251:   const [showMessageSearch, setShowMessageSearch] = useState(false);
+252:   const [messageSearch, setMessageSearch] = useState('');
+253:   const [newConvTab, setNewConvTab] = useState<'contacts' | 'collaborators'>('contacts');
+254:   const [contactSearch, setContactSearch] = useState('');
+255:   const [online, setOnline] = useState<boolean>(() => (typeof navigator === 'undefined' ? true : navigator.onLine !== false));
+256:   const [messagesCursor, setMessagesCursor] = useState<string | null>(null);
+257:   const [hasMoreMessages, setHasMoreMessages] = useState(false);
+258:   const [historyExhausted, setHistoryExhausted] = useState(false);
+259:   const [loadingOlder, setLoadingOlder] = useState(false);
+260:   const [conversationsCursor, setConversationsCursor] = useState<string | null>(null);
+261:   const [loadingMoreConversations, setLoadingMoreConversations] = useState(false);
+262: 
+263:   const [conversationsError, setConversationsError] = useState<LoadError | null>(null);
+264:   const [conversationsNotice, setConversationsNotice] = useState<string | null>(null);
+265:   const [messagesError, setMessagesError] = useState<LoadError | null>(null);
+266:   const [messagesLoading, setMessagesLoading] = useState(false);
+267:   const [sectorsError, setSectorsError] = useState<string | null>(null);
+268:   const [contactsError, setContactsError] = useState<string | null>(null);
+269:   const [newConvError, setNewConvError] = useState<string | null>(null);
+270:   const [startingConversation, setStartingConversation] = useState<string | null>(null);
+271:   const realtimeStatus = useLiveRealtimeStatus();
+272: 
+273:   const selectedConvRef = useRef<string | null>(selectedConv);
+274:   const draftsRef = useRef<Record<string, ConversationDraft>>(drafts);
+275:   const intentionsRef = useRef<Record<string, ComposerIntention>>(intentions);
+276:   const previousOnlineRef = useRef(online);
+277:   const conversationsFilterRef = useRef(selectedSector);
+278:   const chatScrollRef = useRef<HTMLDivElement>(null);
+279:   const contextButtonRef = useRef<HTMLButtonElement>(null);
+
+apps/desk-web/src/pages/Inbox.tsx
+335:   const fetchConversations = useCallback(async (options?: { cursor?: string | null; append?: boolean }) => {
+336:     try {
+337:       const params: Record<string, string> = {};
+338:       if (selectedSector !== 'all') params.sectorId = selectedSector;
+339:       params.limit = String(PAGE_SIZE);
+340:       if (options?.cursor) params.cursor = options.cursor;
+341:       const data = await conversationApi.list(params);
+342:       const incoming = data.conversations || data.items || [];
+343:       const filterChanged = conversationsFilterRef.current !== selectedSector;
+344:       conversationsFilterRef.current = selectedSector;
+345:       setConversations(previous => (
+346:         filterChanged && !options?.append
+347:           ? mergeById([], incoming, conv => conv.updatedAt)
+348:           : mergeById(previous, incoming, conv => conv.updatedAt)
+349:       ));
+350:       setConversationsCursor(data.nextCursor ?? null);
+351:       setConversationsError(null);
+
+apps/desk-web/src/pages/Inbox.tsx
+880:   const filtered = conversations.filter(c => {
+881:     if (searchTerm) {
+882:       const name = c.contactName || '';
+883:       const phone = c.contactPhone || '';
+884:       return name.toLowerCase().includes(searchTerm.toLowerCase()) || phone.includes(searchTerm);
+885:     }
+886:     return true;
+887:   });
+888: 
+889:   const filteredContacts = contacts.filter(c => {
+890:     if (!contactSearch) return true;
+891:     return (c.name || '').toLowerCase().includes(contactSearch.toLowerCase()) || (c.phone || '').includes(contactSearch);
+892:   });
+893: 
+894:   const sectorCount = (id: string) => conversations.filter(c => c.sectorId === id).length;
+895:   const activeSector = sectors.find(s => s.id === selectedSector);
+
+apps/desk-web/src/pages/Inbox.tsx
+1120:                       <span className="header-status pending-details">Detalhes pendentes</span>
+1121:                     )}
+1122:                   </div>
+1123:                 </div>
+1124:               </div>
+1125:               <div className="header-actions">
+1126:                 <button type="button" className="header-btn" aria-label="Buscar nesta conversa" aria-expanded={showMessageSearch} onClick={() => setShowMessageSearch(value => !value)}><Icon name="search" /></button>
+1127:                 <button type="button" className="header-btn" aria-label="Transferir conversa — indisponível" title="Transferência em configuração" disabled><Icon name="transfer" /></button>
+1128:                 <button ref={contextButtonRef} type="button" className="header-btn" aria-label="Abrir informações da conversa" aria-expanded={showContext} onClick={() => setShowContext((value) => !value)}><Icon name="info" /></button>
+1129:               </div>
+1130:             </div>
+1131: 
+1132:             {showMessageSearch && <label className="message-search"><Icon name="search" size={16} /><span className="sr-only">Buscar nas mensagens</span><input autoFocus value={messageSearch} onChange={event => setMessageSearch(event.target.value)} placeholder="Buscar nas mensagens…" /><button type="button" aria-label="Fechar busca" onClick={() => { setShowMessageSearch(false); setMessageSearch(''); }}><Icon name="close" size={15} /></button></label>}
+
+apps/desk-web/src/pages/Inbox.tsx
+1157:                         <span>Falha ao atualizar o histórico. Exibindo as mensagens já carregadas.</span>
+1158:                         <button type="button" onClick={() => { void fetchMessages(selectedConv); }}>Tentar novamente</button>
+1159:                       </div>
+1160:                     )}
+1161:                     <div className="date-separator"><span>Hoje</span></div>
+1162:                     {visibleMessages.map(msg => {
+1163:                       const mediaUrl = msg.mediaUrl && !msg.mediaUrl.startsWith('asset://') ? msg.mediaUrl : null;
+1164:                       const assetMedia = Boolean(msg.mediaUrl?.startsWith('asset://'));
+1165:                       return (
+1166:                         <div key={msg.id} className={`message ${msg.direction}`}>
+1167:                           {msg.mediaType === 'image' && mediaUrl && (
+1168:                             <div className="msg-media-v2"><img src={mediaUrl} alt="Imagem" /></div>
+1169:                           )}
+1170:                           {msg.mediaType === 'audio' && mediaUrl && (
+1171:                             <div className="msg-media-v2"><audio controls><source src={mediaUrl} /></audio></div>
+1172:                           )}
+1173:                           {assetMedia && msg.mediaFilename && (
+1174:                             <span className="msg-file-chip"><Icon name="attachment" size={13} /> {msg.mediaFilename}</span>
+1175:                           )}
+1176:                           {msg.content && <span className="msg-text">{msg.content}</span>}
+1177:                           <span className="msg-timestamp">
+1178:                             {new Date(msg.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+1179:                             {msg.direction === 'outbound' && deliveryMark(msg.status)}
+1180:                           </span>
+1181:                         </div>
+1182:                       );
+1183:                     })}
+1184:                     {hasMoreMessages && !historyExhausted && (
+1185:                       <button type="button" className="load-older" onClick={() => { void loadOlderMessages(); }} disabled={loadingOlder}>
+1186:                         {loadingOlder ? 'Carregando mensagens…' : 'Carregar mensagens anteriores'}
+1187:                       </button>
+1188:                     )}
+1189:                     {historyExhausted && (
+1190:                       <p className="history-cap" role="status">Janela de busca esgotada no limite de 100 mensagens por requisição; o servidor ainda não oferece cursor para mensagens mais antigas.</p>
+
+apps/desk-web/src/pages/Inbox.tsx
+1238:       </div>
+1239: 
+1240:       {selectedConvData && <aside className="context-panel" aria-label="Contexto da conversa">
+1241:         <div className="context-header"><div><span className="inbox-kicker">Contexto</span><h2>Atendimento</h2></div><button type="button" aria-label="Fechar informações" onClick={() => setShowContext(false)}><Icon name="close" /></button></div>
+1242:         <div className="context-profile"><div className="context-avatar">{getInitial(selectedConvData)}</div><strong>{getDisplayName(selectedConvData)}</strong><span>{formatPhone(selectedConvData.contactPhone ?? null) || 'Telefone não informado'}</span></div>
+1243:         <dl className="context-list">
+1244:           <div><dt>Status</dt><dd>{selectedStatus ? (<><span className="context-status" style={{ background: statusColor(selectedStatus) }} />{statusLabel(selectedStatus)}</>) : 'Não carregado'}</dd></div>
+1245:           <div><dt>Setor</dt><dd>{conversationSector?.name || (selectedConvData.pendingDetails ? 'Não carregado' : 'Não atribuído')}</dd></div>
+1246:           <div><dt>Início</dt><dd>{selectedConvData.createdAt ? new Date(selectedConvData.createdAt).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Não informado'}</dd></div>
+1247:           <div><dt>Canal</dt><dd>{selectedConvData.pendingDetails ? 'Não informado' : selectedConvData.externalChannelId ? 'Canal externo' : 'CVG Desk'}</dd></div>
+1248:         </dl>
+1249:         <button type="button" className="context-action" onClick={() => navigate('/contacts')}><Icon name="contacts" size={18} /> Abrir cadastro do contato</button>
+1250:       </aside>}
+1251:       {showContext && <button type="button" className="context-backdrop" aria-label="Fechar informações" onClick={() => setShowContext(false)} />}
+1252:     </div>
+1253:   );
+
+apps/desk-web/src/pages/Inbox.css
+17: @media(max-width:1260px){.inbox-v2.has-selection{grid-template-columns:minmax(290px,330px) minmax(0,1fr)}.context-panel{position:absolute;z-index:20;inset:0 0 0 auto;width:280px;transform:translateX(105%);transition:transform var(--duration-normal) var(--ease-standard);box-shadow:-22px 0 50px rgba(7,27,43,.14)}.show-context .context-panel{transform:translateX(0)}.context-header button{display:grid}.context-backdrop{position:absolute;z-index:19;inset:0;display:block;border:0;background:rgba(7,27,43,.20);opacity:0;pointer-events:none;transition:opacity var(--duration-normal) var(--ease-standard)}.show-context .context-backdrop{opacity:1;pointer-events:auto}}
+18: @media(max-width:860px){.inbox-v2,.inbox-v2.has-selection{height:calc(100dvh - var(--header-height));grid-template-columns:minmax(290px,340px) minmax(0,1fr)}.context-panel{top:0}}
+19: @media(max-width:860px){.inbox-v2,.inbox-v2.has-selection{display:block;height:calc(100dvh - var(--header-height));position:relative}.inbox-sidebar,.inbox-main{width:100%;height:100%}.inbox-main{display:none}.has-selection .inbox-sidebar{display:none}.has-selection .inbox-main{display:flex}.mobile-back{display:grid}.main-header{min-height:68px;padding-inline:10px}.header-avatar{width:38px;height:38px}.header-phone{display:none}.header-actions{gap:1px}.header-btn{width:36px;height:36px}.chat-messages-v2{padding:18px 16px}.message{max-width:84%}.context-panel{position:absolute;inset:0 0 0 auto;height:100%;width:min(310px,88vw)}.composer-v2{padding:9px 8px calc(11px + env(safe-area-inset-bottom,0px))}.composer-btn{width:36px;height:36px}.composer-input-v2{height:42px}.composer-send{width:42px;height:42px}}
+
+apps/desk-web/src/pages/Tasks.tsx
+81:   const fetchTasks = useCallback(async () => {
+82:     setLoading(true);
+83:     try {
+84:       const data = await taskApi.list();
+85:       setTasks(Array.isArray(data) ? data : []);
+86:       setLoadError(null);
+87:     } catch (err) {
+88:       setLoadError(loadFailureFrom(err));
+89:     } finally {
+90:       setLoading(false);
+91:     }
+92:   }, []);
+93: 
+94:   useEffect(() => { void fetchTasks(); }, [fetchTasks]);
+95: 
+96:   useEffect(() => {
+
+apps/desk-web/src/pages/Tasks.tsx
+127:     setCreateError(null);
+128:     try {
+129:       await taskApi.create({
+130:         title: newTask.title.trim(),
+131:         description: newTask.description.trim() || undefined,
+132:         priority: newTask.priority,
+133:         dueAt: newTask.dueAt ? new Date(newTask.dueAt).toISOString() : undefined,
+134:       });
+135:       setNewTask(emptyTask);
+136:       setShowCreate(false);
+137:       setFeedback('Tarefa criada.');
+138:       await fetchTasks();
+
+apps/desk-web/src/pages/Tasks.tsx
+350: 
+351:                 <div className="task-meta">
+352:                   {task.dueAt && (
+353:                     <span className={`due-badge ${overdue ? 'overdue' : ''}`}>
+354:                       <Icon name="clock" size={13} /> {new Date(task.dueAt).toLocaleDateString('pt-BR')} · {timeUntil(task.dueAt)}
+355:                     </span>
+356:                   )}
+357:                   {task.assignedTo && <span className="assignee"><Icon name="tutors" size={13} /> {task.assignedTo.slice(0, 8)}</span>}
+358:                 </div>
+359: 
+360:                 {actionErrors[task.id] && (
+361:                   <p className="task-action-error" role="alert">Não foi possível atualizar a tarefa: {actionErrors[task.id]}</p>
+362:                 )}
+363: 
+364:                 <div className="task-actions">
+365:                   {task.status === 'pending' && (
+
+apps/desk-web/src/pages/Notes.tsx
+92:     if (saving) return;
+93:     const errors: { content?: string; referenceId?: string } = {};
+94:     if (!newNote.content.trim()) errors.content = 'Escreva o conteúdo da nota.';
+95:     if (!newNote.referenceId.trim()) errors.referenceId = 'Informe o ID da referência.';
+96:     if (errors.content || errors.referenceId) {
+97:       setCreateErrors(errors);
+98:       setCreateApiError(null);
+99:       (errors.content ? contentRef : referenceRef).current?.focus();
+
+apps/desk-web/src/pages/Notes.tsx
+155:               <Icon name="warning" size={18} />
+156:               <span>Não foi possível salvar a nota: {createApiError}. O conteúdo digitado foi mantido.</span>
+157:             </div>
+158:           )}
+159:           <div className="create-row">
+160:             <select aria-label="Tipo da referência" value={newNote.referenceType} onChange={e => setNewNote({ ...newNote, referenceType: e.target.value })}>
+161:               {Object.entries(refConfig).map(([k, v]) => (
+162:                 <option key={k} value={k}>{v.label}</option>
+163:               ))}
+164:             </select>
+165:             <div className="ui-field">
+166:               <input
+167:                 ref={referenceRef}
+168:                 className="ui-input"
+169:                 aria-label="ID da referência"
+170:                 aria-invalid={createErrors.referenceId ? true : undefined}
+171:                 aria-describedby={createErrors.referenceId ? 'note-reference-error' : undefined}
+172:                 placeholder="ID da referência"
+173:                 value={newNote.referenceId}
+174:                 onChange={e => { setNewNote({ ...newNote, referenceId: e.target.value }); setCreateErrors(current => ({ ...current, referenceId: undefined })); }}
+175:               />
+176:               {createErrors.referenceId && <p id="note-reference-error" className="ui-field__error" role="alert">{createErrors.referenceId}</p>}
+177:             </div>
+
+apps/desk-web/src/pages/Notes.tsx
+239:                     <span className="note-time">{formatDate(note.createdAt)}</span>
+240:                   </div>
+241:                   <div className="note-body">{note.content}</div>
+242:                   <div className="note-footer">
+243:                     <span className="note-ref-id">{note.referenceId ? `#${note.referenceId.slice(0, 8)}` : 'sem referência'}</span>
+244:                     {note.authorUserId && <span className="note-author">por {note.authorUserId.slice(0, 8)}</span>}
+245:                   </div>
+246:                 </div>
+
+apps/desk-web/src/pages/Contacts.tsx
+185:       if (requestId !== detailRequestRef.current) return;
+186:       setSelectedContact(data);
+187:       setPendingDetailId(null);
+188:       const conversationId = data.conversations[0]?.id;
+189:       if (conversationId) void loadContactNotes(conversationId);
+190:     } catch (detailFailure) {
+
+apps/desk-web/src/pages/Contacts.tsx
+301:     }
+302:   };
+303: 
+304:   const handleAddNote = async () => {
+305:     const conversationId = selectedContact?.conversations[0]?.id;
+306:     if (!newNote.trim() || !conversationId || noteSaving) return;
+307:     setNoteSaving(true);
+308:     setNoteError(null);
+309:     try {
+310:       await api.post('/notes', {
+311:         content: newNote.trim(),
+312:         referenceType: 'conversation',
+313:         referenceId: conversationId,
+314:       });
+
+apps/desk-web/src/pages/Contacts.tsx
+449:                   {selectedContact.labels?.map(l => (
+450:                     <span key={l.id} className="tag-label" style={{ background: `${l.color}20`, color: l.color }}>{l.name}</span>
+451:                   ))}
+452:                   {selectedContact.groups?.map(g => (
+453:                     <span key={g.id} className="tag-group">{g.icon} {g.name}</span>
+454:                   ))}
+455:                 </div>
+456:               </div>
+457:             )}
+458: 
+459:             {/* Notas rápidas */}
+
+apps/desk-web/src/pages/Patients.tsx
+65:   const [saving, setSaving] = useState(false);
+66:   const [formError, setFormError] = useState<string | null>(null);
+67:   const [nameError, setNameError] = useState<string | null>(null);
+68:   const [form, setForm] = useState({ name: '', species: '', breed: '', tutorId: '' });
+69:   const nameInputRef = useRef<HTMLInputElement>(null);
+
+apps/desk-web/src/pages/Patients.tsx
+142:     setNameError(null);
+143:     try {
+144:       const data = { name: form.name.trim(), species: form.species || undefined, breed: form.breed || undefined, tutorId: form.tutorId || undefined };
+145:       if (editing) await patientApi.update(editing.id, { ...data, species: data.species || null, breed: data.breed || null, tutorId: data.tutorId || null });
+146:       else await patientApi.create(data);
+
+apps/desk-web/src/pages/Patients.tsx
+319:               <span className="ui-field__label">Tutor</span>
+320:               <select
+321:                 className="ui-input"
+322:                 value={form.tutorId}
+323:                 disabled={tutorsLoading || (!tutorOptionsAvailable && !currentTutorMissing)}
+324:                 onChange={(event) => setForm({ ...form, tutorId: event.target.value })}
+325:               >
+326:                 {tutorsLoading && <option value="">Carregando tutores…</option>}
+327:                 {!tutorsLoading && !tutorOptionsAvailable && <option value="">Sem tutores disponíveis para vincular</option>}
+328:                 {!tutorsLoading && tutorOptionsAvailable && <option value="">Sem tutor vinculado</option>}
+329:                 {currentTutorMissing && <option value={form.tutorId}>Tutor vinculado atual</option>}
+330:                 {tutors.map((tutor) => <option key={tutor.id} value={tutor.id}>{tutor.name}{tutor.phone ? ` · ${tutor.phone}` : ''}</option>)}
+331:               </select>
+
+apps/desk-web/src/pages/ContactGroups.tsx
+350:                     onRetry={membersError.retryable ? () => { void fetchMembers(selectedGroup); } : undefined}
+351:                   />
+352:                 ) : members.length > 0 ? (
+353:                   <div className="members-list">
+354:                     {members.map(m => (
+355:                       <div key={m.id} className="member-card">
+356:                         <span className="member-name">{m.contactName || 'Sem nome'}</span>
+357:                         <span className="member-phone">{m.contactPhone || '—'}</span>
+358:                       </div>
+359:                     ))}
+360:                   </div>
+361:                 ) : (
+362:                   <EmptyState
+363:                     title="Nenhum membro neste grupo"
+364:                     description="Adicione contatos ao grupo pela ficha do contato."
+365:                     icon="contacts"
+366:                   />
+367:                 )}
+
+apps/desk-web/src/pages/Admin.tsx
+739:   const renderRolesTable = () => renderSimpleTable('roles', ['Nome', 'Descrição', 'Ações'], roles.map((role) => ({
+740:     id: role.id,
+741:     label: role.name,
+742:     cells: [<strong key="name">{role.name}</strong>, role.description || '—'],
+743:   })));
+744: 
+745:   const renderQueuesTable = () => renderSimpleTable('queues', ['Nome', 'Descrição', 'Status', 'Ações'], queues.map((queue) => ({
+746:     id: queue.id,
+747:     label: queue.name,
+748:     cells: [
+749:       <strong key="name">{queue.name}</strong>,
+750:       queue.description || '—',
+751:       <Badge key="status" tone={queue.isActive ? 'success' : 'neutral'} status>{queue.isActive ? 'Ativa' : 'Inativa'}</Badge>,
+752:     ],
+753:   })));
+754: 
+755:   const renderTeamsTable = () => renderSimpleTable('teams', ['Nome', 'Descrição', 'Status', 'Ações'], teams.map((team) => ({
+756:     id: team.id,
+757:     label: team.name,
+758:     cells: [
+759:       <strong key="name">{team.name}</strong>,
+760:       team.description || '—',
+761:       <Badge key="status" tone={team.isActive ? 'success' : 'neutral'} status>{team.isActive ? 'Ativo' : 'Inativo'}</Badge>,
+762:     ],
+763:   })));
+764: 
+765:   const renderObservabilitySummary = () => (
+766:     <>
+767:       <section className="observability-card">
+
+apps/desk-web/src/pages/Alerts.tsx
+73:   const fetchAlerts = useCallback(async () => {
+74:     setLoading(true);
+75:     try {
+76:       const data = await alertApi.list();
+77:       setAlerts(Array.isArray(data) ? data : []);
+78:       setLoadError(null);
+79:     } catch (err) {
+80:       setLoadError(loadFailureFrom(err));
+81:     } finally {
+82:       setLoading(false);
+83:     }
+84:   }, []);
+85: 
+86:   useEffect(() => { void fetchAlerts(); }, [fetchAlerts]);
+87: 
+88:   useEffect(() => {
+
+apps/desk-web/src/pages/Alerts.tsx
+243:                   <div className="alert-meta">
+244:                     <span className="alert-type">{alert.type}</span>
+245:                     <span className="alert-time">{timeAgo(alert.createdAt)}</span>
+246:                     {alert.acknowledgedAt && <span className="alert-ack"><Icon name="eye" size={14} /> {timeAgo(alert.acknowledgedAt)}</span>}
+247:                     {alert.resolvedAt && <span className="alert-resolved"><Icon name="check" size={14} /> {timeAgo(alert.resolvedAt)}</span>}
+248:                   </div>
+249:                 </div>
+250: 
+251:                 {actionErrors[alert.id] && (
+252:                   <p className="alert-action-error" role="alert">Não foi possível atualizar o alerta: {actionErrors[alert.id]}</p>
+253:                 )}
+254: 
+255:                 {alert.status === 'active' && (
+256:                   <div className="alert-actions">
+257:                     <Button size="sm" variant="secondary" icon="eye" disabled={Boolean(updating)} loading={busy && updating?.action === 'ack'} onClick={() => void runAction(alert, 'ack')}>Reconhecer</Button>
+258:                     <Button size="sm" variant="secondary" icon="check" disabled={Boolean(updating)} loading={busy && updating?.action === 'resolve'} onClick={() => void runAction(alert, 'resolve')}>Resolver</Button>
+259:                   </div>
+260:                 )}
+261:                 {alert.status === 'acknowledged' && (
+262:                   <div className="alert-actions">
+263:                     <Button size="sm" variant="secondary" icon="check" disabled={Boolean(updating)} loading={busy && updating?.action === 'resolve'} onClick={() => void runAction(alert, 'resolve')}>Resolver</Button>
+264:                   </div>
+265:                 )}
+266:               </div>
+267:             );
+268:           })}
+269:         </div>
+270:       )}
+
+apps/desk-web/src/pages/Kanban.tsx
+88:   const fetchBoard = useCallback(async (mode: 'initial' | 'refresh' | 'silent') => {
+89:     if (mode === 'initial') setLoading(true);
+90:     if (mode === 'refresh') setRefreshing(true);
+91:     try {
+92:       const params = filterSector ? `?sectorId=${encodeURIComponent(filterSector)}` : '';
+93:       const data = await api.get<KanbanBoard>(`/kanban/board${params}`);
+94:       setBoard(data);
+95:       hasBoardRef.current = true;
+96:       if (mode === 'initial') setLoadError(null);
+97:       if (mode === 'refresh' || mode === 'silent') setRefreshError(null);
+98:     } catch (err) {
+99:       const failure = loadFailureFrom(err);
+100:       if (mode === 'initial' || !hasBoardRef.current) setLoadError(failure);
+101:       else setRefreshError(failure);
+102:     } finally {
+103:       if (mode === 'initial') setLoading(false);
+104:       if (mode === 'refresh') setRefreshing(false);
+105:     }
+106:   }, [filterSector]);
+107: 
+108:   useEffect(() => { void fetchBoard('initial'); }, [fetchBoard]);
+109: 
+110:   useEffect(() => {
+
+apps/desk-web/src/pages/Kanban.tsx
+261:                       <div
+262:                         key={card.id}
+263:                         className={`kanban-card priority-${card.priority}`}
+264:                         draggable={!moving}
+265:                         onDragStart={() => handleDragStart(card)}
+266:                         style={{ borderLeftColor: pri.border }}
+267:                         aria-busy={busy || undefined}
+268:                       >
+269:                         <div className="card-header">
+270:                           <span className="card-name">{card.contactName || 'Sem nome'}</span>
+271:                           <span className="card-time">{formatTime(card.minutesSinceUpdate)}</span>
+272:                         </div>
+273:                         <Badge tone={pri.tone}>Prioridade {pri.label}</Badge>
+274: 
+275:                         {card.sectorName && (
+276:                           <div className="card-sector" style={{ color: card.sectorColor || 'var(--color-text-secondary)' }}>
+277:                             {card.sectorIcon} {card.sectorName}
+
+apps/desk-web/src/pages/Dashboard.tsx
+35: 
+36:   useEffect(() => {
+37:     let cancelled = false;
+38:     setLoading(true);
+39:     setError(null);
+40: 
+41:     dashboardApi.getSummary()
+42:       .then((data) => {
+43:         if (cancelled) return undefined;
+44:         setSummary(data);
+45:         setPremiumLoading(true);
+46:         return dashboardApi.getPremium().then(
+47:           (premiumData) => {
+48:             if (!cancelled) {
+49:               setPremium(premiumData);
+
+apps/desk-web/src/pages/Dashboard.tsx
+78:   }, [reloadKey]);
+79: 
+80:   const retry = useCallback(() => setReloadKey((key) => key + 1), []);
+81: 
+82:   const retryPremium = useCallback(async () => {
+83:     setPremiumLoading(true);
+84:     setPremiumError(null);
+85:     try {
+86:       setPremium(await dashboardApi.getPremium());
+87:     } catch (err) {
+
+playwright.production.config.ts
+37: 
+38:   webServer: {
+39:     command: 'pnpm exec tsx e2e/support/aaa/start-aaa-stack.ts',
+40:     url: `${webBaseUrl}/login`,
+41:     reuseExistingServer: !process.env.CI,
+42:     timeout: 240_000,
+43:     gracefulShutdown: { signal: 'SIGTERM', timeout: 10_000 },
+44:     stdout: 'pipe',
+
+Inventory e2e/production:
+e2e/production/01-harness-identity.spec.ts

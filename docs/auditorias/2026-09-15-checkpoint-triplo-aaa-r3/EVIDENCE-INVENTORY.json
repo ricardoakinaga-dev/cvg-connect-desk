@@ -1,0 +1,53 @@
+{
+  "scope": [
+    "SA-001",
+    "SA-002",
+    "SA-003",
+    "SA-004",
+    "SA-005",
+    "SA-006",
+    "SA-007",
+    "SA-008",
+    "SA-009",
+    "SA-010",
+    "SA-011",
+    "SA-012",
+    "SA-013",
+    "SA-014",
+    "SA-015",
+    "SA-019",
+    "SA-020"
+  ],
+  "required_acceptance_count": 54,
+  "current_reference_count": 104,
+  "entry_reference_count_reported_by_i1": 101,
+  "post_entry_change": "Execuções concorrentes posteriores ao snapshot adicionaram 3 referências ao backlog e 17 registros JSONL ligados ao selo #128b1a64; o inventário corrente preserva essa evolução sem tratá-la como aprovação R3.",
+  "missing_or_hash_mismatch": [],
+  "jsonl_record_count": 105,
+  "candidate_distribution": {
+    "754f9bad+worktree": 29,
+    "754f9bad+worktree#710396fa": 2,
+    "754f9bad+worktree#c850555d": 3,
+    "754f9bad+worktree#fe8280bef538251e": 24,
+    "754f9badac46278e77d21de91c58eedb15e80581+worktree#128b1a64eab10c3f": 17,
+    "754f9badac46278e77d21de91c58eedb15e80581+worktree#c486a63f161da313": 2,
+    "754f9badac46278e77d21de91c58eedb15e80581+worktree#fe8280bef538251e": 28
+  },
+  "exact_entry_candidate_records": [
+    {
+      "task_id": "SA-015",
+      "line": 10,
+      "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#c486a63f161da313",
+      "ac": "SA-015-AC1/AC2/AC3 — correções finais de crítica (D1–D5, órfãos, inativo)",
+      "reviewer": "critic R2-sa015-sa019 (I1)"
+    },
+    {
+      "task_id": "SA-019",
+      "line": 16,
+      "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#c486a63f161da313",
+      "ac": "SA-019-AC2/AC3 — correções finais de crítica (403 vs 404 + artefatos)",
+      "reviewer": "critic R2-sa015-sa019 (I1)"
+    }
+  ],
+  "structural_conclusion": "Integridade de arquivo não comprova cobertura semântica dos aceites nem revisão I1 posterior."
+}

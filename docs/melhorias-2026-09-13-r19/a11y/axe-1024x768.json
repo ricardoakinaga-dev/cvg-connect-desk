@@ -1,0 +1,4235 @@
+[
+  {
+    "route": "login",
+    "path": "/login",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/login",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".login-eyebrow"
+            ],
+            "html": "<span class=\"login-eyebrow\"><i></i> Centro Veterinário Guarapiranga</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>O plantão inteiro,<br><em>em um só pulso.</em></h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "em"
+            ],
+            "html": "<em>em um só pulso.</em>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-visual-copy > p"
+            ],
+            "html": "<p>Conversas, pacientes e prioridades conectados em uma central clínica precisa e humana.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Rede disponível</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "small"
+            ],
+            "html": "<small>A autenticação é verificada no acesso</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-product"
+            ],
+            "html": "<span class=\"login-product\">CVG Connect</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-product-detail"
+            ],
+            "html": "<span class=\"login-product-detail\">Desk operacional</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-kicker"
+            ],
+            "html": "<span class=\"login-kicker\">Acesso seguro</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "#login-title"
+            ],
+            "html": "<h2 id=\"login-title\">Bem-vindo ao plantão.</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-intro > p"
+            ],
+            "html": "<p>Entre com suas credenciais para continuar.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "label:nth-child(1) > span:nth-child(1)"
+            ],
+            "html": "<span>Email</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "input[type=\"email\"]"
+            ],
+            "html": "<input type=\"email\" placeholder=\"Email\" required=\"\" autocomplete=\"username\" value=\"\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "label:nth-child(2) > span:nth-child(1)"
+            ],
+            "html": "<span>Senha</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "input[type=\"password\"]"
+            ],
+            "html": "<input type=\"password\" placeholder=\"Senha\" required=\"\" autocomplete=\"current-password\" value=\"\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-login"
+            ],
+            "html": "<button type=\"submit\" class=\"btn-login\" aria-busy=\"false\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-footer > span"
+            ],
+            "html": "<span>Ambiente operacional do CVG</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".login-footer > strong"
+            ],
+            "html": "<strong>v1.0</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "inbox",
+    "path": "/inbox",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/inbox",
+    "engine": "axe-core 4.13.0",
+    "passCount": 27,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Central instável</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Reconectando automaticamente</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .active[aria-current=\"page\"][href$=\"inbox\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".conv-row[type=\"button\"]:nth-child(2) > .conv-avatar-v2"
+            ],
+            "html": "<div class=\"conv-avatar-v2\" style=\"background: rgb(230, 57, 70);\">C</div>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              "h2"
+            ],
+            "html": "<h2>CVG Connect Desk</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "p"
+            ],
+            "html": "<p>Selecione uma conversa na barra lateral<br>ou inicie uma nova conversa</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-start-new"
+            ],
+            "html": "<button class=\"btn-start-new\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12 5v14M5 12h14\"></path></svg> Nova conversa</button>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [
+      "[Realtime] WebSocket error: Event"
+    ],
+    "ok": true
+  },
+  {
+    "route": "contacts",
+    "path": "/contacts",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/contacts",
+    "engine": "axe-core 4.13.0",
+    "passCount": 24,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".contact-item[type=\"button\"]:nth-child(1) > .contact-avatar"
+            ],
+            "html": "<div class=\"contact-avatar\" aria-hidden=\"true\">C</div>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".contact-item[type=\"button\"]:nth-child(2) > .contact-avatar"
+            ],
+            "html": "<div class=\"contact-avatar\" aria-hidden=\"true\">C</div>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "tutors",
+    "path": "/tutors",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/tutors",
+    "engine": "axe-core 4.13.0",
+    "passCount": 26,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>Tutores</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".entity-title > p"
+            ],
+            "html": "<p>Cadastre responsáveis e acompanhe os vínculos da operação.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "patients",
+    "path": "/patients",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/patients",
+    "engine": "axe-core 4.13.0",
+    "passCount": 27,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>Pacientes</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".entity-title > p"
+            ],
+            "html": "<p>Organize pets, espécies e o responsável por cada atendimento.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "kanban",
+    "path": "/kanban",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/kanban",
+    "engine": "axe-core 4.13.0",
+    "passCount": 25,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "tasks",
+    "path": "/tasks",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/tasks",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[aria-current=\"page\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".page-kicker"
+            ],
+            "html": "<span class=\"page-kicker\">Fluxo de trabalho</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".hero-left > p"
+            ],
+            "html": "<p>Crie, vincule e acompanhe tarefas com contexto operacional.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".stat-card:nth-child(1) > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".stat-card:nth-child(1) > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Total</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".pending > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".pending > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Pendentes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".progress > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".progress > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Em andamento</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".done > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".done > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Concluídas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div[aria-label=\"Filtrar tarefas por status\"] > .filter-label"
+            ],
+            "html": "<span class=\"filter-label\">Status:</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div[aria-label=\"Filtrar tarefas por prioridade\"] > .filter-label"
+            ],
+            "html": "<span class=\"filter-label\">Prioridade:</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".result-count"
+            ],
+            "html": "<span class=\"result-count\" role=\"status\">0 tarefas exibidas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__title"
+            ],
+            "html": "<p class=\"ui-state__title\">Nenhuma tarefa encontrada</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__description"
+            ],
+            "html": "<p class=\"ui-state__description\">Crie a primeira tarefa para acompanhar o fluxo da operação.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "notes",
+    "path": "/notes",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/notes",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[aria-current=\"page\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".page-kicker"
+            ],
+            "html": "<span class=\"page-kicker\">Memória clínica</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M5 3h11l3 3v15H5z\"></path><path d=\"M15 3v4h4M8 11h8M8 15h8\"></path></svg> Notas internas</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".hero-left > p"
+            ],
+            "html": "<p>Registre observações sobre conversas, tarefas e contatos</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".filter-label"
+            ],
+            "html": "<span class=\"filter-label\">Tipo:</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__title"
+            ],
+            "html": "<p class=\"ui-state__title\">Não foi possível carregar</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__description"
+            ],
+            "html": "<p class=\"ui-state__description ui-error__message\">conversationId or taskId is required</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "ok": true
+  },
+  {
+    "route": "alerts",
+    "path": "/alerts",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/alerts",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[aria-current=\"page\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".page-kicker"
+            ],
+            "html": "<span class=\"page-kicker\">Central de atenção</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8ZM10 20h4\"></path></svg> Alertas</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".hero-left > p"
+            ],
+            "html": "<p>Monitore alertas operacionais do sistema</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".stat-card:nth-child(1) > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".stat-card:nth-child(1) > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Total</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".stat-card.active > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".stat-card.active > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Ativos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ack > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".ack > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Reconhecidos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".resolved > .stat-num"
+            ],
+            "html": "<span class=\"stat-num\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".resolved > .stat-label"
+            ],
+            "html": "<span class=\"stat-label\">Resolvidos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div[aria-label=\"Filtrar alertas por status\"] > .filter-label"
+            ],
+            "html": "<span class=\"filter-label\">Status:</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div[aria-label=\"Filtrar alertas por severidade\"] > .filter-label"
+            ],
+            "html": "<span class=\"filter-label\">Severidade:</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".result-count"
+            ],
+            "html": "<span class=\"result-count\" role=\"status\">0 alertas exibidos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__title"
+            ],
+            "html": "<p class=\"ui-state__title\">Nenhum alerta encontrado</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__description"
+            ],
+            "html": "<p class=\"ui-state__description\">Quando o sistema registrar um alerta operacional, ele aparecerá aqui.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "dashboard",
+    "path": "/dashboard",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/dashboard",
+    "engine": "axe-core 4.13.0",
+    "passCount": 23,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contact-groups\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".dashboard-kicker"
+            ],
+            "html": "<span class=\"dashboard-kicker\">Pulso operacional</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>Dashboard</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "p"
+            ],
+            "html": "<p>Visão geral da operação</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".update-badge"
+            ],
+            "html": "<span class=\"update-badge\" title=\"Resumo gerado em 14/09/2026, 05:19\"><i aria-hidden=\"true\"></i> Atualizado hoje às 05:19</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".tone-sky.metric-card > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">2</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-sky.metric-card > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Conversas abertas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-warning.metric-card:nth-child(2) > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">1</div>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".tone-warning.metric-card:nth-child(2) > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Conversas pendentes</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-navy > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">3</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-navy > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Total de conversas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-warning.metric-card:nth-child(4) > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">0</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-warning.metric-card:nth-child(4) > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Tarefas pendentes</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-danger.metric-card:nth-child(5) > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">0</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-danger.metric-card:nth-child(5) > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Tarefas vencidas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-success > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">0</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-success > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Tarefas concluídas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-danger.metric-card:nth-child(7) > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">0</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-danger.metric-card:nth-child(7) > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Alertas ativos</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-critical.metric-card > .metric-info > .metric-value"
+            ],
+            "html": "<div class=\"metric-value\">0</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".tone-critical.metric-card > .metric-info > .metric-label"
+            ],
+            "html": "<div class=\"metric-label\">Alertas críticos</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > h2"
+            ],
+            "html": "<h2><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 5h16v11H9l-5 4V5Z\"></path></svg> Conversas</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(1) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Abertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(1) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">2</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(2) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Pendentes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(2) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">1</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(3) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Fechadas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(1) > .bar-group > .bar-row:nth-child(3) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > h2"
+            ],
+            "html": "<h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(1) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Pendentes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(1) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(2) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Em Andamento</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(2) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(3) > .bar-label"
+            ],
+            "html": "<span class=\"bar-label\">Concluídas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(2) > .bar-group > .bar-row:nth-child(3) > .bar-value"
+            ],
+            "html": "<span class=\"bar-value\">0</span>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".section-card:nth-child(3) > h2"
+            ],
+            "html": "<h2><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8ZM10 20h4\"></path></svg> Alertas por severidade</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    ],
+    "ok": true
+  },
+  {
+    "route": "sectors",
+    "path": "/sectors",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/sectors",
+    "engine": "axe-core 4.13.0",
+    "passCount": 23,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contact-groups\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"admin\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Administração</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 21V7l8-4 8 4v14M8 10h2M14 10h2M8 14h2M14 14h2M10 21v-3h4v3\"></path></svg> Setores</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(1) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Administrativo</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(1) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">admin</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(1) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Cobrança, documentos, reclamações</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(2) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Cirurgia</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(2) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">cirurgia</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(2) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Agendamento e acompanhamento cirúrgico</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(3) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Clínica Médica</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(3) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">clinica</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(3) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Consultas, exames, resultados</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(4) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Comercial</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(4) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">comercial</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(4) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Orçamentos, pacotes, vacinas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(5) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Farmácia</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(5) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">farmacia</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(5) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Medicamentos, dispensação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(6) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Internação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(6) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">internacao</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(6) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Pacientes internados</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(7) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Recepção</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(7) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">recepcao</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(7) > .sector-info > .sector-desc"
+            ],
+            "html": "<div class=\"sector-desc\">Primeiro atendimento, agendamentos, dúvidas</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(8) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Setor A (fixture)</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(8) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">AAA-A</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(9) > .sector-info > .sector-name"
+            ],
+            "html": "<div class=\"sector-name\">Setor B (fixture)</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".sector-card:nth-child(9) > .sector-info > .sector-code"
+            ],
+            "html": "<div class=\"sector-code\">AAA-B</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "labels",
+    "path": "/labels",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/labels",
+    "engine": "axe-core 4.13.0",
+    "passCount": 23,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contact-groups\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"admin\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Administração</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"audit\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Auditoria</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M20 13 13 20 4 11V4h7l9 9Z\"></path><circle cx=\"8\" cy=\"8\" r=\"1\"></circle></svg> Labels</h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "contact-groups",
+    "path": "/contact-groups",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/contact-groups",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"admin\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Administração</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"audit\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Auditoria</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__title"
+            ],
+            "html": "<p class=\"ui-state__title\">Nenhum grupo criado</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__description"
+            ],
+            "html": "<p class=\"ui-state__description\">Crie o primeiro grupo para organizar contatos por equipe, clínica ou assunto.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "admin",
+    "path": "/admin",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/admin",
+    "engine": "axe-core 4.13.0",
+    "passCount": 25,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 2,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/aria-prohibited-attr?application=axeAPI",
+        "tags": [
+          "cat.aria",
+          "wcag2a",
+          "wcag412",
+          "EN-301-549",
+          "EN-9.4.1.2",
+          "RGAAv4",
+          "RGAA-7.1.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".admin-table-scroll"
+            ],
+            "html": "<div class=\"admin-table-scroll\" tabindex=\"0\" aria-label=\"Tabela de usuários; deslize horizontalmente para ver todas as colunas\">",
+            "failureSummary": "Fix all of the following:\n  aria-label attribute is not well supported on a div with no valid role attribute."
+          }
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contact-groups\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[aria-current=\"page\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Administração</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"audit\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Auditoria</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".page-kicker"
+            ],
+            "html": "<span class=\"page-kicker\">Governança operacional</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "p"
+            ],
+            "html": "<p>Gerencie usuários, papéis, filas, times e dead-letters</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "#admin-tab-users > .tab-info-icon"
+            ],
+            "html": "<span class=\"tab-info-icon\" aria-hidden=\"true\">ⓘ</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              "#admin-tab-roles"
+            ],
+            "html": "<button id=\"admin-tab-roles\" type=\"button\" aria-pressed=\"false\" class=\"admin-tab \">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "#admin-tab-roles > .tab-info-icon"
+            ],
+            "html": "<span class=\"tab-info-icon\" aria-hidden=\"true\">ⓘ</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              "#admin-tab-queues"
+            ],
+            "html": "<button id=\"admin-tab-queues\" type=\"button\" aria-pressed=\"false\" class=\"admin-tab \">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "#admin-tab-queues > .tab-info-icon"
+            ],
+            "html": "<span class=\"tab-info-icon\" aria-hidden=\"true\">ⓘ</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              "#admin-tab-teams"
+            ],
+            "html": "<button id=\"admin-tab-teams\" type=\"button\" aria-pressed=\"false\" class=\"admin-tab \">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "#admin-tab-teams > .tab-info-icon"
+            ],
+            "html": "<span class=\"tab-info-icon\" aria-hidden=\"true\">ⓘ</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              "#admin-tab-dead-letters"
+            ],
+            "html": "<button id=\"admin-tab-dead-letters\" type=\"button\" aria-pressed=\"false\" class=\"admin-tab \">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "#admin-tab-dead-letters > .tab-info-icon"
+            ],
+            "html": "<span class=\"tab-info-icon\" aria-hidden=\"true\">ⓘ</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "audit",
+    "path": "/audit",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/audit",
+    "engine": "axe-core 4.13.0",
+    "passCount": 25,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contact-groups\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Grupos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"admin\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Administração</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".active > span:nth-child(2)"
+            ],
+            "html": "<span>Auditoria</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".page-subtitle"
+            ],
+            "html": "<p class=\"page-subtitle\">Consulte o histórico de ações registradas pela operação.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__title"
+            ],
+            "html": "<p class=\"ui-state__title\">Nenhum log de auditoria registrado</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".ui-state__description"
+            ],
+            "html": "<p class=\"ui-state__description\">As ações da operação aparecerão aqui conforme forem registradas.</p>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  },
+  {
+    "route": "settings",
+    "path": "/settings",
+    "viewport": "1024x768",
+    "url": "http://127.0.0.1:4383/settings",
+    "engine": "axe-core 4.13.0",
+    "passCount": 22,
+    "violationCount": 0,
+    "seriousOrCritical": 0,
+    "incompleteCount": 1,
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "nodes": [
+          {
+            "target": [
+              ".brand-copy > strong"
+            ],
+            "html": "<strong>CVG Connect</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".brand-copy > small"
+            ],
+            "html": "<small>Desk operacional</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > strong"
+            ],
+            "html": "<strong>Tempo real inativo</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".system-presence > span:nth-child(2) > small"
+            ],
+            "html": "<small>Nenhuma sessão de tempo real ativa</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(1) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Operação</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-item[href$=\"inbox\"][data-discover=\"true\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Inbox</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"contacts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Contatos</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tutors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tutores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"patients\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Pacientes</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"kanban\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Kanban</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(2) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Trabalho</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"tasks\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Tarefas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"notes\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Notas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"alerts\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Alertas</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".nav-section:nth-child(3) > .nav-section-label"
+            ],
+            "html": "<div class=\"nav-section-label\">Gestão</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"dashboard\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Dashboard</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"sectors\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Setores</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "a[href$=\"labels\"] > span:nth-child(2)"
+            ],
+            "html": "<span>Labels</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-avatar"
+            ],
+            "html": "<span class=\"user-avatar\">AA</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > strong"
+            ],
+            "html": "<strong>AAA Admin</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".user-copy > small"
+            ],
+            "html": "<small>Admin</small>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              ".btn-logout"
+            ],
+            "html": "<button type=\"button\" class=\"ui-btn ui-btn--ghost btn-logout\">",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a pseudo element"
+          },
+          {
+            "target": [
+              "h1"
+            ],
+            "html": "<h1>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".settings-section:nth-child(2) > h2"
+            ],
+            "html": "<h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".profile-avatar"
+            ],
+            "html": "<div class=\"profile-avatar\" aria-hidden=\"true\">A</div>",
+            "failureSummary": "Fix any of the following:\n  Element content is too short to determine if it is actual text content"
+          },
+          {
+            "target": [
+              ".profile-name"
+            ],
+            "html": "<div class=\"profile-name\">AAA Admin</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".profile-email"
+            ],
+            "html": "<div class=\"profile-email\">aaa-admin@cvg.test</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".profile-date"
+            ],
+            "html": "<span class=\"profile-date\">Membro desde 14 de setembro de 2026</span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".settings-section:nth-child(3) > h2"
+            ],
+            "html": "<h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".settings-section:nth-child(4) > h2"
+            ],
+            "html": "<h2><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m5 12 4 4L19 6\"></path></svg> Permissões</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(1) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(2) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(3) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(4) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(5) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(6) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(7) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(8) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(9) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(10) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(11) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(12) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(13) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(14) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              ".permission-item:nth-child(15) > .permission-check[aria-hidden=\"true\"]"
+            ],
+            "html": "<span class=\"permission-check\" aria-hidden=\"true\">✓</span>",
+            "failureSummary": "Fix any of the following:\n  Element content contains only non-text characters"
+          },
+          {
+            "target": [
+              "h2 > span"
+            ],
+            "html": "<span>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".settings-section:nth-child(6) > h2"
+            ],
+            "html": "<h2><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 11v6M12 7h.01\"></path></svg> Sessão</h2>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div:nth-child(1) > strong"
+            ],
+            "html": "<strong>ID do Usuário:</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              "div:nth-child(2) > strong"
+            ],
+            "html": "<strong>Token:</strong>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          },
+          {
+            "target": [
+              ".session-note"
+            ],
+            "html": "<div class=\"session-note\">Os dados exibidos vêm de <code>/auth/me</code>; nenhum valor é preenchido localmente em caso de falha.</div>",
+            "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+          }
+        ]
+      }
+    ],
+    "consoleErrors": [],
+    "ok": true
+  }
+]

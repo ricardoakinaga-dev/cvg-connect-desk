@@ -1,0 +1,24 @@
+{
+  "runId": "review-migidem",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:58532/cvg_aaa_review_migidem_w21",
+  "databaseName": "cvg_aaa_review_migidem_w21",
+  "databasePort": 58532,
+  "redisUrl": "redis://127.0.0.1:56890",
+  "redisPort": 56890,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2206458,
+    "dataDir": "/tmp/cvg-aaa-runs/review-migidem/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2206476,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-migidem",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 12:34:13.436908-03"
+  }
+}

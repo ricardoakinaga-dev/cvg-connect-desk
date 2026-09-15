@@ -1,0 +1,24 @@
+{
+  "runId": "sa022-dbg",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60232/cvg_aaa_sa022_dbg_w38",
+  "databaseName": "cvg_aaa_sa022_dbg_w38",
+  "databasePort": 60232,
+  "redisUrl": "redis://127.0.0.1:57060",
+  "redisPort": 57060,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 1219168,
+    "dataDir": "/tmp/cvg-aaa-runs/sa022-dbg/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 1219227,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "sa022-dbg",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-14 22:55:37.167456-03"
+  }
+}

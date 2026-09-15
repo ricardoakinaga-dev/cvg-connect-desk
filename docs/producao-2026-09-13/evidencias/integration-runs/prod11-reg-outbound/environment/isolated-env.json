@@ -1,0 +1,24 @@
+{
+  "runId": "prod11-reg-outbound",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60032/cvg_aaa_prod11_reg_outbound_w36",
+  "databaseName": "cvg_aaa_prod11_reg_outbound_w36",
+  "databasePort": 60032,
+  "redisUrl": "redis://127.0.0.1:57040",
+  "redisPort": 57040,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3345313,
+    "dataDir": "/tmp/cvg-aaa-runs/prod11-reg-outbound/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3345365,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod11-reg-outbound",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:51:08.357533-03"
+  }
+}

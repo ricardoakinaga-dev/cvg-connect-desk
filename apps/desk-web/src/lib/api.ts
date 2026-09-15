@@ -2,9 +2,77 @@
 // Usamos URLs relativas para funcionar tanto no Docker (nginx) quanto no desenvolvimento (Vite proxy).
 const API_BASE_URL = (typeof import.meta.env.VITE_API_URL === 'string' && import.meta.env.VITE_API_URL.trim() !== '') ? import.meta.env.VITE_API_URL : '';
 
+/**
+ * Evento global disparado quando uma requisição autenticada recebe 401:
+ * a sessão expirou e o estado sensível deve ser limpo antes de voltar ao login.
+ */
+export const SESSION_EXPIRED_EVENT = 'cvg:session-expired';
+const SESSION_EXPIRED_NOTICE = 'Sua sessão expirou. Entre novamente para continuar.';
+
+function isSessionCheckEndpoint(endpoint: string): boolean {
+  return endpoint === '/auth/login' || endpoint === '/auth/logout';
+}
+
+function notifySessionExpired(): void {
+  try {
+    localStorage.removeItem('auth-storage');
+  } catch {
+    // Armazenamento indisponível: o evento abaixo ainda limpa o estado em memória.
+  }
+  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+    window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT, { detail: { notice: SESSION_EXPIRED_NOTICE } }));
+  }
+}
+
 interface ApiError {
   error: string;
   message: string;
+  recoverable?: boolean;
+  retryable?: boolean;
+}
+
+/** Limite de conteúdo de anexo compartilhado com o backend (C05). */
+export const MEDIA_MAX_BYTES = 16 * 1024 * 1024;
+
+/** Teto de página do histórico aceito pelo backend (C06): limit máximo 100. */
+export const MESSAGES_MAX_LIMIT = 100;
+
+export type MediaKind = 'image' | 'audio' | 'video' | 'document';
+
+export function mediaKindForFile(mimetype: string): MediaKind {
+  if (mimetype.startsWith('image/')) return 'image';
+  if (mimetype.startsWith('audio/')) return 'audio';
+  if (mimetype.startsWith('video/')) return 'video';
+  return 'document';
+}
+
+/**
+ * Erro HTTP tipado. `ambiguous` separa falha definitiva (4xx) de resultado
+ * incerto (rede/timeout/5xx): só o segundo pode ser retomado com a MESMA
+ * Idempotency-Key sem risco de reenvio silencioso (C04).
+ */
+export class ApiRequestError extends Error {
+  readonly status: number;
+  readonly code: string;
+  readonly recoverable: boolean;
+  readonly retryable: boolean;
+
+  constructor(
+    message: string,
+    init: { status?: number; code?: string; recoverable?: boolean; retryable?: boolean } = {}
+  ) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.status = init.status ?? 0;
+    this.code = init.code ?? 'UNKNOWN_ERROR';
+    this.recoverable = init.recoverable ?? (this.status === 413 || this.status === 503);
+    this.retryable = init.retryable
+      ?? (this.status === 0 || this.status === 408 || this.status === 429 || this.status >= 500);
+  }
+
+  get ambiguous(): boolean {
+    return this.status === 0 || this.status === 408 || this.status === 429 || this.status >= 500;
+  }
 }
 
 class ApiClient {
@@ -27,6 +95,27 @@ class ApiClient {
     return null;
   }
 
+  private async parseResponse<T>(response: Response): Promise<T> {
+    if (!response.ok) {
+      const error: ApiError = await response.json().catch(() => ({
+        error: 'UNKNOWN_ERROR',
+        message: `HTTP ${response.status}`,
+      }));
+      throw new ApiRequestError(error.message || `HTTP ${response.status}`, {
+        status: response.status,
+        code: error.error,
+        recoverable: error.recoverable,
+        retryable: error.retryable,
+      });
+    }
+
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
+    return response.json();
+  }
+
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -46,26 +135,95 @@ class ApiClient {
       headers,
     });
 
-    if (!response.ok) {
-      const error: ApiError = await response.json().catch(() => ({
-        error: 'UNKNOWN_ERROR',
-        message: 'An unexpected error occurred',
-      }));
-      throw new Error(error.message || `HTTP ${response.status}`);
+    if (response.status === 401 && token && !isSessionCheckEndpoint(endpoint)) {
+      notifySessionExpired();
     }
 
-    return response.json();
+    return this.parseResponse<T>(response);
   }
 
   async get<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: 'GET' });
   }
 
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: { headers?: HeadersInit }
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
+      headers: options?.headers,
     });
+  }
+
+  /**
+   * Upload binário dedicado (C05): corpo cru `octet-stream`, sem base64/JSON.
+   * O excesso de 16 MiB é barrado no cliente antes de qualquer requisição.
+   */
+  async upload<T>(
+    endpoint: string,
+    file: Blob,
+    headers: Record<string, string>,
+    options?: { signal?: AbortSignal },
+  ): Promise<T> {
+    if (file.size > MEDIA_MAX_BYTES) {
+      throw new ApiRequestError(
+        `Conteúdo excede o limite de ${MEDIA_MAX_BYTES} bytes`,
+        { status: 413, code: 'PAYLOAD_TOO_LARGE', recoverable: true, retryable: false }
+      );
+    }
+
+    const token = this.getToken();
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: file,
+      signal: options?.signal,
+    });
+
+    if (response.status === 401 && token && !isSessionCheckEndpoint(endpoint)) {
+      notifySessionExpired();
+    }
+
+    return this.parseResponse<T>(response);
+  }
+
+  /**
+   * Leitura de bytes protegidos. O endpoint de mídia não retorna JSON nem URL
+   * pública; o token segue no request e o chamador decide como exibir o Blob.
+   */
+  async getBlob(endpoint: string, options?: { signal?: AbortSignal }): Promise<Blob> {
+    const token = this.getToken();
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: 'GET',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      signal: options?.signal,
+    });
+
+    if (response.status === 401 && token && !isSessionCheckEndpoint(endpoint)) {
+      notifySessionExpired();
+    }
+
+    if (!response.ok) {
+      const error: ApiError = await response.json().catch(() => ({
+        error: 'UNKNOWN_ERROR',
+        message: `HTTP ${response.status}`,
+      }));
+      throw new ApiRequestError(error.message || `HTTP ${response.status}`, {
+        status: response.status,
+        code: error.error,
+        recoverable: error.recoverable,
+        retryable: error.retryable,
+      });
+    }
+
+    return response.blob();
   }
 
   async patch<T>(endpoint: string, data: unknown): Promise<T> {
@@ -102,6 +260,8 @@ export interface Conversation {
   metadata: string | null;
   unreadCount: number;
   currentHandler?: 'bot' | 'human';
+  statusV2?: string | null;
+  assignedUserId?: string | null;
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
@@ -123,6 +283,49 @@ export interface Message {
   sentAt: string | null;
   deliveredAt: string | null;
   createdAt: string;
+  mediaUrl?: string | null;
+  mediaType?: MediaKind | null;
+  mediaMimetype?: string | null;
+  mediaFilename?: string | null;
+  mediaAssetId?: string | null;
+  mediaState?: string | null;
+  mediaReasonCode?: string | null;
+}
+
+export interface SendMessageInput {
+  conversationId: string;
+  content: string;
+  recipient?: string;
+  sender?: string;
+  mediaAssetId?: string;
+  mediaType?: MediaKind;
+  mediaMimetype?: string;
+  mediaFilename?: string;
+  clientMessageId?: string;
+  /** Anexada de forma não enumerável pela intenção; viaja no header, nunca no JSON. */
+  idempotencyKey?: string;
+}
+
+export type SendOutcome = 'accepted' | 'pending' | 'sent' | 'failed' | 'unknown_reconciling';
+
+export interface SendMessageResult {
+  messageId: string;
+  conversationId: string;
+  status: string;
+  outcome?: SendOutcome;
+  deduplicated?: boolean;
+  expired?: boolean;
+}
+
+export interface MediaUploadResult {
+  assetId: string;
+  mediaType: MediaKind;
+  mimetype: string;
+  filename?: string | null;
+  sizeBytes: number;
+  sha256?: string;
+  scanStatus: string;
+  storageStatus: string;
 }
 
 export interface Task {
@@ -362,34 +565,144 @@ export interface PremiumDashboardSummary {
 }
 
 export const conversationApi = {
-  list: (filters?: { status?: string; queueId?: string; teamId?: string }) => {
+  list: (filters?: {
+    status?: string;
+    queueId?: string;
+    teamId?: string;
+    sectorId?: string;
+    limit?: number;
+    cursor?: string | null;
+  }) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.queueId) params.append('queueId', filters.queueId);
     if (filters?.teamId) params.append('teamId', filters.teamId);
+    if (filters?.sectorId) params.append('sectorId', filters.sectorId);
+    if (filters?.limit) params.append('limit', String(filters.limit));
+    if (filters?.cursor) params.append('cursor', filters.cursor);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return api.get<{ conversations: Conversation[] }>(`/conversations${query}`);
+    return api.get<{
+      conversations: Conversation[];
+      items?: Conversation[];
+      nextCursor?: string | null;
+    }>(`/conversations${query}`);
   },
 
-  getMessages: (conversationId: string, limit = 50) => {
-    return api.get<{ messages: Message[] }>(`/conversations/${conversationId}/messages?limit=${limit}`);
+  getMessages: (
+    conversationId: string,
+    options?: number | { limit?: number; cursor?: string | null }
+  ) => {
+    const opts = typeof options === 'number' ? { limit: options } : (options ?? {});
+    const requested = typeof opts.limit === 'number' && Number.isFinite(opts.limit)
+      ? Math.trunc(opts.limit)
+      : 50;
+    const limit = Math.min(Math.max(requested, 1), MESSAGES_MAX_LIMIT);
+    const params = new URLSearchParams();
+    params.set('limit', String(limit));
+    if (opts.cursor) params.set('cursor', opts.cursor);
+    return api.get<{ messages: Message[]; nextCursor?: string | null }>(
+      `/conversations/${conversationId}/messages?${params.toString()}`
+    );
   },
 
   markRead: (conversationId: string) => {
     return api.post<{ conversationId: string; unreadCount: number }>(`/conversations/${conversationId}/read`);
   },
 
-  sendMessage: (data: { conversationId: string; content: string; recipient: string; sender?: string }) => {
-    return api.post<{ messageId: string; conversationId: string; status: string }>('/messages', data);
+  /**
+   * Envio com Idempotency-Key estável por intenção (C04). A chave é lida do
+   * payload de forma não enumerável e enviada apenas no header — o corpo JSON
+   * permanece exatamente o DTO do contrato, sem base64/data-URL.
+   */
+  sendMessage: (data: SendMessageInput) => {
+    const idempotencyKey = data.idempotencyKey?.trim();
+    return api.post<SendMessageResult>(
+      '/messages',
+      data,
+      idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : undefined
+    );
   },
+
+  /** Upload dedicado de anexo (C05): bytes crus + metadados em headers. */
+  uploadMedia: (
+    conversationId: string,
+    file: File,
+    options?: { filename?: string; mediaType?: MediaKind; signal?: AbortSignal }
+  ) => {
+    const mediaType = options?.mediaType ?? mediaKindForFile(file.type);
+    const filename = options?.filename ?? file.name;
+    const headers: Record<string, string> = {
+      'X-Media-Type': mediaType,
+      'X-Media-Mimetype': file.type || 'application/octet-stream',
+    };
+    if (filename) {
+      headers['X-Media-Filename'] = filename;
+    }
+    return api.upload<MediaUploadResult>(
+      `/conversations/${conversationId}/media`,
+      file,
+      headers,
+      { signal: options?.signal },
+    );
+  },
+
+  changeState: (
+    conversationId: string,
+    data: {
+      statusV2: string;
+      expectedStatusV2?: string;
+      expectedUpdatedAt?: string;
+      reason?: string;
+    },
+  ) => api.patch<{
+    conversationId: string;
+    statusV2: string;
+    previousStatusV2: string;
+    updatedAt: string;
+    deduplicated: boolean;
+  }>(`/conversations/${conversationId}/state`, data),
+
+  assign: (
+    conversationId: string,
+    data: {
+      assigneeId: string;
+      expectedAssignedUserId?: string | null;
+      expectedUpdatedAt?: string;
+    },
+  ) => api.post<{
+    conversationId: string;
+    assignedUserId: string | null;
+    previousAssignedUserId: string | null;
+    updatedAt: string;
+    deduplicated: boolean;
+  }>(`/conversations/${conversationId}/assign`, data),
+
+  handoff: (
+    conversationId: string,
+    data: {
+      newHandler: 'bot' | 'human';
+      expectedHandler?: 'bot' | 'human';
+      expectedUpdatedAt?: string;
+      reason?: string;
+    },
+  ) => api.post<{
+    conversationId: string;
+    currentHandler: 'bot' | 'human';
+    previousHandler: 'bot' | 'human';
+    updatedAt: string;
+    deduplicated: boolean;
+  }>(`/conversations/${conversationId}/handoff`, data),
 };
 
 export const taskApi = {
-  list: (filters?: { status?: string; assignedTo?: string; priority?: string }) => {
+  list: (filters?: { status?: string; assignedTo?: string; priority?: string; conversationId?: string; limit?: number; offset?: number }) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.assignedTo) params.append('assignedTo', filters.assignedTo);
     if (filters?.priority) params.append('priority', filters.priority);
+    if (filters?.conversationId) params.append('conversationId', filters.conversationId);
+    if (filters?.limit !== undefined) params.append('limit', String(filters.limit));
+    if (filters?.offset !== undefined) params.append('offset', String(filters.offset));
     const query = params.toString() ? `?${params.toString()}` : '';
     return api.get<Task[]>(`/tasks${query}`);
   },
@@ -407,12 +720,50 @@ export const taskApi = {
   },
 };
 
+export interface InternalNote {
+  id: string;
+  conversationId: string | null;
+  taskId: string | null;
+  authorId: string;
+  content: string;
+  referenceType: 'conversation' | 'task' | 'tutor' | 'patient' | null;
+  referenceId: string | null;
+  metadata: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const noteApi = {
+  list: (filters: { conversationId?: string; taskId?: string; limit?: number; offset?: number }) => {
+    const params = new URLSearchParams();
+    if (filters.conversationId) params.set('conversationId', filters.conversationId);
+    if (filters.taskId) params.set('taskId', filters.taskId);
+    if (filters.limit !== undefined) params.set('limit', String(filters.limit));
+    if (filters.offset !== undefined) params.set('offset', String(filters.offset));
+    return api.get<InternalNote[]>(`/notes?${params.toString()}`);
+  },
+
+  get: (id: string) => api.get<InternalNote>(`/notes/${id}`),
+
+  create: (data: {
+    conversationId?: string;
+    taskId?: string;
+    referenceType?: 'conversation' | 'task' | 'tutor' | 'patient';
+    referenceId?: string;
+    content: string;
+    metadata?: Record<string, unknown>;
+  }) => api.post<InternalNote>('/notes', data),
+};
+
 export const alertApi = {
-  list: (filters?: { status?: string; severity?: string; type?: string }) => {
+  list: (filters?: { status?: string; severity?: string; type?: string; conversationId?: string; limit?: number; offset?: number }) => {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.severity) params.append('severity', filters.severity);
     if (filters?.type) params.append('type', filters.type);
+    if (filters?.conversationId) params.append('conversationId', filters.conversationId);
+    if (filters?.limit !== undefined) params.append('limit', String(filters.limit));
+    if (filters?.offset !== undefined) params.append('offset', String(filters.offset));
     const query = params.toString() ? `?${params.toString()}` : '';
     return api.get<Alert[]>(`/alerts${query}`);
   },
@@ -573,7 +924,7 @@ export interface ContactTransfer {
 }
 
 export const transferApi = {
-  create: (data: { contactId: string; conversationId?: string; toSectorId: string; fromSectorId?: string; reason?: string; autoAccept?: boolean }) =>
+  create: (data: { contactId: string; conversationId?: string; toSectorId: string; fromSectorId?: string; toUserId?: string; reason?: string; autoAccept?: boolean }) =>
     api.post<ContactTransfer>('/transfers', data),
   list: () => api.get<ContactTransfer[]>('/transfers'),
   getContactTransfers: (contactId: string) => api.get<ContactTransfer[]>(`/contacts/${contactId}/transfers`),

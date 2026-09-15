@@ -1,0 +1,154 @@
+[
+  {
+    "scope": "Typecheck",
+    "status": "PASS",
+    "result": "33/33 pacotes",
+    "command": "pnpm exec turbo run typecheck --continue --force",
+    "log": "evidencias/typecheck.log",
+    "limits": "Sem cache; não comprova inicialização."
+  },
+  {
+    "scope": "Lint",
+    "status": "PASS",
+    "result": "33/33 pacotes",
+    "command": "pnpm exec turbo run lint --continue --force",
+    "log": "evidencias/lint.log",
+    "limits": "Warnings dentro dos limites."
+  },
+  {
+    "scope": "Web unit/jsdom",
+    "status": "PASS",
+    "result": "268/268;22 arquivos",
+    "command": "pnpm --filter @cvg/desk-web exec vitest run",
+    "log": "evidencias/web-unit.log",
+    "limits": "Sem backend real."
+  },
+  {
+    "scope": "PROD-02/03/36",
+    "status": "PASS",
+    "result": "25+17+5=47/47",
+    "command": "node --test scripts/production/prod-02.test.mjs scripts/production/prod-03.test.mjs scripts/production/prod-36.test.mjs",
+    "log": "evidencias/ops/node-tests.log",
+    "limits": "Não cobre os novos adversariais; PROD36 não prova Docker."
+  },
+  {
+    "scope": "Realtime unit",
+    "status": "PASS",
+    "result": "87/87;10 arquivos",
+    "command": "pnpm --filter @cvg/realtime-service exec vitest run --exclude '**/aaa-05-isolation.test.ts'",
+    "log": "evidencias/realtime-unit.log",
+    "limits": "AAA05 executado separadamente; Vitest não prova bootstrap nativo."
+  },
+  {
+    "scope": "Realtime metrics HTTP",
+    "status": "PASS",
+    "result": "3/3",
+    "command": "Ver configuração/comando no relatório ops",
+    "log": "evidencias/ops/realtime-health.log",
+    "limits": "Está incluído nos87; não somar. Handler em servidor HTTP local sob Vitest."
+  },
+  {
+    "scope": "AAA-05 isolado",
+    "status": "PASS",
+    "result": "14/14",
+    "command": "Ver evidencias/run-realtime-isolated.mjs",
+    "log": "evidencias/aaa05/results.json",
+    "limits": "PG/Redis próprios+sockets reais; classe carregada pelo Vitest, não entrypoint CLI."
+  },
+  {
+    "scope": "PROD-05 atual",
+    "status": "FAIL",
+    "result": "1 suite falhou;17 testes não executados",
+    "command": "Ver evidencias/run-integrations.py",
+    "log": "evidencias/integration-05/output.log",
+    "limits": "Falha de bootstrap realtime no beforeAll; não são17 falhas de asserção."
+  },
+  {
+    "scope": "Bootstrap realtime nativo",
+    "status": "FAIL",
+    "result": "exit1",
+    "command": "NODE_ENV=test DATABASE_URL=postgresql://invalid:invalid@127.0.0.1:1/invalid pnpm --filter @cvg/realtime-service exec tsx src/index.ts",
+    "log": "evidencias/realtime-native-boot.log",
+    "limits": "Erro de named export antes de I/O; não atribuir ao PG."
+  },
+  {
+    "scope": "PROD-18 atual",
+    "status": "PASS",
+    "result": "18/18",
+    "command": "Ver evidencias/run-integrations.py",
+    "log": "evidencias/integration-18/output.log",
+    "limits": "PG/Redis isolados; precondições omitidas no cliente ainda não protegidas."
+  },
+  {
+    "scope": "Backend focado",
+    "status": "PASS",
+    "result": "38/38;5 arquivos",
+    "command": "Ver evidencias/backend/findings.json",
+    "log": "evidencias/backend/unit-tests.log",
+    "limits": "Mocks; nome postgres em suíte não significa PG real."
+  },
+  {
+    "scope": "Gate adversarial R3",
+    "status": "FAIL_REQUIREMENT",
+    "result": "4 cenários inválidos aceitos; controle vazio rejeitado",
+    "command": "Ver evidencias/ops/query-probe.mjs",
+    "log": "evidencias/ops/query-probe.log",
+    "limits": "null, excedente, futuro e run/attempt ausentes; fixtures no validador real."
+  },
+  {
+    "scope": "Recovery pool probe",
+    "status": "FAIL_REQUIREMENT",
+    "result": "1 job progride;10/50 não progridem na janela simulada",
+    "command": "Ver evidencias/backend/pool-probe.cjs",
+    "log": "evidencias/backend/pool-probe.json",
+    "limits": "Função real extraída+pool simulado; não alegar deadlock infinito/PG medido."
+  },
+  {
+    "scope": "Compose config",
+    "status": "PASS",
+    "result": "2/2 arquivos",
+    "command": "docker compose --env-file <fixture-sintetica> -f <compose> config --quiet",
+    "log": "evidencias/compose-config.json",
+    "limits": "Somente parsing/interpolação; não Docker up ou scrape."
+  },
+  {
+    "scope": "PROD-00 baseline hashes",
+    "status": "PASS_STATIC",
+    "result": "42/42 sem drift",
+    "command": "Ver evidencias/ops/baseline-drift.json",
+    "log": "evidencias/ops/baseline-drift.json",
+    "limits": "Recalculo de hashes; não reexecução dos8testes."
+  },
+  {
+    "scope": "PROD-00 suite",
+    "status": "SUBMITTED_NOT_RERUN",
+    "result": "8/8 informado",
+    "command": "node --test scripts/production/prod-00.test.mjs",
+    "log": "",
+    "limits": "Suite grava diretório histórico fixo; não executada nesta auditoria para preservá-lo."
+  },
+  {
+    "scope": "Browser UI parcial",
+    "status": "PARTIAL",
+    "result": "23 PNGs;Inbox375/1024/1440 e páginas desktop",
+    "command": "Ver scripts render em evidencias/frontend",
+    "log": "evidencias/frontend/RELATORIO-R3.md",
+    "limits": "Vite real com API sintética; não E2E integrado; não16rotas×5viewports."
+  },
+  {
+    "scope": "git diff --check",
+    "status": "PASS",
+    "result": "exit0",
+    "command": "git diff --check",
+    "log": "evidencias/diff-check.log",
+    "limits": "Não substitui validação dos arquivos novos não rastreados."
+  },
+  {
+    "scope": "Docker/MinIO/ClamAV/SIGKILL/E2E real/DR/carga/CI remoto",
+    "status": "NOT_RUN",
+    "result": "Sem prova nesta rodada",
+    "command": "",
+    "log": "",
+    "limits": "Também sem build global/coverage atual/sandbox oficial/scrape real. Não inferir indisponibilidade do ambiente, apenas não executado."
+  }
+]

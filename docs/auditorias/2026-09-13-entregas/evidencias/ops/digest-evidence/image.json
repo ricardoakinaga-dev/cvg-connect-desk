@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "check": "image",
+  "scope": "image test",
+  "command": "echo ok",
+  "status": "PASS",
+  "exitCode": 0,
+  "signal": null,
+  "startedAt": "2026-09-13T19:33:29.568Z",
+  "finishedAt": "2026-09-13T19:33:29.576Z",
+  "durationMs": 8,
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "linux",
+    "arch": "x64",
+    "cwd": "/tmp/cvg-audit-deliveries-ufq9_ejh/ops/fixture",
+    "ci": false,
+    "runId": null,
+    "attempt": null
+  },
+  "candidate": {
+    "repository": null,
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+    "sourceSha256": "a9b21628323a622c8b75aff4699c130fc918317b09a5aba22fbdf5f25d8aa842",
+    "sourceFileCount": 4,
+    "imageDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "sealedAt": "2026-09-13T19:33:29.565Z"
+  },
+  "hashes": {
+    "log": "91d9d6c1ccd547cb2a9079d168be8bbae3668c4089a986b19ae2e5987ca20f57",
+    "lockfileSha256": "0c030586945fe504b604ecc2e875c38ede400cd5cd73da9730302162e6b02c6f",
+    "sourceSha256": "a9b21628323a622c8b75aff4699c130fc918317b09a5aba22fbdf5f25d8aa842"
+  },
+  "artifacts": [
+    {
+      "path": "logs/image.log",
+      "sha256": "91d9d6c1ccd547cb2a9079d168be8bbae3668c4089a986b19ae2e5987ca20f57",
+      "kind": "log"
+    }
+  ],
+  "metrics": null,
+  "error": null
+}

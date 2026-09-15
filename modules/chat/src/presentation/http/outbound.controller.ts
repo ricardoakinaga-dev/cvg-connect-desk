@@ -1,16 +1,20 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { sendOutboundMessage } from '../../application/use-cases/send-outbound-message.use-case';
-import { conversationRepository, Conversation } from '../../infrastructure/repositories/conversation.repository';
+import { conversationRepository, conversationCursorScope, decodeConversationCursor, encodeConversationCursor } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
 import { AppError, messagesOutboundTotal } from '@cvg/shared';
-import { authenticate, authorize, requirePermission, sectorPermissionService } from '@cvg/auth';
+import { authenticate, authorize, authorizeConversationResource, requirePermission, sectorPermissionService } from '@cvg/auth';
 import { inArray } from 'drizzle-orm';
+import { toSanitizedMessage } from './message-dto';
+import { registerConversationOperations } from './conversation-operations.controller';
 
 interface SendMessageBody {
   conversationId: string;
   content?: string;
   recipient?: string;
   sender?: string;
+  /** C05: anexo por referência a asset autorizado (upload dedicado). */
+  mediaAssetId?: string;
   mediaUrl?: string;
   mediaType?: string;
   mediaMimetype?: string;
@@ -19,7 +23,7 @@ interface SendMessageBody {
 }
 
 export async function registerOutboundController(app: FastifyInstance) {
-  app.post(
+  app.post<{ Body: SendMessageBody }>(
     '/messages',
     {
       preHandler: [authenticate, requirePermission('chat:write')],
@@ -31,6 +35,7 @@ export async function registerOutboundController(app: FastifyInstance) {
             content: { type: 'string' },
             recipient: { type: 'string' },
             sender: { type: 'string' },
+            mediaAssetId: { type: 'string', format: 'uuid' },
             mediaUrl: { type: 'string' },
             mediaType: { type: 'string', enum: ['image', 'audio', 'video', 'document'] },
             mediaMimetype: { type: 'string' },
@@ -41,23 +46,36 @@ export async function registerOutboundController(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Body: SendMessageBody }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const { conversationId, content, recipient, sender, mediaUrl, mediaType, mediaMimetype, mediaFilename, clientMessageId } = request.body;
+        const { conversationId, content, recipient, sender, mediaAssetId, mediaUrl, mediaType, mediaMimetype, mediaFilename, clientMessageId } = request.body;
         const userId = request.user?.id;
         const headerKey = request.headers['idempotency-key'];
         const idempotencyKey = (typeof headerKey === 'string' && headerKey.trim()) || clientMessageId;
+
+        const conversation = await conversationRepository.findById(conversationId);
+        const access = await authorizeConversationResource({
+          actor: request.user,
+          action: 'chat:write',
+          conversation,
+          requiredLevel: 'write',
+        });
+        if (!access.allowed) {
+          return reply.status(access.statusCode).send({ error: access.error, message: access.message });
+        }
 
         const result = await sendOutboundMessage({
           conversationId,
           content: content || '',
           recipient,
           sender,
+          mediaAssetId,
           mediaUrl,
           mediaType,
           mediaMimetype,
           mediaFilename,
           userId,
+          roles: request.user?.roles,
           idempotencyKey,
         });
 
@@ -84,7 +102,10 @@ export async function registerOutboundController(app: FastifyInstance) {
           messageId: result.value.messageId,
           conversationId: result.value.conversationId,
           status: result.value.status,
+          // C04: distingue aceito/pending/sent/failed/unknown-reconciling.
+          outcome: result.value.outcome,
           deduplicated: result.value.deduplicated,
+          ...(result.value.expired ? { expired: true } : {}),
         });
       } catch (error) {        request.log.error(error);
         return reply.status(500).send({
@@ -95,10 +116,10 @@ export async function registerOutboundController(app: FastifyInstance) {
     }
   );
 
-  app.get(
+  app.get<{ Params: { conversationId: string }; Querystring: { limit?: number } }>(
     '/conversations/:conversationId/messages',
     {
-      preHandler: authenticate,
+      preHandler: [authenticate, requirePermission('chat:read')],
       schema: {
         params: {
           type: 'object',
@@ -115,15 +136,28 @@ export async function registerOutboundController(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { conversationId: string }; Querystring: { limit?: number } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
         const { conversationId } = request.params;
         const limit = request.query.limit || 50;
 
+        const conversation = await conversationRepository.findById(conversationId);
+        const access = await authorizeConversationResource({
+          actor: request.user,
+          action: 'chat:read',
+          conversation,
+          requiredLevel: 'read',
+        });
+        if (!access.allowed) {
+          return reply.status(access.statusCode).send({ error: access.error, message: access.message });
+        }
+
         const { messageRepository } = await import('../../infrastructure/repositories/message.repository');
         const messages = await messageRepository.findRecentByConversationId(conversationId, limit);
 
-        return reply.status(200).send({ messages });
+        // PROD-14/AC3: DTO nunca entrega URL crua de mídia (não-pronta/anexa
+        // referência pública); somente `asset://<id>` publicado após CLEAN.
+        return reply.status(200).send({ messages: messages.map(toSanitizedMessage) });
       } catch (error) {
         request.log.error(error);
         return reply.status(500).send({
@@ -134,7 +168,7 @@ export async function registerOutboundController(app: FastifyInstance) {
     }
   );
 
-  app.post(
+  app.post<{ Params: { conversationId: string } }>(
     '/conversations/:conversationId/read',
     {
       preHandler: [authenticate, requirePermission('chat:read')],
@@ -146,19 +180,32 @@ export async function registerOutboundController(app: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest<{ Params: { conversationId: string } }>, reply: FastifyReply) => {
-      const conversation = await conversationRepository.markRead(request.params.conversationId);
-      if (!conversation) {
+    async (request, reply) => {
+      const conversation = await conversationRepository.findById(request.params.conversationId);
+      const access = await authorizeConversationResource({
+        actor: request.user,
+        action: 'chat:read',
+        conversation,
+        requiredLevel: 'read',
+      });
+      if (!access.allowed) {
+        return reply.status(access.statusCode).send({ error: access.error, message: access.message });
+      }
+
+      const updated = await conversationRepository.markRead(request.params.conversationId);
+      if (!updated) {
         return reply.status(404).send({ error: 'NOT_FOUND', message: 'Conversation not found' });
       }
-      return reply.status(200).send({ conversationId: conversation.id, unreadCount: conversation.unreadCount });
+      return reply.status(200).send({ conversationId: updated.id, unreadCount: updated.unreadCount });
     },
   );
 
-  app.get(
+  app.get<{ Querystring: { status?: string; queueId?: string; teamId?: string; sectorId?: string; limit?: number; cursor?: string } }>(
     '/conversations',
     {
-      preHandler: authenticate,
+      // AC1 (C02): toda variante da listagem exige a permissão de ação antes
+      // de qualquer consulta; o escopo de recurso entra em seguida.
+      preHandler: [authenticate, requirePermission('chat:read')],
       schema: {
         querystring: {
           type: 'object',
@@ -167,36 +214,68 @@ export async function registerOutboundController(app: FastifyInstance) {
             queueId: { type: 'string', format: 'uuid' },
             teamId: { type: 'string', format: 'uuid' },
             sectorId: { type: 'string', format: 'uuid' },
+            limit: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
+            cursor: { type: 'string', maxLength: 4096 },
           },
         },
       },
     },
-    async (request: FastifyRequest<{ Querystring: { status?: string; queueId?: string; teamId?: string; sectorId?: string } }>, reply: FastifyReply) => {
+    async (request, reply) => {
       try {
-        const { status, queueId, teamId, sectorId } = request.query;
+        const { status, queueId, teamId, sectorId, cursor: rawCursor } = request.query;
+        const limit = request.query.limit ?? 50;
         const userId = (request.user as any)?.id;
         const roles = (request.user?.roles ?? []) as string[];
+
+        // Papel global explícito (D01): role Admin OU marcação no banco. Só
+        // este caminho dispensa o filtro de memberships — ausência de setores
+        // jamais é interpretada como admin.
+        const isGlobalAdmin = roles.includes('Admin')
+          || (userId ? await sectorPermissionService.isGlobalAdmin(userId) : false);
 
         // Zero-trust (§7.2): filtro explícito de setor exige membership;
         // sem setores atribuídos, não-admin não enxerga nada (default-deny).
         if (sectorId) {
           const decision = await authorize(
-            { id: userId, roles },
+            {
+              id: userId,
+              roles,
+              // F2: a decisão por ação usa a fonte efetiva do banco, não só o
+              // catálogo estático; sem o campo o papel customizado era negado.
+              permissions: request.user?.permissions,
+              permissionsAuthoritative: request.user?.permissionsAuthoritative,
+            },
             'chat:read',
             { type: 'conversation', sectorId },
           );
           if (!decision.allowed) {
             return reply.status(403).send({ error: 'FORBIDDEN', message: 'No access to this sector' });
           }
-        } else if (!roles.includes('Admin')) {
+        } else if (!isGlobalAdmin) {
           const memberOf = await sectorPermissionService.getUserSectorIds(userId);
           if (memberOf.length === 0) {
-            return reply.status(200).send({ conversations: [] });
+            return reply.status(200).send({ items: [], conversations: [], nextCursor: null });
           }
         }
 
-        const conversations = await conversationRepository.findAll({ status, queueId, teamId, sectorId, userId });
-        
+        // Recusa antecipada acima é só UX; o filtro efetivo é recalculado pelo
+        // repositório na query (não confia na decisão da rota — TOCTOU).
+        const filters = { status, queueId, teamId, sectorId, userId, globalAdmin: isGlobalAdmin };
+        const scope = conversationCursorScope(userId, filters);
+
+        let cursor: ReturnType<typeof decodeConversationCursor> = null;
+        if (rawCursor !== undefined) {
+          // Autorização precede a paginação: o cursor só é aceito depois do
+          // escopo autorizado (e recalculado no servidor); inválido -> 400 seco.
+          cursor = decodeConversationCursor(rawCursor, scope);
+          if (!cursor) {
+            return reply.status(400).send({ error: 'INVALID_CURSOR', message: 'Invalid cursor' });
+          }
+        }
+
+        const page = await conversationRepository.findPage(filters, limit, cursor);
+        const conversations = page.items;
+
         // Buscar contatos para resolver nomes
         const contactIds = [...new Set(conversations.map(c => c.contactId).filter(Boolean))];
         const contactsMap = new Map<string, { name: string | null; phone: string | null }>();
@@ -213,7 +292,9 @@ export async function registerOutboundController(app: FastifyInstance) {
         }
 
         const conversationsWithLastMessage = await (async () => {
-          // 1 query para a última mensagem de todas (sem N+1).
+          // Última mensagem/inbound da PÁGINA selecionadas no banco com
+          // LATERAL + LIMIT 1 (uma sondagem de índice por conversa, sem N+1 e
+          // sem transferir histórico). DTO existente preservado.
           const conversationIds = conversations.map((conv) => conv.id);
           const [latestByConversation, latestInboundByConversation] = await Promise.all([
             messageRepository.findLatestByConversationIds(conversationIds),
@@ -221,17 +302,27 @@ export async function registerOutboundController(app: FastifyInstance) {
           ]);
           return conversations.map((conv) => {
             const contact = conv.contactId ? contactsMap.get(conv.contactId) : null;
+            const lastMessage = latestByConversation.get(conv.id);
+            const lastInboundMessage = latestInboundByConversation.get(conv.id);
             return {
               ...conv,
               contactName: contact?.name || null,
               contactPhone: contact?.phone || null,
-              lastMessage: latestByConversation.get(conv.id) || null,
-              lastInboundMessage: latestInboundByConversation.get(conv.id) || null,
+              lastMessage: lastMessage ? toSanitizedMessage(lastMessage) : null,
+              lastInboundMessage: lastInboundMessage ? toSanitizedMessage(lastInboundMessage) : null,
             };
           });
         })();
 
-        return reply.status(200).send({ conversations: conversationsWithLastMessage });
+        const nextCursor = page.nextKeyset ? encodeConversationCursor(page.nextKeyset, scope) : null;
+
+        // `items` é o nome canônico de C06; `conversations` permanece como
+        // alias legado para não quebrar o DTO consumido pelo frontend atual.
+        return reply.status(200).send({
+          items: conversationsWithLastMessage,
+          conversations: conversationsWithLastMessage,
+          nextCursor,
+        });
       } catch (error) {
         request.log.error(error);
         return reply.status(500).send({
@@ -241,4 +332,7 @@ export async function registerOutboundController(app: FastifyInstance) {
       }
     }
   );
+
+  // PROD-18/UI05: estado/atribuição/handoff transacionais no módulo chat.
+  await registerConversationOperations(app);
 }

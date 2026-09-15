@@ -1,4 +1,7 @@
+import type { Err, Ok, Result } from '@cvg/shared';
+import { AppError } from '@cvg/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { randomUUID } from 'node:crypto';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { initializeSecretaryClient } from '@cvg/integrations';
@@ -7,6 +10,12 @@ import { publishSecretaryInvocation } from '../application/use-cases/secretary-p
 
 vi.mock('../application/use-cases/secretary-publisher', () => ({
   publishSecretaryInvocation: vi.fn().mockResolvedValue(undefined),
+}));
+
+const countConversationInvocationsMock = vi.hoisted(() => vi.fn());
+
+vi.mock('../infrastructure/repositories/secretary-invocation.repository', () => ({
+  countConversationInvocations: countConversationInvocationsMock,
 }));
 
 type SecretaryMockRequest = {
@@ -80,9 +89,24 @@ async function createSecretaryMockServer(responder: SecretaryResponder) {
   };
 }
 
+function assertOk<T, E>(result: Result<T, E>): asserts result is Ok<T, E> {
+  expect(result.isOk()).toBe(true);
+}
+
+function assertErr<T>(result: Result<T, AppError>): asserts result is Err<T, AppError> {
+  expect(result.isErr()).toBe(true);
+}
+
 describe('Secretary adapter integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    countConversationInvocationsMock.mockImplementation(async (conversationId: string) => {
+      if (conversationId === 'nao-e-uuid') {
+        throw new Error('invalid conversation id');
+      }
+      return 0;
+    });
+    vi.mocked(publishSecretaryInvocation).mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -90,14 +114,17 @@ describe('Secretary adapter integration', () => {
   });
 
   it('builds the request payload and parses a successful Secretary response', async () => {
+    const conversationId = randomUUID();
     const mock = await createSecretaryMockServer(async (request) => {
       expect(request.method).toBe('POST');
       expect(request.url).toBe('/invoke');
       expect(request.headers.authorization).toBe('Bearer secretary-test-key');
+      expect(request.headers['idempotency-key']).toBe('inbound:msg-001');
       expect(request.body).toMatchObject({
         action: 'classify',
-        conversation_id: 'conv-001',
+        conversation_id: conversationId,
         message_id: 'msg-001',
+        invocation_id: 'inbound:msg-001',
         context: {
           content: 'Cliente pediu retorno sobre exame',
           sender: '+5511988887777',
@@ -139,9 +166,10 @@ describe('Secretary adapter integration', () => {
     });
 
     const result = await invokeSecretary({
-      conversationId: 'conv-001',
+      conversationId,
       messageId: 'msg-001',
       action: 'classify',
+      invocationId: 'inbound:msg-001',
       content: 'Cliente pediu retorno sobre exame',
       sender: '+5511988887777',
       conversationHistory: [
@@ -156,7 +184,7 @@ describe('Secretary adapter integration', () => {
 
     await mock.close();
 
-    expect(result.isOk()).toBe(true);
+    assertOk(result);
     expect(result.value).toMatchObject({
       success: true,
       response: 'Classificação concluída',
@@ -174,7 +202,7 @@ describe('Secretary adapter integration', () => {
     expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
-        conversationId: 'conv-001',
+        conversationId,
         messageId: 'msg-001',
         action: 'classify',
         status: 'requested',
@@ -183,7 +211,7 @@ describe('Secretary adapter integration', () => {
     expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
-        conversationId: 'conv-001',
+        conversationId,
         messageId: 'msg-001',
         action: 'classify',
         status: 'success',
@@ -195,6 +223,7 @@ describe('Secretary adapter integration', () => {
   });
 
   it('returns an error when the Secretary responds with an invalid payload', async () => {
+    const conversationId = randomUUID();
     const mock = await createSecretaryMockServer(async () => ({
       statusCode: 200,
       body: {
@@ -210,7 +239,7 @@ describe('Secretary adapter integration', () => {
     });
 
     const result = await invokeSecretary({
-      conversationId: 'conv-002',
+      conversationId,
       action: 'classify',
       content: 'Mensagem inválida',
       sender: '+5511999999999',
@@ -218,13 +247,13 @@ describe('Secretary adapter integration', () => {
 
     await mock.close();
 
-    expect(result.isErr()).toBe(true);
+    assertErr(result);
     expect(result.error.message).toBe('Invalid response format from Secretary');
     expect(result.error.code).toBe('SECRETARY_INVALID_RESPONSE');
     expect(publishSecretaryInvocation).toHaveBeenCalledTimes(2);
     expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        conversationId: 'conv-002',
+        conversationId,
         status: 'failed',
         errorMessage: 'Invalid response format',
       })
@@ -232,6 +261,7 @@ describe('Secretary adapter integration', () => {
   });
 
   it('returns an error when the Secretary API times out', async () => {
+    const conversationId = randomUUID();
     const mock = await createSecretaryMockServer(async () => ({
       statusCode: 200,
       delayMs: 200,
@@ -248,7 +278,7 @@ describe('Secretary adapter integration', () => {
     });
 
     const result = await invokeSecretary({
-      conversationId: 'conv-003',
+      conversationId,
       action: 'classify',
       content: 'Mensagem lenta',
       sender: '+5511888888888',
@@ -256,13 +286,13 @@ describe('Secretary adapter integration', () => {
 
     await mock.close();
 
-    expect(result.isErr()).toBe(true);
+    assertErr(result);
     expect(result.error.message).toBe('Secretary request timed out');
     expect(result.error.code).toBe('SECRETARY_TIMEOUT');
     expect(publishSecretaryInvocation).toHaveBeenCalledTimes(2);
     expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        conversationId: 'conv-003',
+        conversationId,
         status: 'failed',
         errorMessage: 'Secretary request timed out',
       })
@@ -270,6 +300,7 @@ describe('Secretary adapter integration', () => {
   });
 
   it('returns an error when the Secretary API responds with HTTP failure', async () => {
+    const conversationId = randomUUID();
     const mock = await createSecretaryMockServer(async () => ({
       statusCode: 500,
       body: {
@@ -284,7 +315,7 @@ describe('Secretary adapter integration', () => {
     });
 
     const result = await invokeSecretary({
-      conversationId: 'conv-004',
+      conversationId,
       action: 'classify',
       content: 'Mensagem com erro HTTP',
       sender: '+5511777777777',
@@ -292,15 +323,180 @@ describe('Secretary adapter integration', () => {
 
     await mock.close();
 
-    expect(result.isErr()).toBe(true);
+    assertErr(result);
     expect(result.error.message).toBe('Secretary API error: 500');
     expect(result.error.code).toBe('SECRETARY_ERROR');
     expect(publishSecretaryInvocation).toHaveBeenCalledTimes(2);
     expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        conversationId: 'conv-004',
+        conversationId,
         status: 'failed',
         errorMessage: 'Secretary API error: 500',
+      })
+    );
+  });
+
+  it('embrulha erro desconhecido no catch como SECRETARY_ERROR 500', async () => {
+    const mock = await createSecretaryMockServer(async () => ({
+      statusCode: 200,
+      body: { success: true, response: 'ok', action: 'respond' },
+    }));
+
+    initializeSecretaryClient({
+      baseUrl: mock.url,
+      apiKey: 'secretary-test-key',
+      timeout: 1000,
+    });
+
+    vi.mocked(publishSecretaryInvocation)
+      .mockResolvedValueOnce(undefined) // status 'requested' (antes do try)
+      .mockImplementationOnce(() => {
+        throw new Error('broker down'); // status 'success' (dentro do try)
+      })
+      .mockResolvedValueOnce(undefined); // status 'failed' (catch)
+
+    const result = await invokeSecretary({
+      conversationId: randomUUID(),
+      action: 'classify',
+      content: 'Mensagem que publica com falha inesperada',
+      sender: '+5511666666666',
+    });
+
+    await mock.close();
+
+    assertErr(result);
+    expect(result.error).toBeInstanceOf(AppError);
+    expect(result.error.statusCode).toBe(500);
+    expect(result.error.code).toBe('SECRETARY_ERROR');
+    expect(result.error.message).toBe('broker down');
+  });
+
+  it('preserva AppError lançado dentro do try (passthrough do catch)', async () => {
+    const mock = await createSecretaryMockServer(async () => ({
+      statusCode: 200,
+      body: { success: true, response: 'ok', action: 'respond' },
+    }));
+
+    initializeSecretaryClient({
+      baseUrl: mock.url,
+      apiKey: 'secretary-test-key',
+      timeout: 1000,
+    });
+
+    const brokerError = new AppError('broker down', 503, 'BROKER_DOWN');
+    vi.mocked(publishSecretaryInvocation)
+      .mockResolvedValueOnce(undefined)
+      .mockImplementationOnce(() => {
+        throw brokerError;
+      })
+      .mockResolvedValueOnce(undefined);
+
+    const result = await invokeSecretary({
+      conversationId: randomUUID(),
+      action: 'classify',
+      content: 'Mensagem que publica AppError',
+      sender: '+5511555555555',
+    });
+
+    await mock.close();
+
+    assertErr(result);
+    expect(result.error).toBe(brokerError);
+  });
+
+  it('nega por policy (conteúdo acima do budget) com AI_POLICY_DENIED 403', async () => {
+    initializeSecretaryClient({
+      baseUrl: 'http://127.0.0.1:9/never-called',
+      apiKey: 'secretary-test-key',
+      timeout: 1000,
+    });
+
+    const result = await invokeSecretary({
+      conversationId: randomUUID(),
+      action: 'classify',
+      content: 'x'.repeat(4001),
+      sender: '+5511444444444',
+    });
+
+    assertErr(result);
+    expect(result.error.statusCode).toBe(403);
+    expect(result.error.code).toBe('AI_POLICY_DENIED');
+    expect(result.error.message).toMatch(/content exceeds/);
+    expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 'failed',
+        metadata: expect.objectContaining({ policyDenied: true }),
+      })
+    );
+  });
+
+  it('resposta success=false vira Err(SECRETARY_ERROR) e publica status failed', async () => {
+    const conversationId = randomUUID();
+    const mock = await createSecretaryMockServer(async () => ({
+      statusCode: 200,
+      body: { success: false, error: 'resposta recusada pelo secretary' },
+    }));
+
+    initializeSecretaryClient({
+      baseUrl: mock.url,
+      apiKey: 'secretary-test-key',
+      timeout: 1000,
+    });
+
+    const result = await invokeSecretary({
+      conversationId,
+      action: 'classify',
+      content: 'Conteúdo recusado',
+      sender: '+5511333333333',
+    });
+
+    await mock.close();
+
+    assertErr(result);
+    expect(result.error.statusCode).toBe(500);
+    expect(result.error.code).toBe('SECRETARY_ERROR');
+    expect(result.error.message).toBe('resposta recusada pelo secretary');
+    expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        conversationId,
+        status: 'failed',
+        errorMessage: 'resposta recusada pelo secretary',
+      })
+    );
+  });
+
+  it('nega por budget indisponível (DB) SEM chamar a Secretary — fail-closed', async () => {
+    const mock = await createSecretaryMockServer(async () => ({
+      statusCode: 200,
+      body: { success: true, response: 'não deveria ser chamada' },
+    }));
+
+    initializeSecretaryClient({
+      baseUrl: mock.url,
+      apiKey: 'secretary-test-key',
+      timeout: 1000,
+    });
+
+    // Conversa inválida ⇒ o contador durável (uuid) falha no PG; a policy NÃO
+    // pode liberar a chamada sem contador confiável.
+    const result = await invokeSecretary({
+      conversationId: 'nao-e-uuid',
+      action: 'classify',
+      content: 'conteudo',
+      sender: '+5511000000000',
+    });
+
+    await mock.close();
+
+    assertErr(result);
+    expect(result.error.statusCode).toBe(403);
+    expect(result.error.code).toBe('AI_POLICY_DENIED');
+    expect(result.error.message).toMatch(/budget store unavailable/);
+    expect(mock.requests).toHaveLength(0);
+    expect(vi.mocked(publishSecretaryInvocation)).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        status: 'failed',
+        metadata: expect.objectContaining({ policyDenied: true }),
       })
     );
   });

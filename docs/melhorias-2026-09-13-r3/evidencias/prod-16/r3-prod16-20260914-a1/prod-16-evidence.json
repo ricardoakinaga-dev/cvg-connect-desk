@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-09-14T02:08:19.958Z",
+  "runId": "r3-prod16-20260914-a1",
+  "workerIndex": 25,
+  "database": "cvg_aaa_r3_prod16_20260914_a1_w25",
+  "postgresPort": 58932,
+  "runner": "scripts/production/run-integration-isolated.mjs",
+  "boundary": "PostgreSQL isolado + HTTP real (app.inject) + módulo @cvg/privacy de produção",
+  "users": {
+    "admin": "29355c1f-c39c-4a2a-99ab-a3ab4ec41ecb",
+    "managerA": "222ff507-c4af-4300-bb53-fba7a1691e54",
+    "operatorA": "098a4e0f-7041-4aaa-838f-a369f943bd5c",
+    "operatorA2": "343b1b13-ad04-495e-b5bd-73723f49ef87",
+    "operatorB": "1a45c66e-8577-4e2d-8659-06fafc834da7"
+  },
+  "sectors": {
+    "sectorA": "36705acb-64f5-4f42-84f3-117ed6db9845",
+    "sectorB": "d3663ace-464a-4ab9-9031-0fa88a0eebd3"
+  },
+  "cases": [
+    {
+      "case": "AC3-inventario-politica",
+      "copies": 10,
+      "mediaItems": 2,
+      "backupObserved": false,
+      "policyMode": "dry-run",
+      "irreversibleDeleteAllowed": false,
+      "pendingDecision": "D02"
+    },
+    {
+      "case": "AC1-requestid-binding",
+      "requestId": "prod16-bind-b90d09fd-1c0f-4f66-bec8-5f6986d3dc73",
+      "operationId": "82491e11-2bac-4603-9970-382d09cbe220",
+      "dedupRepeated": true,
+      "foreignActorStatus": 409,
+      "foreignActorError": "REQUEST_ID_CONFLICT",
+      "foreignContactStatus": 409,
+      "rowsForRequestId": 1,
+      "refusalAudits": 2
+    },
+    {
+      "case": "AC1-operacao-outro-setor",
+      "operationId": "54edb506-5b07-4081-81c3-e0e4536f30ce",
+      "readInScopeStatus": 200,
+      "readOutOfScopeStatus": 404,
+      "resumeOutOfScopeStatus": 404,
+      "cancelOutOfScopeStatus": 404,
+      "managerEraseStatus": 403,
+      "refusalAudits": 3
+    },
+    {
+      "case": "AC1-revogacao-retomada",
+      "operationId": "1bea457a-73cd-4291-94d7-8ea9685a7bc4",
+      "checkpointBeforeResume": 4,
+      "blockedStatus": 404,
+      "resumedStatus": 200,
+      "resumedBy": "343b1b13-ad04-495e-b5bd-73723f49ef87",
+      "resumedFrom": 4,
+      "finalCheckpoint": 10,
+      "finalStatus": "partial",
+      "partial": true
+    },
+    {
+      "case": "AC1-cancelamento",
+      "operationId": "7df525ff-894c-4831-90d2-e4bfc31b9ecd",
+      "cancelStatus": 200,
+      "cancelIdempotent": true,
+      "resumeAfterCancelStatus": 409,
+      "resumeAfterCancelError": "OPERATION_NOT_RESUMABLE"
+    },
+    {
+      "case": "AC2-export-escopo",
+      "fullDeniedStatus": 403,
+      "scopedStatus": 200,
+      "scopedConversations": 1,
+      "omittedConversations": 1,
+      "scopedMediaAssets": 1,
+      "deniedContactStatus": 404,
+      "inventoryDeniedStatus": 404,
+      "adminFullConversations": 2
+    },
+    {
+      "case": "AC2-escopo-midia-execucao",
+      "outOfScopeErasureStatus": 404,
+      "deletedObjects": 0,
+      "scopedExecuteStatus": 200,
+      "residualHits": 2,
+      "residualByCopy": {
+        "message": 2
+      },
+      "outOfScopeMessageStillHasPii": true,
+      "residualScanHits": 2
+    },
+    {
+      "case": "AC2-confirmacao-irreversivel",
+      "refusedStatus": 409,
+      "refusedError": "IRREVERSIBLE_CONFIRMATION_REQUIRED",
+      "bytesBeforeConfirmation": 1,
+      "dryRunStatus": 200,
+      "dryRunMode": "dry-run",
+      "confirmedStatus": 200,
+      "deletedKeys": 1,
+      "storageStatus": "DELETED",
+      "auditHasConfirmation": true
+    },
+    {
+      "case": "AC2-residual-checkpoint",
+      "hitsBefore": 13,
+      "executeStatus": 200,
+      "checkpoint": 10,
+      "steps": 10,
+      "pseudonymizedCopies": 8,
+      "residualHitsAfter": 0,
+      "residualScanAfter": 0,
+      "backupResidual": true
+    }
+  ]
+}

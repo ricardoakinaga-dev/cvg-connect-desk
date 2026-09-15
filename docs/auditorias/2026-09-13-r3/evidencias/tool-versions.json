@@ -1,0 +1,35 @@
+{
+  "node": {
+    "command": [
+      "node",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "v24.20.0"
+  },
+  "pnpm": {
+    "command": [
+      "pnpm",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "10.33.0"
+  },
+  "python": {
+    "command": [
+      "python3",
+      "--version"
+    ],
+    "exit": 0,
+    "output": "Python 3.12.3"
+  },
+  "compose": {
+    "command": [
+      "docker",
+      "compose",
+      "version"
+    ],
+    "exit": 0,
+    "output": "Docker Compose version 2.40.3+ds1-0ubuntu1~24.04.1"
+  }
+}

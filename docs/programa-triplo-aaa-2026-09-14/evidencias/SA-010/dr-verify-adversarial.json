@@ -1,0 +1,56 @@
+{
+  "runAt": "2026-09-15T01:45:01.667Z",
+  "tag": "dr-adv-1789436701180",
+  "result": "PASS",
+  "cases": [
+    {
+      "case": "fixture_completa_aprova",
+      "expectedNonZero": false,
+      "observedStatus": 0,
+      "ok": true,
+      "failedChecks": 0
+    },
+    {
+      "case": "sem_mensagem_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 4
+    },
+    {
+      "case": "sem_evento_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 4
+    },
+    {
+      "case": "sem_dlq_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 3
+    },
+    {
+      "case": "vinculo_dlq_trocado_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 2
+    },
+    {
+      "case": "valor_trocado_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 2
+    },
+    {
+      "case": "backup_vazio_reprova",
+      "expectedNonZero": true,
+      "observedStatus": 1,
+      "ok": true,
+      "failedChecks": 17
+    }
+  ]
+}

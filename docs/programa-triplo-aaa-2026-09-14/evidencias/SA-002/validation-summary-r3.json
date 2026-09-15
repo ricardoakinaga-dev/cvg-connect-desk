@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "SA-002",
+  "run_id": "sa002-r3-final-20260915",
+  "candidate_id": "754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+  "document_validator": {
+    "command": "python3 -B docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/validate_sa002_docs.py --manifest docs/programa-triplo-aaa-2026-09-14/evidencias/SA-002/candidate-manifest-r3.json --candidate-id 754f9badac46278e77d21de91c58eedb15e80581+worktree#product-4ee19f2ec5ca8bff",
+    "valid": true,
+    "contract_count": 10,
+    "gate_count": 12,
+    "decision_count": 6,
+    "requirement_count": 59,
+    "errors": []
+  },
+  "program_validator": {
+    "command": "python3 -B docs/programa-triplo-aaa-2026-09-14/programa.py validate",
+    "valid": true,
+    "task_count": 63,
+    "requirement_count": 59,
+    "states": {"DONE": 2, "REWORK": 17, "PLANNED": 44},
+    "dependency_eligible": ["SA-003", "SA-020"]
+  },
+  "limitations": [
+    "Validação estrutural não certifica produto, gates ou decisões OPEN.",
+    "As provas produtoras e a adjudicação SA-059 permanecem necessárias."
+  ]
+}

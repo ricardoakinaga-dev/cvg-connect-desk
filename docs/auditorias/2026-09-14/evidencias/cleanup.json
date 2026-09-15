@@ -1,0 +1,6 @@
+{
+  "own_disposable_containers_remaining": [],
+  "realtime": "SIGTERM/server stopped observed in realtime-native-dev.log",
+  "vite": "Agent visual_audit reported SIGINT and server termination",
+  "git_diff_check_exit": 0
+}

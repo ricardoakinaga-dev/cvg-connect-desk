@@ -1,5 +1,5 @@
 import { err, ok, type Result } from '@cvg/shared';
-import { AppError, NotFoundError } from '@cvg/shared';
+import { AppError } from '@cvg/shared';
 import type { SecretaryInvocationResponse } from '../types';
 
 export interface ParsedSecretaryResponse {
@@ -18,7 +18,7 @@ export interface ParsedSecretaryResponse {
 
 export function handleSecretaryResponse(
   response: SecretaryInvocationResponse
-): Result<ParsedSecretaryResponse, Error> {
+): Result<ParsedSecretaryResponse, AppError> {
   if (!response.success) {
     return err(new AppError(
       response.error || 'Unknown error from Secretary',

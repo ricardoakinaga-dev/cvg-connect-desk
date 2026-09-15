@@ -10,7 +10,7 @@ describe('Contact Groups routes integration', () => {
   const passwordHash = '$2a$10$UX/LcD/6NKhheDIZmbHyN.a6Hc8SW6ytZ/LCCZW3un3h5vJ9n/1h6';
   const email = `group.integration.${Date.now()}@example.com`;
   const userId = randomUUID();
-  let adminRoleId = randomUUID();
+  let adminRoleId: string = randomUUID();
   let createdAdminRole = false;
   const testGroupId = randomUUID();
   const testContactId = randomUUID();
@@ -71,7 +71,6 @@ describe('Contact Groups routes integration', () => {
       id: testContactId,
       name: `Test Contact ${Date.now()}`,
       phone: `+55199${Date.now()}`.slice(0, 15),
-      type: 'patient',
     });
 
     // Insert test group

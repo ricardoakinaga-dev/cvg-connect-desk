@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'http';
 import { AddressInfo } from 'net';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { WebSocket } from 'ws';
 import { RealtimeServer } from '../index.ts';
 
@@ -291,15 +291,90 @@ describe('RealtimeServer behavioral auth flow', () => {
 
   it('keeps legacy URL-token authentication working for compatibility', async () => {
     authServer.setTokenStatus('legacy-token', 'user-legacy', 200);
-    const client = await connectClient(`${realtimeBaseUrl}?token=legacy-token`);
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const client = await connectClient(`${realtimeBaseUrl}?token=legacy-token`);
 
+      await waitForMessage(client, (message) => message.event === 'auth.success');
+
+      client.ws.send(JSON.stringify({ type: 'subscribe', channel: 'global' }));
+
+      await waitForMessage(client, (message) => message.event === 'subscribed');
+
+      expect(client.messages.find((message) => message.event === 'auth.success')?.data?.payload?.userId).toBe('user-legacy');
+
+      // O caminho legado entrega o token na URL do cliente; o servidor não
+      // pode ecoá-lo para o socket nem registrá-lo em log (C01 D-C02-7).
+      expect(JSON.stringify(client.messages)).not.toContain('legacy-token');
+      const logged = [...infoSpy.mock.calls, ...warnSpy.mock.calls, ...errorSpy.mock.calls]
+        .map((call) => call.map((value) => String(value)).join(' '))
+        .join('\n');
+      expect(logged).not.toContain('legacy-token');
+
+      await closeClient(client);
+    } finally {
+      infoSpy.mockRestore();
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it('403 na revalidação é tratado como revogação: fecha 4002', async () => {
+    authServer.setTokenStatus('forbidden-token', 'user-forbidden', 200);
+    const client = await connectClient(realtimeBaseUrl);
+
+    await waitForMessage(client, (message) => message.event === 'auth.required');
+    client.ws.send(JSON.stringify({ type: 'auth', token: 'forbidden-token' }));
     await waitForMessage(client, (message) => message.event === 'auth.success');
 
-    client.ws.send(JSON.stringify({ type: 'subscribe', channel: 'global' }));
+    authServer.setTokenStatus('forbidden-token', 'user-forbidden', 403);
+    await waitForMessage(client, (message) => message.event === 'auth.revalidate.error');
+    await waitForCloseCode(client, 4002);
+    expect(client.closeCode).toBe(4002);
 
-    await waitForMessage(client, (message) => message.event === 'subscribed');
+    await closeClient(client);
+  });
 
-    expect(client.messages.find((message) => message.event === 'auth.success')?.data?.payload?.userId).toBe('user-legacy');
+  it('falha não-autenticação (503) não é revogação: conexão permanece autenticada', async () => {
+    authServer.setTokenStatus('unstable-token', 'user-unstable', 200);
+    const client = await connectClient(realtimeBaseUrl);
+
+    await waitForMessage(client, (message) => message.event === 'auth.required');
+    client.ws.send(JSON.stringify({ type: 'auth', token: 'unstable-token' }));
+    await waitForMessage(client, (message) => message.event === 'auth.success');
+
+    // Múltiplos ciclos de revalidação falham com 503 (indisponível, não 401/403).
+    authServer.setTokenStatus('unstable-token', 'user-unstable', 503);
+    await wait(900);
+
+    expect(client.closeCode).toBeUndefined();
+    expect(client.ws.readyState).toBe(WebSocket.OPEN);
+    expect(client.messages.some((message) => message.event === 'auth.revalidate.error')).toBe(false);
+
+    // Recuperado o avaliador, a conexão segue autenticada (heartbeat responde).
+    authServer.setTokenStatus('unstable-token', 'user-unstable', 200);
+    client.ws.send(JSON.stringify({ type: 'ping', at: new Date().toISOString() }));
+    await waitForMessage(client, (message) => message.event === 'pong');
+
+    await closeClient(client);
+  });
+
+  it('falha de rede na revalidação não revoga a conexão (fail-closed só na entrega)', async () => {
+    authServer.setTokenStatus('network-token', 'user-network', 200);
+    const client = await connectClient(realtimeBaseUrl);
+
+    await waitForMessage(client, (message) => message.event === 'auth.required');
+    client.ws.send(JSON.stringify({ type: 'auth', token: 'network-token' }));
+    await waitForMessage(client, (message) => message.event === 'auth.success');
+
+    await new Promise<void>((resolve) => authServer.server.close(() => resolve()));
+    await wait(900);
+
+    expect(client.closeCode).toBeUndefined();
+    expect(client.ws.readyState).toBe(WebSocket.OPEN);
+    expect(client.messages.some((message) => message.event === 'auth.revalidate.error')).toBe(false);
 
     await closeClient(client);
   });

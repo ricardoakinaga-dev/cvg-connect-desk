@@ -1,0 +1,7 @@
+# Execução local real do job migration-upgrade (lógica extraída do YAML)
+# ambiente: PostgreSQL local 16.15 em 127.0.0.1:5432, banco sintético connect_desk_upgrade_check (criado e dropado)
+# comando: DATABASE_URL_ADMIN=postgresql://postgres:postgres@localhost:5432/postgres pnpm --filter @cvg/database exec tsx .prod03-migration-upgrade.check.ts
+# extrato do script via PyYAML do bloco 'Apply previous journal then upgrade in place'
+
+upgrade ok: 23 -> 24
+exit=0

@@ -12,6 +12,7 @@ describe('Chat routes integration', () => {
   const roleName = 'Receptionist';
   const conversationId = randomUUID();
   const userId = randomUUID();
+  let sectorId = '';
   let roleId = '';
   let createdRole = false;
   let app: Awaited<ReturnType<typeof buildDeskApiApp>>;
@@ -51,6 +52,12 @@ describe('Chat routes integration', () => {
       roleId,
     });
 
+    // AAA-04 (MUD-CAT-002): conversa com setor exige membership para o ator de teste.
+    const suffix = String(Date.now()).slice(-6);
+    const [sector] = await db.insert(schema.sectors).values({ name: `chat-routes ${suffix}`, code: `chatr${suffix}` }).returning();
+    sectorId = sector.id;
+    await db.insert(schema.userSectors).values({ userId, sectorId, accessLevel: 'write' });
+
     const login = await app.inject({
       method: 'POST',
       url: '/auth/login',
@@ -72,6 +79,7 @@ describe('Chat routes integration', () => {
       statusV2: 'novo',
       currentHandler: 'bot',
       isActive: true,
+      sectorId,
     });
   });
 
@@ -83,7 +91,11 @@ describe('Chat routes integration', () => {
       await db.delete(schema.auditLogs).where(eq(schema.auditLogs.userId, userId));
       await db.delete(schema.sessions).where(eq(schema.sessions.userId, userId));
       await db.delete(schema.userRoles).where(eq(schema.userRoles.userId, userId));
+      await db.delete(schema.userSectors).where(eq(schema.userSectors.userId, userId));
       await db.delete(schema.users).where(eq(schema.users.id, userId));
+    }
+    if (sectorId) {
+      await db.delete(schema.sectors).where(eq(schema.sectors.id, sectorId));
     }
     if (createdRole) {
       await db.delete(schema.roles).where(eq(schema.roles.id, roleId));

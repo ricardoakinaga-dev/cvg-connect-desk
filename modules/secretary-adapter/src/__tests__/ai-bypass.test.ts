@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect } from 'vitest';
 import {
   classifyAITool,
   invokeAITool,
@@ -10,8 +10,18 @@ import { classifyAIAction, evaluateAIPolicy } from '../application/ai-policy';
  * - unknown action/tool → FORBIDDEN por default
  * - case variation/alias → NÃO é alias (registry é exato)
  * - invalid args após aprovação → hash diferente → nova aprovação
+ *
+ * PROD-13/D05: o workflow é desabilitado por padrão; os testes de pedido de
+ * aprovação ligam a flag em ambiente isolado (nenhuma ferramenta executa).
  */
 describe('AI safety bypass validation', () => {
+  beforeEach(() => {
+    process.env.SECRETARY_AI_TOOLS_ENABLED = 'true';
+  });
+
+  afterEach(() => {
+    delete process.env.SECRETARY_AI_TOOLS_ENABLED;
+  });
   it('unknown tool → FORBIDDEN', async () => {
     expect(classifyAITool('nonsense.nope')).toBe('FORBIDDEN');
     expect(await invokeAITool({ invocationId: 'bypass1', tool: 'nonsense.nope', args: {} }))

@@ -1,0 +1,54 @@
+{
+  "runId": "sa006-role",
+  "workerIndex": 45,
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa006_role_w45",
+  "redisUrl": "redis://127.0.0.1:57130",
+  "storageScanner": null,
+  "startedAt": "2026-09-15T03:08:00.619Z",
+  "finishedAt": "2026-09-15T03:08:06.551Z",
+  "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-006-role-permissions.integration.test.ts",
+  "allowedEnv": {
+    "NODE_ENV": "test",
+    "DATABASE_URL": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_sa006_role_w45",
+    "REDIS_URL": "redis://127.0.0.1:57130",
+    "JWT_SECRET": "***",
+    "INTERNAL_EVENTS_SECRET": "***",
+    "AAA_RUN_ID": "sa006-role",
+    "AAA_RUN_ROOT": "/tmp/cvg-aaa-runs/sa006-role",
+    "AAA_WORKER_INDEX": "45"
+  },
+  "steps": [
+    {
+      "label": "db:types",
+      "command": "pnpm --filter @cvg/database db:types",
+      "startedAt": "2026-09-15T03:08:00.619Z",
+      "finishedAt": "2026-09-15T03:08:02.507Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:types /home/ricardo/cvg-connect-desk/packages/database\n> tsc src/schema.ts --declaration --declarationMap --emitDeclarationOnly --outDir src --module esnext --target es2022 --moduleResolution bundler --skipLibCheck\n\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "db:migrate",
+      "command": "pnpm --filter @cvg/database db:migrate",
+      "startedAt": "2026-09-15T03:08:02.507Z",
+      "finishedAt": "2026-09-15T03:08:03.270Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "\n> @cvg/database@0.0.0 db:migrate /home/ricardo/cvg-connect-desk/packages/database\n> tsx src/migrate.ts\n\nRunning migrations...\nMigrations completed successfully\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "command",
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/sa-006-role-permissions.integration.test.ts",
+      "startedAt": "2026-09-15T03:08:03.270Z",
+      "finishedAt": "2026-09-15T03:08:06.551Z",
+      "exitStatus": 0,
+      "signal": null,
+      "stdoutTail": "icardo-System-Product-Name\",\"reqId\":\"req-4\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/74c4342f-ed69-4eab-aa52-e84491359590\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789441686353,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-4\",\"res\":{\"statusCode\":200},\"responseTime\":5.090035000000171,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789441686355,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/74c4342f-ed69-4eab-aa52-e84491359590\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789441686361,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-5\",\"res\":{\"statusCode\":200},\"responseTime\":6.308539999999994,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789441686363,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/74c4342f-ed69-4eab-aa52-e84491359590\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789441686368,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-6\",\"res\":{\"statusCode\":200},\"responseTime\":5.354144999999789,\"msg\":\"request completed\"}\n{\"level\":30,\"time\":1789441686369,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-7\",\"req\":{\"method\":\"PUT\",\"url\":\"/admin/roles/74c4342f-ed69-4eab-aa52-e84491359590\",\"host\":\"localhost:80\",\"remoteAddress\":\"127.0.0.1\"},\"msg\":\"incoming request\"}\n{\"level\":30,\"time\":1789441686375,\"pid\":1598345,\"hostname\":\"ricardo-System-Product-Name\",\"reqId\":\"req-7\",\"res\":{\"statusCode\":400},\"responseTime\":6.174500999999964,\"msg\":\"request completed\"}\n ✓ src/__tests__/sa-006-role-permissions.integration.test.ts (3 tests) 433ms\n\n Test Files  1 passed (1)\n      Tests  3 passed (3)\n   Start at  00:08:03\n   Duration  2.58s (transform 939ms, setup 0ms, collect 1.94s, tests 433ms, environment 0ms, prepare 66ms)\n\n",
+      "stderrTail": ""
+    }
+  ],
+  "selfTest": null,
+  "exitCode": 0
+}

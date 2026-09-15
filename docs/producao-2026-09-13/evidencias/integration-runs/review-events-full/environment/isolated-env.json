@@ -1,0 +1,24 @@
+{
+  "runId": "review-events-full",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:59932/cvg_aaa_review_events_full_w35",
+  "databaseName": "cvg_aaa_review_events_full_w35",
+  "databasePort": 59932,
+  "redisUrl": "redis://127.0.0.1:57030",
+  "redisPort": 57030,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 2890733,
+    "dataDir": "/tmp/cvg-aaa-runs/review-events-full/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 2890879,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "review-events-full",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 13:51:49.54589-03"
+  }
+}

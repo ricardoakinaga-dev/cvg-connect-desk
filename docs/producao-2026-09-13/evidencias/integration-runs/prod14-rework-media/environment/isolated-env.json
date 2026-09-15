@@ -1,0 +1,24 @@
+{
+  "runId": "prod14-rework-media",
+  "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:60932/cvg_aaa_prod14_rework_media_w38",
+  "databaseName": "cvg_aaa_prod14_rework_media_w38",
+  "databasePort": 60932,
+  "redisUrl": "redis://127.0.0.1:57160",
+  "redisPort": 57160,
+  "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+  "postgres": {
+    "status": "started",
+    "pid": 3152912,
+    "dataDir": "/tmp/cvg-aaa-runs/prod14-rework-media/pg/data"
+  },
+  "redis": {
+    "status": "started",
+    "pid": 3152942,
+    "binarySource": "cvg-his-v4-runtime"
+  },
+  "marker": {
+    "runId": "prod14-rework-media",
+    "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+    "createdAt": "2026-09-13 14:24:47.782439-03"
+  }
+}

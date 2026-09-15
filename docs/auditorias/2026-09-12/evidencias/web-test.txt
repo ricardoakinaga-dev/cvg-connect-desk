@@ -1,0 +1,41 @@
+
+> @cvg/desk-web@0.0.0 test /home/ricardo/cvg-connect-desk/apps/desk-web
+> vitest run
+
+
+ RUN  v3.2.7 /home/ricardo/cvg-connect-desk/apps/desk-web
+
+ ✓ src/__tests__/auth-store.test.ts (12 tests) 9ms
+ ✓ src/__tests__/api-client.test.ts (18 tests) 17ms
+ ✓ src/__tests__/realtime.test.ts (9 tests) 36ms
+stdout | src/__tests__/inbox.test.tsx > Inbox page > renders conversations, opens a thread, and sends a message
+[Inbox] Realtime client connected
+
+stderr | src/__tests__/inbox.test.tsx > Inbox page > renders conversations, opens a thread, and sends a message
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/__tests__/kanban.test.tsx (1 test) 139ms
+ ✓ src/__tests__/login.test.tsx (2 tests) 246ms
+stdout | src/__tests__/inbox.test.tsx > Inbox page > renders conversations, opens a thread, and sends a message
+[Inbox] Realtime client disconnected
+
+stdout | src/__tests__/inbox.test.tsx > Inbox page > shows the empty state when there are no conversations
+[Inbox] Realtime client connected
+
+ ✓ src/__tests__/admin.test.tsx (1 test) 360ms
+   ✓ Admin page > loads dead-letter entries from the admin dead-letter endpoint and renders actions  358ms
+stdout | src/__tests__/inbox.test.tsx > Inbox page > shows the empty state when there are no conversations
+[Inbox] Realtime client disconnected
+
+ ✓ src/__tests__/inbox.test.tsx (2 tests) 364ms
+   ✓ Inbox page > renders conversations, opens a thread, and sends a message  340ms
+ ✓ src/__tests__/entities.test.tsx (2 tests) 908ms
+   ✓ Tutor and patient pages > lists a tutor and loads its linked details  416ms
+   ✓ Tutor and patient pages > lists patients and forwards the selected species filter  489ms
+
+ Test Files  8 passed (8)
+      Tests  47 passed (47)
+   Start at  17:00:53
+   Duration  2.57s (transform 1.30s, setup 0ms, collect 3.66s, tests 2.08s, environment 4.79s, prepare 1.05s)
+

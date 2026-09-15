@@ -5,7 +5,8 @@
 1. Checar `GET /admin/webhook-security/stats` (motivos) + `webhook_requests_total`.
 2. `missing_secret` → setar `WEBHOOK_SECRET` e redeploy.
 3. `invalid_signature` em massa → conferir rotação de segredo no gateway / skew de relógio (>300s).
-4. `duplicate_event_id` alto → gateway reenviando; normal (409), investigar causa no gateway.
+4. `duplicate_event_id` alto → gateway reenviando; o ACK é 2xx idempotente,
+   mas investigar a causa no gateway e correlacionar `event_id`.
 
 ## Fila parada (worker)
 

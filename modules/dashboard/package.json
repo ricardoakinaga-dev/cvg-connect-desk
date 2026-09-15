@@ -7,14 +7,15 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "lint": "echo lint",
-    "test": "vitest run --passWithNoTests",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
     "@cvg/auth": "workspace:*",
     "@cvg/database": "workspace:*",
     "@cvg/shared": "workspace:*",
+    "drizzle-orm": "0.45.2",
     "fastify": "^5.12.4"
   },
   "devDependencies": {

@@ -1,0 +1,99 @@
+{
+  "task": "PROD-00",
+  "criterion": "PROD-00-AC2/AC3",
+  "checkedAt": "2026-09-13T22:03:22.337Z",
+  "startedAt": "2026-09-13T22:03:21.511Z",
+  "command": "node e2e/support/production/isolation-canary.mjs (runId=prod00-20260913)",
+  "runId": "prod00-20260913",
+  "result": "PASS",
+  "failures": [],
+  "checks": [
+    {
+      "name": "recusa_banco_sem_marcador",
+      "result": "passed",
+      "detail": "code=DB_URL_NO_TEST_MARKER"
+    },
+    {
+      "name": "recusa_host_remoto",
+      "result": "passed",
+      "detail": "code=DB_URL_REMOTE_HOST"
+    },
+    {
+      "name": "recusa_porta_divergente",
+      "result": "passed",
+      "detail": "code=DB_URL_WRONG_PORT"
+    },
+    {
+      "name": "recusa_banco_proibido",
+      "result": "passed",
+      "detail": "code=DB_URL_NO_TEST_MARKER"
+    },
+    {
+      "name": "recusa_banco_de_outro_run",
+      "result": "passed",
+      "detail": "code=DB_URL_WRONG_DATABASE"
+    },
+    {
+      "name": "recusa_redis_porta_divergente",
+      "result": "passed",
+      "detail": "code=REDIS_URL_WRONG_PORT"
+    },
+    {
+      "name": "aceita_banco_do_run",
+      "result": "passed",
+      "detail": "cvg_aaa_prod00_20260913_w7"
+    },
+    {
+      "name": "provisiona_pg_redis_marcados",
+      "result": "passed",
+      "detail": "cvg_aaa_prod00_20260913_w7 pg=started redis=started"
+    },
+    {
+      "name": "postgres_isolado_responde",
+      "result": "passed",
+      "detail": "select1=1"
+    },
+    {
+      "name": "isolamento_de_banco_conferido",
+      "result": "passed",
+      "detail": "db=cvg_aaa_prod00_20260913_w7 timezone=America/Sao_Paulo"
+    },
+    {
+      "name": "redis_isolado_responde",
+      "result": "passed",
+      "detail": "ping=true"
+    },
+    {
+      "name": "teardown_para_servicos_do_run",
+      "result": "passed",
+      "detail": "{\"runId\":\"prod00-20260913\",\"redis\":{\"stopped\":true,\"pid\":1176285},\"postgres\":{\"stopped\":true,\"pid\":1176203}}"
+    },
+    {
+      "name": "teardown_idempotente",
+      "result": "passed",
+      "detail": "{\"runId\":\"prod00-20260913\",\"redis\":{\"stopped\":false,\"pid\":null},\"postgres\":{\"stopped\":false,\"pid\":null}}"
+    }
+  ],
+  "isolatedEnv": {
+    "runId": "prod00-20260913",
+    "workerIndex": 7,
+    "ports": {
+      "postgres": 57132,
+      "redis": 56750,
+      "api": 4700,
+      "realtime": 5001,
+      "web": 4443,
+      "evolutionMock": 8090
+    },
+    "databaseName": "cvg_aaa_prod00_20260913_w7",
+    "databaseUrl": "postgresql://cvg_aaa@127.0.0.1:57132/cvg_aaa_prod00_20260913_w7",
+    "redisUrl": "redis://127.0.0.1:56750",
+    "marker": {
+      "runId": "prod00-20260913",
+      "sourceRevision": "754f9badac46278e77d21de91c58eedb15e80581",
+      "createdAt": "2026-09-13 19:03:21.837894-03"
+    },
+    "postgresStatus": "started",
+    "redisStatus": "started"
+  }
+}

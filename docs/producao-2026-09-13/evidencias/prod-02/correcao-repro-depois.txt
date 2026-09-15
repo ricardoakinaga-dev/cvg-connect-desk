@@ -1,0 +1,15 @@
+M1: hash antes  = 84d7e3c02509b711d31efb800d3acde600b5ba6614132d1e47cd5ec1aa8bc9df (2 arquivos)
+M1: hash depois = 372c92a64db0f299ce03eeffed04f4c61045d3312eceba2d29141c4f9179b2de (2 arquivos)
+OK   M1 untracked alterado muda sourceSha256
+M2: estado do gate com payload 2000/PASS/sem lock/source = FAILED (INVALID)
+M2: reasons = ["lockfileSha256 ausente no payload (identidade C10 obrigatória)","sourceSha256 ausente no payload (identidade C10 obrigatória)","payload anterior ao selo do candidato (STALE: 2000-01-01T00:00:00.000Z < 2026-09-13T14:44:16.789Z)"]
+OK   M2 payload velho/sem identidade é rejeitado (nunca PASS)
+L2: unit DATABASE_URL fixado = ausente
+OK   L2 unit não fixa banco do host
+L2: postgres-real DATABASE_URL fixado = ausente
+OK   L2 postgres-real não fixa banco do host
+L2: migration-check DATABASE_URL fixado = ausente
+OK   L2 migration-check não fixa banco do host
+L5: EVENT inválido -> report.event=push requestedEvent=evento-invalido (sem erro; corrigir em PROD-03)
+
+RESULTADO: 5/5 verificações M1/M2/L2 OK

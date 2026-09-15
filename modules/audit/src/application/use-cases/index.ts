@@ -1,5 +1,7 @@
 import { auditRepository, AuditFilter } from '../../infrastructure/repositories/audit.repository';
 
+export * from './transactional-audit';
+
 export async function createAuditLog(data: {
   userId?: string;
   action: string;

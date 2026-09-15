@@ -1,0 +1,18 @@
+{
+  "audit_id": "checkpoint-triplo-aaa-r2",
+  "observed_at": "2026-09-14T23:23:28-03:00",
+  "verdict": "PARTIAL_NOT_READY",
+  "findings": [
+    {"id":"R2-F01","severity":"HIGH","status":"OPEN","tasks":["SA-008"],"route":"BUILD_AUDIT","summary":"AC2 de SA-008 não tem prova browser+API real com back, refresh e deep-link."},
+    {"id":"R2-F02","severity":"HIGH","status":"OPEN","tasks":["SA-007"],"route":"BUILD","summary":"Typecheck falha no teste novo de SA-007 por uso de db.close inexistente."},
+    {"id":"R2-F03","severity":"HIGH","status":"OPEN","tasks":["SA-001","SA-051"],"route":"SPEC_BUILD","summary":"HEAD+worktree não identifica de forma imutável o candidato atual; manifesto sofreu drift."},
+    {"id":"R2-F04","severity":"MEDIUM","status":"OPEN","tasks":["SA-022"],"route":"BUILD","summary":"AC2 e AC3 de KPI permanecem incompletos."},
+    {"id":"R2-F05","severity":"MEDIUM","status":"OPEN","tasks":["SA-017"],"route":"BUILD","summary":"Dependências estão abertas e falta prova do worker real."},
+    {"id":"R2-F06","severity":"MEDIUM","status":"PARTIALLY_RESOLVED","tasks":["SA-057"],"route":"BUILD_AUDIT","summary":"Validador não verificava dependências de IMPLEMENTED/REVIEW nem existência dos review_ref."},
+    {"id":"R2-F07","severity":"MEDIUM","status":"OPEN","tasks":["SA-050","SA-063"],"route":"BUILD","summary":"Lint retorna sucesso com 142 avisos permitidos."},
+    {"id":"R2-F08","severity":"MEDIUM","status":"OPEN","tasks":["SA-056"],"route":"BUILD","summary":"JS inicial web mede 121,64 KiB gzip, acima do orçamento de 120 KiB."},
+    {"id":"R2-F09","severity":"MEDIUM","status":"RESOLVED","tasks":["SA-057"],"route":"DOCS","summary":"Documentos de estado estavam desatualizados e o manifesto documental tinha 17 divergências; ambos foram atualizados nesta auditoria."},
+    {"id":"R2-F10","severity":"MEDIUM","status":"OPEN","tasks":["SA-037","SA-039","SA-048","SA-049"],"route":"BUILD_AUDIT","summary":"Matriz visual e acessibilidade manual permanecem NOT_RUN."},
+    {"id":"R2-F11","severity":"LOW","status":"OPEN","tasks":["SA-004","SA-059"],"route":"AUDIT","summary":"Caminho de log/erro sem segredo não tem prova executável nem nova adjudicação independente."}
+  ]
+}

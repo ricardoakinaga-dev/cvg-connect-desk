@@ -1,11 +1,14 @@
-import { conversationRepository } from '../../infrastructure/repositories/conversation.repository';
 import { messageRepository } from '../../infrastructure/repositories/message.repository';
+import { persistInboundAtomically } from '../../infrastructure/repositories/inbound-atomic.repository';
 import { ok, err, type Result } from '@cvg/shared';
-import { BadRequestError, validateMedia, safeFilename } from '@cvg/shared';
-import { publishMessagePersisted, publishConversationCreated } from '../events/chat-publisher';
-import { processMessageWithSecretary, type ProcessMessageWithSecretaryOutput } from './process-message-with-secretary.use-case';
+import { BadRequestError, safeFilename } from '@cvg/shared';
 import { createAuditLog } from '@cvg/audit';
-import { resolveInboundContact } from '../../infrastructure/repositories/inbound-contact.repository';
+import {
+  enqueueInboundMediaProcessing,
+  evaluateInboundMediaInput,
+  isInboundMediaPipelineEnabled,
+  type InboundMediaIntake,
+} from './inbound-media-pipeline';
 
 export interface ReceiveInboundMessageInput {
   externalMessageId: string;
@@ -29,29 +32,50 @@ export interface ReceiveInboundMessageOutput {
   messageId: string;
   conversationId: string;
   isNewConversation: boolean;
+  /** Estado do intake de mídia (PROD-14): nunca a URL bruta. */
+  mediaState?: string;
 }
 
 export async function receiveInboundMessage(
   input: ReceiveInboundMessageInput
 ): Promise<Result<ReceiveInboundMessageOutput, BadRequestError>> {
   try {
-    if (!input.content || !input.sender) {
-      return err(new BadRequestError('Content and sender are required'));
+    if ((!input.content && !input.mediaUrl) || !input.sender) {
+      return err(new BadRequestError('Content or media is required, and sender is required'));
     }
 
-    if (input.mediaUrl || input.mediaType || input.mediaMimetype) {
-      const check = validateMedia({
+    // PROD-14/AC1: a URL recebida do provider NUNCA é persistida em
+    // `media_url`; a mensagem é preservada mesmo com mídia rejeitada/indisponível
+    // e o estado do intake fica registrado em metadata (server-side).
+    const hasMedia = Boolean(input.mediaUrl || input.mediaType || input.mediaMimetype);
+    const pipelineEnabled = isInboundMediaPipelineEnabled();
+    let mediaIntake: InboundMediaIntake | undefined;
+    if (input.mediaFilename) {
+      input.mediaFilename = safeFilename(input.mediaFilename);
+    }
+    if (hasMedia) {
+      const evaluation = evaluateInboundMediaInput({
+        url: input.mediaUrl,
         mediaType: input.mediaType,
         mimetype: input.mediaMimetype,
-        url: input.mediaUrl,
       });
-      if (!check.ok) {
-        return err(new BadRequestError(check.message || 'Invalid media'));
-      }
-      if (input.mediaFilename) {
-        input.mediaFilename = safeFilename(input.mediaFilename);
-      }
+      mediaIntake = {
+        state: evaluation.ok ? (pipelineEnabled ? 'PENDING_SCAN' : 'PIPELINE_DISABLED') : 'REJECTED',
+        mediaType: input.mediaType,
+        mimetype: input.mediaMimetype,
+        filename: input.mediaFilename,
+        sourceUrl: evaluation.ok ? input.mediaUrl : undefined,
+        reasonCode: evaluation.ok ? (pipelineEnabled ? undefined : 'pipeline_disabled') : evaluation.reasonCode,
+        reason: evaluation.ok
+          ? (pipelineEnabled ? undefined : 'MEDIA_PIPELINE_ENABLED=false: mídia não será referenciada como pública')
+          : evaluation.reason,
+        updatedAt: new Date().toISOString(),
+      };
     }
+    const metadata = {
+      ...(input.metadata ?? {}),
+      ...(mediaIntake ? { mediaIntake } : {}),
+    };
 
     const existingMessage = await messageRepository.findByExternalId(input.externalMessageId);
     if (existingMessage) {
@@ -59,108 +83,70 @@ export async function receiveInboundMessage(
         messageId: existingMessage.id,
         conversationId: existingMessage.conversationId,
         isNewConversation: false,
+        mediaState: mediaIntake?.state,
       });
     }
 
-    let conversationId: string;
-    let isNewConversation = false;
-    const inboundContact = input.contactPhone
-      ? await resolveInboundContact(input.contactPhone, input.contactName)
-      : null;
-
-    if (input.externalConversationId) {
-      const existingConversation = await conversationRepository.findByExternalId(input.externalConversationId);
-      if (existingConversation) {
-        conversationId = existingConversation.id;
-        if (!existingConversation.contactId && inboundContact) {
-          await conversationRepository.attachContact(conversationId, inboundContact.id);
-        }
-      } else {
-        const newConv = await conversationRepository.create({
-          contactId: inboundContact?.id,
-          externalConversationId: input.externalConversationId,
-          externalChannelId: 'whatsapp',
-          status: 'open',
-          isActive: true,
-        });
-        conversationId = newConv.id;
-        isNewConversation = true;
-        await conversationRepository.addStatusHistory(conversationId, 'open', undefined, 'Created from inbound message');
-        await publishConversationCreated(newConv);
-
-        // Audit: registro de criação de conversa (se houver userId)
-        if (input.userId) {
-          await createAuditLog({
-            userId: input.userId,
-            action: 'conversation.created',
-            entityType: 'conversation',
-            entityId: newConv.id,
-            newValue: newConv,
-            metadata: {
-              externalConversationId: input.externalConversationId,
-              source: 'inbound',
-            },
-          });
-        }
-      }
-    } else {
-      const newConv = await conversationRepository.create({
-        contactId: inboundContact?.id,
-        externalChannelId: 'whatsapp',
-        status: 'open',
-        isActive: true,
-      });
-      conversationId = newConv.id;
-      isNewConversation = true;
-      await conversationRepository.addStatusHistory(conversationId, 'open', undefined, 'Created from inbound message');
-      await publishConversationCreated(newConv);
-
-      // Audit: registro de criação de conversa (se houver userId)
-      if (input.userId) {
-        await createAuditLog({
-          userId: input.userId,
-          action: 'conversation.created',
-          entityType: 'conversation',
-          entityId: newConv.id,
-          newValue: newConv,
-          metadata: {
-            source: 'inbound',
-          },
-        });
-      }
-    }
-
-    const { message, isDuplicate } = await messageRepository.createIdempotent({
-      conversationId,
-      direction: 'inbound',
+    // D-C03-1: mensagem + estado da conversa + intenções de evento no MESMO
+    // executor transacional. O contato também entra na transação (upsert
+    // idempotente); falha entre escritas ⇒ rollback total, sem órfãos.
+    const persisted = await persistInboundAtomically({
+      externalMessageId: input.externalMessageId,
+      externalConversationId: input.externalConversationId,
       content: input.content,
       sender: input.sender,
       senderType: input.senderType,
-      externalMessageId: input.externalMessageId,
-      sentAt: input.sentAt || new Date(),
-      status: 'pending',
-      // Media fields
-      mediaUrl: input.mediaUrl,
+      sentAt: input.sentAt,
+      // Nunca a URL bruta: asset só entra por `asset://<id>` após CLEAN.
+      mediaUrl: undefined,
       mediaType: input.mediaType,
       mediaMimetype: input.mediaMimetype,
       mediaFilename: input.mediaFilename,
-      metadata: input.metadata ? JSON.stringify(input.metadata) : undefined,
+      metadata,
+      contactPhone: input.contactPhone,
+      contactName: input.contactName,
     });
 
-    if (isDuplicate) {
+    if (persisted.isDuplicate) {
       return ok({
-        messageId: message.id,
-        conversationId: message.conversationId,
+        messageId: persisted.message.id,
+        conversationId: persisted.message.conversationId,
         isNewConversation: false,
+        mediaState: mediaIntake?.state,
       });
     }
 
-    // A mensagem já está persistida. Agora torna a conversa visível no topo do
-    // Desk antes de publicar o evento e antes de qualquer chamada à Secretary.
-    await conversationRepository.markInboundUnread(conversationId);
-    await publishMessagePersisted(message);
+    const { message, conversation, isNewConversation } = persisted;
 
-    // Audit: registrar recebimento de mensagem inbound
+    // Agenda o pipeline (não bloqueia o webhook em fetch/scan longos). O
+    // processamento é idempotente por mensagem e recuperável pós-crash.
+    if (pipelineEnabled && mediaIntake?.state === 'PENDING_SCAN' && input.mediaUrl) {
+      void enqueueInboundMediaProcessing({
+        messageId: message.id,
+        conversationId: conversation.id,
+        sourceUrl: input.mediaUrl,
+        mediaType: input.mediaType,
+        mimetype: input.mediaMimetype,
+        filename: input.mediaFilename,
+      });
+    }
+
+    // Audit (fora do escopo transacional do outbox): registro de criação de
+    // conversa e de recebimento da mensagem.
+    if (isNewConversation && input.userId) {
+      await createAuditLog({
+        userId: input.userId,
+        action: 'conversation.created',
+        entityType: 'conversation',
+        entityId: conversation.id,
+        newValue: conversation,
+        metadata: {
+          externalConversationId: input.externalConversationId,
+          source: 'inbound',
+        },
+      });
+    }
+
     if (input.userId) {
       await createAuditLog({
         userId: input.userId,
@@ -169,78 +155,27 @@ export async function receiveInboundMessage(
         entityId: message.id,
         metadata: {
           externalMessageId: input.externalMessageId,
-          conversationId,
-          sender: input.sender,
+          conversationId: conversation.id,
+          // C07/AAA-17: remetente é PII; a cópia vive na mensagem, não na trilha.
+          senderType: input.senderType ?? null,
+          contentLength: input.content.length,
         },
       });
     }
 
-    // Integração com Secretary: processar mensagem apenas se a conversa está com bot ativo
-    // Erros na Secretary não devem quebrar o fluxo de inbound
-    try {
-      const conversation = await conversationRepository.findById(conversationId);
-      if (conversation && conversation.currentHandler === 'bot') {
-        const secretaryResult = await processMessageWithSecretary({
-          conversationId,
-          messageId: message.id,
-          content: input.content,
-          sender: input.sender,
-        });
-
-        if (secretaryResult.isOk()) {
-          const secretaryOutput: ProcessMessageWithSecretaryOutput = secretaryResult.value;
-
-          if (secretaryOutput.handoffTriggered) {
-            // Atualiza currentHandler da conversa primeiro (fonte da verdade)
-            await conversationRepository.updateCurrentHandler(conversationId, 'human');
-
-            // Audit: registrar handoff bot→human
-            if (input.userId) {
-              await createAuditLog({
-                userId: input.userId,
-                action: 'conversation.handoff',
-                entityType: 'conversation',
-                entityId: conversationId,
-                oldValue: { handler: 'bot' },
-                newValue: { handler: 'human' },
-                metadata: {
-                  reason: secretaryOutput.classification?.handoffReason || 'Secretary requested handoff',
-                  classification: secretaryOutput.classification,
-                  messageId: message.id,
-                },
-              });
-            }
-          } else if (secretaryOutput.secretaryResponse?.trim()) {
-            const { sendOutboundMessage } = await import('./send-outbound-message.use-case');
-            const outbound = await sendOutboundMessage({
-              conversationId,
-              content: secretaryOutput.secretaryResponse.trim(),
-              recipient: input.sender,
-              sender: 'agent-secretary',
-              senderType: 'bot',
-              instance: String(input.metadata?.instance || process.env.EVOLUTION_INSTANCE || 'cvg-local'),
-              idempotencyKey: `secretary-reply:${input.externalMessageId}`,
-              metadata: {
-                source: 'agent-secretary',
-                replyToMessageId: message.id,
-                instance: String(input.metadata?.instance || process.env.EVOLUTION_INSTANCE || 'cvg-local'),
-              },
-            });
-            if (outbound.isErr()) throw outbound.error;
-          }
-        }
-      }
-    } catch (secretaryError) {
-      // Secretary failure é não-crítica; logamos mas não interrompemos o fluxo
-      console.error('[receiveInboundMessage] Secretary integration failed:', secretaryError);
-    }
+    // PROD-10/BE13: a invocação da Secretary é DURÁVEL e assíncrona. A
+    // intenção (`message.persisted`, inbound) já foi commitada na MESMA
+    // transação da mensagem; o worker a reclama com lease e executa a IA,
+    // retry/backoff e o envio idempotente (C05). O webhook NUNCA aguarda a IA
+    // nem depende dela para confirmar o recibo.
 
     return ok({
       messageId: message.id,
-      conversationId,
+      conversationId: conversation.id,
       isNewConversation,
+      mediaState: mediaIntake?.state,
     });
   } catch (error) {
-    return err(error as Error);
+    return err(error as BadRequestError);
   }
 }

@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-09-13T19:17:16.331Z",
+  "task": "PROD-36",
+  "candidate": "754f9badac46278e77d21de91c58eedb15e80581",
+  "status": "IMPLEMENTED",
+  "criteria": {
+    "PROD-36-AC1": "PASS",
+    "PROD-36-AC2": "PASS",
+    "PROD-36-AC3": "PARTIAL",
+    "PROD-36-AC4": "PARTIAL"
+  },
+  "runs": [
+    {
+      "runId": "prod36-health-final2",
+      "workerIndex": 38,
+      "command": "node --test scripts/production/prod-36.test.mjs",
+      "exitCode": 0,
+      "result": "5/5"
+    },
+    {
+      "runId": "prod36-realtime-final",
+      "workerIndex": 36,
+      "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/aaa-05-isolation.test.ts",
+      "exitCode": 0,
+      "result": "14/14"
+    },
+    {
+      "runId": "prod36-api-resilience",
+      "workerIndex": 37,
+      "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/resilience.integration.test.ts",
+      "exitCode": 0,
+      "result": "5/5"
+    }
+  ],
+  "localChecks": [
+    { "command": "pnpm --filter @cvg/desk-api exec vitest run src/__tests__/runtime-config.test.ts", "exitCode": 0, "result": "6/6" },
+    { "command": "pnpm --filter @cvg/message-worker exec vitest run", "exitCode": 0, "result": "14/14" },
+    { "command": "pnpm --filter @cvg/realtime-service exec vitest run src/__tests__/realtime-health.test.ts src/__tests__/realtime-http-polling.test.ts src/__tests__/realtime-structure.test.ts src/__tests__/realtime-three-replica.test.ts", "exitCode": 0, "result": "19/19" },
+    { "command": "events/desk-api/message-worker/realtime typecheck", "exitCode": 0, "result": "pass" }
+  ],
+  "limitations": [
+    "AC3 externo: Docker, checkout limpo, TLS/WSS, proxy remoto, graceful drain e restart nao observados.",
+    "AC4 externo: S3/ClamAV reais, recursos efetivos, persistencia de volumes e rollback nao ensaiados.",
+    "Revisao independente ainda pendente; o cartao nao e DONE."
+  ]
+}
